@@ -27,6 +27,9 @@ func main() {
 
 func dns_loop(setting Settings, loop chan bool) {
 	fmt.Println("Inside the loop...")
-	time.Sleep(time.Second * 10)
+	//time.Sleep(time.Second * 60 * 5)
+	time.Sleep(time.Second * 5)
+
+	fmt.Println(GetCurrentIP(setting.IP_Url))
 	loop <- false
 }
