@@ -35,7 +35,7 @@ func dns_loop(loop chan bool) {
 
 	//Continue to check the IP of sub-domain
 	if len(currentIP) > 0 {
-
+		get_domain(Configuration.Domain)
 	}
 
 	api_version()

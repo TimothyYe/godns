@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	// "github.com/bitly/go-simplejson"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -41,6 +43,56 @@ func generate_header(content url.Values) url.Values {
 func api_version() {
 	fmt.Println(Configuration.Email)
 	post_data("/Info.Version", nil)
+}
+
+func get_domain(name string) int {
+
+	ret := -1
+	values := url.Values{}
+	values.Add("type", "all")
+	values.Add("offset", "0")
+	values.Add("length", "20")
+
+	response, err := post_data("/Domain.List", values)
+
+	if err != nil {
+		fmt.Println("Failed to get domain list...")
+		return ret
+	}
+
+	var list domain_list
+	json.Unmarshal([]byte(response), &list)
+
+	// json, parse_err := simplejson.NewJson([]byte(response))
+
+	// if parse_err != nil {
+	// 	fmt.Println(parse_err.Error())
+	// }
+
+	// if json.Get("status").Get("code").MustString() == "1" {
+	// 	domains, _ := json.Get("domains").Array()
+
+	// 	// fmt.Println(string(domains))
+	// 	for _, d := range domains {
+	// 		m := d.(map[string]interface{})
+	// 		if m["name"] == name {
+	// 			id := simplejson.NewJson(m["id"]).Int()
+	// 			fmt.Println(id)
+	// 		}
+	// 		// if d["name"] == name {
+	// 		// 	fmt.Println(d["name"])
+	// 		// 	ret = d["id"]
+	// 		// }
+	// 		// if d == "name" {
+	// 		// 	if v == name {
+	// 		// 		fmt.Println(v)
+	// 		// 	}
+	// 		// }
+	// 	}
+	// }
+
+	fmt.Printf("Domain id is: %d", ret)
+	return ret
 }
 
 func post_data(url string, content url.Values) (string, error) {
