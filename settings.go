@@ -28,7 +28,5 @@ func LoadSettings() Settings {
 	var setting Settings
 	json.Unmarshal(file, &setting)
 
-	fmt.Println(setting.Email)
-
 	return setting
 }

@@ -6,14 +6,15 @@ import (
 	"time"
 )
 
+var Configuration Settings
+
 func main() {
 	fmt.Println("Starting...")
 
-	setting := LoadSettings()
-	fmt.Println(setting.IP_Url)
+	Configuration = LoadSettings()
 
 	loop := make(chan bool)
-	go dns_loop(setting, loop)
+	go dns_loop(loop)
 
 	ret := <-loop
 
@@ -25,11 +26,18 @@ func main() {
 	}
 }
 
-func dns_loop(setting Settings, loop chan bool) {
+func dns_loop(loop chan bool) {
 	fmt.Println("Inside the loop...")
 	//time.Sleep(time.Second * 60 * 5)
-	time.Sleep(time.Second * 5)
 
-	fmt.Println(GetCurrentIP(setting.IP_Url))
+	currentIP, _ := get_currentIP(Configuration.IP_Url)
+	fmt.Println("Current IP is" + currentIP)
+
+	//Continue to check the IP of sub-domain
+	if len(currentIP) > 0 {
+
+	}
+
+	api_version()
 	loop <- false
 }
