@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 func main() {
@@ -25,5 +26,7 @@ func main() {
 }
 
 func dns_loop(setting Settings, loop chan bool) {
-
+	fmt.Println("Inside the loop...")
+	time.Sleep(time.Second * 10)
+	loop <- false
 }
