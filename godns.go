@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -30,14 +31,22 @@ func dns_loop(loop chan bool) {
 	fmt.Println("Inside the loop...")
 	time.Sleep(time.Second * 2)
 
-	// currentIP, _ := get_currentIP(Configuration.IP_Url)
-	// fmt.Println("Current IP is" + currentIP)
+	domain_id := get_domain(Configuration.Domain)
+
+	currentIP, _ := get_currentIP(Configuration.IP_Url)
+	sub_domain_id, ip := get_subdomain(domain_id, Configuration.Sub_domain)
+
+	fmt.Printf("currentIp is:%s\n", currentIP)
 
 	//Continue to check the IP of sub-domain
-	// if len(currentIP) > 0 {
-	domain_id := get_domain(Configuration.Domain)
-	// }
+	if len(ip) > 0 && !strings.Contains(currentIP, ip) {
 
-	api_version()
+		fmt.Println("Start to update record IP...")
+		update_ip(domain_id, sub_domain_id, Configuration.Sub_domain, currentIP)
+
+	} else {
+		fmt.Println("Current IP is same as domain IP, no need to update...")
+	}
+
 	loop <- false
 }

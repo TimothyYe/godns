@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -70,8 +71,6 @@ func get_domain(name string) int64 {
 	if sjson.Get("status").Get("code").MustString() == "1" {
 		domains, _ := sjson.Get("domains").Array()
 
-		fmt.Println(domains)
-
 		for _, d := range domains {
 			m := d.(map[string]interface{})
 			if m["name"] == name {
@@ -81,15 +80,80 @@ func get_domain(name string) int64 {
 				case json.Number:
 					ret, _ = t.Int64()
 				}
+
+				break
 			}
 		}
 	}
 
-	fmt.Printf("Domain id is: %d", ret)
 	return ret
 }
 
-func get_subdomain(name string) int64 {
+func get_subdomain(domain_id int64, name string) (string, string) {
+	var ret, ip string
+	value := url.Values{}
+	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
+	value.Add("offset", "0")
+	value.Add("length", "1")
+	value.Add("sub_domain", name)
+
+	response, err := post_data("/Record.List", value)
+
+	if err != nil {
+		fmt.Println("Failed to get domain list...")
+		return "", ""
+	}
+
+	sjson, parse_err := simplejson.NewJson([]byte(response))
+
+	if parse_err != nil {
+		fmt.Println(parse_err.Error())
+		return "", ""
+	}
+
+	if sjson.Get("status").Get("code").MustString() == "1" {
+		records, _ := sjson.Get("records").Array()
+
+		for _, d := range records {
+			m := d.(map[string]interface{})
+			if m["name"] == name {
+				ret = m["id"].(string)
+				ip = m["value"].(string)
+				break
+			}
+		}
+	}
+
+	return ret, ip
+}
+
+func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip string) {
+	value := url.Values{}
+	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
+	value.Add("record_id", sub_domain_id)
+	value.Add("sub_domain", sub_domain_name)
+	value.Add("record_type", "A")
+	value.Add("record_line", "默认")
+	value.Add("value", ip)
+
+	response, err := post_data("/Record.Modify", value)
+
+	if err != nil {
+		fmt.Println("Failed to update record to new IP!")
+		fmt.Println(err.Error())
+		return
+	}
+
+	sjson, parse_err := simplejson.NewJson([]byte(response))
+
+	if parse_err != nil {
+		fmt.Println(parse_err.Error())
+		return
+	}
+
+	if sjson.Get("status").Get("code").MustString() == "1" {
+		fmt.Println("New IP updated!")
+	}
 
 }
 
@@ -112,6 +176,5 @@ func post_data(url string, content url.Values) (string, error) {
 
 	resp, _ := ioutil.ReadAll(response.Body)
 
-	fmt.Println(string(resp))
 	return string(resp), nil
 }
