@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
-	// "github.com/bitly/go-simplejson"
 	"encoding/json"
+	"fmt"
+	"github.com/bitly/go-simplejson"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -45,9 +45,9 @@ func api_version() {
 	post_data("/Info.Version", nil)
 }
 
-func get_domain(name string) int {
+func get_domain(name string) int64 {
 
-	ret := -1
+	var ret int64
 	values := url.Values{}
 	values.Add("type", "all")
 	values.Add("offset", "0")
@@ -57,39 +57,33 @@ func get_domain(name string) int {
 
 	if err != nil {
 		fmt.Println("Failed to get domain list...")
-		return ret
+		return -1
 	}
 
-	var list domain_list
-	json.Unmarshal([]byte(response), &list)
+	sjson, parse_err := simplejson.NewJson([]byte(response))
 
-	// json, parse_err := simplejson.NewJson([]byte(response))
+	if parse_err != nil {
+		fmt.Println(parse_err.Error())
+		return -1
+	}
 
-	// if parse_err != nil {
-	// 	fmt.Println(parse_err.Error())
-	// }
+	if sjson.Get("status").Get("code").MustString() == "1" {
+		domains, _ := sjson.Get("domains").Array()
 
-	// if json.Get("status").Get("code").MustString() == "1" {
-	// 	domains, _ := json.Get("domains").Array()
+		fmt.Println(domains)
 
-	// 	// fmt.Println(string(domains))
-	// 	for _, d := range domains {
-	// 		m := d.(map[string]interface{})
-	// 		if m["name"] == name {
-	// 			id := simplejson.NewJson(m["id"]).Int()
-	// 			fmt.Println(id)
-	// 		}
-	// 		// if d["name"] == name {
-	// 		// 	fmt.Println(d["name"])
-	// 		// 	ret = d["id"]
-	// 		// }
-	// 		// if d == "name" {
-	// 		// 	if v == name {
-	// 		// 		fmt.Println(v)
-	// 		// 	}
-	// 		// }
-	// 	}
-	// }
+		for _, d := range domains {
+			m := d.(map[string]interface{})
+			if m["name"] == name {
+				id := m["id"]
+
+				switch t := id.(type) {
+				case json.Number:
+					ret, _ = t.Int64()
+				}
+			}
+		}
+	}
 
 	fmt.Printf("Domain id is: %d", ret)
 	return ret
