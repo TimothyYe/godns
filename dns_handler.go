@@ -89,6 +89,10 @@ func get_domain(name string) int64 {
 	return ret
 }
 
+func get_subdomain(name string) int64 {
+
+}
+
 func post_data(url string, content url.Values) (string, error) {
 	client := &http.Client{}
 	values := generate_header(content)
