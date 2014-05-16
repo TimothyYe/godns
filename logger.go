@@ -6,7 +6,7 @@ func initLog() {
 	testConfig := `
 <seelog>
 	<outputs>
-		<rollingfile type="size" filename="run.log" maxsize="100" maxrolls="5" />
+		<file type="size" path="./run.log" />
 	</outputs>
 </seelog>
 `
