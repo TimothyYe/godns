@@ -11,11 +11,12 @@ import (
 var Configuration Settings
 
 func main() {
+	initLog()
+
 	fmt.Println("Starting...")
 	log.Info("Starting...")
 
 	Configuration = LoadSettings()
-	initLog()
 
 	loop := make(chan bool)
 	go dns_loop(loop)

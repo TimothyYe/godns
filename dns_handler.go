@@ -148,7 +148,7 @@ func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip
 		fmt.Println("Failed to update record to new IP!")
 		fmt.Println(err.Error())
 
-		log.Eror("Failed to update record to new IP!")
+		log.Error("Failed to update record to new IP!")
 		log.Error(err.Error())
 		return
 	}
