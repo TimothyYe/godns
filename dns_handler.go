@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bitly/go-simplejson"
+	log "github.com/cihub/seelog"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -17,6 +18,7 @@ func get_currentIP(url string) (string, error) {
 
 	if err != nil {
 		fmt.Println("Cannot get IP...")
+		log.Error("Cannot get IP...")
 		return "", err
 	}
 
