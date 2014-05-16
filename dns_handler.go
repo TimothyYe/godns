@@ -60,6 +60,7 @@ func get_domain(name string) int64 {
 
 	if err != nil {
 		fmt.Println("Failed to get domain list...")
+		log.Error("Failed to get domain list...")
 		return -1
 	}
 
@@ -67,6 +68,7 @@ func get_domain(name string) int64 {
 
 	if parse_err != nil {
 		fmt.Println(parse_err.Error())
+		log.Error(parse_err.Error())
 		return -1
 	}
 
@@ -103,6 +105,7 @@ func get_subdomain(domain_id int64, name string) (string, string) {
 
 	if err != nil {
 		fmt.Println("Failed to get domain list...")
+		log.Error("Failed to get domain list")
 		return "", ""
 	}
 
@@ -110,6 +113,7 @@ func get_subdomain(domain_id int64, name string) (string, string) {
 
 	if parse_err != nil {
 		fmt.Println(parse_err.Error())
+		log.Error(parse_err.Error())
 		return "", ""
 	}
 
@@ -143,6 +147,9 @@ func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip
 	if err != nil {
 		fmt.Println("Failed to update record to new IP!")
 		fmt.Println(err.Error())
+
+		log.Eror("Failed to update record to new IP!")
+		log.Error(err.Error())
 		return
 	}
 
@@ -150,11 +157,13 @@ func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip
 
 	if parse_err != nil {
 		fmt.Println(parse_err.Error())
+		log.Error(parse_err.Error())
 		return
 	}
 
 	if sjson.Get("status").Get("code").MustString() == "1" {
 		fmt.Println("New IP updated!")
+		log.Info("New IP updated!")
 	}
 
 }
@@ -173,6 +182,9 @@ func post_data(url string, content url.Values) (string, error) {
 	if err != nil {
 		fmt.Println("Post failed...")
 		fmt.Println(err.Error())
+
+		log.Error("Post failed...")
+		log.Error(err.Error())
 		return "", err
 	}
 
