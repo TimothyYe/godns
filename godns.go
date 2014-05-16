@@ -34,6 +34,12 @@ func main() {
 
 func dns_loop(loop chan bool) {
 
+	defer func() {
+		if err := recover(); err != nil {
+			log.Error(err)
+		}
+	}()
+
 	for {
 
 		domain_id := get_domain(Configuration.Domain)
