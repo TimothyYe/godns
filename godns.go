@@ -34,22 +34,26 @@ func main() {
 
 func dns_loop(loop chan bool) {
 
-	defer func() {
-		if err := recover(); err != nil {
-			log.Error(err)
-		}
-	}()
-
 	for {
+
+		defer func() {
+			if err := recover(); err != nil {
+				log.Error(err)
+			}
+		}()
 
 		domain_id := get_domain(Configuration.Domain)
 
 		if domain_id == -1 {
-
 			continue
 		}
 
-		currentIP, _ := get_currentIP(Configuration.IP_Url)
+		currentIP, err := get_currentIP(Configuration.IP_Url)
+
+		if err != nil {
+			continue
+		}
+
 		sub_domain_id, ip := get_subdomain(domain_id, Configuration.Sub_domain)
 
 		fmt.Printf("currentIp is:%s\n", currentIP)
