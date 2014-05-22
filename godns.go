@@ -78,4 +78,7 @@ func dns_loop(loop chan bool) {
 		//Interval is 5 minutes
 		time.Sleep(time.Second * 60 * 5)
 	}
+
+	log.Info("Loop exited...")
+	loop <- false
 }
