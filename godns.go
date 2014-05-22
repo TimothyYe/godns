@@ -56,6 +56,10 @@ func dns_loop(loop chan bool) {
 
 		sub_domain_id, ip := get_subdomain(domain_id, Configuration.Sub_domain)
 
+		if sub_domain_id == "" || ip == "" {
+			continue
+		}
+
 		fmt.Printf("currentIp is:%s\n", currentIP)
 		log.Infof("currentIp is:%s\n", currentIP)
 
