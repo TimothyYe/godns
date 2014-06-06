@@ -4,6 +4,7 @@ import (
 	"fmt"
 	log "github.com/cihub/seelog"
 	"os"
+	"runtime/debug"
 	"strings"
 	"time"
 )
@@ -39,6 +40,7 @@ func dns_loop(loop chan bool) {
 		defer func() {
 			if err := recover(); err != nil {
 				log.Error(err)
+				log.Info("Stack trace:\n" + string(debug.Stack()))
 			}
 		}()
 
