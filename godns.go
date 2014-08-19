@@ -41,6 +41,8 @@ func dns_loop(loop chan bool) {
 			if err := recover(); err != nil {
 				log.Error(err)
 				log.Info("Stack trace:\n" + string(debug.Stack()))
+				log.Info("Got panic in goroutine, will start a new one...")
+				go dns_loop(loop)
 			}
 		}()
 
