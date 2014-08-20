@@ -14,13 +14,14 @@ import (
 
 func get_currentIP(url string) (string, error) {
 	response, err := http.Get(url)
-	defer response.Body.Close()
 
 	if err != nil {
 		fmt.Println("Cannot get IP...")
 		log.Error("Cannot get IP...")
 		return "", err
 	}
+
+	defer response.Body.Close()
 
 	body, _ := ioutil.ReadAll(response.Body)
 	return string(body), nil
