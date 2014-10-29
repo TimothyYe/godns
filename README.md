@@ -8,7 +8,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 
 ## Pre-condition
 
-GoDNS is relied to [DNSPod](http://dnspod.cn) and its API. 
+GoDNS relies on [DNSPod](http://dnspod.cn) and its API. 
 
 To use GoDNS, you need to have a domain and host it on [DNSPod](http://dnspod.cn).
 
