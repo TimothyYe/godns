@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/TimothyYe/godns.svg?branch=master)](https://travis-ci.org/TimothyYe/godns)
 
-GoDNS is a dynamic DNS (DDNS) tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
+GoDNS is a dynamic DNS (DDNS) tool, it is fork from: [GoDNS](https://github.com/TimothyYe/godns). 
 
-Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
+Modify something.
 
 ## Pre-condition
 
@@ -19,7 +19,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * Get source code from Github:
 
 ```bash
-git clone https://github.com/TimothyYe/godns.git
+git clone https://github.com/abotoo/godns.git
 ```
 * Go into the godns directory, get related library and then build it:
 
@@ -30,21 +30,17 @@ go build
 ```
 * Then you get GoDNS.
 
-### Build godns from the 3rd party 
-
-* Visit this URL provided by [GoBuild](http://gobuild.io/download/github.com/TimothyYe/godns).
-* Select the platform you need.
-* Input the build type and branch name.
-* Build and download GoDNS.
-
 ## Run it
 
-* Get [config_sample.json](https://github.com/TimothyYe/godns/blob/master/config_sample.json) from Github.
+* Get [config_sample.json](https://github.com/abotoo/godns/blob/master/config_sample.json) from Github.
 * Rename it to **config.json**.
 * Configure your domain/sub-domain info, username and password of DNSPod account.
-* Save it in the same directory of GoDNS.
+* Configure log file path, max size of log file, max count of log file.
+* Configure user id, group id for safty.
+* Save it in the same directory of GoDNS, or use -c=your_conf_path command.
 * The last step, run godns:
+
 ```bash
-nohup ./godns &
+./godns
 ```
 * Enjoy it!
