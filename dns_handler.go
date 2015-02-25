@@ -3,21 +3,21 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bitly/go-simplejson"
-	log "github.com/cihub/seelog"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/bitly/go-simplejson"
 )
 
 func get_currentIP(url string) (string, error) {
 	response, err := http.Get(url)
 
 	if err != nil {
-		fmt.Println("Cannot get IP...")
-		log.Error("Cannot get IP...")
+		log.Println("Cannot get IP...")
 		return "", err
 	}
 
@@ -60,16 +60,14 @@ func get_domain(name string) int64 {
 	response, err := post_data("/Domain.List", values)
 
 	if err != nil {
-		fmt.Println("Failed to get domain list...")
-		log.Error("Failed to get domain list...")
+		log.Println("Failed to get domain list...")
 		return -1
 	}
 
 	sjson, parse_err := simplejson.NewJson([]byte(response))
 
 	if parse_err != nil {
-		fmt.Println(parse_err.Error())
-		log.Error(parse_err.Error())
+		log.Println(parse_err)
 		return -1
 	}
 
@@ -89,12 +87,18 @@ func get_domain(name string) int64 {
 				break
 			}
 		}
+		if len(domains) == 0 {
+			log.Println("domains slice is empty.")
+		}
+	} else {
+		log.Println("get_domain:status code:", sjson.Get("status").Get("code").MustString())
 	}
 
 	return ret
 }
 
 func get_subdomain(domain_id int64, name string) (string, string) {
+	log.Println("debug:", domain_id, name)
 	var ret, ip string
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
@@ -105,16 +109,14 @@ func get_subdomain(domain_id int64, name string) (string, string) {
 	response, err := post_data("/Record.List", value)
 
 	if err != nil {
-		fmt.Println("Failed to get domain list...")
-		log.Error("Failed to get domain list")
+		log.Println("Failed to get domain list")
 		return "", ""
 	}
 
 	sjson, parse_err := simplejson.NewJson([]byte(response))
 
 	if parse_err != nil {
-		fmt.Println(parse_err.Error())
-		log.Error(parse_err.Error())
+		log.Println(parse_err)
 		return "", ""
 	}
 
@@ -129,6 +131,11 @@ func get_subdomain(domain_id int64, name string) (string, string) {
 				break
 			}
 		}
+		if len(records) == 0 {
+			log.Println("records slice is empty.")
+		}
+	} else {
+		log.Println("get_subdomain:status code:", sjson.Get("status").Get("code").MustString())
 	}
 
 	return ret, ip
@@ -146,25 +153,20 @@ func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip
 	response, err := post_data("/Record.Modify", value)
 
 	if err != nil {
-		fmt.Println("Failed to update record to new IP!")
-		fmt.Println(err.Error())
-
-		log.Error("Failed to update record to new IP!")
-		log.Error(err.Error())
+		log.Println("Failed to update record to new IP!")
+		log.Println(err)
 		return
 	}
 
 	sjson, parse_err := simplejson.NewJson([]byte(response))
 
 	if parse_err != nil {
-		fmt.Println(parse_err.Error())
-		log.Error(parse_err.Error())
+		log.Println(parse_err)
 		return
 	}
 
 	if sjson.Get("status").Get("code").MustString() == "1" {
-		fmt.Println("New IP updated!")
-		log.Info("New IP updated!")
+		log.Println("New IP updated!")
 	}
 
 }
@@ -181,11 +183,8 @@ func post_data(url string, content url.Values) (string, error) {
 	defer response.Body.Close()
 
 	if err != nil {
-		fmt.Println("Post failed...")
-		fmt.Println(err.Error())
-
-		log.Error("Post failed...")
-		log.Error(err.Error())
+		log.Println("Post failed...")
+		log.Println(err)
 		return "", err
 	}
 
