@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/TimothyYe/godns.svg?branch=master)](https://travis-ci.org/TimothyYe/godns)
 
-GoDNS is a dynamic DNS (DDNS) tool, it is fork from: [GoDNS](https://github.com/TimothyYe/godns). 
+GoDNS is a dynamic DNS (DDNS) tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
 
-Modify something.
+Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
 ## Pre-condition
 
