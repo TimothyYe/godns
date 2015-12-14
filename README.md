@@ -28,7 +28,6 @@ cd godns
 go get
 go build
 ```
-* Then you get GoDNS.
 
 ## Run it
 
@@ -36,7 +35,7 @@ go build
 * Rename it to **config.json**.
 * Configure your domain/sub-domain info, username and password of DNSPod account.
 * Configure log file path, max size of log file, max count of log file.
-* Configure user id, group id for safty.
+* Configure user id, group id for safety.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
 * The last step, run godns:
 
