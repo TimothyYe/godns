@@ -1,5 +1,6 @@
 before_script:
   - export GOPATH=$(pwd)
+  - export GOBIN=$GOPATH/bin
 
 stages:
   - build
@@ -9,6 +10,7 @@ build-my-project:
   image: golang:1.6.2
   stage: build
   script:
+    - mkdir $GOPATH/bin
     - go get
     - go build
 
