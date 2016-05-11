@@ -45,7 +45,6 @@ func generate_header(content url.Values) url.Values {
 }
 
 func api_version() {
-	fmt.Println(Configuration.Email)
 	post_data("/Info.Version", nil)
 }
 

@@ -7,6 +7,7 @@ init-env:
   stage: init
   script:
   - export CURRENT_BUILD_PATH=/builds/timothy/godns
+
 build-my-project:
   stage: build
   script:
