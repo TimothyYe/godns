@@ -1,12 +1,15 @@
+image: golang:1.6.2
+
+before_script:
+  - export CURRENT_BUILD_PATH=/builds/timothy/godns
+
 stages:
-  - init
   - build
   - test
 
 init-env:
   stage: init
   script:
-  - export CURRENT_BUILD_PATH=/builds/timothy/godns
 
 build-my-project:
   stage: build
