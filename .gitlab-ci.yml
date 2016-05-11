@@ -1,11 +1,17 @@
 stages:
+  - init
   - build
   - test
 
+init-env:
+  stage: init
+  script:
+  - export CURRENT_BUILD_PATH=/builds/timothy/godns
 build-my-project:
   stage: build
   script:
-    - cd $CURRENT_BUILD_PATH
+    - cd $CURRENT_BUILD_PATH 
+    - go get
     - go build
 
 test-my-project:
