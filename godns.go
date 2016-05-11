@@ -5,10 +5,7 @@ import (
 	"log"
 	"runtime/debug"
 	"strings"
-	"syscall"
 	"time"
-
-	"bitbucket.org/abotoo/gonohup"
 )
 
 const (
@@ -37,35 +34,7 @@ func main() {
 
 	Configuration = LoadSettings(*optConf)
 
-	ctx := gonohup.Context{
-		Hash:    "godns",
-		User:    Configuration.User,
-		Group:   Configuration.Group,
-		Command: *optCommand,
-	}
-	sig, err := gonohup.Daemonize(ctx)
-	if err != nil {
-		log.Println("Daemonize:", err)
-		return
-	}
-
-	err = gonohup.InitLogger(Configuration.Log_Path, Configuration.Log_Size, Configuration.Log_Num)
-	if err != nil {
-		log.Println("InitLogger error:", err)
-		return
-	}
-
 	go dns_loop()
-
-	for s := range sig {
-		switch s {
-		case syscall.SIGHUP, syscall.SIGUSR2:
-			// do some custom jobs while reload/hotupdate
-		case syscall.SIGTERM:
-			// do some clean up and exit
-			return
-		}
-	}
 }
 
 func dns_loop() {

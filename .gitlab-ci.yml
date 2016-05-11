@@ -1,0 +1,15 @@
+stages:
+  - build
+  - test
+
+build-my-project:
+  stage: build
+  script:
+    - cd $CURRENT_BUILD_PATH
+    - go build
+
+test-my-project:
+  stage: test
+  script:
+    - cd $CURRENT_BUILD_PATH
+    - go test
