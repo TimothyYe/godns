@@ -37,7 +37,6 @@ func getExternalIp(url string) (string, error) {
 	//http://members.3322.org/dyndns/getip
 	response, err := http.Get(url)
 	if err != nil {
-		log.Println("Cannot get IP...")
 		return "", err
 	}
 	defer response.Body.Close()

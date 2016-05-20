@@ -77,7 +77,7 @@ func main() {
 		usage()
 		return
 	}
-	log.SetFlags(log.Lshortfile | log.Ltime | log.LstdFlags)
+	//log.SetFlags(log.Lshortfile | log.Ltime | log.LstdFlags)
 
 	Configuration = LoadSettings(*optConf)
 
@@ -137,7 +137,7 @@ func dnsUpdateLoop() {
 			log.Println("[ GoDns][ Stat] - ip not need be update!")
 		} else {
 			latestIp = localIp
-			log.Println("[ GoDns][ Stat] - current ip is ", localIp, ", will be updated!")
+			log.Println("[ GoDns][ Stat] - external ip :", localIp)
 			for i, subId := range SubDomainIdArr {
 				if err = UpdateIpRecord(DomainId, subId, SubDomainArr[i], localIp); err != nil {
 					log.Println("[ GoDns][ Update]- subdomain ", SubDomainArr[i], err.Error())
