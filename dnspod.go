@@ -32,7 +32,6 @@ func getLoginToken() string {
 	return loginToken
 }
 
-
 // 附加公共API参数
 func appendCommParams(params url.Values) url.Values {
 	if params == nil {

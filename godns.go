@@ -2,16 +2,16 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"io/ioutil"
 	"log"
+	"net"
+	"net/http"
 	"os"
 	"runtime/debug"
 	"strings"
 	"time"
-    "net/http"
-    "net"
-    "errors"
 )
 
 const (
@@ -21,16 +21,16 @@ const (
 )
 
 var (
-	Configuration  *Settings
-	latestIp       string // 上次的IP地址
-	optConf        string
-	optHelp        bool
-    resolveInternal bool
-	panicCount     = 0
-	Domain         string
-	DomainId       int64
-	SubDomainArr   = []string{}
-	SubDomainIdArr = []string{}
+	Configuration   *Settings
+	latestIp        string // 上次的IP地址
+	optConf         string
+	optHelp         bool
+	resolveInternal bool
+	panicCount      = 0
+	Domain          string
+	DomainId        int64
+	SubDomainArr    = []string{}
+	SubDomainIdArr  = []string{}
 )
 
 type (
@@ -68,7 +68,7 @@ func LoadSettings(config_path string) *Settings {
 func main() {
 	flag.BoolVar(&optHelp, "help", false, "this help")
 	flag.StringVar(&optConf, "conf", "godns.conf", "config file")
-    flag.BoolVar(&resolveInternal,"internal",false,"external or internal")
+	flag.BoolVar(&resolveInternal, "internal", false, "external or internal")
 
 	flag.Parse()
 	if optHelp {
@@ -84,36 +84,35 @@ func main() {
 	dnsUpdateLoop(resolveInternal)
 }
 
-
 // 获取外网IP
 func getExternalIp(url string) (string, error) {
-    //http://myexternalip.com/raw
-    //http://members.3322.org/dyndns/getip
-    response, err := http.Get(url)
-    if err != nil {
-        return "", err
-    }
-    defer response.Body.Close()
-    body, _ := ioutil.ReadAll(response.Body)
-    return string(body), nil
+	//http://myexternalip.com/raw
+	//http://members.3322.org/dyndns/getip
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+	body, _ := ioutil.ReadAll(response.Body)
+	return string(body), nil
 }
 
 // 获取内网IP
-func getInternalIp()(string,error) {
-    addrs, err := net.InterfaceAddrs()
-    if err == nil {
-        for _, a := range addrs {
-            if ip, ok := a.(*net.IPNet); ok && !ip.IP.IsLoopback() {
-                if ip.IP.To4() != nil {
-                    return ip.IP.String(),nil
-                }
-            }
-        }
-    }
-    if err == nil{
-        err = errors.New("not connect any network")
-    }
-    return "",err
+func getInternalIp() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+	if err == nil {
+		for _, a := range addrs {
+			if ip, ok := a.(*net.IPNet); ok && !ip.IP.IsLoopback() {
+				if ip.IP.To4() != nil {
+					return ip.IP.String(), nil
+				}
+			}
+		}
+	}
+	if err == nil {
+		err = errors.New("not connect any network")
+	}
+	return "", err
 }
 
 // 检测域名
@@ -155,17 +154,17 @@ func dnsUpdateLoop(resolveInternal bool) {
 	}()
 
 	for {
-        var err error
-        var localIp string
-        if resolveInternal {
-            localIp,err = getInternalIp()
-        }else{
-            localIp, err = getExternalIp(Configuration.IpFetchUrl)
-        }
-        if err != nil {
-            log.Println("[ GoDns][ Error] - fetch ip error:", err.Error())
-            continue
-        }
+		var err error
+		var localIp string
+		if resolveInternal {
+			localIp, err = getInternalIp()
+		} else {
+			localIp, err = getExternalIp(Configuration.IpFetchUrl)
+		}
+		if err != nil {
+			log.Println("[ GoDns][ Error] - fetch ip error:", err.Error())
+			continue
+		}
 		//检测IP是否有变化,如无变化则不提交更新
 		if localIp == latestIp {
 			log.Println("[ GoDns][ Stat] - ip not change!")
