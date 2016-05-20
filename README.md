@@ -1,11 +1,6 @@
 ## GoDNS
 
-[![Build Status](https://travis-ci.org/TimothyYe/godns.svg?branch=master)](https://travis-ci.org/TimothyYe/godns)
-
-GoDNS is a dynamic DNS (DDNS) tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
-
-Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
-
+GoDNS is a dynamic DNS (DDNS) tool
 ## Pre-condition
 
 * GoDNS relies on [DNSPod](http://dnspod.cn) and its API. 
@@ -19,7 +14,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * Get source code from Github:
 
 ```bash
-git clone https://github.com/abotoo/godns.git
+git clone https://github.com/jsix/godns.git
 ```
 * Go into the godns directory, get related library and then build it:
 
@@ -30,16 +25,13 @@ go build
 ```
 
 ## Run it
-
-* Get [config_sample.json](https://github.com/abotoo/godns/blob/master/config_sample.json) from Github.
-* Rename it to **config.json**.
-* Configure your domain/sub-domain info, username and password of DNSPod account.
-* Configure log file path, max size of log file, max count of log file.
-* Configure user id, group id for safety.
-* Save it in the same directory of GoDNS, or use -c=your_conf_path command.
-* The last step, run godns:
+ Configure api-id ,api-token and domain/sub-domains of DNSPod account.
 
 ```bash
 ./godns
+```
+You can use your config file like this:
+```bash
+./godns -conf=your.conf
 ```
 * Enjoy it!

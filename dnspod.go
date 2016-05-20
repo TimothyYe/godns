@@ -49,14 +49,12 @@ func appendCommParams(params url.Values) url.Values {
 	if params == nil {
 		panic("params not be nil!")
 	}
-	//header.Add("login_email", Configuration.Email)
-	//header.Add("login_password", Configuration.Password)
 	params.Set("format", "json")
 	params.Set("lang", "en")
 	params.Set("error_on_empty", "no")
 	params.Set("login_token", getLoginToken())
 	//仅代理用户需要使用以下参数
-	//params.Set("user_id","")
+	params.Set("user_id", "")
 	return params
 }
 
@@ -75,8 +73,6 @@ func GetApiVersion() *Version {
 	code := stat["code"]
 	msg := stat["message"]
 	date, _ := time.Parse("2006-01-02 15:04:05", stat["created_at"].(string))
-
-	log.Println(code, getLoginToken())
 	if code != "1" {
 		log.Println(fmt.Sprintf("[ Check][ Version] - code:%s,message:%s", code, msg))
 		os.Exit(0)
@@ -211,11 +207,10 @@ func apiPost(url string, content url.Values) ([]byte, error) {
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", AuthorEmail))
 	response, err := client.Do(req)
-	defer response.Body.Close()
-
 	if err != nil {
 		log.Println("Post failed...", err.Error())
 		return nil, err
 	}
+	defer response.Body.Close()
 	return ioutil.ReadAll(response.Body)
 }

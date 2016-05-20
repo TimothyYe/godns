@@ -20,10 +20,10 @@ const (
 var (
 	Configuration  *Settings
 	latestIp       string // 上次的IP地址
-	optConf        = flag.String("c", "./godns.conf", "config file")
-	optCommand     = flag.String("s", "", "send signal to a master process: stop, quit, reopen, reload")
-	optHelp        = flag.Bool("h", false, "this help")
+	optConf        string
+	optHelp        bool
 	panicCount     = 0
+	Domain         string
 	DomainId       int64
 	SubDomainArr   = []string{}
 	SubDomainIdArr = []string{}
@@ -61,20 +61,17 @@ func LoadSettings(config_path string) *Settings {
 	return &setting
 }
 
-func usage() {
-	log.Println("[command] -c=[config file path]")
-	flag.PrintDefaults()
-}
 func main() {
+	flag.BoolVar(&optHelp, "help", false, "this help")
+	flag.StringVar(&optConf, "conf", "godns.conf", "config file")
 	flag.Parse()
-	if *optHelp {
-		usage()
+	if optHelp {
+		flag.Usage()
 		return
 	}
 	//log.SetFlags(log.Lshortfile | log.Ltime | log.LstdFlags)
 
-	Configuration = LoadSettings(*optConf)
-
+	Configuration = LoadSettings(optConf)
 	ver := GetApiVersion()
 	log.Println("[ GoDns][ Version] -", " latest :", ver.ApiVersion,
 		" release :", ver.ApiDate.Format("2006-01-02"))
@@ -84,10 +81,10 @@ func main() {
 
 // 检测域名
 func checkDomain() {
-	domain := strings.TrimSpace(Configuration.Domain)
-	DomainId = get_domain(domain)
+	Domain = strings.TrimSpace(Configuration.Domain)
+	DomainId = get_domain(Domain)
 	if DomainId == -1 {
-		log.Println("[ GoDns][ Error] - domain :", domain, " dont't be resolve by DnsPod.")
+		log.Println("[ GoDns][ Error] - domain :", Domain, " dont't be resolve by DnsPod.")
 		os.Exit(0)
 	}
 
@@ -96,7 +93,7 @@ func checkDomain() {
 		v = strings.TrimSpace(v)
 		if len(v) != 0 {
 			subDomainId, ip := getSubdomain(DomainId, v)
-			subDomain := v + "." + domain
+			subDomain := v + "." + Domain
 			if subDomainId == "" || ip == "" {
 				log.Println("[ GoDns][ Wanning] - ", subDomain, " not in list.")
 				SubDomainArr = append(SubDomainArr[:i], SubDomainArr[i+1:]...)
@@ -128,15 +125,16 @@ func dnsUpdateLoop() {
 		}
 		//检测IP是否有变化,如无变化则不提交更新
 		if localIp == latestIp {
-			log.Println("[ GoDns][ Stat] - ip not need be update!")
+			log.Println("[ GoDns][ Stat] - ip not change!")
 		} else {
 			latestIp = localIp
 			log.Println("[ GoDns][ Stat] - external ip :", localIp)
 			for i, subId := range SubDomainIdArr {
+				subDomain := SubDomainArr[i] + "." + Domain
 				if err = UpdateIpRecord(DomainId, subId, SubDomainArr[i], localIp); err != nil {
-					log.Println("[ GoDns][ Update]- subdomain ", SubDomainArr[i], err.Error())
+					log.Println("[ GoDns][ Update]- subdomain ", subDomain, err.Error())
 				} else {
-					log.Println("[ GoDns][ Update]- subdomain ", SubDomainArr[i], " update success!")
+					log.Println("[ GoDns][ Update]- subdomain ", subDomain, "update success!")
 				}
 			}
 		}
