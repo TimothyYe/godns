@@ -37,17 +37,11 @@ type (
 		ClientVersion string
 	}
 	Settings struct {
-		Email      string
-		Domain     string
 		ApiId      int    `json:"api_id"`
 		ApiToken   string `json:"api_token"`
-		Sub_domain string
-		IP_Url     string
-		Log_Path   string
-		Log_Size   int
-		Log_Num    int
-		User       int
-		Group      int
+		Domain     string `json:"domain"`
+		SubDomains string `json:"sub_domains"`
+		IpFetchUrl string `json:"ip_fetch_url"`
 	}
 )
 
@@ -97,7 +91,7 @@ func checkDomain() {
 		os.Exit(0)
 	}
 
-	SubDomainArr = strings.Split(Configuration.Sub_domain, ",")
+	SubDomainArr = strings.Split(Configuration.SubDomains, ",")
 	for i, v := range SubDomainArr {
 		v = strings.TrimSpace(v)
 		if len(v) != 0 {
@@ -127,7 +121,7 @@ func dnsUpdateLoop() {
 	}()
 
 	for {
-		localIp, err := getExternalIp(Configuration.IP_Url)
+		localIp, err := getExternalIp(Configuration.IpFetchUrl)
 		if err != nil {
 			log.Println("[ GoDns][ Error] - fetch ip error:", err.Error())
 			continue
