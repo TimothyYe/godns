@@ -1,89 +1,154 @@
 package main
 
 import (
-	"flag"
-	"log"
-	"runtime/debug"
-	"strings"
-	"time"
+    "flag"
+    "log"
+    "runtime/debug"
+    "strings"
+    "time"
+    "io/ioutil"
+    "os"
+    "encoding/json"
 )
 
 const (
-	PANIC_MAX = 5
-	INTERVAL  = 5 //Minute
+    PANIC_MAX = 5
+    DnsUpdateInterval = 5 * time.Minute //Minute
+    ClientVersion = "0.1" //客户端版本
 )
 
 var (
-	Configuration Settings
-	optConf       = flag.String("c", "./config.json", "config file")
-	optCommand    = flag.String("s", "", "send signal to a master process: stop, quit, reopen, reload")
-	optHelp       = flag.Bool("h", false, "this help")
-	panicCount    = 0
+    Configuration *Settings
+    latestIp string    // 上次的IP地址
+    optConf = flag.String("c", "./godns.conf", "config file")
+    optCommand = flag.String("s", "", "send signal to a master process: stop, quit, reopen, reload")
+    optHelp = flag.Bool("h", false, "this help")
+    panicCount = 0
+    DomainId int64
+    SubDomainArr = []string{}
+    SubDomainIdArr = []string{}
 )
 
+type(
+    // 版本
+    Version struct {
+        ApiVersion    string
+        ApiDate       time.Time
+        ClientVersion string
+    }
+    Settings struct {
+        Email      string
+        Domain     string
+        ApiId      int      `json:"api_id"`
+        ApiToken   string  `json:"api_token"`
+        Sub_domain string
+        IP_Url     string
+        Log_Path   string
+        Log_Size   int
+        Log_Num    int
+        User       int
+        Group      int
+    }
+)
+
+func LoadSettings(config_path string) *Settings {
+    file, err := ioutil.ReadFile(config_path)
+    if err != nil {
+        log.Println("Error occurs while reading config file, please make sure config file exists!")
+        os.Exit(1)
+    }
+
+    var setting Settings
+    err = json.Unmarshal(file, &setting)
+    if err != nil {
+        log.Println("Error occurs while unmarshal config file, please make sure config file correct!")
+        os.Exit(1)
+    }
+    return &setting
+}
+
 func usage() {
-	log.Println("[command] -c=[config file path]")
-	flag.PrintDefaults()
+    log.Println("[command] -c=[config file path]")
+    flag.PrintDefaults()
 }
 func main() {
-	flag.Parse()
-	if *optHelp {
-		usage()
-		return
-	}
+    flag.Parse()
+    if *optHelp {
+        usage()
+        return
+    }
+    log.SetFlags(log.Lshortfile | log.Ltime | log.LstdFlags)
 
-	Configuration = LoadSettings(*optConf)
+    Configuration = LoadSettings(*optConf)
 
-	go dns_loop()
+    ver := GetApiVersion()
+    log.Println("[ GoDns][ Version] -", " latest :", ver.ApiVersion,
+        " release :", ver.ApiDate.Format("2006-01-02"))
+    checkDomain()
+    dnsUpdateLoop()
 }
 
-func dns_loop() {
-	defer func() {
-		if err := recover(); err != nil {
-			panicCount++
-			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
-			if panicCount < PANIC_MAX {
-				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-				go dns_loop()
-			}
-		}
-	}()
+// 检测域名
+func checkDomain() {
+    domain := strings.TrimSpace(Configuration.Domain)
+    DomainId = get_domain(domain)
+    if DomainId == -1 {
+        log.Println("[ GoDns][ Error] - domain :", domain, " dont't be resolve by DnsPod.")
+        os.Exit(0)
+    }
 
-	for {
+    SubDomainArr = strings.Split(Configuration.Sub_domain, ",")
+    for i, v := range SubDomainArr {
+        v = strings.TrimSpace(v)
+        if len(v) != 0 {
+            subDomainId, ip := getSubdomain(DomainId, v)
+            subDomain := v + "." + domain
+            if subDomainId == "" || ip == "" {
+                log.Println("[ GoDns][ Wanning] - ", subDomain, " not in list.")
+                SubDomainArr = append(SubDomainArr[:i],SubDomainArr[i+1:]...)
+            } else {
+                log.Println("[ GoDns][ Stat] - ", subDomain, "=>", ip)
+                SubDomainIdArr = append(SubDomainIdArr, subDomainId)
+            }
+        }
+    }
+}
 
-		domain_id := get_domain(Configuration.Domain)
+func dnsUpdateLoop() {
+    defer func() {
+        if err := recover(); err != nil {
+            panicCount++
+            log.Printf("Recovered in %v: %v\n", err, debug.Stack())
+            if panicCount < PANIC_MAX {
+                log.Println("Got panic in goroutine, will start a new one... :", panicCount)
+                go dnsUpdateLoop()
+            }
+        }
+    }()
 
-		if domain_id == -1 {
-			continue
-		}
+    for {
+        localIp, err := get_currentIP(Configuration.IP_Url)
+        if err != nil {
+            log.Println("[ GoDns][ Error] - fetch ip error:", err.Error())
+            continue
+        }
+        //检测IP是否有变化,如无变化则不提交更新
+        if localIp == latestIp {
+            log.Println("[ GoDns][ Stat] - ip not need be update!")
+        } else {
+            log.Println("[ GoDns][ Stat] - current ip is ", localIp, ", will be updated!")
+            for i,subId := range SubDomainIdArr {
+                if err = UpdateIpRecord(DomainId, subId, SubDomainArr[i], localIp); err != nil {
+                    log.Println("[ GoDns][ Update]- subdomain ", SubDomainArr[i], err.Error())
+                } else {
+                    log.Println("[ GoDns][ Update]- subdomain ", SubDomainArr[i], " update success!")
+                }
+            }
+        }
 
-		currentIP, err := get_currentIP(Configuration.IP_Url)
+        //Interval is 5 minutes
+        time.Sleep(DnsUpdateInterval)
+    }
 
-		if err != nil {
-			log.Println("get_currentIP:", err)
-			continue
-		}
-
-		sub_domain_id, ip := get_subdomain(domain_id, Configuration.Sub_domain)
-
-		if sub_domain_id == "" || ip == "" {
-			log.Println("sub_domain:", sub_domain_id, ip)
-			continue
-		}
-
-		log.Println("currentIp is:", currentIP)
-
-		//Continue to check the IP of sub-domain
-		if len(ip) > 0 && !strings.Contains(currentIP, ip) {
-			log.Println("Start to update record IP...")
-			update_ip(domain_id, sub_domain_id, Configuration.Sub_domain, currentIP)
-		} else {
-			log.Println("Current IP is same as domain IP, no need to update...")
-		}
-
-		//Interval is 5 minutes
-		time.Sleep(time.Minute * INTERVAL)
-	}
-
-	log.Printf("Loop %d exited...\n", panicCount)
+    log.Printf("Loop %d exited...\n", panicCount)
 }
