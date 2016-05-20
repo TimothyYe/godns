@@ -32,17 +32,6 @@ func getLoginToken() string {
 	return loginToken
 }
 
-func getExternalIp(url string) (string, error) {
-	//http://myexternalip.com/raw
-	//http://members.3322.org/dyndns/getip
-	response, err := http.Get(url)
-	if err != nil {
-		return "", err
-	}
-	defer response.Body.Close()
-	body, _ := ioutil.ReadAll(response.Body)
-	return string(body), nil
-}
 
 // 附加公共API参数
 func appendCommParams(params url.Values) url.Values {
@@ -85,7 +74,7 @@ func GetApiVersion() *Version {
 	}
 }
 
-func get_domain(name string) int64 {
+func GetDomain(name string) int64 {
 	var ret int64
 	values := url.Values{}
 	values.Add("type", "all")
@@ -132,7 +121,7 @@ func get_domain(name string) int64 {
 	return ret
 }
 
-func getSubdomain(domain_id int64, name string) (string, string) {
+func getSubDomain(domain_id int64, name string) (string, string) {
 	var ret, ip string
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
