@@ -19,7 +19,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * Get source code from Github:
 
 ```bash
-git clone https://github.com/abotoo/godns.git
+git clone https://github.com/timothyye/godns.git
 ```
 * Go into the godns directory, get related library and then build it:
 
