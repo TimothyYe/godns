@@ -15,14 +15,17 @@ import (
 )
 
 const (
-	PANIC_MAX         = 5
-	DnsUpdateInterval = 5 * time.Minute //Minute
-	ClientVersion     = "0.1"           //客户端版本
+	PANIC_MAX     = 5
+	ClientVersion = "0.1" //客户端版本
 )
 
 var (
-	Configuration   *Settings
-	latestIp        string // 上次的IP地址
+	Configuration *Settings
+	latestIp      string // 上次的IP地址
+
+	//DNS 更新间隔,默认5分钟
+	dnsCheckInterval = 300 * time.Second
+
 	optConf         string
 	optHelp         bool
 	resolveInternal bool
@@ -46,6 +49,8 @@ type (
 		Domain     string `json:"domain"`
 		SubDomains string `json:"sub_domains"`
 		IpFetchUrl string `json:"ip_fetch_url"`
+		// 更新间隔秒数
+		DnsCheckSecond int `json:"check_second"`
 	}
 )
 
@@ -77,6 +82,13 @@ func main() {
 	}
 	//log.SetFlags(log.Lshortfile | log.Ltime | log.LstdFlags)
 	Configuration = LoadSettings(optConf)
+	if Configuration.DnsCheckSecond > 0 {
+		if Configuration.DnsCheckSecond < 300 {
+			log.Println("[ GoDns][ Error] - dns check time range must more than 5 minute!")
+			os.Exit(0)
+		}
+		dnsCheckInterval = time.Duration(Configuration.DnsCheckSecond) * time.Second
+	}
 	ver := GetApiVersion()
 	log.Println("[ GoDns][ Version] -", " latest :", ver.ApiVersion,
 		" release :", ver.ApiDate.Format("2006-01-02"))
@@ -181,7 +193,7 @@ func dnsUpdateLoop(resolveInternal bool) {
 			}
 		}
 		//Interval is 5 minutes
-		time.Sleep(DnsUpdateInterval)
+		time.Sleep(dnsCheckInterval)
 	}
 
 	log.Printf("Loop %d exited...\n", panicCount)
