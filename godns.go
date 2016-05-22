@@ -33,8 +33,7 @@ func main() {
 	}
 
 	Configuration = LoadSettings(*optConf)
-
-	go dns_loop()
+	dns_loop()
 }
 
 func dns_loop() {
