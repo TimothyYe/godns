@@ -24,3 +24,5 @@ _testmain.go
 config.json
 *.swp
 godns
+
+vendor/*
