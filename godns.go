@@ -2,7 +2,9 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -32,7 +34,15 @@ func main() {
 		return
 	}
 
-	Configuration = LoadSettings(*optConf)
+	var err error
+	Configuration, err = LoadSettings(*optConf)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		log.Println(err.Error())
+		os.Exit(1)
+	}
+
 	dns_loop()
 }
 
