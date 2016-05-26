@@ -13,7 +13,7 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
-func get_currentIP(url string) (string, error) {
+func getCurrentIP(url string) (string, error) {
 	response, err := http.Get(url)
 
 	if err != nil {
@@ -27,13 +27,13 @@ func get_currentIP(url string) (string, error) {
 	return string(body), nil
 }
 
-func generate_header(content url.Values) url.Values {
+func generateHeader(content url.Values) url.Values {
 	header := url.Values{}
-	if(Configuration.LoginToken!=""){
-		header.Add("login_token", Configuration.LoginToken)
-	}else{
-		header.Add("login_email", Configuration.Email)
-		header.Add("login_password", Configuration.Password)
+	if configuration.LoginToken != "" {
+		header.Add("login_token", configuration.LoginToken)
+	} else {
+		header.Add("login_email", configuration.Email)
+		header.Add("login_password", configuration.Password)
 	}
 	header.Add("format", "json")
 	header.Add("lang", "en")
@@ -48,11 +48,11 @@ func generate_header(content url.Values) url.Values {
 	return header
 }
 
-func api_version() {
-	post_data("/Info.Version", nil)
+func apiVersion() {
+	postData("/Info.Version", nil)
 }
 
-func get_domain(name string) int64 {
+func getDomain(name string) int64 {
 
 	var ret int64
 	values := url.Values{}
@@ -60,17 +60,17 @@ func get_domain(name string) int64 {
 	values.Add("offset", "0")
 	values.Add("length", "20")
 
-	response, err := post_data("/Domain.List", values)
+	response, err := postData("/Domain.List", values)
 
 	if err != nil {
 		log.Println("Failed to get domain list...")
 		return -1
 	}
 
-	sjson, parse_err := simplejson.NewJson([]byte(response))
+	sjson, parseErr := simplejson.NewJson([]byte(response))
 
-	if parse_err != nil {
-		log.Println(parse_err)
+	if parseErr != nil {
+		log.Println(parseErr)
 		return -1
 	}
 
@@ -100,16 +100,16 @@ func get_domain(name string) int64 {
 	return ret
 }
 
-func get_subdomain(domain_id int64, name string) (string, string) {
-	log.Println("debug:", domain_id, name)
+func getSubDomain(domainID int64, name string) (string, string) {
+	log.Println("debug:", domainID, name)
 	var ret, ip string
 	value := url.Values{}
-	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
+	value.Add("domain_id", strconv.FormatInt(domainID, 10))
 	value.Add("offset", "0")
 	value.Add("length", "1")
 	value.Add("sub_domain", name)
 
-	response, err := post_data("/Record.List", value)
+	response, err := postData("/Record.List", value)
 
 	if err != nil {
 		log.Println("Failed to get domain list")
@@ -144,7 +144,7 @@ func get_subdomain(domain_id int64, name string) (string, string) {
 	return ret, ip
 }
 
-func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip string) {
+func updateIP(domain_id int64, sub_domain_id string, sub_domain_name string, ip string) {
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
 	value.Add("record_id", sub_domain_id)
@@ -153,7 +153,7 @@ func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip
 	value.Add("record_line", "默认")
 	value.Add("value", ip)
 
-	response, err := post_data("/Record.Modify", value)
+	response, err := postData("/Record.Modify", value)
 
 	if err != nil {
 		log.Println("Failed to update record to new IP!")
@@ -174,13 +174,13 @@ func update_ip(domain_id int64, sub_domain_id string, sub_domain_name string, ip
 
 }
 
-func post_data(url string, content url.Values) (string, error) {
+func postData(url string, content url.Values) (string, error) {
 	client := &http.Client{}
-	values := generate_header(content)
+	values := generateHeader(content)
 	req, _ := http.NewRequest("POST", "https://dnsapi.cn"+url, strings.NewReader(values.Encode()))
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", Configuration.Email))
+	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", configuration.Email))
 
 	response, err := client.Do(req)
 	defer response.Body.Close()
