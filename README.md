@@ -29,17 +29,29 @@ go get
 go build
 ```
 
-## Run it
+## Config it
 
-* Get [config_sample.json](https://github.com/abotoo/godns/blob/master/config_sample.json) from Github.
+* Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
 * Rename it to **config.json**.
 * Configure your domain/sub-domain info, username and password of DNSPod account.
 * Configure log file path, max size of log file, max count of log file.
 * Configure user id, group id for safety.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
-* The last step, run godns:
+
+## Run it as a daemon manually
 
 ```bash
-./godns
+nohup ./godns &
 ```
-* Enjoy it!
+
+## Run it as a daemon, manage it via Upstart
+
+* Install `upstart` first
+* Copy `./upstart/godns.conf` to `/etc/init`
+* Start it as a system service:
+
+```bash
+sudo start godns
+```
+
+## Enjoy it!
