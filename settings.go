@@ -10,6 +10,7 @@ import (
 type Settings struct {
 	Email      string
 	Password   string
+	LoginToken   string
 	Domain     string
 	Sub_domain string
 	IP_Url     string
