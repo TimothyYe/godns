@@ -29,8 +29,12 @@ func get_currentIP(url string) (string, error) {
 
 func generate_header(content url.Values) url.Values {
 	header := url.Values{}
-	header.Add("login_email", Configuration.Email)
-	header.Add("login_password", Configuration.Password)
+	if(Configuration.LoginToken!=""){
+		header.Add("login_token", Configuration.LoginToken)
+	}else{
+		header.Add("login_email", Configuration.Email)
+		header.Add("login_password", Configuration.Password)
+	}
 	header.Add("format", "json")
 	header.Add("lang", "en")
 	header.Add("error_on_empty", "no")
