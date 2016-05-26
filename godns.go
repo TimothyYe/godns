@@ -49,26 +49,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	dns_loop()
+	dnsLoop()
 }
 
-func dns_loop() {
+func dnsLoop() {
 	defer func() {
 		if err := recover(); err != nil {
 			panicCount++
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
 			if panicCount < PANIC_MAX {
 				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-				go dns_loop()
+				go dnsLoop()
 			}
 		}
 	}()
 
 	for {
 
-		domain_id := getDomain(configuration.Domain)
+		domainID := getDomain(configuration.Domain)
 
-		if domain_id == -1 {
+		if domainID == -1 {
 			continue
 		}
 
@@ -79,10 +79,10 @@ func dns_loop() {
 			continue
 		}
 
-		sub_domain_id, ip := getSubDomain(domain_id, configuration.Sub_domain)
+		subDomainID, ip := getSubDomain(domainID, configuration.Sub_domain)
 
-		if sub_domain_id == "" || ip == "" {
-			log.Println("sub_domain:", sub_domain_id, ip)
+		if subDomainID == "" || ip == "" {
+			log.Println("sub_domain:", subDomainID, ip)
 			continue
 		}
 
@@ -91,7 +91,7 @@ func dns_loop() {
 		//Continue to check the IP of sub-domain
 		if len(ip) > 0 && !strings.Contains(currentIP, ip) {
 			log.Println("Start to update record IP...")
-			updateIP(domain_id, sub_domain_id, configuration.Sub_domain, currentIP)
+			updateIP(domainID, subDomainID, configuration.Sub_domain, currentIP)
 		} else {
 			log.Println("Current IP is same as domain IP, no need to update...")
 		}
@@ -99,6 +99,4 @@ func dns_loop() {
 		//Interval is 5 minutes
 		time.Sleep(time.Minute * INTERVAL)
 	}
-
-	log.Printf("Loop %d exited...\n", panicCount)
 }
