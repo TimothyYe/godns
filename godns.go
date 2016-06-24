@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -23,10 +24,39 @@ var (
 	panicCount    = 0
 )
 
+func identifyPanic() string {
+	var name, file string
+	var line int
+	var pc [16]uintptr
+
+	n := runtime.Callers(3, pc[:])
+	for _, pc := range pc[:n] {
+		fn := runtime.FuncForPC(pc)
+		if fn == nil {
+			continue
+		}
+		file, line = fn.FileLine(pc)
+		name = fn.Name()
+		if !strings.HasPrefix(name, "runtime.") {
+			break
+		}
+	}
+
+	switch {
+	case name != "":
+		return fmt.Sprintf("%v:%v", name, line)
+	case file != "":
+		return fmt.Sprintf("%v:%v", file, line)
+	}
+
+	return fmt.Sprintf("pc:%x", pc)
+}
+
 func usage() {
 	log.Println("[command] -c=[config file path]")
 	flag.PrintDefaults()
 }
+
 func main() {
 	flag.Parse()
 	if *optHelp {
@@ -57,6 +87,7 @@ func dnsLoop() {
 		if err := recover(); err != nil {
 			panicCount++
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
+			fmt.Println(identifyPanic())
 			if panicCount < PANIC_MAX {
 				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
 				go dnsLoop()
