@@ -18,8 +18,9 @@ const (
 
 var (
 	configuration Settings
-	optConf       = flag.String("c", "./config.json", "config file")
-	optHelp       = flag.Bool("h", false, "this help")
+	optConf       = flag.String("c", "./config.json", "Specify a config file")
+	optDocker     = flag.Bool("d", false, "Run it as docker mode")
+	optHelp       = flag.Bool("h", false, "Show help")
 	panicCount    = 0
 )
 
@@ -87,6 +88,7 @@ func dnsLoop() {
 			panicCount++
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
 			fmt.Println(identifyPanic())
+			log.Print(identifyPanic())
 			if panicCount < PANIC_MAX {
 				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
 				go dnsLoop()
