@@ -116,10 +116,10 @@ func getSubDomain(domainID int64, name string) (string, string) {
 		return "", ""
 	}
 
-	sjson, parse_err := simplejson.NewJson([]byte(response))
+	sjson, parseErr := simplejson.NewJson([]byte(response))
 
-	if parse_err != nil {
-		log.Println(parse_err)
+	if parseErr != nil {
+		log.Println(parseErr)
 		return "", ""
 	}
 
@@ -144,11 +144,11 @@ func getSubDomain(domainID int64, name string) (string, string) {
 	return ret, ip
 }
 
-func updateIP(domain_id int64, sub_domain_id string, sub_domain_name string, ip string) {
+func updateIP(domainID int64, subDomainID string, subDomainName string, ip string) {
 	value := url.Values{}
-	value.Add("domain_id", strconv.FormatInt(domain_id, 10))
-	value.Add("record_id", sub_domain_id)
-	value.Add("sub_domain", sub_domain_name)
+	value.Add("domain_id", strconv.FormatInt(domainID, 10))
+	value.Add("record_id", subDomainID)
+	value.Add("sub_domain", subDomainName)
 	value.Add("record_type", "A")
 	value.Add("record_line", "默认")
 	value.Add("value", ip)
@@ -161,10 +161,10 @@ func updateIP(domain_id int64, sub_domain_id string, sub_domain_name string, ip 
 		return
 	}
 
-	sjson, parse_err := simplejson.NewJson([]byte(response))
+	sjson, parseErr := simplejson.NewJson([]byte(response))
 
-	if parse_err != nil {
-		log.Println(parse_err)
+	if parseErr != nil {
+		log.Println(parseErr)
 		return
 	}
 
@@ -183,7 +183,6 @@ func postData(url string, content url.Values) (string, error) {
 	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", configuration.Email))
 
 	response, err := client.Do(req)
-	defer response.Body.Close()
 
 	if err != nil {
 		log.Println("Post failed...")
@@ -191,6 +190,7 @@ func postData(url string, content url.Values) (string, error) {
 		return "", err
 	}
 
+	defer response.Body.Close()
 	resp, _ := ioutil.ReadAll(response.Body)
 
 	return string(resp), nil
