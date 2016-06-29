@@ -19,7 +19,6 @@ const (
 var (
 	configuration Settings
 	optConf       = flag.String("c", "./config.json", "config file")
-	optCommand    = flag.String("s", "", "send signal to a master process: stop, quit, reopen, reload")
 	optHelp       = flag.Bool("h", false, "this help")
 	panicCount    = 0
 )
