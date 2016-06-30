@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -24,43 +23,10 @@ var (
 	panicCount    = 0
 )
 
-func identifyPanic() string {
-	var name, file string
-	var line int
-	var pc [16]uintptr
-
-	n := runtime.Callers(3, pc[:])
-	for _, pc := range pc[:n] {
-		fn := runtime.FuncForPC(pc)
-		if fn == nil {
-			continue
-		}
-		file, line = fn.FileLine(pc)
-		name = fn.Name()
-		if !strings.HasPrefix(name, "runtime.") {
-			break
-		}
-	}
-
-	switch {
-	case name != "":
-		return fmt.Sprintf("%v:%v", name, line)
-	case file != "":
-		return fmt.Sprintf("%v:%v", file, line)
-	}
-
-	return fmt.Sprintf("pc:%x", pc)
-}
-
-func usage() {
-	log.Println("[command] -c=[config file path]")
-	flag.PrintDefaults()
-}
-
 func main() {
 	flag.Parse()
 	if *optHelp {
-		usage()
+		flag.Usage()
 		return
 	}
 
@@ -71,11 +37,11 @@ func main() {
 			Password:   os.Getenv("PASSWORD"),
 			LoginToken: os.Getenv("TOKEN"),
 			Domain:     os.Getenv("DOMAIN"),
-			Sub_domain: os.Getenv("SUB_DOMAIN"),
-			IP_Url:     "http://members.3322.org/dyndns/getip",
-			Log_Path:   "./godns.log",
-			Log_Size:   16,
-			Log_Num:    3,
+			SubDomain:  os.Getenv("SUB_DOMAIN"),
+			IPUrl:      "http://members.3322.org/dyndns/getip",
+			LogPath:    "./godns.log",
+			LogSize:    16,
+			LogNum:     3,
 		}
 	} else {
 		//Load settings from configurations file
@@ -86,8 +52,13 @@ func main() {
 		}
 	}
 
-	if err := InitLogger(configuration.Log_Path, configuration.Log_Size, configuration.Log_Num); err != nil {
-		log.Println("InitLogger error:", err)
+	if err := checkSettings(&configuration); err != nil {
+		log.Println("Settings is invalid! " + err.Error())
+		os.Exit(1)
+	}
+
+	if err := InitLogger(configuration.LogPath, configuration.LogSize, configuration.LogNum); err != nil {
+		log.Println("InitLogger error:" + err.Error())
 		os.Exit(1)
 	}
 
@@ -116,14 +87,14 @@ func dnsLoop() {
 			continue
 		}
 
-		currentIP, err := getCurrentIP(configuration.IP_Url)
+		currentIP, err := getCurrentIP(configuration.IPUrl)
 
 		if err != nil {
 			log.Println("get_currentIP:", err)
 			continue
 		}
 
-		subDomainID, ip := getSubDomain(domainID, configuration.Sub_domain)
+		subDomainID, ip := getSubDomain(domainID, configuration.SubDomain)
 
 		if subDomainID == "" || ip == "" {
 			log.Println("sub_domain:", subDomainID, ip)
@@ -135,7 +106,7 @@ func dnsLoop() {
 		//Continue to check the IP of sub-domain
 		if len(ip) > 0 && !strings.Contains(currentIP, ip) {
 			log.Println("Start to update record IP...")
-			updateIP(domainID, subDomainID, configuration.Sub_domain, currentIP)
+			updateIP(domainID, subDomainID, configuration.SubDomain, currentIP)
 		} else {
 			log.Println("Current IP is same as domain IP, no need to update...")
 		}

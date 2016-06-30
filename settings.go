@@ -8,15 +8,15 @@ import (
 
 //Settings struct
 type Settings struct {
-	Email      string
-	Password   string
-	LoginToken string
-	Domain     string
-	Sub_domain string
-	IP_Url     string
-	Log_Path   string
-	Log_Size   int
-	Log_Num    int
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	LoginToken string `json:"login_token"`
+	Domain     string `json:"domain"`
+	SubDomain  string `json:"sub_domain"`
+	IPUrl      string `json:"ip_url"`
+	LogPath    string `json:"log_path"`
+	LogSize    int    `json:"log_size"`
+	LogNum     int    `json:"log_num"`
 }
 
 //LoadSettings -- Load settings from config file
