@@ -8,6 +8,4 @@
 	"log_path":"./godns.log",
 	"log_size":16,
 	"log_num":3,
-	"user":0,
-	"group":0
 }
