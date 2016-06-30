@@ -1,7 +1,7 @@
 {
 	"email": "",
 	"password": "",
-	"loginToken": "",
+	"login_token": "",
 	"domain": "",
 	"sub_domain": "",
 	"ip_url": "http://members.3322.org/dyndns/getip",
