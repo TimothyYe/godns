@@ -5,7 +5,8 @@ import (
 )
 
 func TestLoadSetting(t *testing.T) {
-	settings, err := LoadSettings("./config_sample.json")
+	var settings Settings
+	err := LoadSettings("./config_sample.json", &settings)
 
 	if err != nil {
 		t.Error(err.Error())

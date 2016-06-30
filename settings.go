@@ -21,19 +21,21 @@ type Settings struct {
 	Group      int
 }
 
-func LoadSettings(config_path string, settings *Settings) error {
+//LoadSettings -- Load settings from config file
+func LoadSettings(configPath string, settings *Settings) error {
+	//LoadSettings from config file
 	setting := Settings{}
-	file, err := ioutil.ReadFile(config_path)
+	file, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		fmt.Println("Error occurs while reading config file, please make sure config file exists!")
-		return setting, err
+		return err
 	}
 
 	err = json.Unmarshal(file, &setting)
 	if err != nil {
 		fmt.Println("Error occurs while unmarshal config file, please make sure config file correct!")
-		return setting, err
+		return err
 	}
 
-	return setting, nil
+	return nil
 }
