@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 )
 
+//Settings struct
 type Settings struct {
 	Email      string
 	Password   string
@@ -20,7 +21,7 @@ type Settings struct {
 	Group      int
 }
 
-func LoadSettings(config_path string) (Settings, error) {
+func LoadSettings(config_path string, settings *Settings) error {
 	setting := Settings{}
 	file, err := ioutil.ReadFile(config_path)
 	if err != nil {

@@ -64,18 +64,14 @@ func main() {
 		return
 	}
 
-	var err error
-	configuration, err = LoadSettings(*optConf)
-
-	err = InitLogger(configuration.Log_Path, configuration.Log_Size, configuration.Log_Num)
-	if err != nil {
-		log.Println("InitLogger error:", err)
-		return
-	}
-
-	if err != nil {
+	if err := LoadSettings(*optConf, &configuration); err != nil {
 		fmt.Println(err.Error())
 		log.Println(err.Error())
+		os.Exit(1)
+	}
+
+	if err := InitLogger(configuration.Log_Path, configuration.Log_Size, configuration.Log_Num); err != nil {
+		log.Println("InitLogger error:", err)
 		os.Exit(1)
 	}
 
