@@ -64,10 +64,26 @@ func main() {
 		return
 	}
 
-	if err := LoadSettings(*optConf, &configuration); err != nil {
-		fmt.Println(err.Error())
-		log.Println(err.Error())
-		os.Exit(1)
+	if *optDocker {
+		//Load settings from ENV
+		configuration = Settings{
+			Email:      os.Getenv("EMAIL"),
+			Password:   os.Getenv("PASSWORD"),
+			LoginToken: os.Getenv("TOKEN"),
+			Domain:     os.Getenv("DOMAIN"),
+			Sub_domain: os.Getenv("SUB_DOMAIN"),
+			IP_Url:     "http://members.3322.org/dyndns/getip",
+			Log_Path:   "./godns.log",
+			Log_Size:   16,
+			Log_Num:    3,
+		}
+	} else {
+		//Load settings from configurations file
+		if err := LoadSettings(*optConf, &configuration); err != nil {
+			fmt.Println(err.Error())
+			log.Println(err.Error())
+			os.Exit(1)
+		}
 	}
 
 	if err := InitLogger(configuration.Log_Path, configuration.Log_Size, configuration.Log_Num); err != nil {

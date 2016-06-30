@@ -17,21 +17,18 @@ type Settings struct {
 	Log_Path   string
 	Log_Size   int
 	Log_Num    int
-	User       int
-	Group      int
 }
 
 //LoadSettings -- Load settings from config file
 func LoadSettings(configPath string, settings *Settings) error {
 	//LoadSettings from config file
-	setting := Settings{}
 	file, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		fmt.Println("Error occurs while reading config file, please make sure config file exists!")
 		return err
 	}
 
-	err = json.Unmarshal(file, &setting)
+	err = json.Unmarshal(file, settings)
 	if err != nil {
 		fmt.Println("Error occurs while unmarshal config file, please make sure config file correct!")
 		return err
