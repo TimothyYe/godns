@@ -54,7 +54,7 @@ nohup ./godns &
 sudo start godns
 ```
 
-## Run it as a daemon, manage it via Upstart
+## Run it in docker
 
 Now godns supports to run in docker.
 
