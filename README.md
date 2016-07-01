@@ -54,4 +54,25 @@ nohup ./godns &
 sudo start godns
 ```
 
+## Run it as a daemon, manage it via Upstart
+
+Now godns supports to run in docker.
+
+* Pull godns image from docker hub:
+```bash
+docker pull timothyye/godns:1.0
+```
+
+* Run it in container and pass config parameters to it via enviroment variables:
+
+```bash
+docker run -d --name godns --restart=always \
+-e EMAIL=your_dnspod_account \
+-e PASSWORD=your_dnspod_password \
+-e DOMAIN=your_domain \
+-e SUB_DOMAIN=your_sub_domain DOCKER_IMAGE_ID                                                                                              
+```
+
+
+
 ## Enjoy it!
