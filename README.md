@@ -63,7 +63,7 @@ Now godns supports to run in docker.
 docker pull timothyye/godns:1.0
 ```
 
-* Run it in container and pass config parameters to it via enviroment variables:
+* Run godns in container and pass config parameters to it via enviroment variables:
 
 ```bash
 docker run -d --name godns --restart=always \
