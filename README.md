@@ -69,8 +69,7 @@ docker pull timothyye/godns:1.0
 docker run -d --name godns --restart=always \
 -e EMAIL=your_dnspod_account \
 -e PASSWORD=your_dnspod_password \
--e DOMAIN=your_domain \
--e SUB_DOMAIN=your_sub_domain DOCKER_IMAGE_ID                                                                                              
+-e DOMAINS="your_domain1,your_domain2" DOCKER_IMAGE_ID                                                                                              
 ```
 
 
