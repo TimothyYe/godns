@@ -57,12 +57,12 @@ func main() {
 	}
 
 	if err := checkSettings(&configuration); err != nil {
-		log.Println("Settings is invalid! " + err.Error())
+		log.Println("Settings is invalid! ", err.Error())
 		os.Exit(1)
 	}
 
 	if err := InitLogger(configuration.LogPath, configuration.LogSize, configuration.LogNum); err != nil {
-		log.Println("InitLogger error:" + err.Error())
+		log.Println("InitLogger error:", err.Error())
 		os.Exit(1)
 	}
 
@@ -122,7 +122,7 @@ func DomainLoop(domain *Domain) {
 				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				updateIP(domainID, subDomainID, subDomain, currentIP)
 			} else {
-				log.Println("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+				log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
 			}
 		}
 
