@@ -36,12 +36,16 @@ func main() {
 			Email:      os.Getenv("EMAIL"),
 			Password:   os.Getenv("PASSWORD"),
 			LoginToken: os.Getenv("TOKEN"),
-			Domain:     os.Getenv("DOMAIN"),
-			SubDomain:  os.Getenv("SUB_DOMAIN"),
 			IPUrl:      "http://members.3322.org/dyndns/getip",
 			LogPath:    "./godns.log",
 			LogSize:    16,
 			LogNum:     3,
+		}
+
+		if err := LoadDomains(os.Getenv("DOMAINS"), &configuration.Domains); err != nil {
+			fmt.Println(err.Error())
+			log.Println(err.Error())
+			os.Exit(1)
 		}
 	} else {
 		//Load settings from configurations file
@@ -53,12 +57,12 @@ func main() {
 	}
 
 	if err := checkSettings(&configuration); err != nil {
-		log.Println("Settings is invalid! " + err.Error())
+		log.Println("Settings is invalid! ", err.Error())
 		os.Exit(1)
 	}
 
 	if err := InitLogger(configuration.LogPath, configuration.LogSize, configuration.LogNum); err != nil {
-		log.Println("InitLogger error:" + err.Error())
+		log.Println("InitLogger error:", err.Error())
 		os.Exit(1)
 	}
 
@@ -79,9 +83,18 @@ func dnsLoop() {
 		}
 	}()
 
+	for _, domain := range configuration.Domains {
+		go DomainLoop(&domain)
+	}
+
+	select {}
+}
+
+func DomainLoop(domain *Domain) {
+
 	for {
 
-		domainID := getDomain(configuration.Domain)
+		domainID := getDomain(domain.DomainName)
 
 		if domainID == -1 {
 			continue
@@ -93,22 +106,24 @@ func dnsLoop() {
 			log.Println("get_currentIP:", err)
 			continue
 		}
-
-		subDomainID, ip := getSubDomain(domainID, configuration.SubDomain)
-
-		if subDomainID == "" || ip == "" {
-			log.Println("sub_domain:", subDomainID, ip)
-			continue
-		}
-
 		log.Println("currentIp is:", currentIP)
 
-		//Continue to check the IP of sub-domain
-		if len(ip) > 0 && !strings.Contains(currentIP, ip) {
-			log.Println("Start to update record IP...")
-			updateIP(domainID, subDomainID, configuration.SubDomain, currentIP)
-		} else {
-			log.Println("Current IP is same as domain IP, no need to update...")
+		for _, subDomain := range domain.SubDomains {
+
+			subDomainID, ip := getSubDomain(domainID, subDomain)
+
+			if subDomainID == "" || ip == "" {
+				log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+				continue
+			}
+
+			//Continue to check the IP of sub-domain
+			if len(ip) > 0 && !strings.Contains(currentIP, ip) {
+				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+				updateIP(domainID, subDomainID, subDomain, currentIP)
+			} else {
+				log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+			}
 		}
 
 		//Interval is 5 minutes
