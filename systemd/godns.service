@@ -1,0 +1,12 @@
+[Unit]
+Description=GoDNS Service
+After=network.target
+
+[Service]
+ExecStart=/path/to/your/godns-dir/godns -c=/path/to/your/godns-dir/config.json
+Restart=always
+KillMode=process
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target

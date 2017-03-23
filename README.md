@@ -54,6 +54,16 @@ nohup ./godns &
 sudo start godns
 ```
 
+## Run it as a daemon, manage it via Systemd
+
+* Modify `./systemd/godns.service` and config it.
+* Copy `./systemd/godns.service` to `/lib/systemd/system`
+* Start it as a systemd service:
+
+```bash
+sudo systemctl start godns
+```
+
 ## Run it in docker
 
 Now godns supports to run in docker.
