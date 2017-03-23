@@ -29,6 +29,17 @@ go get
 go build
 ```
 
+## Get help
+
+```bash
+$ ./godns -h
+Usage of ./godns:
+  -c string
+        Specify a config file (default "./config.json")
+  -d    Run it as docker mode
+  -h    Show help
+```
+
 ## Config it
 
 * Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
