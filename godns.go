@@ -70,18 +70,6 @@ func main() {
 }
 
 func dnsLoop() {
-	defer func() {
-		if err := recover(); err != nil {
-			panicCount++
-			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
-			fmt.Println(identifyPanic())
-			log.Print(identifyPanic())
-			if panicCount < PANIC_MAX {
-				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-				go dnsLoop()
-			}
-		}
-	}()
 
 	for _, domain := range configuration.Domains {
 		go DomainLoop(&domain)
@@ -91,6 +79,20 @@ func dnsLoop() {
 }
 
 func DomainLoop(domain *Domain) {
+	defer func() {
+		if err := recover(); err != nil {
+			panicCount++
+			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
+			fmt.Println(identifyPanic())
+			log.Print(identifyPanic())
+			if panicCount < PANIC_MAX {
+				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
+				go DomainLoop(domain)
+			} else {
+				os.Exit(1)
+			}
+		}
+	}()
 
 	for {
 
