@@ -72,6 +72,7 @@ sudo start godns
 * Start it as a systemd service:
 
 ```bash
+sudo systemctl enable godns
 sudo systemctl start godns
 ```
 
