@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-
+	"golang.org/x/net/proxy"
 	"github.com/bitly/go-simplejson"
 )
 
@@ -176,8 +176,24 @@ func updateIP(domainID int64, subDomainID string, subDomainName string, ip strin
 
 func postData(url string, content url.Values) (string, error) {
 	client := &http.Client{}
+
+	if configuration.Socks5Proxy != "" {
+
+		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
+
+		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
+		if err != nil {
+			fmt.Println("can't connect to the proxy:", err)
+			return "", err
+		}
+
+		httpTransport := &http.Transport{}
+		client.Transport = httpTransport
+		httpTransport.Dial = dialer.Dial
+	}
+
 	values := generateHeader(content)
-	req, _ := http.NewRequest("POST", "https://dnsapi.cn"+url, strings.NewReader(values.Encode()))
+	req, _ := http.NewRequest("POST", "https://dnsapi.cn" + url, strings.NewReader(values.Encode()))
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", configuration.Email))
