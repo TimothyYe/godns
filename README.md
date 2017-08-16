@@ -11,9 +11,9 @@ Latest release: V1.1
 
 [![Build Status](https://travis-ci.org/TimothyYe/godns.svg?branch=master)](https://travis-ci.org/TimothyYe/godns)
 
-GoDNS is a dynamic DNS (DDNS) tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
+GoDNS is a dynamic DNS (DDNS) tool, it is forked from [TimothyYe/godns](https://github.com/TimothyYe/godns). 
 
-Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
+In this branch the support for mips32 is added, which means it could run properly on Openwrt and LEDE.
 
 ## Pre-condition
 
@@ -23,12 +23,30 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 
 ## Build it
 
-### Get & build it from source code
+So far, the latest version of Golang(v1.8) has not totally supported mips32. Openwrt and LEDE devices hardly enable the FPU emulator. Therefore, we still use the third-party compiler.
+
+### Get & build go-mips32
+
+* Git source code from GitHub:
+
+```bash
+git clone https://github.com/gomini/go-mips32.git
+```
+
+* Go into the go-mips32 directory, set the env and then build it:
+
+```bash
+export GOOS=linux
+export GOARCH=mips32
+CGO_ENABLED=0 ./make.bash
+```
+
+### Get & build godns from source code
 
 * Get source code from Github:
 
 ```bash
-git clone https://github.com/timothyye/godns.git
+git clone https://github.com/hguandl/godns.git
 ```
 * Go into the godns directory, get related library and then build it:
 
