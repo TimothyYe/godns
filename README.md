@@ -11,7 +11,7 @@ Latest release: V1.1
 
 [![Build Status](https://travis-ci.org/TimothyYe/godns.svg?branch=master)](https://travis-ci.org/TimothyYe/godns)
 
-GoDNS is a dynamic DNS (DDNS) tool, it is forked from [TimothyYe/godns](https://github.com/TimothyYe/godns). 
+GoDNS is a dynamic DNS (DDNS) tool, which is forked from [TimothyYe/godns](https://github.com/TimothyYe/godns). 
 
 In this branch the support for mips32 is added, which means it could run properly on Openwrt and LEDE.
 
