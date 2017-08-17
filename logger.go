@@ -16,21 +16,21 @@ import (
 )
 
 const (
-	//L_INFO log level
+	// L_INFO log level
 	L_INFO int = iota
-	//L_WARNING log level
+	// L_WARNING log level
 	L_WARNING
-	//L_DEBUG log level
+	// L_DEBUG log level
 	L_DEBUG
-	//PRE_INFO log level
+	// PRE_INFO log level
 	PRE_INFO = "[   INFO]"
-	//PRE_WARNING log level
+	// PRE_WARNING log level
 	PRE_WARNING = "[WARNING]"
-	//PRE_DEBUG log level
+	// PRE_DEBUG log level
 	PRE_DEBUG = "[  DEBUG]"
 )
 
-//Logger struct
+// Logger struct
 type Logger struct {
 	DEV_MODE      bool
 	fd            *os.File
@@ -45,7 +45,7 @@ type Logger struct {
 	log           *log.Logger
 }
 
-//NewLogger returns a new created logger
+// NewLogger returns a new created logger
 func NewLogger(logfile string, size, num int, level int, flushInterval int64, flushSize int) (logger *Logger, err error) {
 	if size < 1 || num < 1 || level < L_INFO || len(logfile) < 1 {
 		err = errors.New("NewLogWriter:param error.")
@@ -77,7 +77,7 @@ func NewLogger(logfile string, size, num int, level int, flushInterval int64, fl
 	return
 }
 
-//InitLogger initialize logger with specified log filename & size
+// InitLogger initialize logger with specified log filename & size
 func InitLogger(logfile string, size, num int) (err error) {
 	logger, err := NewLogger(logfile, size, num, L_INFO, -1, -1)
 	if logger != nil {
@@ -86,7 +86,7 @@ func InitLogger(logfile string, size, num int) (err error) {
 	return
 }
 
-//immplement write
+// immplement write
 func (logger *Logger) Write(p []byte) (n int, err error) {
 	if logger.DEV_MODE {
 		n, err = os.Stdout.Write(p)
@@ -181,7 +181,7 @@ func (logger *Logger) saveLog(index int, fbase string, data []byte) (n int, err 
 	return
 }
 
-//Flush buf data to std log
+// Flush buf data to std log
 func (logger *Logger) Flush() {
 	if logger.buf.Len() > 0 {
 		logger.mu.Lock()
@@ -194,7 +194,7 @@ func (logger *Logger) Flush() {
 	}
 }
 
-//Clean prefix and check buf size
+// Clean prefix and check buf size
 func (logger *Logger) clean() {
 	logger.log.SetPrefix("")
 	if logger.buf.Len()/1024 > logger.flushSize {
@@ -253,7 +253,7 @@ func (logger *Logger) logPrintf(lv int, format string, args ...interface{}) {
 	logger.clean()
 }
 
-//Close fd
+// Close fd
 func (logger *Logger) Close() {
 	if logger.fd != nil {
 		logger.Flush()
@@ -261,22 +261,22 @@ func (logger *Logger) Close() {
 	}
 }
 
-//Info output info log
+// Info output info log
 func (logger *Logger) Info(args ...interface{}) {
 	logger.logPrint(L_INFO, args...)
 }
 
-//Infoln output info log with newline
+// Infoln output info log with newline
 func (logger *Logger) Infoln(args ...interface{}) {
 	logger.logPrintln(L_INFO, args...)
 }
 
-//Infof output formatted info log
+// Infof output formatted info log
 func (logger *Logger) Infof(format string, args ...interface{}) {
 	logger.logPrintf(L_INFO, format, args...)
 }
 
-//Warning output warning log
+// Warning output warning log
 func (logger *Logger) Warning(args ...interface{}) {
 	logger.logPrint(L_WARNING, args...)
 }
@@ -286,24 +286,24 @@ func (logger *Logger) Warningln(args ...interface{}) {
 	logger.logPrintln(L_WARNING, args...)
 }
 
-//Warningf output formatted warning log
+// Warningf output formatted warning log
 func (logger *Logger) Warningf(format string, args ...interface{}) {
 	logger.logPrintf(L_WARNING, format, args...)
 }
 
-//Debug output debug log
+// Debug output debug log
 func (logger *Logger) Debug(args ...interface{}) {
 	logger.logPrint(L_DEBUG, args...)
 	logger.Flush()
 }
 
-//Debugln output debug log with newline
+// Debugln output debug log with newline
 func (logger *Logger) Debugln(args ...interface{}) {
 	logger.logPrintln(L_DEBUG, args...)
 	logger.Flush()
 }
 
-//Debugf output formatted debug log
+// Debugf output formatted debug log
 func (logger *Logger) Debugf(format string, args ...interface{}) {
 	logger.logPrintf(L_DEBUG, format, args...)
 	logger.Flush()

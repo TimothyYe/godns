@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	//PANIC_MAX is the max allowed panic times
+	// PANIC_MAX is the max allowed panic times
 	PANIC_MAX = 5
-	//INTERVAL is minute
+	// INTERVAL is minute
 	INTERVAL = 5
 )
 
@@ -33,7 +33,7 @@ func main() {
 	}
 
 	if *optDocker {
-		//Load settings from ENV
+		// Load settings from ENV
 		configuration = Settings{
 			Email:      os.Getenv("EMAIL"),
 			Password:   os.Getenv("PASSWORD"),
