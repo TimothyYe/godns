@@ -9,8 +9,9 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
-	"golang.org/x/net/proxy"
+
 	"github.com/bitly/go-simplejson"
+	"golang.org/x/net/proxy"
 )
 
 func getCurrentIP(url string) (string, error) {
@@ -193,7 +194,7 @@ func postData(url string, content url.Values) (string, error) {
 	}
 
 	values := generateHeader(content)
-	req, _ := http.NewRequest("POST", "https://dnsapi.cn" + url, strings.NewReader(values.Encode()))
+	req, _ := http.NewRequest("POST", "https://dnsapi.cn"+url, strings.NewReader(values.Encode()))
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", configuration.Email))

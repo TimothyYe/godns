@@ -14,15 +14,15 @@ type Domain struct {
 
 //Settings struct
 type Settings struct {
-	Email      string   `json:"email"`
-	Password   string   `json:"password"`
-	LoginToken string   `json:"login_token"`
-	Domains    []Domain `json:"domains"`
-	IPUrl      string   `json:"ip_url"`
-	LogPath    string   `json:"log_path"`
-	LogSize    int      `json:"log_size"`
-	LogNum     int      `json:"log_num"`
-	Socks5Proxy string  `json:"socks5_proxy"`
+	Email       string   `json:"email"`
+	Password    string   `json:"password"`
+	LoginToken  string   `json:"login_token"`
+	Domains     []Domain `json:"domains"`
+	IPUrl       string   `json:"ip_url"`
+	LogPath     string   `json:"log_path"`
+	LogSize     int      `json:"log_size"`
+	LogNum      int      `json:"log_num"`
+	Socks5Proxy string   `json:"socks5_proxy"`
 }
 
 //LoadSettings -- Load settings from config file
