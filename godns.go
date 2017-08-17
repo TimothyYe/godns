@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	//Max allowed panic times
+	//PANIC_MAX is the max allowed panic times
 	PANIC_MAX = 5
-	//Minute
+	//INTERVAL is minute
 	INTERVAL = 5
 )
 

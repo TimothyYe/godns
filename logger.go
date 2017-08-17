@@ -254,10 +254,10 @@ func (logger *Logger) logPrintf(lv int, format string, args ...interface{}) {
 }
 
 //Close fd
-func (log *Logger) Close() {
-	if log.fd != nil {
-		log.Flush()
-		log.fd.Close()
+func (logger *Logger) Close() {
+	if logger.fd != nil {
+		logger.Flush()
+		logger.fd.Close()
 	}
 }
 
