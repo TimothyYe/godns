@@ -17,7 +17,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 
 ## MIPS32 Platform
 
-For MIPS32 platform, please checkout the __mips32__ branch, this branch is contributed by [hguandl](https://github.com/hguandl), in this branch, the support for mips32 is added, which means it could run properly on Openwrt and LEDE.
+For MIPS32 platform, please checkout the [mips32](https://github.com/TimothyYe/godns/tree/mips32) branch, this branch is contributed by [hguandl](https://github.com/hguandl), in this branch, the support for mips32 is added, which means it could run properly on Openwrt and LEDE.
 
 ## Pre-condition
 
