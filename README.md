@@ -15,6 +15,8 @@ GoDNS is a dynamic DNS (DDNS) tool, it is based on my early open source project:
 
 Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
+__For MIPS32 platform__, please checkout the __mips32__ branch, this branch is contributed by [hguandl](https://github.com/hguandl), it provides the support for mips32 is added, which means it could run properly on Openwrt and LEDE.
+
 ## Pre-condition
 
 * GoDNS relies on [DNSPod](http://dnspod.cn) and its API. 
