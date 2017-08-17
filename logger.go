@@ -16,14 +16,21 @@ import (
 )
 
 const (
+	//L_INFO log level
 	L_INFO int = iota
+	//L_WARNING log level
 	L_WARNING
+	//L_DEBUG log level
 	L_DEBUG
-	PRE_INFO    = "[   INFO]"
+	//PRE_INFO log level
+	PRE_INFO = "[   INFO]"
+	//PRE_WARNING log level
 	PRE_WARNING = "[WARNING]"
-	PRE_DEBUG   = "[  DEBUG]"
+	//PRE_DEBUG log level
+	PRE_DEBUG = "[  DEBUG]"
 )
 
+//Logger struct
 type Logger struct {
 	DEV_MODE      bool
 	fd            *os.File
@@ -38,6 +45,7 @@ type Logger struct {
 	log           *log.Logger
 }
 
+//NewLogger returns a new created logger
 func NewLogger(logfile string, size, num int, level int, flushInterval int64, flushSize int) (logger *Logger, err error) {
 	if size < 1 || num < 1 || level < L_INFO || len(logfile) < 1 {
 		err = errors.New("NewLogWriter:param error.")
@@ -69,6 +77,7 @@ func NewLogger(logfile string, size, num int, level int, flushInterval int64, fl
 	return
 }
 
+//InitLogger initialize logger with specified log filename & size
 func InitLogger(logfile string, size, num int) (err error) {
 	logger, err := NewLogger(logfile, size, num, L_INFO, -1, -1)
 	if logger != nil {
@@ -78,27 +87,27 @@ func InitLogger(logfile string, size, num int) (err error) {
 }
 
 //immplement write
-func (this *Logger) Write(p []byte) (n int, err error) {
-	if this.DEV_MODE {
+func (logger *Logger) Write(p []byte) (n int, err error) {
+	if logger.DEV_MODE {
 		n, err = os.Stdout.Write(p)
 		return
 	}
-	n, err = this.fd.Write(p)
+	n, err = logger.fd.Write(p)
 	if err == nil {
-		fi, e := this.fd.Stat()
+		fi, e := logger.fd.Stat()
 		if e != nil {
 			err = e
 			return
 		}
-		if fi.Size() > int64(this.size) {
-			this.muSplit.Lock()
-			defer this.muSplit.Unlock()
+		if fi.Size() > int64(logger.size) {
+			logger.muSplit.Lock()
+			defer logger.muSplit.Unlock()
 
 			fname := fi.Name()
 			strings.HasSuffix(fname, ".log")
 			fbase := fname[:len(fname)-3]
 
-			oldBs := make([]byte, 0, this.size)
+			oldBs := make([]byte, 0, logger.size)
 			newBs := []byte{}
 			fd, e := os.Open(fname)
 			if e != nil {
@@ -115,7 +124,7 @@ func (this *Logger) Write(p []byte) (n int, err error) {
 					err = e
 					return
 				}
-				if len(oldBs)+len(line) > this.size {
+				if len(oldBs)+len(line) > logger.size {
 					newBs = append(newBs, line...)
 				} else {
 					oldBs = append(oldBs, line...)
@@ -123,11 +132,11 @@ func (this *Logger) Write(p []byte) (n int, err error) {
 			}
 			fd.Close()
 
-			_, err = this.saveLog(1, fbase, oldBs)
+			_, err = logger.saveLog(1, fbase, oldBs)
 			if err != nil {
 				return
 			}
-			err = this.fd.Close()
+			err = logger.fd.Close()
 			if err != nil {
 				return
 			}
@@ -135,11 +144,11 @@ func (this *Logger) Write(p []byte) (n int, err error) {
 			if err != nil {
 				return
 			}
-			this.fd, err = os.OpenFile(fname, os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend|0666)
+			logger.fd, err = os.OpenFile(fname, os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend|0666)
 			if err != nil {
 				return
 			}
-			_, err = this.fd.Write(newBs)
+			_, err = logger.fd.Write(newBs)
 			if err != nil {
 				return
 			}
@@ -148,16 +157,16 @@ func (this *Logger) Write(p []byte) (n int, err error) {
 	return
 }
 
-func (this *Logger) saveLog(index int, fbase string, data []byte) (n int, err error) {
+func (logger *Logger) saveLog(index int, fbase string, data []byte) (n int, err error) {
 	fn := fbase + strconv.Itoa(index) + ".log"
 	_, err = os.Stat(fn)
-	if index < this.num && err == nil {
+	if index < logger.num && err == nil {
 		var b []byte
 		b, err = ioutil.ReadFile(fn)
 		if err != nil {
 			return
 		}
-		n, err = this.saveLog(index+1, fbase, b)
+		n, err = logger.saveLog(index+1, fbase, b)
 		if err != nil {
 			return
 		}
@@ -172,121 +181,130 @@ func (this *Logger) saveLog(index int, fbase string, data []byte) (n int, err er
 	return
 }
 
-//flush buf data to std log
-func (this *Logger) Flush() {
-	if this.buf.Len() > 0 {
-		this.mu.Lock()
-		defer this.mu.Unlock()
+//Flush buf data to std log
+func (logger *Logger) Flush() {
+	if logger.buf.Len() > 0 {
+		logger.mu.Lock()
+		defer logger.mu.Unlock()
 
 		log.SetFlags(0)
-		log.Print(this.buf)
+		log.Print(logger.buf)
 		log.SetFlags(log.LstdFlags)
-		this.buf.Reset()
+		logger.buf.Reset()
 	}
 }
 
-//clean prefix and check buf size
-func (this *Logger) clean() {
-	this.log.SetPrefix("")
-	if this.buf.Len()/1024 > this.flushSize {
-		go this.Flush()
+//Clean prefix and check buf size
+func (logger *Logger) clean() {
+	logger.log.SetPrefix("")
+	if logger.buf.Len()/1024 > logger.flushSize {
+		go logger.Flush()
 	}
 }
 
-func (this *Logger) setPrefix(lv int) bool {
-	if lv > this.level {
+func (logger *Logger) setPrefix(lv int) bool {
+	if lv > logger.level {
 		return false
 	}
 
 	switch lv {
 	case L_INFO:
-		this.log.SetPrefix(PRE_INFO)
+		logger.log.SetPrefix(PRE_INFO)
 	case L_WARNING:
-		this.log.SetPrefix(PRE_WARNING)
+		logger.log.SetPrefix(PRE_WARNING)
 	case L_DEBUG:
-		this.log.SetPrefix(PRE_DEBUG)
+		logger.log.SetPrefix(PRE_DEBUG)
 	default:
 		return false
 	}
 	return true
 }
 
-func (this *Logger) logPrint(lv int, args ...interface{}) {
-	this.mu.Lock()
-	defer this.mu.Unlock()
+func (logger *Logger) logPrint(lv int, args ...interface{}) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
 
-	if !this.setPrefix(lv) {
+	if !logger.setPrefix(lv) {
 		return
 	}
-	this.log.Print(args...)
-	this.clean()
+	logger.log.Print(args...)
+	logger.clean()
 }
 
-func (this *Logger) logPrintln(lv int, args ...interface{}) {
-	this.mu.Lock()
-	defer this.mu.Unlock()
+func (logger *Logger) logPrintln(lv int, args ...interface{}) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
 
-	if !this.setPrefix(lv) {
+	if !logger.setPrefix(lv) {
 		return
 	}
-	this.log.Println(args...)
-	this.clean()
+	logger.log.Println(args...)
+	logger.clean()
 }
 
-func (this *Logger) logPrintf(lv int, format string, args ...interface{}) {
-	this.mu.Lock()
-	defer this.mu.Unlock()
+func (logger *Logger) logPrintf(lv int, format string, args ...interface{}) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
 
-	if !this.setPrefix(lv) {
+	if !logger.setPrefix(lv) {
 		return
 	}
-	this.log.Printf(format, args...)
-	this.clean()
+	logger.log.Printf(format, args...)
+	logger.clean()
 }
 
-//close fd
-func (this *Logger) Close() {
-	if this.fd != nil {
-		this.Flush()
-		this.fd.Close()
+//Close fd
+func (log *Logger) Close() {
+	if log.fd != nil {
+		log.Flush()
+		log.fd.Close()
 	}
 }
 
-func (this *Logger) Info(args ...interface{}) {
-	this.logPrint(L_INFO, args...)
+//Info output info log
+func (logger *Logger) Info(args ...interface{}) {
+	logger.logPrint(L_INFO, args...)
 }
 
-func (this *Logger) Infoln(args ...interface{}) {
-	this.logPrintln(L_INFO, args...)
+//Infoln output info log with newline
+func (logger *Logger) Infoln(args ...interface{}) {
+	logger.logPrintln(L_INFO, args...)
 }
 
-func (this *Logger) Infof(format string, args ...interface{}) {
-	this.logPrintf(L_INFO, format, args...)
+//Infof output formatted info log
+func (logger *Logger) Infof(format string, args ...interface{}) {
+	logger.logPrintf(L_INFO, format, args...)
 }
 
-func (this *Logger) Warning(args ...interface{}) {
-	this.logPrint(L_WARNING, args...)
+//Warning output warning log
+func (logger *Logger) Warning(args ...interface{}) {
+	logger.logPrint(L_WARNING, args...)
 }
 
-func (this *Logger) Warningln(args ...interface{}) {
-	this.logPrintln(L_WARNING, args...)
+//Warningln output warning log with newline
+func (logger *Logger) Warningln(args ...interface{}) {
+	logger.logPrintln(L_WARNING, args...)
 }
 
-func (this *Logger) Warningf(format string, args ...interface{}) {
-	this.logPrintf(L_WARNING, format, args...)
+//Warningf output formatted warning log
+func (logger *Logger) Warningf(format string, args ...interface{}) {
+	logger.logPrintf(L_WARNING, format, args...)
 }
 
-func (this *Logger) Debug(args ...interface{}) {
-	this.logPrint(L_DEBUG, args...)
-	this.Flush()
+//Debug output debug log
+func (logger *Logger) Debug(args ...interface{}) {
+	logger.logPrint(L_DEBUG, args...)
+	logger.Flush()
 }
 
-func (this *Logger) Debugln(args ...interface{}) {
-	this.logPrintln(L_DEBUG, args...)
-	this.Flush()
+//Debugln output debug log with newline
+func (logger *Logger) Debugln(args ...interface{}) {
+	logger.logPrintln(L_DEBUG, args...)
+	logger.Flush()
 }
 
-func (this *Logger) Debugf(format string, args ...interface{}) {
-	this.logPrintf(L_DEBUG, format, args...)
-	this.Flush()
+//Debugf output formatted debug log
+func (logger *Logger) Debugf(format string, args ...interface{}) {
+	logger.logPrintf(L_DEBUG, format, args...)
+	logger.Flush()
 }

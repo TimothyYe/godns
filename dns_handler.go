@@ -41,7 +41,7 @@ func generateHeader(content url.Values) url.Values {
 	header.Add("error_on_empty", "no")
 
 	if content != nil {
-		for k, _ := range content {
+		for k := range content {
 			header.Add(k, content.Get(k))
 		}
 	}

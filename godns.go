@@ -11,8 +11,10 @@ import (
 )
 
 const (
+	//Max allowed panic times
 	PANIC_MAX = 5
-	INTERVAL  = 5 //Minute
+	//Minute
+	INTERVAL = 5
 )
 
 var (
@@ -72,13 +74,13 @@ func main() {
 func dnsLoop() {
 
 	for _, domain := range configuration.Domains {
-		go DomainLoop(&domain)
+		go domainLoop(&domain)
 	}
 
 	select {}
 }
 
-func DomainLoop(domain *Domain) {
+func domainLoop(domain *Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			panicCount++
@@ -87,7 +89,7 @@ func DomainLoop(domain *Domain) {
 			log.Print(identifyPanic())
 			if panicCount < PANIC_MAX {
 				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-				go DomainLoop(domain)
+				go domainLoop(domain)
 			} else {
 				os.Exit(1)
 			}

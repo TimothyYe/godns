@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+//Domain struct
 type Domain struct {
 	DomainName string   `json:"domain_name"`
 	SubDomains []string `json:"sub_domains"`
