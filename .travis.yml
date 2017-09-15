@@ -3,6 +3,9 @@ go:
  - 1.7
  - 1.8
 
+install:
+  go get -v
+
 script:
  - cp ./config_sample.json ./config.json
  - go test -v ./...
