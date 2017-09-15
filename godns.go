@@ -20,7 +20,6 @@ const (
 var (
 	configuration Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
-	optDocker     = flag.Bool("d", false, "Run it as docker mode")
 	optHelp       = flag.Bool("h", false, "Show help")
 	panicCount    = 0
 )
@@ -32,30 +31,11 @@ func main() {
 		return
 	}
 
-	if *optDocker {
-		// Load settings from ENV
-		configuration = Settings{
-			Email:      os.Getenv("EMAIL"),
-			Password:   os.Getenv("PASSWORD"),
-			LoginToken: os.Getenv("TOKEN"),
-			IPUrl:      "http://members.3322.org/dyndns/getip",
-			LogPath:    "./godns.log",
-			LogSize:    16,
-			LogNum:     3,
-		}
-
-		if err := LoadDomains(os.Getenv("DOMAINS"), &configuration.Domains); err != nil {
-			fmt.Println(err.Error())
-			log.Println(err.Error())
-			os.Exit(1)
-		}
-	} else {
-		//Load settings from configurations file
-		if err := LoadSettings(*optConf, &configuration); err != nil {
-			fmt.Println(err.Error())
-			log.Println(err.Error())
-			os.Exit(1)
-		}
+	//Load settings from configurations file
+	if err := LoadSettings(*optConf, &configuration); err != nil {
+		fmt.Println(err.Error())
+		log.Println(err.Error())
+		os.Exit(1)
 	}
 
 	if err := checkSettings(&configuration); err != nil {
