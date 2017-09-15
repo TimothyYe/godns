@@ -15,7 +15,7 @@
 [4]: https://microbadger.com/images/timothyye/godns
 [5]: https://img.shields.io/badge/downloads-1.95MB-brightgreen.svg
 [6]: https://github.com/TimothyYe/godns/releases
-[7]: https://img.shields.io/badge/release-v1.1-brightgreen.svg
+[7]: https://img.shields.io/badge/release-v1.2-brightgreen.svg
 [8]: https://github.com/TimothyYe/godns/releases
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
 [10]: LICENSE
@@ -106,18 +106,14 @@ Now godns supports to run in docker.
 
 * Pull godns image from docker hub:
 ```bash
-docker pull timothyye/godns:1.0
+docker pull timothyye/godns:1.2
 ```
 
 * Run godns in container and pass config parameters to it via enviroment variables:
 
 ```bash
 docker run -d --name godns --restart=always \
--e EMAIL=your_dnspod_account \
--e PASSWORD=your_dnspod_password \
--e DOMAINS="your_domain1,your_domain2" DOCKER_IMAGE_ID                                                                                              
+-v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:1.2
 ```
-
-
 
 ## Enjoy it!
