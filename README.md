@@ -106,7 +106,7 @@ Now godns supports to run in docker.
 
 * Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
 * Rename it to **config.json**.
-* Run godns with docker:
+* Run GoDNS with docker:
 
 ```bash
 docker run -d --name godns --restart=always \
