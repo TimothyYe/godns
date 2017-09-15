@@ -100,16 +100,13 @@ sudo systemctl enable godns
 sudo systemctl start godns
 ```
 
-## Run it in docker
+## Run it with docker
 
 Now godns supports to run in docker.
 
-* Pull godns image from docker hub:
-```bash
-docker pull timothyye/godns:1.2
-```
-
-* Run godns in container and pass config parameters to it via enviroment variables:
+* Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
+* Rename it to **config.json**.
+* Run godns with docker:
 
 ```bash
 docker run -d --name godns --restart=always \
