@@ -8,9 +8,9 @@ func createHandler(provider string) IHandler {
 	var handler IHandler
 
 	switch provider {
-	case "DNSPod":
+	case DNSPOD:
 		handler = IHandler(&DNSPodHandler{})
-	case "HE":
+	case HE:
 		handler = IHandler(&HEHandler{})
 	}
 

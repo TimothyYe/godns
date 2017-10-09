@@ -15,7 +15,7 @@ type Domain struct {
 
 //Settings struct
 type Settings struct {
-	Type        string   `json:"type"`
+	Provider    string   `json:"provider"`
 	Email       string   `json:"email"`
 	Password    string   `json:"password"`
 	LoginToken  string   `json:"login_token"`

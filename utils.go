@@ -59,8 +59,16 @@ func usage() {
 }
 
 func checkSettings(config *Settings) error {
-	if (config.Email == "" || config.Password == "") && config.LoginToken == "" {
-		return errors.New("Input email/password or login token cannot be empty!")
+	if config.Provider == DNSPOD {
+		if (config.Email == "" || config.Password == "") && config.LoginToken == "" {
+			return errors.New("Email/Password or login token cannot be empty!")
+		}
+	} else if config.Provider == HE {
+		if config.Password == "" {
+			return errors.New("Password cannot be empty!")
+		}
+	} else {
+		return errors.New("Please provide supported DNS provider: DNSPod/HE")
 	}
 
 	return nil

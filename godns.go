@@ -12,6 +12,10 @@ const (
 	PANIC_MAX = 5
 	// INTERVAL is minute
 	INTERVAL = 5
+	// DNSPod
+	DNSPOD = "DNSPod"
+	// HE
+	HE = "HE"
 )
 
 var (
@@ -49,7 +53,7 @@ func main() {
 }
 
 func dnsLoop() {
-	handler := createHandler(configuration.Type)
+	handler := createHandler(configuration.Provider)
 	for _, domain := range configuration.Domains {
 		go handler.DomainLoop(&domain)
 	}
