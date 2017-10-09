@@ -141,6 +141,16 @@ Remember the DDNS key and fill it as password to the config.json.
 
 __NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key are the same.
 
+### SOCKS5 proxy support
+
+You can also use SOCKS5 proxy, just fill SOCKS5 address to the ```socks5_proxy``` item:
+
+```json
+"socks5_proxy": "127.0.0.1:7070"
+```
+
+Now all the queries will go through the specified SOCKS5 proxy.
+
 ## Run it as a daemon manually
 
 ```bash
