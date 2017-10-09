@@ -74,20 +74,6 @@ func (handler *DNSPodHandler) DomainLoop(domain *Domain) {
 	}
 }
 
-func getCurrentIP(url string) (string, error) {
-	response, err := http.Get(url)
-
-	if err != nil {
-		log.Println("Cannot get IP...")
-		return "", err
-	}
-
-	defer response.Body.Close()
-
-	body, _ := ioutil.ReadAll(response.Body)
-	return string(body), nil
-}
-
 func generateHeader(content url.Values) url.Values {
 	header := url.Values{}
 	if configuration.LoginToken != "" {
