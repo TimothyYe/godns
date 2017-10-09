@@ -22,7 +22,7 @@
 [11]: https://goreportcard.com/badge/github.com/timothyye/godns
 [12]: https://goreportcard.com/report/github.com/timothyye/godns
 
-GoDNS is a dynamic DNS (DDNS) tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
+GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
 
 Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
