@@ -9,10 +9,28 @@ import (
 	"net/http"
 	"runtime"
 	"strings"
+	"golang.org/x/net/proxy"
 )
 
 func getCurrentIP(url string) (string, error) {
-	response, err := http.Get(url)
+	client := &http.Client{}
+	
+	if configuration.Socks5Proxy != "" {
+	
+		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
+	
+		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
+		if err != nil {
+			fmt.Println("can't connect to the proxy:", err)
+			return "", err
+		}
+	
+		httpTransport := &http.Transport{}
+		client.Transport = httpTransport
+		httpTransport.Dial = dialer.Dial
+	}
+
+	response, err := client.Get(url)
 
 	if err != nil {
 		log.Println("Cannot get IP...")

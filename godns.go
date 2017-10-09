@@ -12,7 +12,7 @@ const (
 	PANIC_MAX = 5
 	// INTERVAL is minute
 	INTERVAL = 5
-	// DNSPod
+	// DNSPOD
 	DNSPOD = "DNSPod"
 	// HE
 	HE = "HE"

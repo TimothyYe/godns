@@ -7,8 +7,8 @@ import (
 	"os"
 	"runtime/debug"
 	"time"
-
-	"github.com/parnurzeal/gorequest"
+	"io/ioutil"
+	"golang.org/x/net/proxy"
 )
 
 var (
@@ -53,20 +53,34 @@ func (handler *HEHandler) DomainLoop(domain *Domain) {
 }
 
 func (handler *HEHandler) UpdateIP(domain, subDomain, currentIP string) {
-	request := gorequest.New()
-	resp, body, errs := request.Get(fmt.Sprintf(HEUrl, subDomain, domain, configuration.Password, currentIP)).End()
+	client := &http.Client{}
 
-	if len(errs) > 0 {
-		log.Println("Request error...")
-
-		for _, err := range errs {
-			log.Println("Err:", err.Error())
+	if configuration.Socks5Proxy != "" {
+		
+		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
+	
+		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
+		if err != nil {
+			log.Println("can't connect to the proxy:", err)
+			return
 		}
+		
+		httpTransport := &http.Transport{}
+		client.Transport = httpTransport
+		httpTransport.Dial = dialer.Dial
+	}
+
+	resp, err := client.Get(fmt.Sprintf(HEUrl, subDomain, domain, configuration.Password, currentIP))
+
+	if err != nil {
+		log.Println("Request error...")
+		log.Println("Err:", err.Error())
 	} else {
+		body, _ := ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
-			log.Println("Update IP success:", body)
+			log.Println("Update IP success:", string(body))
 		} else {
-			log.Println("Update IP failed:", body)
+			log.Println("Update IP failed:", string(body))
 		}
 	}
 }
