@@ -76,7 +76,7 @@ Usage of ./godns:
 * Configure log file path, max size of log file, max count of log file.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
 
-## Config example for DNSPod
+### Config example for DNSPod
 
 For DNSPod, you need to provide email & password,  and config all the domains & subdomains.
 
@@ -101,7 +101,7 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
   "socks5_proxy": ""
 }
 ```
-## Config example for HE.net
+### Config example for HE.net
 
 For HE, email is not needed, just fill DDNS key to password, and config all the domains & subdomains.
 
@@ -126,6 +126,16 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
   "socks5_proxy": ""
 }
 ```
+
+### HE.net DDNS configuration
+
+Add a new "A record", make sure that "Enable entry for dynamic dns" is checked:
+
+![](https://github.com/TimothyYe/godns/blob/he/snapshots/he1.png?raw=true)
+
+Fill your own DDNS key or generate a random DDNS key for this new created "A record":
+
+![](https://github.com/TimothyYe/godns/blob/he/snapshots/he2.png?raw=true)
 
 ## Run it as a daemon manually
 
