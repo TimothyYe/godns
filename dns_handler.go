@@ -7,12 +7,72 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"runtime/debug"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/bitly/go-simplejson"
 	"golang.org/x/net/proxy"
 )
+
+type DNSPodHandler struct{}
+
+func (handler *DNSPodHandler) DomainLoop(domain *Domain) {
+	defer func() {
+		if err := recover(); err != nil {
+			panicCount++
+			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
+			fmt.Println(identifyPanic())
+			log.Print(identifyPanic())
+			if panicCount < PANIC_MAX {
+				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
+				go handler.DomainLoop(domain)
+			} else {
+				os.Exit(1)
+			}
+		}
+	}()
+
+	for {
+
+		domainID := getDomain(domain.DomainName)
+
+		if domainID == -1 {
+			continue
+		}
+
+		currentIP, err := getCurrentIP(configuration.IPUrl)
+
+		if err != nil {
+			log.Println("get_currentIP:", err)
+			continue
+		}
+		log.Println("currentIp is:", currentIP)
+
+		for _, subDomain := range domain.SubDomains {
+
+			subDomainID, ip := getSubDomain(domainID, subDomain)
+
+			if subDomainID == "" || ip == "" {
+				log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+				continue
+			}
+
+			//Continue to check the IP of sub-domain
+			if len(ip) > 0 && !strings.Contains(currentIP, ip) {
+				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+				updateIP(domainID, subDomainID, subDomain, currentIP)
+			} else {
+				log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+			}
+		}
+
+		//Interval is 5 minutes
+		time.Sleep(time.Minute * INTERVAL)
+	}
+}
 
 func getCurrentIP(url string) (string, error) {
 	response, err := http.Get(url)
