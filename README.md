@@ -28,7 +28,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 
 ## Supported DNS Provider:
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
-* HE(Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
+* HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 
 ## MIPS32 platform
 
@@ -38,7 +38,7 @@ For MIPS32 platform, please checkout the [mips32](https://github.com/TimothyYe/g
 
 * Register and own a domain.
 
-* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE](https://dns.he.net/).
+* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/).
 
 ## Build it
 
@@ -101,7 +101,7 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
   "socks5_proxy": ""
 }
 ```
-## Config example for HE
+## Config example for HE.net
 
 For HE, email is not needed, just fill DDNS key to password, and config all the domains & subdomains.
 
