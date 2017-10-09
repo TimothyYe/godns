@@ -38,7 +38,7 @@ For MIPS32 platform, please checkout the [mips32](https://github.com/TimothyYe/g
 
 * Register and own a domain.
 
-* Domain's nameserver points to DNSPod or HE.
+* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE](https://dns.he.net/).
 
 ## Build it
 
@@ -72,10 +72,60 @@ Usage of ./godns:
 
 * Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
 * Rename it to **config.json**.
-* Configure your domain/sub-domain info, username and password of DNSPod account.
+* Configure your provider, domain/sub-domain info, username and password, etc.
 * Configure log file path, max size of log file, max count of log file.
-* Configure user id, group id for safety.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
+
+## Config example for DNSPod
+
+For DNSPod, you need to provide email & password,  and config all the domains & subdomains.
+
+```json
+{
+  "provider": "DNSPod",
+  "email": "example@gmail.com",
+  "password": "YourPassword",
+  "login_token": "",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "http://members.3322.org/dyndns/getip",
+  "log_path": "./godns.log",
+  "log_size": 16,
+  "log_num": 3,
+  "socks5_proxy": ""
+}
+```
+## Config example for HE
+
+For HE, email is not needed, just fill DDNS key to password, and config all the domains & subdomains.
+
+```json
+{
+  "provider": "HE",
+  "email": "",
+  "password": "YourPassword",
+  "login_token": "",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "http://members.3322.org/dyndns/getip",
+  "log_path":"/users/timothy/workspace/src/godns/godns.log",
+  "log_size":16,
+  "log_num":3,
+  "socks5_proxy": ""
+}
+```
 
 ## Run it as a daemon manually
 
