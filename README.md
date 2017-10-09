@@ -131,11 +131,15 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
 
 Add a new "A record", make sure that "Enable entry for dynamic dns" is checked:
 
-![](https://github.com/TimothyYe/godns/blob/he/snapshots/he1.png?raw=true)
+<img src="https://github.com/TimothyYe/godns/blob/he/snapshots/he1.png?raw=true" width="640" />
 
 Fill your own DDNS key or generate a random DDNS key for this new created "A record":
 
-![](https://github.com/TimothyYe/godns/blob/he/snapshots/he2.png?raw=true)
+<img src="https://github.com/TimothyYe/godns/blob/he/snapshots/he2.png?raw=true" width="640" />
+
+Remember the DDNS key and fill it as password to the config.json.
+
+__NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key are the same.
 
 ## Run it as a daemon manually
 
