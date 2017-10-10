@@ -42,7 +42,7 @@ For MIPS32 platform, please checkout the [mips32](https://github.com/TimothyYe/g
 
 ## Get it
 
-### Get & build it from source code
+### Build it from source code
 
 * Get source code from Github:
 
