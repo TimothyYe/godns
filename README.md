@@ -57,7 +57,7 @@ go get
 go build
 ```
 
-## Download from releases
+### Download from releases
 
 Download it from [releases](https://github.com/TimothyYe/godns/releases)
 
