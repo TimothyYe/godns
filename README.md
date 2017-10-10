@@ -141,11 +141,11 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
 
 Add a new "A record", make sure that "Enable entry for dynamic dns" is checked:
 
-<img src="https://github.com/TimothyYe/godns/blob/he/snapshots/he1.png?raw=true" width="640" />
+<img src="https://github.com/TimothyYe/godns/blob/master/snapshots/he1.png?raw=true" width="640" />
 
 Fill your own DDNS key or generate a random DDNS key for this new created "A record":
 
-<img src="https://github.com/TimothyYe/godns/blob/he/snapshots/he2.png?raw=true" width="640" />
+<img src="https://github.com/TimothyYe/godns/blob/master/snapshots/he2.png?raw=true" width="640" />
 
 Remember the DDNS key and fill it as password to the config.json.
 
