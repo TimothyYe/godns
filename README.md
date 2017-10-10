@@ -59,7 +59,7 @@ go build
 
 ### Download from releases
 
-Download it from [releases](https://github.com/TimothyYe/godns/releases)
+Download compiled binaries from [releases](https://github.com/TimothyYe/godns/releases)
 
 ## Get help
 
