@@ -40,7 +40,7 @@ For MIPS32 platform, please checkout the [mips32](https://github.com/TimothyYe/g
 
 * Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/).
 
-## Build it
+## Get it
 
 ### Get & build it from source code
 
@@ -56,6 +56,10 @@ cd godns
 go get
 go build
 ```
+
+## Download from releases
+
+Download it from [releases](https://github.com/TimothyYe/godns/releases)
 
 ## Get help
 
