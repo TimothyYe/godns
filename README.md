@@ -26,11 +26,11 @@ GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source p
 
 Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
-## Supported DNS Provider:
+## Supported DNS Provider
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 
-## Supported Platforms:
+## Supported Platforms
 * Linux
 * MacOS
 * ARM Linux (Raspberry Pi, etc...)
