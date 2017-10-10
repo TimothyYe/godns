@@ -17,6 +17,10 @@ release:
 		go clean
 		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build
 		tar czvf ${BINARY}-linux64-${VERSION}.tar.gz ./${BINARY}
+		# Build for arm
+		go clean
+		CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build
+		tar czvf ${BINARY}-arm64-${VERSION}.tar.gz ./${BINARY}
 		# Build for win
 		go clean
 		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build
