@@ -13,9 +13,9 @@
 [2]: https://travis-ci.org/TimothyYe/godns
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
 [4]: https://microbadger.com/images/timothyye/godns
-[5]: https://img.shields.io/badge/downloads-1.95MB-brightgreen.svg
+[5]: https://img.shields.io/badge/downloads-2.04MB-brightgreen.svg
 [6]: https://github.com/TimothyYe/godns/releases
-[7]: https://img.shields.io/badge/release-v1.2-brightgreen.svg
+[7]: https://img.shields.io/badge/release-v1.3-brightgreen.svg
 [8]: https://github.com/TimothyYe/godns/releases
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
 [10]: LICENSE
@@ -192,7 +192,7 @@ Now godns supports to run in docker.
 
 ```bash
 docker run -d --name godns --restart=always \
--v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:1.2
+-v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:1.3
 ```
 
 ## Enjoy it!
