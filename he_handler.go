@@ -2,17 +2,20 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"runtime/debug"
+	"strings"
 	"time"
-	"io/ioutil"
+
 	"golang.org/x/net/proxy"
 )
 
 var (
-	HEUrl = "https://dyn.dns.he.net/nic/update?hostname=%s.%s&password=%s&myip=%s"
+	HEUrl = "https://dyn.dns.he.net/nic/update"
 )
 
 type HEHandler struct{}
@@ -53,24 +56,28 @@ func (handler *HEHandler) DomainLoop(domain *Domain) {
 }
 
 func (handler *HEHandler) UpdateIP(domain, subDomain, currentIP string) {
+	values := url.Values{}
+	values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
+	values.Add("password", configuration.Password)
+	values.Add("myip", currentIP)
+
 	client := &http.Client{}
 
 	if configuration.Socks5Proxy != "" {
-		
 		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
-	
 		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
 			log.Println("can't connect to the proxy:", err)
 			return
 		}
-		
+
 		httpTransport := &http.Transport{}
 		client.Transport = httpTransport
 		httpTransport.Dial = dialer.Dial
 	}
 
-	resp, err := client.Get(fmt.Sprintf(HEUrl, subDomain, domain, configuration.Password, currentIP))
+	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
+	resp, err := client.Do(req)
 
 	if err != nil {
 		log.Println("Request error...")
