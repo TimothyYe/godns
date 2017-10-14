@@ -1,7 +1,7 @@
 package main
 
 type IHandler interface {
-	DomainLoop(domain *Domain)
+	DomainLoop(domain *Domain, panicChan chan<- Domain)
 }
 
 func createHandler(provider string) IHandler {

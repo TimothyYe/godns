@@ -22,7 +22,6 @@ var (
 	configuration Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
 	optHelp       = flag.Bool("h", false, "Show help")
-	panicCount    = 0
 )
 
 func main() {
@@ -53,10 +52,24 @@ func main() {
 }
 
 func dnsLoop() {
+	panicChan := make(chan Domain)
+
 	handler := createHandler(configuration.Provider)
 	for _, domain := range configuration.Domains {
-		go handler.DomainLoop(&domain)
+		go handler.DomainLoop(&domain, panicChan)
 	}
 
-	select {}
+	panicCount := 0
+	for {
+		select {
+		case failDomain := <-panicChan:
+			log.Println("Got panic in goroutine, will start a new one... :", panicCount)
+			go handler.DomainLoop(&failDomain, panicChan)
+		}
+
+		panicCount++
+		if panicCount >= PANIC_MAX {
+			os.Exit(1)
+		}
+	}
 }
