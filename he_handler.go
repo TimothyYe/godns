@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -20,19 +19,13 @@ var (
 
 type HEHandler struct{}
 
-func (handler *HEHandler) DomainLoop(domain *Domain) {
+func (handler *HEHandler) DomainLoop(domain *Domain, panicChan chan<- Domain) {
 	defer func() {
 		if err := recover(); err != nil {
-			panicCount++
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
 			fmt.Println(identifyPanic())
 			log.Print(identifyPanic())
-			if panicCount < PANIC_MAX {
-				log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-				go handler.DomainLoop(domain)
-			} else {
-				os.Exit(1)
-			}
+			panicChan <- *domain
 		}
 	}()
 
