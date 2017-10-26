@@ -8,13 +8,13 @@ import (
 )
 
 const (
-	// PANIC_MAX is the max allowed panic times
-	PANIC_MAX = 5
+	// PanicMax is the max allowed panic times
+	PanicMax = 5
 	// INTERVAL is minute
 	INTERVAL = 5
-	// DNSPOD
+	// DNSPOD for dnspod.cn
 	DNSPOD = "DNSPod"
-	// HE
+	// HE for he.net
 	HE = "HE"
 )
 
@@ -68,7 +68,7 @@ func dnsLoop() {
 		}
 
 		panicCount++
-		if panicCount >= PANIC_MAX {
+		if panicCount >= PanicMax {
 			os.Exit(1)
 		}
 	}

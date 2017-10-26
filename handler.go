@@ -1,5 +1,6 @@
 package main
 
+//IHandler is the interface for all DNS handlers
 type IHandler interface {
 	DomainLoop(domain *Domain, panicChan chan<- Domain)
 }

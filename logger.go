@@ -48,7 +48,7 @@ type Logger struct {
 // NewLogger returns a new created logger
 func NewLogger(logfile string, size, num int, level int, flushInterval int64, flushSize int) (logger *Logger, err error) {
 	if size < 1 || num < 1 || level < L_INFO || len(logfile) < 1 {
-		err = errors.New("NewLogWriter:param error.")
+		err = errors.New("newLogWriter:param error")
 		return
 	}
 	logger = &Logger{size: size * 1024, num: num, level: level, DEV_MODE: false}

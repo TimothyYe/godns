@@ -9,22 +9,23 @@ import (
 	"net/http"
 	"runtime"
 	"strings"
+
 	"golang.org/x/net/proxy"
 )
 
 func getCurrentIP(url string) (string, error) {
 	client := &http.Client{}
-	
+
 	if configuration.Socks5Proxy != "" {
-	
+
 		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
-	
+
 		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
 			fmt.Println("can't connect to the proxy:", err)
 			return "", err
 		}
-	
+
 		httpTransport := &http.Transport{}
 		client.Transport = httpTransport
 		httpTransport.Dial = dialer.Dial
@@ -79,14 +80,14 @@ func usage() {
 func checkSettings(config *Settings) error {
 	if config.Provider == DNSPOD {
 		if (config.Email == "" || config.Password == "") && config.LoginToken == "" {
-			return errors.New("Email/Password or login token cannot be empty!")
+			return errors.New("email/password or login token cannot be empty")
 		}
 	} else if config.Provider == HE {
 		if config.Password == "" {
-			return errors.New("Password cannot be empty!")
+			return errors.New("password cannot be empty")
 		}
 	} else {
-		return errors.New("Please provide supported DNS provider: DNSPod/HE")
+		return errors.New("please provide supported DNS provider: DNSPod/HE")
 	}
 
 	return nil

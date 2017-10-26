@@ -14,11 +14,14 @@ import (
 )
 
 var (
+	//HEUrl the API address for he.net
 	HEUrl = "https://dyn.dns.he.net/nic/update"
 )
 
+//HEHandler struct
 type HEHandler struct{}
 
+//DomainLoop the main logic loop
 func (handler *HEHandler) DomainLoop(domain *Domain, panicChan chan<- Domain) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -48,6 +51,7 @@ func (handler *HEHandler) DomainLoop(domain *Domain, panicChan chan<- Domain) {
 	}
 }
 
+//UpdateIP update subdomain with current IP
 func (handler *HEHandler) UpdateIP(domain, subDomain, currentIP string) {
 	values := url.Values{}
 	values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
