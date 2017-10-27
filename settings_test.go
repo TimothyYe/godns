@@ -1,4 +1,4 @@
-package main
+package godns
 
 import (
 	"testing"

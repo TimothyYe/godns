@@ -1,4 +1,4 @@
-package main
+package godns
 
 import (
 	"errors"
@@ -13,7 +13,18 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-func getCurrentIP(url string) (string, error) {
+const (
+	// PanicMax is the max allowed panic times
+	PanicMax = 5
+	// INTERVAL is minute
+	INTERVAL = 5
+	// DNSPOD for dnspod.cn
+	DNSPOD = "DNSPod"
+	// HE for he.net
+	HE = "HE"
+)
+
+func GetCurrentIP(configuration *Settings) (string, error) {
 	client := &http.Client{}
 
 	if configuration.Socks5Proxy != "" {
@@ -31,7 +42,7 @@ func getCurrentIP(url string) (string, error) {
 		httpTransport.Dial = dialer.Dial
 	}
 
-	response, err := client.Get(url)
+	response, err := client.Get(configuration.IPUrl)
 
 	if err != nil {
 		log.Println("Cannot get IP...")
@@ -44,7 +55,7 @@ func getCurrentIP(url string) (string, error) {
 	return string(body), nil
 }
 
-func identifyPanic() string {
+func IdentifyPanic() string {
 	var name, file string
 	var line int
 	var pc [16]uintptr
@@ -72,12 +83,12 @@ func identifyPanic() string {
 	return fmt.Sprintf("pc:%x", pc)
 }
 
-func usage() {
+func Usage() {
 	log.Println("[command] -c=[config file path]")
 	flag.PrintDefaults()
 }
 
-func checkSettings(config *Settings) error {
+func CheckSettings(config *Settings) error {
 	if config.Provider == DNSPOD {
 		if (config.Email == "" || config.Password == "") && config.LoginToken == "" {
 			return errors.New("email/password or login token cannot be empty")
