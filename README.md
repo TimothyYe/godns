@@ -7,20 +7,20 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
  ```
 
-[![Release][7]][8] [![MIT licensed][9]][10] [![Build Status][1]][2] [![Downloads][5]][6] [![Docker][3]][4] [![Go Report Card][11]][12]
+[![Release][7]][8] [![MIT licensed][9]][10] [![Build Status][1]][2] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14]
 
 [1]: https://travis-ci.org/TimothyYe/godns.svg?branch=master
 [2]: https://travis-ci.org/TimothyYe/godns
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
 [4]: https://microbadger.com/images/timothyye/godns
-[5]: https://img.shields.io/badge/downloads-2.04MB-brightgreen.svg
-[6]: https://github.com/TimothyYe/godns/releases
 [7]: https://img.shields.io/badge/release-v1.3-brightgreen.svg
 [8]: https://github.com/TimothyYe/godns/releases
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
 [10]: LICENSE
 [11]: https://goreportcard.com/badge/github.com/timothyye/godns
 [12]: https://goreportcard.com/report/github.com/timothyye/godns
+[13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
+[14]: https://godoc.org/github.com/TimothyYe/godns
 
 GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
 
