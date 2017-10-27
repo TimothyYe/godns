@@ -13,6 +13,13 @@ func TestGetCurrentIP(t *testing.T) {
 	} else {
 		t.Log("IP is:" + ip)
 	}
+
+	conf = &Settings{Socks5Proxy: "localhost:8899", IPUrl: "http://members.3322.org/dyndns/getip"}
+	ip, err := GetCurrentIP(conf)
+
+	if ip != "" && err == nil {
+		t.Error("should return error")
+	}
 }
 
 func TestCheckSettings(t *testing.T) {
