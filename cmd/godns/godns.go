@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
+
+	"log"
 
 	"github.com/TimothyYe/godns"
 	"github.com/TimothyYe/godns/handler"
@@ -26,26 +27,36 @@ func main() {
 	// Load settings from configurations file
 	if err := godns.LoadSettings(*optConf, &configuration); err != nil {
 		fmt.Println(err.Error())
-		log.Println(err.Error())
 		os.Exit(1)
 	}
 
 	if err := godns.CheckSettings(&configuration); err != nil {
-		log.Println("Settings is invalid! ", err.Error())
+		fmt.Println("Settings is invalid! ", err.Error())
 		os.Exit(1)
 	}
 
-	if err := godns.InitLogger(configuration.LogPath, configuration.LogSize, configuration.LogNum); err != nil {
-		log.Println("InitLogger error:", err.Error())
+	if configuration.LogPath == "" {
+		configuration.LogPath = "./godns.log"
+	}
+
+	// Init log file
+	f, err := os.OpenFile(configuration.LogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		fmt.Println("Failed to create log file:", configuration.LogPath)
 		os.Exit(1)
 	}
 
+	defer f.Close()
+
+	log.SetOutput(f)
+	log.Println("GoDNS started, entering main loop...")
 	dnsLoop()
 }
 
 func dnsLoop() {
 	panicChan := make(chan godns.Domain)
 
+	log.Println("Creating DNS handler with provider:", configuration.Provider)
 	handler := handler.CreateHandler(configuration.Provider)
 	handler.SetConfiguration(&configuration)
 	for _, domain := range configuration.Domains {
