@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"strings"
 )
 
 //Domain struct
@@ -40,38 +39,6 @@ func LoadSettings(configPath string, settings *Settings) error {
 	if err != nil {
 		fmt.Println("Error occurs while unmarshal config file, please make sure config file correct!")
 		return err
-	}
-
-	return nil
-}
-
-//LoadDomains -- Load domains from domains string
-func LoadDomains(domainsOrginStr string, domains *[]Domain) error {
-
-	domainsMap := make(map[string]*Domain)
-	domainsArray := strings.Split(domainsOrginStr, ",")
-	for _, host := range domainsArray {
-		dotCount := strings.Count(host, ".")
-		if dotCount < 2 {
-			continue
-		}
-		len := len(host)
-		pos := strings.Index(host, ".")
-		subDomain := host[0:pos]
-		domainName := host[pos+1 : len]
-
-		if d, exist := domainsMap[domainName]; exist {
-			d.SubDomains = append(d.SubDomains, subDomain)
-		} else {
-			d := new(Domain)
-			d.DomainName = domainName
-			d.SubDomains = append(d.SubDomains, subDomain)
-			domainsMap[domainName] = d
-		}
-	}
-
-	for _, d := range domainsMap {
-		*domains = append(*domains, *d)
 	}
 
 	return nil
