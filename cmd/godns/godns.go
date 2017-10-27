@@ -10,8 +10,6 @@ import (
 	"github.com/TimothyYe/godns/handler"
 )
 
-const ()
-
 var (
 	configuration godns.Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
