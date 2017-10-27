@@ -86,7 +86,7 @@ func InitLogger(logfile string, size, num int) (err error) {
 	return
 }
 
-// immplement write
+// Write immplement write
 func (logger *Logger) Write(p []byte) (n int, err error) {
 	if logger.DevMode {
 		n, err = os.Stdout.Write(p)

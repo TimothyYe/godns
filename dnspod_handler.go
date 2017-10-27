@@ -16,10 +16,10 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-//DNSPodHandler struct definition
+// DNSPodHandler struct definition
 type DNSPodHandler struct{}
 
-//DomainLoop the main logic loop
+// DomainLoop the main logic loop
 func (handler *DNSPodHandler) DomainLoop(domain *Domain, panicChan chan<- Domain) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -69,7 +69,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *Domain, panicChan chan<- Domain
 	}
 }
 
-//GenerateHeader generates the request header for DNSPod API
+// GenerateHeader generates the request header for DNSPod API
 func (handler *DNSPodHandler) GenerateHeader(content url.Values) url.Values {
 	header := url.Values{}
 	if configuration.LoginToken != "" {
@@ -91,7 +91,7 @@ func (handler *DNSPodHandler) GenerateHeader(content url.Values) url.Values {
 	return header
 }
 
-//GetDomain returns specific domain by name
+// GetDomain returns specific domain by name
 func (handler *DNSPodHandler) GetDomain(name string) int64 {
 
 	var ret int64
@@ -140,7 +140,7 @@ func (handler *DNSPodHandler) GetDomain(name string) int64 {
 	return ret
 }
 
-//GetSubDomain returns subdomain by domain id
+// GetSubDomain returns subdomain by domain id
 func (handler *DNSPodHandler) GetSubDomain(domainID int64, name string) (string, string) {
 	log.Println("debug:", domainID, name)
 	var ret, ip string
@@ -185,7 +185,7 @@ func (handler *DNSPodHandler) GetSubDomain(domainID int64, name string) (string,
 	return ret, ip
 }
 
-//UpdateIP update subdomain with current IP
+// UpdateIP update subdomain with current IP
 func (handler *DNSPodHandler) UpdateIP(domainID int64, subDomainID string, subDomainName string, ip string) {
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domainID, 10))
@@ -216,7 +216,7 @@ func (handler *DNSPodHandler) UpdateIP(domainID int64, subDomainID string, subDo
 
 }
 
-//PostData post data and invoke DNSPod API
+// PostData post data and invoke DNSPod API
 func (handler *DNSPodHandler) PostData(url string, content url.Values) (string, error) {
 	client := &http.Client{}
 

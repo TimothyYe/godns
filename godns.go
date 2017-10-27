@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 
-	//Load settings from configurations file
+	// Load settings from configurations file
 	if err := LoadSettings(*optConf, &configuration); err != nil {
 		fmt.Println(err.Error())
 		log.Println(err.Error())
