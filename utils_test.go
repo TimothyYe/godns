@@ -5,7 +5,8 @@ import (
 )
 
 func testGetCurrentIP(t *testing.T) {
-	ip, _ := GetCurrentIP("http://members.3322.org/dyndns/getip")
+	conf := &Settings{IPUrl: "http://members.3322.org/dyndns/getip"}
+	ip, _ := GetCurrentIP(conf)
 
 	if ip == "" {
 		t.Log("IP is empty...")
