@@ -56,7 +56,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 	return string(body), nil
 }
 
-// IdentifyPanic identifies panic and output the detailed panic infomation
+// IdentifyPanic identifies panic and output the detailed panic information
 func IdentifyPanic() string {
 	var name, file string
 	var line int
