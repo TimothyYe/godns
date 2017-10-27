@@ -22,6 +22,7 @@ type DNSPodHandler struct {
 	Configuration *godns.Settings
 }
 
+// SetConfiguration pass dns settings and store it to handler instance
 func (handler *DNSPodHandler) SetConfiguration(conf *godns.Settings) {
 	handler.Configuration = conf
 }

@@ -24,6 +24,7 @@ const (
 	HE = "HE"
 )
 
+// GetCurrentIP gets public IP from internet
 func GetCurrentIP(configuration *Settings) (string, error) {
 	client := &http.Client{}
 
@@ -55,6 +56,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 	return string(body), nil
 }
 
+// IdentifyPanic identifies panic and output the detailed panic infomation
 func IdentifyPanic() string {
 	var name, file string
 	var line int
@@ -83,11 +85,13 @@ func IdentifyPanic() string {
 	return fmt.Sprintf("pc:%x", pc)
 }
 
+// Usage prints the usage of GoDNS
 func Usage() {
 	log.Println("[command] -c=[config file path]")
 	flag.PrintDefaults()
 }
 
+// CheckSettings check the format of settings
 func CheckSettings(config *Settings) error {
 	if config.Provider == DNSPOD {
 		if (config.Email == "" || config.Password == "") && config.LoginToken == "" {

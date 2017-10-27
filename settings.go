@@ -6,13 +6,13 @@ import (
 	"io/ioutil"
 )
 
-//Domain struct
+// Domain struct
 type Domain struct {
 	DomainName string   `json:"domain_name"`
 	SubDomains []string `json:"sub_domains"`
 }
 
-//Settings struct
+// Settings struct
 type Settings struct {
 	Provider    string   `json:"provider"`
 	Email       string   `json:"email"`
@@ -26,9 +26,9 @@ type Settings struct {
 	Socks5Proxy string   `json:"socks5_proxy"`
 }
 
-//LoadSettings -- Load settings from config file
+// LoadSettings -- Load settings from config file
 func LoadSettings(configPath string, settings *Settings) error {
-	//LoadSettings from config file
+	// LoadSettings from config file
 	file, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		fmt.Println("Error occurs while reading config file, please make sure config file exists!")
