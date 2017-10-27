@@ -21,7 +21,7 @@
 [12]: https://goreportcard.com/report/github.com/timothyye/godns
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
-[15]: https://cover.run/go/github.com/timothyye/godns.svg
+[15]: https://img.shields.io/badge/cover.run-88.2%25-green.svg
 [16]: https://cover.run/go/github.com/timothyye/godns
 
 GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source project: [DynDNS](https://github.com/TimothyYe/DynDNS). 
