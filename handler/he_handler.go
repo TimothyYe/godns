@@ -35,8 +35,6 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
-			fmt.Println(godns.IdentifyPanic())
-			log.Print(godns.IdentifyPanic())
 			panicChan <- *domain
 		}
 	}()
