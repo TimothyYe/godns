@@ -35,6 +35,11 @@ func TestCheckSettings(t *testing.T) {
 		t.Error("setting with login token, should be passed")
 	}
 
+	settingDNSPod = &Settings{Provider: "DNSPod"}
+	if err := CheckSettings(settingDNSPod); err == nil {
+		t.Error("setting with invalid parameters, should be failed")
+	}
+
 	settingHE := &Settings{Provider: "HE", Password: ""}
 	if err := CheckSettings(settingHE); err != nil {
 		t.Log("HE setting without password, passed")
