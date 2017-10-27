@@ -25,7 +25,7 @@ config.json
 *.log
 *.swp
 *.gz
-godns
+cmd/godns/godns
 
 vendor/*
 /.idea
