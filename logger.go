@@ -16,23 +16,23 @@ import (
 )
 
 const (
-	// L_INFO log level
-	L_INFO int = iota
-	// L_WARNING log level
-	L_WARNING
-	// L_DEBUG log level
-	L_DEBUG
-	// PRE_INFO log level
-	PRE_INFO = "[   INFO]"
-	// PRE_WARNING log level
-	PRE_WARNING = "[WARNING]"
-	// PRE_DEBUG log level
-	PRE_DEBUG = "[  DEBUG]"
+	// Info log level
+	Info int = iota
+	// Warning log level
+	Warning
+	// Debug log level
+	Debug
+	// PreInfo log level
+	PreInfo = "[   INFO]"
+	// PreWarning log level
+	PreWarning = "[WARNING]"
+	// PreDebug log level
+	PreDebug = "[  DEBUG]"
 )
 
 // Logger struct
 type Logger struct {
-	DEV_MODE      bool
+	DevMode       bool
 	fd            *os.File
 	size          int
 	num           int
@@ -47,11 +47,11 @@ type Logger struct {
 
 // NewLogger returns a new created logger
 func NewLogger(logfile string, size, num int, level int, flushInterval int64, flushSize int) (logger *Logger, err error) {
-	if size < 1 || num < 1 || level < L_INFO || len(logfile) < 1 {
+	if size < 1 || num < 1 || level < Info || len(logfile) < 1 {
 		err = errors.New("newLogWriter:param error")
 		return
 	}
-	logger = &Logger{size: size * 1024, num: num, level: level, DEV_MODE: false}
+	logger = &Logger{size: size * 1024, num: num, level: level, DevMode: false}
 	logger.fd, err = os.OpenFile(logfile, os.O_WRONLY|os.O_APPEND|os.O_CREATE, os.ModeAppend|0666)
 	if err != nil {
 		logger = nil
@@ -79,16 +79,16 @@ func NewLogger(logfile string, size, num int, level int, flushInterval int64, fl
 
 // InitLogger initialize logger with specified log filename & size
 func InitLogger(logfile string, size, num int) (err error) {
-	logger, err := NewLogger(logfile, size, num, L_INFO, -1, -1)
+	logger, err := NewLogger(logfile, size, num, Info, -1, -1)
 	if logger != nil {
-		logger.level = L_INFO - 1
+		logger.level = Info - 1
 	}
 	return
 }
 
 // immplement write
 func (logger *Logger) Write(p []byte) (n int, err error) {
-	if logger.DEV_MODE {
+	if logger.DevMode {
 		n, err = os.Stdout.Write(p)
 		return
 	}
@@ -208,12 +208,12 @@ func (logger *Logger) setPrefix(lv int) bool {
 	}
 
 	switch lv {
-	case L_INFO:
-		logger.log.SetPrefix(PRE_INFO)
-	case L_WARNING:
-		logger.log.SetPrefix(PRE_WARNING)
-	case L_DEBUG:
-		logger.log.SetPrefix(PRE_DEBUG)
+	case Info:
+		logger.log.SetPrefix(PreInfo)
+	case Warning:
+		logger.log.SetPrefix(PreWarning)
+	case Debug:
+		logger.log.SetPrefix(PreDebug)
 	default:
 		return false
 	}
@@ -263,48 +263,48 @@ func (logger *Logger) Close() {
 
 // Info output info log
 func (logger *Logger) Info(args ...interface{}) {
-	logger.logPrint(L_INFO, args...)
+	logger.logPrint(Info, args...)
 }
 
 // Infoln output info log with newline
 func (logger *Logger) Infoln(args ...interface{}) {
-	logger.logPrintln(L_INFO, args...)
+	logger.logPrintln(Info, args...)
 }
 
 // Infof output formatted info log
 func (logger *Logger) Infof(format string, args ...interface{}) {
-	logger.logPrintf(L_INFO, format, args...)
+	logger.logPrintf(Info, format, args...)
 }
 
 // Warning output warning log
 func (logger *Logger) Warning(args ...interface{}) {
-	logger.logPrint(L_WARNING, args...)
+	logger.logPrint(Warning, args...)
 }
 
 //Warningln output warning log with newline
 func (logger *Logger) Warningln(args ...interface{}) {
-	logger.logPrintln(L_WARNING, args...)
+	logger.logPrintln(Warning, args...)
 }
 
 // Warningf output formatted warning log
 func (logger *Logger) Warningf(format string, args ...interface{}) {
-	logger.logPrintf(L_WARNING, format, args...)
+	logger.logPrintf(Warning, format, args...)
 }
 
 // Debug output debug log
 func (logger *Logger) Debug(args ...interface{}) {
-	logger.logPrint(L_DEBUG, args...)
+	logger.logPrint(Debug, args...)
 	logger.Flush()
 }
 
 // Debugln output debug log with newline
 func (logger *Logger) Debugln(args ...interface{}) {
-	logger.logPrintln(L_DEBUG, args...)
+	logger.logPrintln(Debug, args...)
 	logger.Flush()
 }
 
 // Debugf output formatted debug log
 func (logger *Logger) Debugf(format string, args ...interface{}) {
-	logger.logPrintf(L_DEBUG, format, args...)
+	logger.logPrintf(Debug, format, args...)
 	logger.Flush()
 }
