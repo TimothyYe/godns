@@ -58,8 +58,8 @@ git clone https://github.com/timothyye/godns.git
 * Go into the godns directory, get related library and then build it:
 
 ```bash
-cd godns
-go get
+cd cmd/godns
+go get -v
 go build
 ```
 
