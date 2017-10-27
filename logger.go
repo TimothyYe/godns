@@ -23,11 +23,11 @@ const (
 	// Debug log level
 	Debug
 	// PreInfo log level
-	PreInfo = "[   INFO]"
+	PreInfo = "[INFO]"
 	// PreWarning log level
 	PreWarning = "[WARNING]"
 	// PreDebug log level
-	PreDebug = "[  DEBUG]"
+	PreDebug = "[DEBUG]"
 )
 
 // Logger struct
