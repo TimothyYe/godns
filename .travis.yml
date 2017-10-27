@@ -5,8 +5,8 @@ go:
  - 1.9.x
 
 install:
-  go get -v
-  go get -v github.com/bitly/go-simplejson
+ - go get -v
+ - go get -v github.com/bitly/go-simplejson
 
 script:
  - cp ./config_sample.json ./config.json
