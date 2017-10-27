@@ -25,6 +25,7 @@ type HEHandler struct {
 	Configuration *godns.Settings
 }
 
+// SetConfiguration pass dns settings and store it to handler instance
 func (handler *HEHandler) SetConfiguration(conf *godns.Settings) {
 	handler.Configuration = conf
 }
