@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// Logo for GoDNS
 	Logo = `
 
  ██████╗  ██████╗ ██████╗ ███╗   ██╗███████╗
@@ -86,10 +87,12 @@ func CheckSettings(config *Settings) error {
 	return nil
 }
 
+// SaveCurrentIP saves current IP into a template file
 func SaveCurrentIP(currentIP string) {
 	ioutil.WriteFile("./.current_ip", []byte(currentIP), os.FileMode(0644))
 }
 
+// LoadCurrentIP loads saved IP from template file
 func LoadCurrentIP() string {
 	content, err := ioutil.ReadFile("./.current_ip")
 

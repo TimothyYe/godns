@@ -16,7 +16,9 @@ var (
 	configuration godns.Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
 	optHelp       = flag.Bool("h", false, "Show help")
-	Version       = "0.1"
+
+	// Version is current version of GoDNS
+	Version = "0.1"
 )
 
 func main() {
