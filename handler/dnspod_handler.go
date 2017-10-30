@@ -57,30 +57,30 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 
 		if savedIP != "" && strings.TrimRight(currentIP, "\n") == strings.TrimRight(savedIP, "\n") {
 			log.Printf("Current IP is not changed, no need to update...")
-			continue
 		} else {
 			godns.SaveCurrentIP(currentIP)
-		}
 
-		for _, subDomain := range domain.SubDomains {
+			for _, subDomain := range domain.SubDomains {
 
-			subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
+				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
-			if subDomainID == "" || ip == "" {
-				log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
-				continue
-			}
+				if subDomainID == "" || ip == "" {
+					log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+					continue
+				}
 
-			//Continue to check the IP of sub-domain
-			if len(ip) > 0 && !strings.Contains(currentIP, ip) {
-				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
-				handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
-			} else {
-				log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+				//Continue to check the IP of sub-domain
+				if len(ip) > 0 && !strings.Contains(currentIP, ip) {
+					log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
+				} else {
+					log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+				}
 			}
 		}
 
 		//Interval is 5 minutes
+		log.Printf("Going to sleep, will start next checking in %d minutes...\r\n", godns.INTERVAL)
 		time.Sleep(time.Minute * godns.INTERVAL)
 	}
 }
