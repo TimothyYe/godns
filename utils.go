@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 
 	"golang.org/x/net/proxy"
 )
@@ -66,4 +68,18 @@ func CheckSettings(config *Settings) error {
 	}
 
 	return nil
+}
+
+func SaveCurrentIP(currentIP string) {
+	ioutil.WriteFile("./.current_ip", []byte(currentIP), os.FileMode(0644))
+}
+
+func LoadCurrentIP() string {
+	content, err := ioutil.ReadFile("./.current_ip")
+
+	if err != nil {
+		return ""
+	}
+
+	return strings.Replace(string(content), "\n", "", -1)
 }

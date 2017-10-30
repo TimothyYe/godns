@@ -37,7 +37,6 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 	}()
 
 	for {
-
 		domainID := handler.GetDomain(domain.DomainName)
 
 		if domainID == -1 {
@@ -50,7 +49,18 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 			log.Println("get_currentIP:", err)
 			continue
 		}
-		log.Println("currentIp is:", currentIP)
+		log.Println("currentIP is:", currentIP)
+
+		//Compare currentIP with saved IP
+		savedIP := godns.LoadCurrentIP()
+		log.Println("savedIP is:", savedIP)
+
+		if savedIP != "" && strings.TrimRight(currentIP, "\n") == strings.TrimRight(savedIP, "\n") {
+			log.Printf("Current IP is not changed, no need to update...")
+			continue
+		} else {
+			godns.SaveCurrentIP(currentIP)
+		}
 
 		for _, subDomain := range domain.SubDomains {
 

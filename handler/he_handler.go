@@ -46,7 +46,17 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 			log.Println("get_currentIP:", err)
 			continue
 		}
-		log.Println("currentIp is:", currentIP)
+		log.Println("currentIP is:", currentIP)
+
+		//Compare currentIP with saved IP
+		savedIP := godns.LoadCurrentIP()
+
+		if savedIP != "" && currentIP == savedIP {
+			log.Printf("Current IP is not changed, no need to update...")
+			continue
+		} else {
+			godns.SaveCurrentIP(currentIP)
+		}
 
 		for _, subDomain := range domain.SubDomains {
 			log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)

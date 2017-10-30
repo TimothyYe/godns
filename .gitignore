@@ -32,3 +32,4 @@ vendor/*
 /godns.iml
 /godns.ipr
 /godns.iws
+.current_ip
