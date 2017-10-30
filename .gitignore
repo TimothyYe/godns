@@ -33,3 +33,4 @@ vendor/*
 /godns.ipr
 /godns.iws
 .current_ip
+.DS_Store
