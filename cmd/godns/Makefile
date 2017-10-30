@@ -23,11 +23,12 @@ release:
 		tar czvf ${BINARY}-arm64-${VERSION}.tar.gz ./${BINARY}
 		# Build for win
 		go clean
-		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
+		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BINARY}.exe -ldflags "-X main.Version=${VERSION}"
 		tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe
 		go clean
 # Cleans our projects: deletes binaries
 clean:
 		go clean
+		rm -rf *.gz
 
 .PHONY:  clean build
