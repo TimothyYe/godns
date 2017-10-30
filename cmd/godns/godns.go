@@ -9,17 +9,20 @@ import (
 
 	"github.com/TimothyYe/godns"
 	"github.com/TimothyYe/godns/handler"
+	"github.com/fatih/color"
 )
 
 var (
 	configuration godns.Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
 	optHelp       = flag.Bool("h", false, "Show help")
+	Version       = "0.1"
 )
 
 func main() {
 	flag.Parse()
 	if *optHelp {
+		color.Cyan(godns.Logo, Version)
 		flag.Usage()
 		return
 	}
