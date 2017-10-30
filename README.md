@@ -200,7 +200,7 @@ Now godns supports to run in docker.
 
 ```bash
 docker run -d --name godns --restart=always \
--v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:1.3
+-v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:latest
 ```
 
 ## Enjoy it!
