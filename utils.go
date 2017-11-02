@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"golang.org/x/net/proxy"
+	"gopkg.in/gomail.v2"
 )
 
 var (
@@ -101,4 +102,22 @@ func LoadCurrentIP() string {
 	}
 
 	return strings.Replace(string(content), "\n", "", -1)
+}
+
+// SendNotify sends mail notify if IP is changed
+func SendNotify(configuration *Settings, currentIP string) error {
+	m := gomail.NewMessage()
+
+	m.SetHeader("From", configuration.Notify.Account)
+	m.SetHeader("To", configuration.Notify.SendTo)
+	m.SetHeader("Subject", "GoDNS Notification")
+	m.SetBody("text/html", "")
+
+	d := gomail.NewPlainDialer(configuration.Notify.SMTPServer, configuration.Notify.Port, configuration.Notify.Account, configuration.Notify.Password)
+
+	// Send the email config by sendlist	.
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+	return nil
 }

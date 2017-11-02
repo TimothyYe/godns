@@ -12,6 +12,15 @@ type Domain struct {
 	SubDomains []string `json:"sub_domains"`
 }
 
+type Notify struct {
+	Enabled    bool   `json:"enabled"`
+	SMTPServer string `json:"smtp_server"`
+	SendTo     string `json:"send_to"`
+	Port       int    `json:"port"`
+	Account    string `json:"account"`
+	Password   string `json:"password"`
+}
+
 // Settings struct
 type Settings struct {
 	Provider    string   `json:"provider"`
@@ -22,6 +31,7 @@ type Settings struct {
 	IPUrl       string   `json:"ip_url"`
 	LogPath     string   `json:"log_path"`
 	Socks5Proxy string   `json:"socks5_proxy"`
+	Notify      Notify   `json:"notify"`
 }
 
 // LoadSettings -- Load settings from config file
