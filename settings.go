@@ -21,8 +21,6 @@ type Settings struct {
 	Domains     []Domain `json:"domains"`
 	IPUrl       string   `json:"ip_url"`
 	LogPath     string   `json:"log_path"`
-	LogSize     int      `json:"log_size"`
-	LogNum      int      `json:"log_num"`
 	Socks5Proxy string   `json:"socks5_proxy"`
 }
 

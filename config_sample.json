@@ -13,7 +13,5 @@
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
   "log_path": "./godns.log",
-  "log_size": 16,
-  "log_num": 3,
   "socks5_proxy": ""
 }
