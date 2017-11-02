@@ -108,8 +108,6 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
   "log_path": "./godns.log",
-  "log_size": 16,
-  "log_num": 3,
   "socks5_proxy": ""
 }
 ```
@@ -133,8 +131,6 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
   "log_path":"/users/timothy/workspace/src/godns/godns.log",
-  "log_size":16,
-  "log_num":3,
   "socks5_proxy": ""
 }
 ```
