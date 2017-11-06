@@ -2,6 +2,7 @@ package godns
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -105,18 +106,21 @@ func LoadCurrentIP() string {
 }
 
 // SendNotify sends mail notify if IP is changed
-func SendNotify(configuration *Settings, currentIP string) error {
+func SendNotify(configuration *Settings, domain string, currentIP string) error {
 	m := gomail.NewMessage()
 
-	m.SetHeader("From", configuration.Notify.Account)
+	m.SetHeader("From", configuration.Notify.SMTPUsername)
 	m.SetHeader("To", configuration.Notify.SendTo)
 	m.SetHeader("Subject", "GoDNS Notification")
-	m.SetBody("text/html", "")
+	log.Println("currentIP:", currentIP)
+	log.Println("domain:", domain)
+	m.SetBody("text/html", fmt.Sprintf(template, currentIP, domain))
 
-	d := gomail.NewPlainDialer(configuration.Notify.SMTPServer, configuration.Notify.Port, configuration.Notify.Account, configuration.Notify.Password)
+	d := gomail.NewPlainDialer(configuration.Notify.SMTPServer, configuration.Notify.SMTPPort, configuration.Notify.SMTPUsername, configuration.Notify.SMTPPassword)
 
 	// Send the email config by sendlist	.
 	if err := d.DialAndSend(m); err != nil {
+		log.Println("Send email notification with error:", err.Error())
 		return err
 	}
 	return nil

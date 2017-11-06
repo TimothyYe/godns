@@ -13,5 +13,13 @@
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
   "log_path": "./godns.log",
-  "socks5_proxy": ""
+  "socks5_proxy": "",
+	"notify": {
+		"enabled": false,
+		"smtp_server": "",
+		"smtp_username": "",
+		"smtp_password": "",
+		"smtp_port": 25,
+		"send_to": "",
+	}
 }

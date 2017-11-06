@@ -76,7 +76,8 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 
 					// Send mail notification if notify is enabled
 					if handler.Configuration.Notify.Enabled {
-						godns.SendNotify(handler.Configuration, currentIP)
+						log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
+						godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 					}
 
 				} else {

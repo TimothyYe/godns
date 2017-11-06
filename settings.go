@@ -13,12 +13,12 @@ type Domain struct {
 }
 
 type Notify struct {
-	Enabled    bool   `json:"enabled"`
-	SMTPServer string `json:"smtp_server"`
-	SendTo     string `json:"send_to"`
-	Port       int    `json:"port"`
-	Account    string `json:"account"`
-	Password   string `json:"password"`
+	Enabled      bool   `json:"enabled"`
+	SMTPServer   string `json:"smtp_server"`
+	SMTPUsername string `json:"smtp_username"`
+	SMTPPassword string `json:"smtp_password"`
+	SMTPPort     int    `json:"smtp_port"`
+	SendTo       string `json:"send_to"`
 }
 
 // Settings struct
