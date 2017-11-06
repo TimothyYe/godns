@@ -145,6 +145,5 @@ func buildTemplate(currentIP, domain string) string {
 		return ""
 	}
 
-	log.Println("result:", tpl.String())
 	return tpl.String()
 }
