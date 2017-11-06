@@ -129,7 +129,7 @@ func SendNotify(configuration *Settings, domain, currentIP string) error {
 
 func buildTemplate(currentIP, domain string) string {
 	t := template.New("notification template")
-	t.Parse(MailTemplate)
+	t.Parse(mailTemplate)
 
 	data := struct {
 		CurrentIP string

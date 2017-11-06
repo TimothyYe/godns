@@ -12,6 +12,7 @@ type Domain struct {
 	SubDomains []string `json:"sub_domains"`
 }
 
+// Notify struct for SMTP notification
 type Notify struct {
 	Enabled      bool   `json:"enabled"`
 	SMTPServer   string `json:"smtp_server"`

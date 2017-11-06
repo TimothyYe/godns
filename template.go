@@ -1,6 +1,6 @@
 package godns
 
-var MailTemplate = `
+var mailTemplate = `
 <html>
 <body>
     <div role="section">
