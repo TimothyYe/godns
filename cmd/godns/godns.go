@@ -70,11 +70,9 @@ func dnsLoop() {
 
 	panicCount := 0
 	for {
-		select {
-		case failDomain := <-panicChan:
-			log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-			go handler.DomainLoop(&failDomain, panicChan)
-		}
+		failDomain := <-panicChan
+		log.Println("Got panic in goroutine, will start a new one... :", panicCount)
+		go handler.DomainLoop(&failDomain, panicChan)
 
 		panicCount++
 		if panicCount >= godns.PanicMax {
