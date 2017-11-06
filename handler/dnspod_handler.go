@@ -51,7 +51,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 		}
 		log.Println("currentIP is:", currentIP)
 
-		//Compare currentIP with saved IP
+		// Compare currentIP with saved IP
 		savedIP := godns.LoadCurrentIP()
 		log.Println("savedIP is:", savedIP)
 
@@ -69,17 +69,23 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 					continue
 				}
 
-				//Continue to check the IP of sub-domain
+				// Continue to check the IP of sub-domain
 				if len(ip) > 0 && !strings.Contains(currentIP, ip) {
 					log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
+
+					// Send mail notification if notify is enabled
+					if handler.Configuration.Notify.Enabled {
+						godns.SendNotify(handler.Configuration, currentIP)
+					}
+
 				} else {
 					log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
 				}
 			}
 		}
 
-		//Interval is 5 minutes
+		// Interval is 5 minutes
 		log.Printf("Going to sleep, will start next checking in %d minutes...\r\n", godns.INTERVAL)
 		time.Sleep(time.Minute * godns.INTERVAL)
 	}

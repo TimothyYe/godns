@@ -58,6 +58,11 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 			for _, subDomain := range domain.SubDomains {
 				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
+
+				// Send mail notification if notify is enabled
+				if handler.Configuration.Notify.Enabled {
+					godns.SendNotify(handler.Configuration, currentIP)
+				}
 			}
 		}
 
