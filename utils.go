@@ -1,8 +1,9 @@
 package godns
 
 import (
+	"bytes"
 	"errors"
-	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -106,7 +107,7 @@ func LoadCurrentIP() string {
 }
 
 // SendNotify sends mail notify if IP is changed
-func SendNotify(configuration *Settings, domain string, currentIP string) error {
+func SendNotify(configuration *Settings, domain, currentIP string) error {
 	m := gomail.NewMessage()
 
 	m.SetHeader("From", configuration.Notify.SMTPUsername)
@@ -114,7 +115,7 @@ func SendNotify(configuration *Settings, domain string, currentIP string) error 
 	m.SetHeader("Subject", "GoDNS Notification")
 	log.Println("currentIP:", currentIP)
 	log.Println("domain:", domain)
-	m.SetBody("text/html", fmt.Sprintf(template, currentIP, domain))
+	m.SetBody("text/html", buildTemplate(currentIP, domain))
 
 	d := gomail.NewPlainDialer(configuration.Notify.SMTPServer, configuration.Notify.SMTPPort, configuration.Notify.SMTPUsername, configuration.Notify.SMTPPassword)
 
@@ -124,4 +125,26 @@ func SendNotify(configuration *Settings, domain string, currentIP string) error 
 		return err
 	}
 	return nil
+}
+
+func buildTemplate(currentIP, domain string) string {
+	t := template.New("notification template")
+	t.Parse(MailTemplate)
+
+	data := struct {
+		CurrentIP string
+		Domain    string
+	}{
+		currentIP,
+		domain,
+	}
+
+	var tpl bytes.Buffer
+	if err := t.Execute(&tpl, data); err != nil {
+		log.Println(err.Error())
+		return ""
+	}
+
+	log.Println("result:", tpl.String())
+	return tpl.String()
 }

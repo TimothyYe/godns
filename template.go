@@ -1,6 +1,6 @@
 package godns
 
-var template = `
+var MailTemplate = `
 <html>
 <body>
     <div role="section">
@@ -42,14 +42,14 @@ var template = `
                                     lang="x-size-48">
                                     <span class="font-avenir">
                                         <strong>
-                                            <span style="color:#ffffff">%s</span>
+                                            <span style="color:#ffffff">{{ .CurrentIP }}</span>
                                         </strong>
                                     </span>
                                 </h1>
                                 <h2 class="size-28" style="Margin-top: 20px;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #e31212;font-size: 24px;line-height: 32px;font-family: Avenir,sans-serif;text-align: center;"
                                     lang="x-size-28">
                                     <font color="#ffffff">
-                                        <strong>Domain: %s is updated</strong>
+                                        <strong>Domain {{ .Domain }} is updated</strong>
                                     </font>
                                 </h2>
                             </div>
