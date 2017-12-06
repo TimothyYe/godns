@@ -13,7 +13,7 @@
 [2]: https://travis-ci.org/TimothyYe/godns
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
 [4]: https://microbadger.com/images/timothyye/godns
-[7]: https://img.shields.io/badge/release-v1.4-brightgreen.svg
+[7]: http://github-release-version.herokuapp.com/github/timothyye/godns/release.svg?style=flat
 [8]: https://github.com/TimothyYe/godns/releases
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
 [10]: LICENSE
