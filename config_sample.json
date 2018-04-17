@@ -1,25 +1,32 @@
 {
-	"provider": "DNSPod",
+  "provider": "DNSPod",
   "email": "example@gmail.com",
   "password": "",
   "login_token": "",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": [
+        "www",
+        "test"
+      ]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": [
+        "www",
+        "test"
+      ]
     }
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
-  "log_path": "./godns.log",
   "socks5_proxy": "",
-	"notify": {
-		"enabled": false,
-		"smtp_server": "",
-		"smtp_username": "",
-		"smtp_password": "",
-		"smtp_port": 25,
-		"send_to": ""
-	}
+  "notify": {
+    "enabled": false,
+    "smtp_server": "",
+    "smtp_username": "",
+    "smtp_password": "",
+    "smtp_port": 25,
+    "send_to": ""
+  }
 }

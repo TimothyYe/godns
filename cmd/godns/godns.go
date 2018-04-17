@@ -40,20 +40,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	if configuration.LogPath == "" {
-		configuration.LogPath = "./godns.log"
-	}
-
-	// Init log file
-	f, err := os.OpenFile(configuration.LogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		fmt.Println("Failed to create log file:", configuration.LogPath)
-		os.Exit(1)
-	}
-
-	defer f.Close()
-
-	log.SetOutput(f)
+	// Init log settings
+	log.SetPrefix("【GoDNS】")
 	log.Println("GoDNS started, entering main loop...")
 	dnsLoop()
 }
