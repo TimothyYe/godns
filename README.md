@@ -85,7 +85,7 @@ Usage of ./godns:
 * Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
 * Rename it to **config.json**.
 * Configure your provider, domain/sub-domain info, username and password, etc.
-* Configure log file path, max size of log file, max count of log file.
+* Configure the SMTP options if you want, a mail notification will sent to your mailbox once the IP is changed.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
 
 ### Config example for DNSPod
@@ -148,6 +148,25 @@ Fill your own DDNS key or generate a random DDNS key for this new created "A rec
 Remember the DDNS key and fill it as password to the config.json.
 
 __NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key are the same.
+
+### Email notification support
+
+Update config file and provide your SMTP options, a notification mail will be sent to your mailbox once the IP is changed and updated.  
+
+```json
+  "notify": {
+    "enabled": true,
+    "smtp_server": "smtp.example.com",
+    "smtp_username": "user",
+    "smtp_password": "password",
+    "smtp_port": 25,
+    "send_to": "my_mail@example.com"
+  }
+```
+
+Notification mail example:  
+
+<img src="https://github.com/TimothyYe/godns/blob/master/snapshots/mail.png?raw=true" width="640" />  
 
 ### SOCKS5 proxy support
 
