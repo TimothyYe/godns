@@ -166,7 +166,7 @@ Update config file and provide your SMTP options, a notification mail will be se
 
 Notification mail example:  
 
-<img src="https://github.com/TimothyYe/godns/blob/master/snapshots/mail.png?raw=true" width="640" />  
+<img src="https://github.com/TimothyYe/godns/blob/master/snapshots/mail.png?raw=true" />  
 
 ### SOCKS5 proxy support
 
