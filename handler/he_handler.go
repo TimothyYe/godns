@@ -51,7 +51,7 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 		//Compare currentIP with saved IP
 		savedIP := godns.LoadCurrentIP()
 
-		if savedIP != "" && currentIP == savedIP {
+		if savedIP != "" && strings.TrimRight(currentIP, "\n") == strings.TrimRight(savedIP, "\n") {
 			log.Printf("Current IP is not changed, no need to update...")
 		} else {
 			godns.SaveCurrentIP(currentIP)

@@ -70,7 +70,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 				}
 
 				// Continue to check the IP of sub-domain
-				if len(ip) > 0 && !strings.Contains(currentIP, ip) {
+				if len(ip) > 0 && strings.TrimRight(currentIP, "\n") != strings.TrimRight(ip, "\n") {
 					log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
 
