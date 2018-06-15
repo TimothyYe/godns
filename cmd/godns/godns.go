@@ -52,8 +52,8 @@ func dnsLoop() {
 	log.Println("Creating DNS handler with provider:", configuration.Provider)
 	handler := handler.CreateHandler(configuration.Provider)
 	handler.SetConfiguration(&configuration)
-	for _, domain := range configuration.Domains {
-		go handler.DomainLoop(&domain, panicChan)
+	for i, _ := range configuration.Domains {
+		go handler.DomainLoop(&configuration.Domains[i], panicChan)
 	}
 
 	panicCount := 0

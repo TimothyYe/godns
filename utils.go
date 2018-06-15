@@ -7,9 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
-	"strings"
-
 	"golang.org/x/net/proxy"
 	"gopkg.in/gomail.v2"
 )
@@ -88,22 +85,6 @@ func CheckSettings(config *Settings) error {
 	}
 
 	return nil
-}
-
-// SaveCurrentIP saves current IP into a template file
-func SaveCurrentIP(currentIP string) {
-	ioutil.WriteFile("./.current_ip", []byte(currentIP), os.FileMode(0644))
-}
-
-// LoadCurrentIP loads saved IP from template file
-func LoadCurrentIP() string {
-	content, err := ioutil.ReadFile("./.current_ip")
-
-	if err != nil {
-		return ""
-	}
-
-	return strings.Replace(string(content), "\n", "", -1)
 }
 
 // SendNotify sends mail notify if IP is changed

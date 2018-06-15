@@ -48,22 +48,14 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 		}
 		log.Println("currentIP is:", currentIP)
 
-		//Compare currentIP with saved IP
-		savedIP := godns.LoadCurrentIP()
+		for _, subDomain := range domain.SubDomains {
+			log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+			handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 
-		if savedIP != "" && strings.TrimRight(currentIP, "\n") == strings.TrimRight(savedIP, "\n") {
-			log.Printf("Current IP is not changed, no need to update...")
-		} else {
-			godns.SaveCurrentIP(currentIP)
-			for _, subDomain := range domain.SubDomains {
-				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
-				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
-
-				// Send mail notification if notify is enabled
-				if handler.Configuration.Notify.Enabled {
-					log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
-					godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
-				}
+			// Send mail notification if notify is enabled
+			if handler.Configuration.Notify.Enabled {
+				log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
+				godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 			}
 		}
 
