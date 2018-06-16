@@ -1,8 +1,6 @@
 package godns
 
 import (
-	"os"
-	"strings"
 	"testing"
 )
 
