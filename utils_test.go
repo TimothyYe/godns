@@ -49,28 +49,3 @@ func TestCheckSettings(t *testing.T) {
 		t.Error("HE setting without password, should be faild")
 	}
 }
-
-func TestSaveCurrentIP(t *testing.T) {
-	SaveCurrentIP("1.2.3.4")
-
-	if _, err := os.Stat("./.current_ip"); os.IsNotExist(err) {
-		t.Error(".current_ip file should exists")
-	}
-
-	savedIP := LoadCurrentIP()
-
-	if strings.TrimRight(savedIP, "\n") != "1.2.3.4" {
-		t.Error("saved IP should be equal to 1.2.3.4")
-	}
-
-	//Cleanup
-	os.Remove("./.current_ip")
-}
-
-func TestLoadCurrentIP(t *testing.T) {
-	ip := LoadCurrentIP()
-
-	if ip != "" {
-		t.Error("current ip file should be empth")
-	}
-}
