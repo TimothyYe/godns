@@ -28,10 +28,13 @@ _testmain.go
 config.json
 *.log
 *.swp
-godns
+*.gz
+cmd/godns/godns
 
 vendor/*
 /.idea
 /godns.iml
 /godns.ipr
 /godns.iws
+.current_ip
+.DS_Store

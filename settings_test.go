@@ -1,4 +1,4 @@
-package main
+package godns
 
 import (
 	"testing"
@@ -13,6 +13,11 @@ func TestLoadSetting(t *testing.T) {
 	}
 
 	if settings.IPUrl == "" {
-		t.Error("Cannot load ip_url from config file")
+		t.Error("cannot load ip_url from config file")
+	}
+
+	err = LoadSettings("./file/does/not/exists", &settings)
+	if err == nil {
+		t.Error("file doesn't exist, should return error")
 	}
 }
