@@ -37,10 +37,15 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * MacOS
 * ARM Linux (Raspberry Pi, etc...)
 * Windows
+* MIPS32 platform
 
 ## MIPS32 platform
 
-For MIPS32 platform, please checkout the [mips32](https://github.com/TimothyYe/godns/tree/mips32) branch, this branch is contributed by [hguandl](https://github.com/hguandl), in this branch, the support for mips32 is added, which means it could run properly on Openwrt and LEDE.
+To compile binaries for MIPS (mips or mipsle):
+
+```
+GOOS=linux GOARCH=mips/mipsle GOMIPS=softfloat go build -a
+```
 
 ## Pre-condition
 
