@@ -102,9 +102,9 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
 ```json
 {
   "provider": "DNSPod",
-  "email": "example@gmail.com",
-  "password": "YourPassword",
-  "login_token": "",
+  "email": "",
+  "password": "",
+  "login_token": "your_id,your_token",
   "domains": [{
       "domain_name": "example.com",
       "sub_domains": ["www","test"]
