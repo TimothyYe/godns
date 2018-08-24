@@ -30,7 +30,6 @@ config.json
 *.gz
 cmd/godns/godns
 
-vendor/*
 /.idea
 /godns.iml
 /godns.ipr

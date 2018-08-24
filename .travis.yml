@@ -9,7 +9,9 @@ install:
  - go get -v
  - go get -v github.com/bitly/go-simplejson
  - go get -v github.com/fatih/color
-
+ - go get -u github.com/alecthomas/gometalinter
 script:
+ - gometalinter --install
+ - gometalinter --config=./gometalinter.json --vendor ./...
  - cp ./config_sample.json ./config.json
  - go test -v ./...

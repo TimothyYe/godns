@@ -1,3 +1,0 @@
-package: github.com/timothyye/godns
-import:
-- package: github.com/bitly/go-simplejson

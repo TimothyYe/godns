@@ -1,0 +1,19 @@
+{
+  "Deadline": "2m",
+  "Enable": [
+    "goimports",
+    "golint",
+    "ineffassign",
+    "misspell",
+    "vet",
+    "varcheck",
+    "deadcode",
+    "structcheck"
+  ],
+  "Exclude": [
+    "snapshots/",
+    "upstart/",
+    "systemd/"
+  ],
+  "LineLength": 100
+}
