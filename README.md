@@ -47,6 +47,8 @@ To compile binaries for MIPS (mips or mipsle):
 GOOS=linux GOARCH=mips/mipsle GOMIPS=softfloat go build -a
 ```
 
+And the binary can run well on routers.  
+
 ## Pre-condition
 
 * Register and own a domain.
