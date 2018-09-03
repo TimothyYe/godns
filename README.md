@@ -114,7 +114,6 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
     }
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
-  "log_path": "./godns.log",
   "socks5_proxy": ""
 }
 ```
