@@ -137,7 +137,6 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
     }
   ],
   "ip_url": "http://members.3322.org/dyndns/getip",
-  "log_path":"/users/timothy/workspace/src/godns/godns.log",
   "socks5_proxy": ""
 }
 ```
