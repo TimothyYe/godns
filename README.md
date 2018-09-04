@@ -102,7 +102,6 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
 ```json
 {
   "provider": "DNSPod",
-  "email": "",
   "password": "",
   "login_token": "your_id,your_token",
   "domains": [{
@@ -124,7 +123,6 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
 ```json
 {
   "provider": "HE",
-  "email": "",
   "password": "YourPassword",
   "login_token": "",
   "domains": [{
