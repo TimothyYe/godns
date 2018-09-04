@@ -88,10 +88,8 @@ func (handler *DNSPodHandler) GenerateHeader(content url.Values) url.Values {
 	header := url.Values{}
 	if handler.Configuration.LoginToken != "" {
 		header.Add("login_token", handler.Configuration.LoginToken)
-	} else {
-		header.Add("login_email", handler.Configuration.Email)
-		header.Add("login_password", handler.Configuration.Password)
 	}
+
 	header.Add("format", "json")
 	header.Add("lang", "en")
 	header.Add("error_on_empty", "no")
@@ -253,7 +251,7 @@ func (handler *DNSPodHandler) PostData(url string, content url.Values) (string, 
 	req, _ := http.NewRequest("POST", "https://dnsapi.cn"+url, strings.NewReader(values.Encode()))
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", handler.Configuration.Email))
+	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", ""))
 
 	response, err := client.Do(req)
 

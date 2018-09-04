@@ -74,8 +74,8 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 // CheckSettings check the format of settings
 func CheckSettings(config *Settings) error {
 	if config.Provider == DNSPOD {
-		if (config.Email == "" || config.Password == "") && config.LoginToken == "" {
-			return errors.New("email/password or login token cannot be empty")
+		if config.Password == "" && config.LoginToken == "" {
+			return errors.New("password or login token cannot be empty")
 		}
 	} else if config.Provider == HE {
 		if config.Password == "" {

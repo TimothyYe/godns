@@ -29,6 +29,7 @@ config.json
 *.swp
 *.gz
 cmd/godns/godns
+cmd/godns/config.json
 
 /.idea
 /godns.iml

@@ -1,6 +1,5 @@
 {
   "provider": "DNSPod",
-  "email": "example@gmail.com",
   "password": "",
   "login_token": "",
   "domains": [
