@@ -29,6 +29,7 @@ GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source p
 Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
 ## Supported DNS Provider
+* Cloudflare ([https://cloudflare.com](https://cloudflare.com))
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 
@@ -94,6 +95,28 @@ Usage of ./godns:
 * Configure your provider, domain/sub-domain info, username and password, etc.
 * Configure the SMTP options if you want, a mail notification will sent to your mailbox once the IP is changed.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
+
+### Config example for Cloudflare
+
+For Cloudflare, you need to provide email & Global API Key as password, and config all the domains & subdomains.
+
+```json
+{
+  "provider": "Cloudflare",
+  "email": "you@example.com"
+  "password": "Global API Key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "https://ifconfig.co/ip",
+  "socks5_proxy": ""
+}
+```
 
 ### Config example for DNSPod
 

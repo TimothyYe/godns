@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 
 	"golang.org/x/net/proxy"
 	"gopkg.in/gomail.v2"
@@ -38,6 +39,8 @@ const (
 	DNSPOD = "DNSPod"
 	// HE for he.net
 	HE = "HE"
+	// CLOUDFLARE for cloudflare.com
+	CLOUDFLARE = "Cloudflare"
 )
 
 // GetCurrentIP gets public IP from internet
@@ -68,7 +71,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 	defer response.Body.Close()
 
 	body, _ := ioutil.ReadAll(response.Body)
-	return string(body), nil
+	return strings.Trim(string(body), "\n"), nil
 }
 
 // CheckSettings check the format of settings
@@ -78,6 +81,13 @@ func CheckSettings(config *Settings) error {
 			return errors.New("password or login token cannot be empty")
 		}
 	} else if config.Provider == HE {
+		if config.Password == "" {
+			return errors.New("password cannot be empty")
+		}
+	} else if config.Provider == CLOUDFLARE {
+		if config.Email == "" {
+			return errors.New("email cannot be empty")
+		}
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}

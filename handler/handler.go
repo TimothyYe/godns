@@ -13,6 +13,8 @@ func CreateHandler(provider string) IHandler {
 	var handler IHandler
 
 	switch provider {
+	case godns.CLOUDFLARE:
+		handler = IHandler(&CloudflareHandler{})
 	case godns.DNSPOD:
 		handler = IHandler(&DNSPodHandler{})
 	case godns.HE:
