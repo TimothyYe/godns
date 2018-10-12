@@ -32,17 +32,19 @@ type DNSRecordUpdateResponse struct {
 	Success bool      `json:"success"`
 }
 
+// DNSRecord for Cloudflare API
 type DNSRecord struct {
-	Id      string `json:"id"`
-	Ip      string `json:"content"`
+	ID      string `json:"id"`
+	IP      string `json:"content"`
 	Name    string `json:"name"`
 	Proxied bool   `json:"proxied"`
 	Type    string `json:"type"`
-	ZoneId  string `json:"zone_id"`
+	ZoneID  string `json:"zone_id"`
 }
 
-func (r *DNSRecord) SetIp(ip string) {
-	r.Ip = ip
+// Update DNSRecord IP
+func (r *DNSRecord) SetIP(ip string) {
+	r.IP = ip
 }
 
 // response from zone api request
@@ -53,7 +55,7 @@ type ZoneResponse struct {
 
 // nested results, only care about name and id
 type Zone struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -73,18 +75,18 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 	}()
 
 	for {
-		currentIp, err := godns.GetCurrentIP(handler.Configuration)
+		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 		if err != nil {
 			log.Println("Error in GetCurrentIP:", err)
 			continue
 		}
-		log.Println("Current IP is:", currentIp)
+		log.Println("Current IP is:", currentIP)
 		// TODO: check against locally cached IP, if no change, skip update
 
 		log.Println("Checking IP for domain", domain.DomainName)
-		zoneId := handler.getZone(domain.DomainName)
-		if zoneId != "" {
-			records := handler.getDNSRecords(zoneId)
+		zoneID := handler.getZone(domain.DomainName)
+		if zoneID != "" {
+			records := handler.getDNSRecords(zoneID)
 
 			// update records
 			for _, rec := range records {
@@ -92,11 +94,11 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 					log.Println("Skiping record:", rec.Name)
 					continue
 				}
-				if rec.Ip != currentIp {
-					log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIp, rec.Ip)
-					handler.updateRecord(rec, currentIp)
+				if rec.IP != currentIP {
+					log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
+					handler.updateRecord(rec, currentIP)
 				} else {
-					log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.Ip)
+					log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
 				}
 			}
 		} else {
@@ -175,19 +177,19 @@ func (handler *CloudflareHandler) getZone(domain string) string {
 
 	for _, zone := range z.Zones {
 		if zone.Name == domain {
-			return zone.Id
+			return zone.ID
 		}
 	}
 	return ""
 }
 
 // Get all DNS A records for a zone
-func (handler *CloudflareHandler) getDNSRecords(zoneId string) []DNSRecord {
+func (handler *CloudflareHandler) getDNSRecords(zoneID string) []DNSRecord {
 
 	var empty []DNSRecord
 	var r DNSRecordResponse
 
-	req, client := handler.newRequest("GET", "/zones/"+zoneId+"/dns_records?type=A", nil)
+	req, client := handler.newRequest("GET", "/zones/"+zoneID+"/dns_records?type=A", nil)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Request error:", err.Error())
@@ -211,14 +213,14 @@ func (handler *CloudflareHandler) getDNSRecords(zoneId string) []DNSRecord {
 }
 
 // Update DNS A Record with new IP
-func (handler *CloudflareHandler) updateRecord(record DNSRecord, newIp string) {
+func (handler *CloudflareHandler) updateRecord(record DNSRecord, newIP string) {
 
 	var r DNSRecordUpdateResponse
-	record.SetIp(newIp)
+	record.SetIP(newIP)
 
 	j, _ := json.Marshal(record)
 	req, client := handler.newRequest("PUT",
-		"/zones/"+record.ZoneId+"/dns_records/"+record.Id,
+		"/zones/"+record.ZoneID+"/dns_records/"+record.ID,
 		bytes.NewBuffer(j),
 	)
 	resp, err := client.Do(req)
@@ -238,6 +240,6 @@ func (handler *CloudflareHandler) updateRecord(record DNSRecord, newIp string) {
 		body, _ := ioutil.ReadAll(resp.Body)
 		log.Printf("Response failed: %+v\n", string(body))
 	} else {
-		log.Printf("Record updated: %+v - %+v", record.Name, record.Ip)
+		log.Printf("Record updated: %+v - %+v", record.Name, record.IP)
 	}
 }
