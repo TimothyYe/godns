@@ -20,13 +20,13 @@ type CloudflareHandler struct {
 	API           string
 }
 
-// DNS api response
+// DNSRecordResponse struct
 type DNSRecordResponse struct {
 	Records []DNSRecord `json:"result"`
 	Success bool        `json:"success"`
 }
 
-// DNS update api response
+// DNSRecordUpdateResponse struct
 type DNSRecordUpdateResponse struct {
 	Record  DNSRecord `json:"result"`
 	Success bool      `json:"success"`
@@ -42,18 +42,18 @@ type DNSRecord struct {
 	ZoneID  string `json:"zone_id"`
 }
 
-// Update DNSRecord IP
+// SetIP updates DNSRecord.IP
 func (r *DNSRecord) SetIP(ip string) {
 	r.IP = ip
 }
 
-// response from zone api request
+// ZoneResponse is a wrapper for Zones
 type ZoneResponse struct {
 	Zones   []Zone `json:"result"`
 	Success bool   `json:"success"`
 }
 
-// nested results, only care about name and id
+// Zone object with id and name
 type Zone struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`

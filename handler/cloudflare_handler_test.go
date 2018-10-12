@@ -38,8 +38,8 @@ func TestResponseToJSON(t *testing.T) {
 	if resp.Success != true {
 		t.Errorf("Success Error: %#v != true ", resp.Success)
 	}
-	if resp.Zones[0].Id != "mk2b6fa491c12445a4376666a32429e1" {
-		t.Errorf("ID Error: %#v != mk2b6fa491c12445a4376666a32429e1 ", resp.Zones[0].Id)
+	if resp.Zones[0].ID != "mk2b6fa491c12445a4376666a32429e1" {
+		t.Errorf("ID Error: %#v != mk2b6fa491c12445a4376666a32429e1 ", resp.Zones[0].ID)
 	}
 	if resp.Zones[0].Name != "example.com" {
 		t.Errorf("Name Error: %#v != example.com", resp.Zones[0].Name)
@@ -72,8 +72,8 @@ func TestDNSResponseToJSON(t *testing.T) {
 	if resp.Success != true {
 		t.Errorf("Success Error: %#v != true ", resp.Success)
 	}
-	if resp.Records[0].Id != "F11cc63e02a42d38174b8e7c548a7b6f" {
-		t.Errorf("ID Error: %#v != F11cc63e02a42d38174b8e7c548a7b6f ", resp.Records[0].Id)
+	if resp.Records[0].ID != "F11cc63e02a42d38174b8e7c548a7b6f" {
+		t.Errorf("ID Error: %#v != F11cc63e02a42d38174b8e7c548a7b6f ", resp.Records[0].ID)
 	}
 	if resp.Records[0].Name != "example.com" {
 		t.Errorf("Name Error: %#v != example.com", resp.Records[0].Name)
@@ -114,8 +114,8 @@ func TestDNSUpdateResponseToJSON(t *testing.T) {
 	if resp.Success != true {
 		t.Errorf("Success Error: %#v != true ", resp.Success)
 	}
-	if resp.Record.Id != "F11cc63e02a42d38174b8e7c548a7b6f" {
-		t.Errorf("ID Error: %#v != F11cc63e02a42d38174b8e7c548a7b6f ", resp.Record.Id)
+	if resp.Record.ID != "F11cc63e02a42d38174b8e7c548a7b6f" {
+		t.Errorf("ID Error: %#v != F11cc63e02a42d38174b8e7c548a7b6f ", resp.Record.ID)
 	}
 	if resp.Record.Name != "example.com" {
 		t.Errorf("Name Error: %#v != example.com", resp.Record.Name)
