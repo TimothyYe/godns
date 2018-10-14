@@ -25,6 +25,7 @@ type Notify struct {
 // Settings struct
 type Settings struct {
 	Provider    string   `json:"provider"`
+	Email       string   `json:"email"`
 	Password    string   `json:"password"`
 	LoginToken  string   `json:"login_token"`
 	Domains     []Domain `json:"domains"`
