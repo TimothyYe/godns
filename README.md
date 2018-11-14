@@ -7,14 +7,12 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
  ```
 
-[![Release][7]][8] [![MIT licensed][9]][10] [![Build Status][1]][2] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
+[![MIT licensed][9]][10] [![Build Status][1]][2] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
 
 [1]: https://travis-ci.org/TimothyYe/godns.svg?branch=master
 [2]: https://travis-ci.org/TimothyYe/godns
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
 [4]: https://microbadger.com/images/timothyye/godns
-[7]: http://github-release-version.herokuapp.com/github/timothyye/godns/release.svg?style=flat
-[8]: https://github.com/TimothyYe/godns/releases
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
 [10]: LICENSE
 [11]: https://goreportcard.com/badge/github.com/timothyye/godns
@@ -54,7 +52,7 @@ And the binary can run well on routers.
 
 * Register and own a domain.
 
-* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/).
+* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/).
 
 ## Get it
 
