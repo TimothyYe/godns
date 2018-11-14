@@ -21,6 +21,9 @@ release:
 		go clean
 		CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
 		tar czvf ${BINARY}-arm64-${VERSION}.tar.gz ./${BINARY}
+		go clean
+		CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
+		tar czvf ${BINARY}-arm-${VERSION}.tar.gz ./${BINARY}
 		# Build for win
 		go clean
 		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o ${BINARY}.exe -ldflags "-X main.Version=${VERSION}"
