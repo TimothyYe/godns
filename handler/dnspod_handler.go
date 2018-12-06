@@ -36,6 +36,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 		}
 	}()
 
+	var lastIP string
 	for {
 		log.Printf("Checking IP for domain %s \r\n", domain.DomainName)
 		domainID := handler.GetDomain(domain.DomainName)
@@ -52,31 +53,37 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 		}
 		log.Println("currentIP is:", currentIP)
 
-		for _, subDomain := range domain.SubDomains {
+		//check against locally cached IP, if no change, skip update
+		if (currentIP == lastIP){
+			log.Printf("IP is the same as cached one. Skip update.\n")
+		}else{
+			lastIP = currentIP
+			
+			for _, subDomain := range domain.SubDomains {
 
-			subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
+				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
-			if subDomainID == "" || ip == "" {
-				log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
-				continue
-			}
-
-			// Continue to check the IP of sub-domain
-			if len(ip) > 0 && strings.TrimRight(currentIP, "\n") != strings.TrimRight(ip, "\n") {
-				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
-				handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
-
-				// Send mail notification if notify is enabled
-				if handler.Configuration.Notify.Enabled {
-					log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
-					godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
+				if subDomainID == "" || ip == "" {
+					log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+					continue
 				}
 
-			} else {
-				log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
-			}
-		}
+				// Continue to check the IP of sub-domain
+				if len(ip) > 0 && strings.TrimRight(currentIP, "\n") != strings.TrimRight(ip, "\n") {
+					log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
 
+					// Send mail notification if notify is enabled
+					if handler.Configuration.Notify.Enabled {
+						log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
+						godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
+					}
+
+				} else {
+					log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+				}
+			}
+		} 
 		// Interval is 5 minutes
 		log.Printf("Going to sleep, will start next checking in %d minutes...\r\n", godns.INTERVAL)
 		time.Sleep(time.Minute * godns.INTERVAL)

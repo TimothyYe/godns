@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+    "net"
 
 	"golang.org/x/net/proxy"
 	"gopkg.in/gomail.v2"
@@ -43,8 +44,87 @@ const (
 	CLOUDFLARE = "Cloudflare"
 )
 
-// GetCurrentIP gets public IP from internet
+//GetIPFromInterface gets IP address from the specific interface
+func GetIPFromInterface(configuration *Settings) (string,error) {
+ 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
+	if err != nil {
+		log.Println("can't get network device "+configuration.IPInterface+":", err)
+		return "", err
+	}
+
+	addrs, err  :=ifaces.Addrs();
+	if err != nil {
+		log.Println("can't get address from "+configuration.IPInterface+":", err)
+		return "", err
+	}
+
+	for _, addr := range addrs {
+		var ip net.IP
+		switch v := addr.(type) {
+		case *net.IPNet:
+			ip = v.IP
+		case *net.IPAddr:
+			ip = v.IP
+		}
+		if (ip == nil){
+			continue;
+		}
+
+		if (!(ip.IsGlobalUnicast() &&!(ip.IsUnspecified()||ip.IsMulticast()||ip.IsLoopback()||ip.IsLinkLocalUnicast()||ip.IsLinkLocalMulticast()||ip.IsInterfaceLocalMulticast()))){
+			continue;
+		} 
+
+		//the code is not ready for updating an AAAA record
+		/*
+		if (isIPv4(ip.String())){
+			if (configuration.IPType=="IPv6"){
+				continue;
+			}
+		}else{
+			if (configuration.IPType!="IPv6"){
+				continue;
+			}
+		} */
+		if (!isIPv4(ip.String())){
+			continue;
+		}
+
+		return ip.String(),nil
+		 
+	}
+	return "", errors.New("can't get a vaild address from "+configuration.IPInterface)
+}
+
+func isIPv4(ip string) bool{
+	return strings.Count(ip, ":") < 2
+}
+
+//GetCurrentIP gets an IP from either internet or specific interface, depending on configuration
 func GetCurrentIP(configuration *Settings) (string, error) {
+	var err error
+
+	if (configuration.IPUrl != ""){ 
+		ip, err := GetIPOnline(configuration)
+		if (err != nil){
+			log.Println("get ip online failed. Fallback to get ip from interface if possible.")
+		}else{
+			return ip,nil
+		}
+	}
+
+	if (configuration.IPInterface != ""){
+		ip, err := GetIPFromInterface(configuration)
+		if (err != nil){ 
+			log.Println("get ip from interface failed. There is no more ways to try.")
+		}else{
+			return ip,nil
+		}
+	}
+
+	return "", err
+}
+// GetIPOnline gets public IP from internet
+func GetIPOnline(configuration *Settings) (string, error) {
 	client := &http.Client{}
 
 	if configuration.Socks5Proxy != "" {
