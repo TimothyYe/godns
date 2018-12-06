@@ -173,6 +173,19 @@ Remember the DDNS key and fill it as password to the config.json.
 
 __NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key are the same.
 
+### Get an IP address from the interface
+
+For some reasons if you want to get an IP directly from the interface, say `eth0` for Linux or `Local Area Connection` for Windows, update config file like this:
+```json
+  "ip_url": "",
+  "ip_interface": "eth0",
+```
+
+If you set both `ip_url` and `ip_interface`, it first tries to get an IP address online, and if not succeed, gets
+an IP address from the interface as a fallback.
+
+Note that IPv6 address will be ignored currently.
+
 ### Email notification support
 
 Update config file and provide your SMTP options, a notification mail will be sent to your mailbox once the IP is changed and updated.  
@@ -241,5 +254,11 @@ Now godns supports to run in docker.
 docker run -d --name godns --restart=always \
 -v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:latest
 ```
+
+## Run it as an Windows service
+
+* Get [birkett/srvany-ng](https://github.com/birkett/srvany-ng/releases) from Github.
+* Uncompress and place the executable `srvany-ng.exe` to the same directory where `godns.exe` in.
+* Create a service and add registry keys according to the guide [here](https://github.com/birkett/srvany-ng).
 
 ## Enjoy it!
