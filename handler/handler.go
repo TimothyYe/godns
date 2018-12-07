@@ -8,7 +8,7 @@ type IHandler interface {
 	DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain)
 }
 
-// CreateHandler creates dns handler by different providers
+// CreateHandler creates DNS handler by different providers
 func CreateHandler(provider string) IHandler {
 	var handler IHandler
 
