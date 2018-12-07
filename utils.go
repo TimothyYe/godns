@@ -6,9 +6,9 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"strings"
-    "net"
 
 	"golang.org/x/net/proxy"
 	"gopkg.in/gomail.v2"
@@ -45,14 +45,14 @@ const (
 )
 
 //GetIPFromInterface gets IP address from the specific interface
-func GetIPFromInterface(configuration *Settings) (string,error) {
- 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
+func GetIPFromInterface(configuration *Settings) (string, error) {
+	ifaces, err := net.InterfaceByName(configuration.IPInterface)
 	if err != nil {
 		log.Println("can't get network device "+configuration.IPInterface+":", err)
 		return "", err
 	}
 
-	addrs, err  :=ifaces.Addrs();
+	addrs, err := ifaces.Addrs()
 	if err != nil {
 		log.Println("can't get address from "+configuration.IPInterface+":", err)
 		return "", err
@@ -66,36 +66,42 @@ func GetIPFromInterface(configuration *Settings) (string,error) {
 		case *net.IPAddr:
 			ip = v.IP
 		}
-		if (ip == nil){
-			continue;
+		if ip == nil {
+			continue
 		}
 
-		if (!(ip.IsGlobalUnicast() &&!(ip.IsUnspecified()||ip.IsMulticast()||ip.IsLoopback()||ip.IsLinkLocalUnicast()||ip.IsLinkLocalMulticast()||ip.IsInterfaceLocalMulticast()))){
-			continue;
-		} 
+		if !(ip.IsGlobalUnicast() &&
+			!(ip.IsUnspecified() ||
+				ip.IsMulticast() ||
+				ip.IsLoopback() ||
+				ip.IsLinkLocalUnicast() ||
+				ip.IsLinkLocalMulticast() ||
+				ip.IsInterfaceLocalMulticast())) {
+			continue
+		}
 
 		//the code is not ready for updating an AAAA record
 		/*
-		if (isIPv4(ip.String())){
-			if (configuration.IPType=="IPv6"){
-				continue;
-			}
-		}else{
-			if (configuration.IPType!="IPv6"){
-				continue;
-			}
-		} */
-		if (!isIPv4(ip.String())){
-			continue;
+			if (isIPv4(ip.String())){
+				if (configuration.IPType=="IPv6"){
+					continue;
+				}
+			}else{
+				if (configuration.IPType!="IPv6"){
+					continue;
+				}
+			} */
+		if !isIPv4(ip.String()) {
+			continue
 		}
 
-		return ip.String(),nil
-		 
+		return ip.String(), nil
+
 	}
-	return "", errors.New("can't get a vaild address from "+configuration.IPInterface)
+	return "", errors.New("can't get a vaild address from " + configuration.IPInterface)
 }
 
-func isIPv4(ip string) bool{
+func isIPv4(ip string) bool {
 	return strings.Count(ip, ":") < 2
 }
 
@@ -103,26 +109,27 @@ func isIPv4(ip string) bool{
 func GetCurrentIP(configuration *Settings) (string, error) {
 	var err error
 
-	if (configuration.IPUrl != ""){ 
+	if configuration.IPUrl != "" {
 		ip, err := GetIPOnline(configuration)
-		if (err != nil){
+		if err != nil {
 			log.Println("get ip online failed. Fallback to get ip from interface if possible.")
-		}else{
-			return ip,nil
+		} else {
+			return ip, nil
 		}
 	}
 
-	if (configuration.IPInterface != ""){
+	if configuration.IPInterface != "" {
 		ip, err := GetIPFromInterface(configuration)
-		if (err != nil){ 
+		if err != nil {
 			log.Println("get ip from interface failed. There is no more ways to try.")
-		}else{
-			return ip,nil
+		} else {
+			return ip, nil
 		}
 	}
 
 	return "", err
 }
+
 // GetIPOnline gets public IP from internet
 func GetIPOnline(configuration *Settings) (string, error) {
 	client := &http.Client{}

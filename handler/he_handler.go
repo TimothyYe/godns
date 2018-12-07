@@ -50,11 +50,11 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 		log.Println("currentIP is:", currentIP)
 
 		//check against locally cached IP, if no change, skip update
-		if (currentIP == lastIP){
+		if currentIP == lastIP {
 			log.Printf("IP is the same as cached one. Skip update.\n")
 		} else {
 			lastIP = currentIP
-			
+
 			for _, subDomain := range domain.SubDomains {
 				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(domain.DomainName, subDomain, currentIP)

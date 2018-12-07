@@ -83,7 +83,7 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 		}
 		log.Println("Current IP is:", currentIP)
 		//check against locally cached IP, if no change, skip update
-		if (currentIP == lastIP){
+		if currentIP == lastIP {
 			log.Printf("IP is the same as cached one. Skip update.\n")
 		} else {
 			lastIP = currentIP

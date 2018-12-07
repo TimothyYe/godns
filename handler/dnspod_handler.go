@@ -54,11 +54,11 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 		log.Println("currentIP is:", currentIP)
 
 		//check against locally cached IP, if no change, skip update
-		if (currentIP == lastIP){
+		if currentIP == lastIP {
 			log.Printf("IP is the same as cached one. Skip update.\n")
-		}else{
+		} else {
 			lastIP = currentIP
-			
+
 			for _, subDomain := range domain.SubDomains {
 
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
@@ -83,7 +83,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 					log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
 				}
 			}
-		} 
+		}
 		// Interval is 5 minutes
 		log.Printf("Going to sleep, will start next checking in %d minutes...\r\n", godns.INTERVAL)
 		time.Sleep(time.Minute * godns.INTERVAL)

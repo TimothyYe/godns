@@ -255,7 +255,7 @@ docker run -d --name godns --restart=always \
 -v /path/to/config.json:/usr/local/godns/config.json timothyye/godns:latest
 ```
 
-## Run it as an Windows service
+## Run it as a Windows service
 
 * Get [birkett/srvany-ng](https://github.com/birkett/srvany-ng/releases) from Github.
 * Uncompress and place the executable `srvany-ng.exe` to the same directory where `godns.exe` in.
