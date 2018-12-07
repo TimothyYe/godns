@@ -39,6 +39,7 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 		}
 	}()
 
+	var lastIP string
 	for {
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
@@ -48,21 +49,28 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 		}
 		log.Println("currentIP is:", currentIP)
 
-		for _, subDomain := range domain.SubDomains {
-			log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
-			handler.UpdateIP(domain.DomainName, subDomain, currentIP)
+		//check against locally cached IP, if no change, skip update
+		if (currentIP == lastIP){
+			log.Printf("IP is the same as cached one. Skip update.\n")
+		} else {
+			lastIP = currentIP
+			
+			for _, subDomain := range domain.SubDomains {
+				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 
-			// Send mail notification if notify is enabled
-			if handler.Configuration.Notify.Enabled {
-				log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
-				godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
+				// Send mail notification if notify is enabled
+				if handler.Configuration.Notify.Enabled {
+					log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
+					godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
+				}
 			}
 		}
-
 		// Interval is 5 minutes
 		log.Printf("Going to sleep, will start next checking in %d minutes...\r\n", godns.INTERVAL)
 		time.Sleep(time.Minute * godns.INTERVAL)
 	}
+
 }
 
 // UpdateIP update subdomain with current IP

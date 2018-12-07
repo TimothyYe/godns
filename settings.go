@@ -33,6 +33,9 @@ type Settings struct {
 	LogPath     string   `json:"log_path"`
 	Socks5Proxy string   `json:"socks5_proxy"`
 	Notify      Notify   `json:"notify"`
+	IPInterface string   `json:"ip_interface"`
+	//the code is not ready to update AAAA record
+	//IPType      string   `json:"ip_type"`
 }
 
 // LoadSettings -- Load settings from config file

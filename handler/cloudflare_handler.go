@@ -74,6 +74,7 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 		}
 	}()
 
+	var lastIP string
 	for {
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 		if err != nil {
@@ -81,30 +82,34 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 			continue
 		}
 		log.Println("Current IP is:", currentIP)
-		// TODO: check against locally cached IP, if no change, skip update
-
-		log.Println("Checking IP for domain", domain.DomainName)
-		zoneID := handler.getZone(domain.DomainName)
-		if zoneID != "" {
-			records := handler.getDNSRecords(zoneID)
-
-			// update records
-			for _, rec := range records {
-				if recordTracked(domain, &rec) != true {
-					log.Println("Skiping record:", rec.Name)
-					continue
-				}
-				if rec.IP != currentIP {
-					log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
-					handler.updateRecord(rec, currentIP)
-				} else {
-					log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
-				}
-			}
+		//check against locally cached IP, if no change, skip update
+		if (currentIP == lastIP){
+			log.Printf("IP is the same as cached one. Skip update.\n")
 		} else {
-			log.Println("Failed to find zone for domain:", domain.DomainName)
-		}
+			lastIP = currentIP
 
+			log.Println("Checking IP for domain", domain.DomainName)
+			zoneID := handler.getZone(domain.DomainName)
+			if zoneID != "" {
+				records := handler.getDNSRecords(zoneID)
+
+				// update records
+				for _, rec := range records {
+					if recordTracked(domain, &rec) != true {
+						log.Println("Skiping record:", rec.Name)
+						continue
+					}
+					if rec.IP != currentIP {
+						log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
+						handler.updateRecord(rec, currentIP)
+					} else {
+						log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
+					}
+				}
+			} else {
+				log.Println("Failed to find zone for domain:", domain.DomainName)
+			}
+		}
 		// Interval is 5 minutes
 		log.Printf("Going to sleep, will start next checking in %d minutes...\r\n", godns.INTERVAL)
 		time.Sleep(time.Minute * godns.INTERVAL)
