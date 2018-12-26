@@ -82,7 +82,6 @@ $ ./godns -h
 Usage of ./godns:
   -c string
         Specify a config file (default "./config.json")
-  -d    Run it as docker mode
   -h    Show help
 ```
 
