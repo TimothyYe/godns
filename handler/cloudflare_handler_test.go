@@ -161,7 +161,7 @@ func TestRecordTracked(t *testing.T) {
 
 	for _, rec := range resp.Records {
 		if recordTracked(domain, &rec) {
-			t.Info("Record founded: %+v\r\n", rec.Name)
+			t.Logf("Record founded: %+v\r\n", rec.Name)
 		}
 	}
 }
