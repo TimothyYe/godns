@@ -3,6 +3,7 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -95,7 +96,7 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 
 				// update records
 				for _, rec := range records {
-					if recordTracked(domain, &rec) != true {
+					if !recordTracked(domain, &rec) {
 						log.Println("Skiping record:", rec.Name)
 						continue
 					}
@@ -118,13 +119,8 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 
 // Check if record is present in domain conf
 func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
-
-	if record.Name == domain.DomainName {
-		return true
-	}
-
 	for _, subDomain := range domain.SubDomains {
-		sd := subDomain + "." + domain.DomainName
+		sd := fmt.Sprintf("%s.%s", subDomain, domain.DomainName)
 		if record.Name == sd {
 			return true
 		}
