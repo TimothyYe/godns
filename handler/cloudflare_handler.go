@@ -103,6 +103,12 @@ func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan cha
 					if rec.IP != currentIP {
 						log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
 						handler.updateRecord(rec, currentIP)
+
+						// Send mail notification if notify is enabled
+						if handler.Configuration.Notify.Enabled {
+							log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
+							godns.SendNotify(handler.Configuration, rec.Name, currentIP)
+						}
 					} else {
 						log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
 					}
