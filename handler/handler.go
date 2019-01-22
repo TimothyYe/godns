@@ -1,6 +1,12 @@
 package handler
 
-import "github.com/TimothyYe/godns"
+import (
+	"github.com/TimothyYe/godns"
+	"github.com/TimothyYe/godns/handler/alidns"
+	"github.com/TimothyYe/godns/handler/cloudflare"
+	"github.com/TimothyYe/godns/handler/dnspod"
+	"github.com/TimothyYe/godns/handler/he"
+)
 
 // IHandler is the interface for all DNS handlers
 type IHandler interface {
@@ -14,11 +20,13 @@ func CreateHandler(provider string) IHandler {
 
 	switch provider {
 	case godns.CLOUDFLARE:
-		handler = IHandler(&CloudflareHandler{})
+		handler = IHandler(&cloudflare.CloudflareHandler{})
 	case godns.DNSPOD:
-		handler = IHandler(&DNSPodHandler{})
+		handler = IHandler(&dnspod.DNSPodHandler{})
 	case godns.HE:
-		handler = IHandler(&HEHandler{})
+		handler = IHandler(&he.HEHandler{})
+	case godns.ALIDNS:
+		handler = IHandler(&alidns.AliDNSHandler{})
 	}
 
 	return handler

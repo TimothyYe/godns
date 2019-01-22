@@ -1,4 +1,4 @@
-package handler
+package dnspod
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/TimothyYe/godns"
-	"github.com/bitly/go-simplejson"
+	simplejson "github.com/bitly/go-simplejson"
 	"golang.org/x/net/proxy"
 )
 
@@ -68,7 +68,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 					continue
 				}
 
-				// Continue to check the IP of sub-domain
+				// Continue to check the IP of subdomain
 				if len(ip) > 0 && strings.TrimRight(currentIP, "\n") != strings.TrimRight(ip, "\n") {
 					log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)

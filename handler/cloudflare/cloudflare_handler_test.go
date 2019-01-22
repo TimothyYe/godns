@@ -1,4 +1,4 @@
-package handler
+package cloudflare
 
 import (
 	"encoding/json"

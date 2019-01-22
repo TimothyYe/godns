@@ -30,6 +30,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * Cloudflare ([https://cloudflare.com](https://cloudflare.com))
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
+* AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
 
 ## Supported Platforms
 * Linux
@@ -52,7 +53,7 @@ And the binary can run well on routers.
 
 * Register and own a domain.
 
-* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/).
+* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/) or [AliDNS](https://dc.console.aliyun.com).
 
 ## Get it
 
@@ -89,7 +90,7 @@ Usage of ./godns:
 
 * Get [config_sample.json](https://github.com/timothyye/godns/blob/master/config_sample.json) from Github.
 * Rename it to **config.json**.
-* Configure your provider, domain/sub-domain info, username and password, etc.
+* Configure your provider, domain/subdomain info, username and password, etc.
 * Configure the SMTP options if you want, a mail notification will sent to your mailbox once the IP is changed.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
 
@@ -124,6 +125,28 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
   "provider": "DNSPod",
   "password": "",
   "login_token": "your_id,your_token",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "http://members.3322.org/dyndns/getip",
+  "socks5_proxy": ""
+}
+```
+### Config example for AliDNS
+
+For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `password`,  and config all the domains & subdomains.
+
+```json
+{
+  "provider": "AliDNS",
+  "email": "AccessKeyID",
+  "password": "AccessKeySecret",
+  "login_token": "",
   "domains": [{
       "domain_name": "example.com",
       "sub_domains": ["www","test"]

@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"golang.org/x/net/proxy"
-	"gopkg.in/gomail.v2"
+	gomail "gopkg.in/gomail.v2"
 )
 
 var (
@@ -42,6 +42,8 @@ const (
 	HE = "HE"
 	// CLOUDFLARE for cloudflare.com
 	CLOUDFLARE = "Cloudflare"
+	// ALIDNS for AliDNS
+	ALIDNS = "AliDNS"
 )
 
 //GetIPFromInterface gets IP address from the specific interface
@@ -172,6 +174,13 @@ func CheckSettings(config *Settings) error {
 			return errors.New("password cannot be empty")
 		}
 	} else if config.Provider == CLOUDFLARE {
+		if config.Email == "" {
+			return errors.New("email cannot be empty")
+		}
+		if config.Password == "" {
+			return errors.New("password cannot be empty")
+		}
+	} else if config.Provider == ALIDNS {
 		if config.Email == "" {
 			return errors.New("email cannot be empty")
 		}
