@@ -20,18 +20,18 @@ var (
 	HEUrl = "https://dyn.dns.he.net/nic/update"
 )
 
-// HEHandler struct
-type HEHandler struct {
+// Handler struct
+type Handler struct {
 	Configuration *godns.Settings
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *HEHandler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 	handler.Configuration = conf
 }
 
 // DomainLoop the main logic loop
-func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
@@ -74,7 +74,7 @@ func (handler *HEHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godn
 }
 
 // UpdateIP update subdomain with current IP
-func (handler *HEHandler) UpdateIP(domain, subDomain, currentIP string) {
+func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	values := url.Values{}
 	values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
 	values.Add("password", handler.Configuration.Password)

@@ -9,18 +9,18 @@ import (
 	"github.com/TimothyYe/godns"
 )
 
-// AliDNSHandler struct
-type AliDNSHandler struct {
+// Handler struct
+type Handler struct {
 	Configuration *godns.Settings
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *AliDNSHandler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 	handler.Configuration = conf
 }
 
 // DomainLoop the main logic loop
-func (handler *AliDNSHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())

@@ -17,18 +17,18 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-// DNSPodHandler struct definition
-type DNSPodHandler struct {
+// Handler struct definition
+type Handler struct {
 	Configuration *godns.Settings
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *DNSPodHandler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 	handler.Configuration = conf
 }
 
 // DomainLoop the main logic loop
-func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
@@ -91,7 +91,7 @@ func (handler *DNSPodHandler) DomainLoop(domain *godns.Domain, panicChan chan<- 
 }
 
 // GenerateHeader generates the request header for DNSPod API
-func (handler *DNSPodHandler) GenerateHeader(content url.Values) url.Values {
+func (handler *Handler) GenerateHeader(content url.Values) url.Values {
 	header := url.Values{}
 	if handler.Configuration.LoginToken != "" {
 		header.Add("login_token", handler.Configuration.LoginToken)
@@ -111,7 +111,7 @@ func (handler *DNSPodHandler) GenerateHeader(content url.Values) url.Values {
 }
 
 // GetDomain returns specific domain by name
-func (handler *DNSPodHandler) GetDomain(name string) int64 {
+func (handler *Handler) GetDomain(name string) int64 {
 
 	var ret int64
 	values := url.Values{}
@@ -160,7 +160,7 @@ func (handler *DNSPodHandler) GetDomain(name string) int64 {
 }
 
 // GetSubDomain returns subdomain by domain id
-func (handler *DNSPodHandler) GetSubDomain(domainID int64, name string) (string, string) {
+func (handler *Handler) GetSubDomain(domainID int64, name string) (string, string) {
 	log.Println("debug:", domainID, name)
 	var ret, ip string
 	value := url.Values{}
@@ -205,7 +205,7 @@ func (handler *DNSPodHandler) GetSubDomain(domainID int64, name string) (string,
 }
 
 // UpdateIP update subdomain with current IP
-func (handler *DNSPodHandler) UpdateIP(domainID int64, subDomainID string, subDomainName string, ip string) {
+func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainName string, ip string) {
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domainID, 10))
 	value.Add("record_id", subDomainID)
@@ -236,7 +236,7 @@ func (handler *DNSPodHandler) UpdateIP(domainID int64, subDomainID string, subDo
 }
 
 // PostData post data and invoke DNSPod API
-func (handler *DNSPodHandler) PostData(url string, content url.Values) (string, error) {
+func (handler *Handler) PostData(url string, content url.Values) (string, error) {
 	client := &http.Client{}
 
 	if handler.Configuration.Socks5Proxy != "" {

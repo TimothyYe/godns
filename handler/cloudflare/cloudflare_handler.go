@@ -15,8 +15,8 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-// CloudflareHandler struct definition
-type CloudflareHandler struct {
+// Handler struct definition
+type Handler struct {
 	Configuration *godns.Settings
 	API           string
 }
@@ -61,13 +61,13 @@ type Zone struct {
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *CloudflareHandler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 	handler.Configuration = conf
 	handler.API = "https://api.cloudflare.com/client/v4"
 }
 
 // DomainLoop the main logic loop
-func (handler *CloudflareHandler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
@@ -136,7 +136,7 @@ func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
 }
 
 // Create a new request with auth in place and optional proxy
-func (handler *CloudflareHandler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
+func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
 	client := &http.Client{}
 
 	if handler.Configuration.Socks5Proxy != "" {
@@ -159,7 +159,7 @@ func (handler *CloudflareHandler) newRequest(method, url string, body io.Reader)
 }
 
 // Find the correct zone via domain name
-func (handler *CloudflareHandler) getZone(domain string) string {
+func (handler *Handler) getZone(domain string) string {
 
 	var z ZoneResponse
 
@@ -191,7 +191,7 @@ func (handler *CloudflareHandler) getZone(domain string) string {
 }
 
 // Get all DNS A records for a zone
-func (handler *CloudflareHandler) getDNSRecords(zoneID string) []DNSRecord {
+func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 
 	var empty []DNSRecord
 	var r DNSRecordResponse
@@ -220,7 +220,7 @@ func (handler *CloudflareHandler) getDNSRecords(zoneID string) []DNSRecord {
 }
 
 // Update DNS A Record with new IP
-func (handler *CloudflareHandler) updateRecord(record DNSRecord, newIP string) {
+func (handler *Handler) updateRecord(record DNSRecord, newIP string) {
 
 	var r DNSRecordUpdateResponse
 	record.SetIP(newIP)

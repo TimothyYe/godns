@@ -76,6 +76,7 @@ func getHTTPBody(url string) ([]byte, error) {
 	return nil, fmt.Errorf("Status %d, Error:%s", resp.StatusCode, body)
 }
 
+// NewAliDNS function creates instance of AliDNS and return
 func NewAliDNS(key, secret string) *AliDNS {
 	once.Do(func() {
 		instance = &AliDNS{
