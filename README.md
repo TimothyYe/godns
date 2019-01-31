@@ -101,7 +101,7 @@ For Cloudflare, you need to provide email & Global API Key as password, and conf
 ```json
 {
   "provider": "Cloudflare",
-  "email": "you@example.com"
+  "email": "you@example.com",
   "password": "Global API Key",
   "domains": [{
       "domain_name": "example.com",
