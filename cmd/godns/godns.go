@@ -41,7 +41,7 @@ func main() {
 	}
 
 	// Init log settings
-	log.SetPrefix("【GoDNS】")
+	log.SetPrefix("[GoDNS] ")
 	log.Println("GoDNS started, entering main loop...")
 	dnsLoop()
 }
