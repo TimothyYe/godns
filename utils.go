@@ -217,7 +217,10 @@ func SendNotify(configuration *Settings, domain, currentIP string) error {
 
 func buildTemplate(currentIP, domain string) string {
 	t := template.New("notification template")
-	t.Parse(mailTemplate)
+	if _, err := t.Parse(mailTemplate); err != nil {
+		log.Println("Failed to parse template")
+		return ""
+	}
 
 	data := struct {
 		CurrentIP string

@@ -5,6 +5,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -100,7 +101,10 @@ func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 	if err != nil {
 		fmt.Printf("GetDomainRecords error.%+v\n", err)
 	} else {
-		json.Unmarshal(body, resp)
+		if err := json.Unmarshal(body, resp); err != nil {
+			fmt.Printf("GetDomainRecords error. %+v\n", err)
+			return nil
+		}
 		return resp.DomainRecords.Record
 	}
 	return nil
@@ -119,6 +123,9 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 	}
 
 	urlPath := d.genRequestURL(parms)
+	if urlPath == "" {
+		return errors.New("Failed to generate request URL")
+	}
 	_, err := getHTTPBody(urlPath)
 	if err != nil {
 		fmt.Printf("UpdateDomainRecord error.%+v\n", err)
@@ -152,7 +159,9 @@ func (d *AliDNS) genRequestURL(parms map[string]string) string {
 	s = strings.Replace(s, "%2A", "%252A", -1)
 	mac := hmac.New(sha1.New, []byte(d.AccessKeySecret+"&"))
 
-	mac.Write([]byte(s))
+	if _, err := mac.Write([]byte(s)); err != nil {
+		return ""
+	}
 	sign := base64.StdEncoding.EncodeToString(mac.Sum(nil))
 	return fmt.Sprintf("%s?%s&Signature=%s", baseURL, path, url.QueryEscape(sign))
 }

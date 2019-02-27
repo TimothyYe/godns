@@ -107,7 +107,9 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 						// Send mail notification if notify is enabled
 						if handler.Configuration.Notify.Enabled {
 							log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
-							godns.SendNotify(handler.Configuration, rec.Name, currentIP)
+							if err := godns.SendNotify(handler.Configuration, rec.Name, currentIP); err != nil {
+								log.Println("Failed to send notification")
+							}
 						}
 					} else {
 						log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
