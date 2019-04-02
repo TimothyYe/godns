@@ -7,7 +7,7 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
  ```
 
-[![MIT licensed][9]][10] [![Build Status][1]][2] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
+[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu) [![MIT licensed][9]][10] [![Build Status][1]][2] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
 
 [1]: https://travis-ci.org/TimothyYe/godns.svg?branch=master
 [2]: https://travis-ci.org/TimothyYe/godns
