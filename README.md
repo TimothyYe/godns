@@ -111,7 +111,7 @@ For Cloudflare, you need to provide email & Global API Key as password, and conf
       "sub_domains": ["www","test"]
     }
   ],
-  "ip_url": "https://ifconfig.co/ip",
+  "ip_url": "https://myip.biturl.top",
   "socks5_proxy": ""
 }
 ```
@@ -133,7 +133,7 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
       "sub_domains": ["www","test"]
     }
   ],
-  "ip_url": "http://members.3322.org/dyndns/getip",
+  "ip_url": "https://myip.biturl.top",
   "socks5_proxy": ""
 }
 ```
@@ -155,7 +155,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
       "sub_domains": ["www","test"]
     }
   ],
-  "ip_url": "http://members.3322.org/dyndns/getip",
+  "ip_url": "https://myip.biturl.top",
   "socks5_proxy": ""
 }
 ```
@@ -176,7 +176,7 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
       "sub_domains": ["www","test"]
     }
   ],
-  "ip_url": "http://members.3322.org/dyndns/getip",
+  "ip_url": "https://myip.biturl.top",
   "socks5_proxy": ""
 }
 ```
