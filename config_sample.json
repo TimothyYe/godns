@@ -18,7 +18,7 @@
       ]
     }
   ],
-  "ip_url": "http://members.3322.org/dyndns/getip",
+  "ip_url": "https://myip.biturl.top",
   "ip_interface": "eth0",
   "socks5_proxy": "",
   "notify": {
