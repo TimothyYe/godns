@@ -112,6 +112,7 @@ For Cloudflare, you need to provide email & Global API Key as password, and conf
     }
   ],
   "ip_url": "https://myip.biturl.top",
+	"interval": 300,
   "socks5_proxy": ""
 }
 ```
@@ -134,6 +135,7 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
     }
   ],
   "ip_url": "https://myip.biturl.top",
+	"interval": 300,
   "socks5_proxy": ""
 }
 ```
@@ -156,6 +158,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
     }
   ],
   "ip_url": "https://myip.biturl.top",
+	"interval": 300,
   "socks5_proxy": ""
 }
 ```
@@ -177,6 +180,7 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
     }
   ],
   "ip_url": "https://myip.biturl.top",
+	"interval": 300,
   "socks5_proxy": ""
 }
 ```
