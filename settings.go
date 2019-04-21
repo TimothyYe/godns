@@ -30,6 +30,7 @@ type Settings struct {
 	LoginToken  string   `json:"login_token"`
 	Domains     []Domain `json:"domains"`
 	IPUrl       string   `json:"ip_url"`
+	Interval    int      `json:"interval"`
 	LogPath     string   `json:"log_path"`
 	Socks5Proxy string   `json:"socks5_proxy"`
 	Notify      Notify   `json:"notify"`
@@ -51,6 +52,11 @@ func LoadSettings(configPath string, settings *Settings) error {
 	if err != nil {
 		fmt.Println("Error occurs while unmarshal config file, please make sure config file correct!")
 		return err
+	}
+
+	if settings.Interval == 0 {
+		// set default interval as 5 minutes if interval is 0
+		settings.Interval = 5 * 60
 	}
 
 	return nil

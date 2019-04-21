@@ -19,6 +19,7 @@
     }
   ],
   "ip_url": "https://myip.biturl.top",
+  "interval": 300,
   "ip_interface": "eth0",
   "socks5_proxy": "",
   "notify": {
