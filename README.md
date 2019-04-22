@@ -94,6 +94,17 @@ Usage of ./godns:
 * Configure the SMTP options if you want, a mail notification will sent to your mailbox once the IP is changed.
 * Save it in the same directory of GoDNS, or use -c=your_conf_path command.
 
+## Config fields
+
+* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `DNSPod`, `AliDNS`, `HE` .
+* email: Email or account name of your DNS provider.
+* password: Password of your account.
+* login_token: Login token of your account.
+* domains: Domains list, with your sub domains.
+* ip_url: A site helps you to get your public IP address.
+* interval: The interval setting for GoDNS to check your public IP changes.
+* socks5_proxy: Socks5 proxy server.
+
 ### Config example for Cloudflare
 
 For Cloudflare, you need to provide email & Global API Key as password, and config all the domains & subdomains.
