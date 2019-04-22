@@ -102,7 +102,7 @@ Usage of ./godns:
 * login_token: Login token of your account.
 * domains: Domains list, with your sub domains.
 * ip_url: A site helps you to get your public IP address.
-* interval: The interval setting for GoDNS to check your public IP changes.
+* interval: The interval `seconds` that GoDNS check your public IP.
 * socks5_proxy: Socks5 proxy server.
 
 ### Config example for Cloudflare
