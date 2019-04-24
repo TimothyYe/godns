@@ -150,6 +150,29 @@ For DNSPod, you need to provide email & password,  and config all the domains & 
   "socks5_proxy": ""
 }
 ```
+
+### Config example for Cloudflare
+
+For Cloudflare, you need to provide email & Global API Key as password, and config all the domains & subdomains.
+
+```json
+{
+  "provider": "Cloudflare",
+  "email": "you@example.com",
+  "password": "Global API Key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "https://myip.biturl.top",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
 ### Config example for AliDNS
 
 For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `password`,  and config all the domains & subdomains.

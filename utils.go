@@ -42,6 +42,8 @@ const (
 	CLOUDFLARE = "Cloudflare"
 	// ALIDNS for AliDNS
 	ALIDNS = "AliDNS"
+	// GOOGLE for Google Domains
+	GOOGLE = "Google"
 )
 
 //GetIPFromInterface gets IP address from the specific interface
