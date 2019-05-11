@@ -130,12 +130,11 @@ For Cloudflare, you need to provide email & Global API Key as password, and conf
 
 ### Config example for DNSPod
 
-For DNSPod, you need to provide email & password,  and config all the domains & subdomains.
+For DNSPod, you need to provide your API Token(you can create it [here](https://www.dnspod.cn/console/user/security)), and config all the domains & subdomains.
 
 ```json
 {
   "provider": "DNSPod",
-  "password": "",
   "login_token": "your_id,your_token",
   "domains": [{
       "domain_name": "example.com",
