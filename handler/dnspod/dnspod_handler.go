@@ -64,7 +64,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
 				if subDomainID == "" || ip == "" {
-					log.Printf("domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+					log.Printf("Domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
 					continue
 				}
 
