@@ -28,7 +28,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 
 ## Supported DNS Provider
 * Cloudflare ([https://cloudflare.com](https://cloudflare.com))
-* Google Domains ([https://domains.google](https://domains.google)
+* Google Domains ([https://domains.google](https://domains.google))
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 * AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
