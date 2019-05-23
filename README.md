@@ -150,15 +150,15 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
 }
 ```
 
-### Config example for Cloudflare
+### Config example for Google Domains
 
-For Cloudflare, you need to provide email & Global API Key as password, and config all the domains & subdomains.
+For Google Domains, you need to provide email & password, and config all the domains & subdomains.
 
 ```json
 {
-  "provider": "Cloudflare",
-  "email": "you@example.com",
-  "password": "Global API Key",
+  "provider": "Google",
+  "email": "Your_Username",
+  "password": "Your_Password",
   "domains": [{
       "domain_name": "example.com",
       "sub_domains": ["www","test"]
