@@ -97,7 +97,7 @@ Usage of ./godns:
 
 ## Config fields
 
-* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `DNSPod`, `AliDNS`, `HE` .
+* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE` .
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
 * login_token: Login token of your account.
