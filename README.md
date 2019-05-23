@@ -54,7 +54,7 @@ And the binary can run well on routers.
 
 * Register and own a domain.
 
-* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/) or [AliDNS](https://dc.console.aliyun.com).
+* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/) or [Google Domains](https://domains.google) or [AliDNS](https://dc.console.aliyun.com).
 
 ## Get it
 
