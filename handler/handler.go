@@ -5,6 +5,7 @@ import (
 	"github.com/TimothyYe/godns/handler/alidns"
 	"github.com/TimothyYe/godns/handler/cloudflare"
 	"github.com/TimothyYe/godns/handler/dnspod"
+	"github.com/TimothyYe/godns/handler/google"
 	"github.com/TimothyYe/godns/handler/he"
 )
 
@@ -27,6 +28,8 @@ func CreateHandler(provider string) IHandler {
 		handler = IHandler(&he.Handler{})
 	case godns.ALIDNS:
 		handler = IHandler(&alidns.Handler{})
+	case godns.GOOGLE:
+		handler = IHandler(&google.Handler{})
 	}
 
 	return handler
