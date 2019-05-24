@@ -27,12 +27,14 @@ GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source p
 Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
 ## Supported DNS Provider
+
 * Cloudflare ([https://cloudflare.com](https://cloudflare.com))
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 * AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
 
 ## Supported Platforms
+
 * Linux
 * MacOS
 * ARM Linux (Raspberry Pi, etc...)
@@ -43,7 +45,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 
 To compile binaries for MIPS (mips or mipsle):
 
-```
+```bash
 GOOS=linux GOARCH=mips/mipsle GOMIPS=softfloat go build -a
 ```
 
@@ -64,6 +66,7 @@ And the binary can run well on routers.
 ```bash
 git clone https://github.com/timothyye/godns.git
 ```
+
 * Go into the godns directory, get related library and then build it:
 
 ```bash
@@ -172,6 +175,7 @@ For Google Domains, you need to provide email & password, and config all the dom
   "socks5_proxy": ""
 }
 ```
+
 ### Config example for AliDNS
 
 For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `password`,  and config all the domains & subdomains.
@@ -195,6 +199,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
   "socks5_proxy": ""
 }
 ```
+
 ### Config example for HE.net
 
 For HE, email is not needed, just fill DDNS key to password, and config all the domains & subdomains.
@@ -235,6 +240,7 @@ __NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key
 ### Get an IP address from the interface
 
 For some reasons if you want to get an IP directly from the interface, say `eth0` for Linux or `Local Area Connection` for Windows, update config file like this:
+
 ```json
   "ip_url": "",
   "ip_interface": "eth0",
