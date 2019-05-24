@@ -29,6 +29,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 ## Supported DNS Provider
 
 * Cloudflare ([https://cloudflare.com](https://cloudflare.com))
+* Google Domains ([https://domains.google](https://domains.google))
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 * AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
@@ -55,7 +56,7 @@ And the binary can run well on routers.
 
 * Register and own a domain.
 
-* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/) or [AliDNS](https://dc.console.aliyun.com).
+* Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/) or [Google Domains](https://domains.google) or [AliDNS](https://dc.console.aliyun.com).
 
 ## Get it
 
@@ -99,7 +100,7 @@ Usage of ./godns:
 
 ## Config fields
 
-* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `DNSPod`, `AliDNS`, `HE` .
+* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE` .
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
 * login_token: Login token of your account.
