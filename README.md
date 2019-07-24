@@ -323,8 +323,23 @@ docker run -d --name godns --restart=always \
 
 ## Run it as a Windows service
 
-* Get [birkett/srvany-ng](https://github.com/birkett/srvany-ng/releases) from Github.
-* Uncompress and place the executable `srvany-ng.exe` to the same directory where `godns.exe` in.
-* Create a service and add registry keys according to the guide [here](https://github.com/birkett/srvany-ng).
+After creating your config.json file:
+
+* Get the latest [NSSM](https://nssm.cc/download) for create a windows service.
+* Open the command prompt (as administrator) in the folder where you downloaded NSSM (e.g. C:\Downloads\nssm\ **win64**) and run:
+
+```
+nssm install YOURSERVICENAME
+```
+
+You will have an interface to configure your service, it is very simple in the "Application" tab just indicate where your `godns.exe` file is. Optionally you can also define a description on the "Details" tab and define a log file on the "I/O" tab.
+
+* Finish using the "Install service" button.
+* Done. Now whenever windows start your service will be loaded.
+* To uninstall:
+
+```
+nssm remove YOURSERVICENAME
+```
 
 ## Enjoy it!
