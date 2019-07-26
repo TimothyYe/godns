@@ -26,7 +26,7 @@ GoDNS is a dynamic DNS (DDNS) client tool, it is based on my early open source p
 
 Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call it [GoDNS](https://github.com/TimothyYe/godns).
 
-## Supported DNS Provider
+## Supported DNS Providers
 
 * Cloudflare ([https://cloudflare.com](https://cloudflare.com))
 * Google Domains ([https://domains.google](https://domains.google))
