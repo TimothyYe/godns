@@ -44,6 +44,8 @@ const (
 	ALIDNS = "AliDNS"
 	// GOOGLE for Google Domains
 	GOOGLE = "Google"
+	// DUCK for Duck DNS
+	DUCK = "DuckDNS"
 )
 
 //GetIPFromInterface gets IP address from the specific interface
@@ -187,8 +189,12 @@ func CheckSettings(config *Settings) error {
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
+	} else if config.Provider == DUCK {
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
 	} else {
-		return errors.New("please provide supported DNS provider: DNSPod/HE")
+		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS")
 	}
 
 	return nil

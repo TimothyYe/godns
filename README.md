@@ -33,6 +33,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * DNSPod ([https://www.dnspod.cn/](https://www.dnspod.cn/))
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 * AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
+* DuckDNS ([https://www.duckdns.org](https://www.duckdns.org))
 
 ## Supported Platforms
 
@@ -198,6 +199,29 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
+}
+```
+
+### Config example for DuckDNS
+
+For DuckDNS, only need to provide the `token`, config 1 default domain & subdomains.
+
+```json
+{
+  "provider": "DuckDNS",
+  "password": "",
+  "login_token": "3aaaaaaaa-f411-4198-a5dc-8381cac61b87",
+  "domains": [
+    {
+      "domain_name": "www.duckdns.org",
+      "sub_domains": [
+        "myname"
+      ]
+    }
+  ],
+  "ip_url": "https://myip.biturl.top",
+  "interval": 30,
+  "socks5_proxy": "",
 }
 ```
 
