@@ -59,6 +59,8 @@ And the binary can run well on routers.
 
 * Domain's nameserver points to [DNSPod](https://www.dnspod.cn/) or [HE.net](https://dns.he.net/) or [Cloudflare](https://www.cloudflare.com/) or [Google Domains](https://domains.google) or [AliDNS](https://dc.console.aliyun.com).
 
+* Or just register an account from [DuckDNS](https://www.duckdns.org/).
+
 ## Get it
 
 ### Build it from source code
