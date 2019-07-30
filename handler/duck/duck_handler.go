@@ -51,6 +51,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		if currentIP == lastIP {
 			log.Printf("IP is the same as cached one. Skip update.\n")
 		} else {
+			lastIP = currentIP
 			client := &http.Client{}
 
 			if handler.Configuration.Socks5Proxy != "" {
