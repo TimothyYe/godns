@@ -109,6 +109,26 @@ func isIPv4(ip string) bool {
 	return strings.Count(ip, ":") < 2
 }
 
+// GetHttpClient creates the HTTP client and return it
+func GetHttpClient(configuration *Settings) *http.Client {
+	client := &http.Client{}
+
+	if configuration.Socks5Proxy != "" {
+		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
+		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
+		if err != nil {
+			log.Println("can't connect to the proxy:", err)
+			return nil
+		}
+
+		httpTransport := &http.Transport{}
+		client.Transport = httpTransport
+		httpTransport.Dial = dialer.Dial
+	}
+
+	return client
+}
+
 //GetCurrentIP gets an IP from either internet or specific interface, depending on configuration
 func GetCurrentIP(configuration *Settings) (string, error) {
 	var err error

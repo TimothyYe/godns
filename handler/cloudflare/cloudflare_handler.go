@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/TimothyYe/godns"
-	"golang.org/x/net/proxy"
 )
 
 // Handler struct definition
@@ -139,18 +138,9 @@ func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
 
 // Create a new request with auth in place and optional proxy
 func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
-	client := &http.Client{}
-
-	if handler.Configuration.Socks5Proxy != "" {
-		log.Println("use socks5 proxy:" + handler.Configuration.Socks5Proxy)
-		dialer, err := proxy.SOCKS5("tcp", handler.Configuration.Socks5Proxy, nil, proxy.Direct)
-		if err != nil {
-			log.Println("can't connect to the proxy:", err)
-		} else {
-			httpTransport := &http.Transport{}
-			client.Transport = httpTransport
-			httpTransport.Dial = dialer.Dial
-		}
+	client := godns.GetHttpClient(handler.Configuration)
+	if client == nil {
+		log.Println("cannot create HTTP client")
 	}
 
 	req, _ := http.NewRequest(method, handler.API+url, body)

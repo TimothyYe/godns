@@ -4,12 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"runtime/debug"
 	"time"
 
 	"github.com/TimothyYe/godns"
-	"golang.org/x/net/proxy"
 )
 
 var (
@@ -52,20 +50,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			log.Printf("IP is the same as cached one. Skip update.\n")
 		} else {
 			lastIP = currentIP
-			client := &http.Client{}
-
-			if handler.Configuration.Socks5Proxy != "" {
-				log.Println("use socks5 proxy:" + handler.Configuration.Socks5Proxy)
-				dialer, err := proxy.SOCKS5("tcp", handler.Configuration.Socks5Proxy, nil, proxy.Direct)
-				if err != nil {
-					log.Println("can't connect to the proxy:", err)
-					return
-				}
-
-				httpTransport := &http.Transport{}
-				client.Transport = httpTransport
-				httpTransport.Dial = dialer.Dial
-			}
+			client := godns.GetHttpClient(handler.Configuration)
 
 			for _, subDomain := range domain.SubDomains {
 				// update IP with HTTP GET request

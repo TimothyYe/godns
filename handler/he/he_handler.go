@@ -11,8 +11,6 @@ import (
 	"time"
 
 	"github.com/TimothyYe/godns"
-
-	"golang.org/x/net/proxy"
 )
 
 var (
@@ -82,20 +80,7 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	values.Add("password", handler.Configuration.Password)
 	values.Add("myip", currentIP)
 
-	client := &http.Client{}
-
-	if handler.Configuration.Socks5Proxy != "" {
-		log.Println("use socks5 proxy:" + handler.Configuration.Socks5Proxy)
-		dialer, err := proxy.SOCKS5("tcp", handler.Configuration.Socks5Proxy, nil, proxy.Direct)
-		if err != nil {
-			log.Println("can't connect to the proxy:", err)
-			return
-		}
-
-		httpTransport := &http.Transport{}
-		client.Transport = httpTransport
-		httpTransport.Dial = dialer.Dial
-	}
+	client := godns.GetHttpClient(handler.Configuration)
 
 	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
 	resp, err := client.Do(req)

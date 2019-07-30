@@ -2,6 +2,7 @@ package dnspod
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/TimothyYe/godns"
 	simplejson "github.com/bitly/go-simplejson"
-	"golang.org/x/net/proxy"
 )
 
 // Handler struct definition
@@ -239,21 +239,10 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 
 // PostData post data and invoke DNSPod API
 func (handler *Handler) PostData(url string, content url.Values) (string, error) {
-	client := &http.Client{}
+	client := godns.GetHttpClient(handler.Configuration)
 
-	if handler.Configuration.Socks5Proxy != "" {
-
-		log.Println("use socks5 proxy:" + handler.Configuration.Socks5Proxy)
-
-		dialer, err := proxy.SOCKS5("tcp", handler.Configuration.Socks5Proxy, nil, proxy.Direct)
-		if err != nil {
-			fmt.Println("can't connect to the proxy:", err)
-			return "", err
-		}
-
-		httpTransport := &http.Transport{}
-		client.Transport = httpTransport
-		httpTransport.Dial = dialer.Dial
+	if client == nil {
+		return "", errors.New("failed to create HTTP client")
 	}
 
 	values := handler.GenerateHeader(content)
