@@ -6,6 +6,14 @@ build:
 # Installs our project: copies binaries
 install:
 		GO111MODULE=on go install
+image:
+		# Build docker image
+		go clean
+		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
+		docker build -t timothyye/godns:${VERSION} .
+		docker tag timothyye/godns:${VERSION} timothyye/godns:latest
+		docker push timothyye/godns:${VERSION}
+		docker push timothyye/godns:latest
 release:
 		# Clean
 		go clean
@@ -28,14 +36,7 @@ release:
 		go clean
 		CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GO111MODULE=on go build -o ${BINARY}.exe -ldflags "-X main.Version=${VERSION}"
 		tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe
-		go clean
-		# Build docker image
-		go clean
-		CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
-		docker build -t timothyye/godns:${VERSION} .
-		docker tag timothyye/godns:${VERSION} timothyye/godns:latest
-		docker push timothyye/godns:${VERSION}
-		docker push timothyye/godns:latest
+		make image
 # Cleans our projects: deletes binaries
 clean:
 		go clean
