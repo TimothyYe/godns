@@ -103,7 +103,7 @@ Usage of ./godns:
 
 ## Config fields
 
-* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE` .
+* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`.
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
 * login_token: Login token of your account.
@@ -222,8 +222,8 @@ For DuckDNS, only need to provide the `token`, config 1 default domain & subdoma
     }
   ],
   "ip_url": "https://myip.biturl.top",
-  "interval": 30,
-  "socks5_proxy": "",
+  "interval": 300,
+  "socks5_proxy": ""
 }
 ```
 
