@@ -82,8 +82,12 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	values.Add("myip", currentIP)
 
 	client := godns.GetHttpClient(handler.Configuration)
-
 	req, _ := http.NewRequest("POST", GoogleUrl, strings.NewReader(values.Encode()))
+
+	if handler.Configuration.UserAgent != "" {
+		req.Header.Add("User-Agent", handler.Configuration.UserAgent)
+	}
+
 	resp, err := client.Do(req)
 
 	if err != nil {

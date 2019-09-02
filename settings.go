@@ -31,6 +31,7 @@ type Settings struct {
 	Domains     []Domain `json:"domains"`
 	IPUrl       string   `json:"ip_url"`
 	Interval    int      `json:"interval"`
+	UserAgent   string   `json:"user_agent,omitempty"`
 	LogPath     string   `json:"log_path"`
 	Socks5Proxy string   `json:"socks5_proxy"`
 	Notify      Notify   `json:"notify"`
