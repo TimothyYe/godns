@@ -17,4 +17,4 @@ jobs:
       uses: actions/checkout@v1
 
     - name: Build
-      run: go build -v .
+      run: cd cmd/godns && go build -v .
