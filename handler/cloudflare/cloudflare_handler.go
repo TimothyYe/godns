@@ -40,6 +40,7 @@ type DNSRecord struct {
 	Proxied bool   `json:"proxied"`
 	Type    string `json:"type"`
 	ZoneID  string `json:"zone_id"`
+	TTL	int32  `json:"ttl"`
 }
 
 // SetIP updates DNSRecord.IP
