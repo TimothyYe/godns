@@ -7,10 +7,8 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
  ```
 
-[![MIT licensed][9]][10] [![LICENSE](https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE) [![Build Status][1]][2] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
+[![MIT licensed][9]][10] [![LICENSE](https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE) [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
 
-[1]: https://travis-ci.org/TimothyYe/godns.svg?branch=master
-[2]: https://travis-ci.org/TimothyYe/godns
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
 [4]: https://microbadger.com/images/timothyye/godns
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
