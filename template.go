@@ -35,7 +35,7 @@ var mailTemplate = `
                                 <h1 class="size-28" style="Margin-top: 0;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #000;font-size: 24px;line-height: 32px;font-family: avenir,sans-serif;text-align: center;"
                                     lang="x-size-28">
                                     <span class="font-avenir">
-                                        <span style="color:#ffffff">Your IP address is changed to</span>
+                                        <span style="color:#ffffff">Your IP address has changed to</span>
                                     </span>
                                 </h1>
                                 <h1 class="size-48" style="Margin-top: 20px;Margin-bottom: 0;font-style: normal;font-weight: normal;color: #000;font-size: 36px;line-height: 43px;font-family: avenir,sans-serif;text-align: center;"
