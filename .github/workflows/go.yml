@@ -18,5 +18,3 @@ jobs:
 
     - name: Build
       run: cd cmd/godns && go build -v .
-    - name: GolangCI-Linter
-      uses: Mushus/golangci-linter@v1.1.1
