@@ -46,6 +46,10 @@ const (
 	GOOGLE = "Google"
 	// DUCK for Duck DNS
 	DUCK = "DuckDNS"
+	// IPV4 for IPV4 mode
+	IPV4 = "IPV4"
+	// IPV6 for IPV6 mode
+	IPV6 = "IPV6"
 )
 
 //GetIPFromInterface gets IP address from the specific interface
@@ -84,17 +88,17 @@ func GetIPFromInterface(configuration *Settings) (string, error) {
 			continue
 		}
 
-		//the code is not ready for updating an AAAA record
-		/*
-			if (isIPv4(ip.String())){
-				if (configuration.IPType=="IPv6"){
-					continue;
-				}
-			}else{
-				if (configuration.IPType!="IPv6"){
-					continue;
-				}
-			} */
+		//the code is not ready for updating the 'AAAA' record
+		if isIPv4(ip.String()) {
+			if strings.ToUpper(configuration.Mode) == IPV4 {
+				continue
+			}
+		} else {
+			if configuration.Mode != IPV6 {
+				continue
+			}
+		}
+
 		if !isIPv4(ip.String()) {
 			continue
 		}
@@ -172,7 +176,14 @@ func GetIPOnline(configuration *Settings) (string, error) {
 		httpTransport.Dial = dialer.Dial
 	}
 
-	response, err := client.Get(configuration.IPUrl)
+	var response *http.Response
+	var err error
+
+	if configuration.Mode == IPV4 {
+		response, err = client.Get(configuration.IPUrl)
+	} else {
+		response, err = client.Get(configuration.IPV6Url)
+	}
 
 	if err != nil {
 		log.Println("Cannot get IP...")
