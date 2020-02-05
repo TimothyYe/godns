@@ -104,7 +104,7 @@ Usage of ./godns:
 * provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`.
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
-* login_token: Login token of your account.
+* login_token: API token of your account.
 * domains: Domains list, with your sub domains.
 * ip_url: A site helps you to get your public IP address.
 * interval: The interval `seconds` that GoDNS check your public IP.
