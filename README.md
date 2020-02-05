@@ -112,13 +112,35 @@ Usage of ./godns:
 
 ### Config example for Cloudflare
 
-For Cloudflare, you need to provide email & Global API Key as password, and config all the domains & subdomains.
+For Cloudflare, you need to provide the email & Global API Key as password (or to use the API token) and config all the domains & subdomains.
+
+* Using email & Global API Key
 
 ```json
 {
   "provider": "Cloudflare",
   "email": "you@example.com",
   "password": "Global API Key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "https://myip.biturl.top",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+* Using the API Token
+
+```json
+{
+  "provider": "Cloudflare",
+  "login_token": "API Token",
   "domains": [{
       "domain_name": "example.com",
       "sub_domains": ["www","test"]
