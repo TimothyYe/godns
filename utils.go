@@ -173,7 +173,7 @@ func GetIPOnline(configuration *Settings) (string, error) {
 	var response *http.Response
 	var err error
 
-	if configuration.IPType == "" || configuration.IPType == IPV4 {
+	if configuration.IPType == "" || strings.ToUpper(configuration.IPType) == IPV4 {
 		response, err = client.Get(configuration.IPUrl)
 	} else {
 		response, err = client.Get(configuration.IPV6Url)
