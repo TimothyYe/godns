@@ -93,13 +93,9 @@ func GetIPFromInterface(configuration *Settings) (string, error) {
 				continue
 			}
 		} else {
-			if configuration.IPType != IPV6 {
+			if strings.ToUpper(configuration.IPType) != IPV6 {
 				continue
 			}
-		}
-
-		if !isIPv4(ip.String()) {
-			continue
 		}
 
 		return ip.String(), nil
