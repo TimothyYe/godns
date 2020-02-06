@@ -117,6 +117,7 @@ Usage of ./godns:
 Supported provider(s):
 * Cloudflare
 * HE.net
+* DNSPod
 
 To enable the `IPv6` mode of GoDNS, you only need two steps:
 * Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured.
