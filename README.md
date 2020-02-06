@@ -119,6 +119,7 @@ Supported provider(s):
 * HE.net
 * DNSPod
 * DuckDNS
+* Google Domains
 
 To enable the `IPv6` mode of GoDNS, you only need two steps:
 * Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured.
