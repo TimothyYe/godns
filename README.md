@@ -134,7 +134,7 @@ For example:
     }
   ],
   "ipv6_url": "https://api-ipv6.ip.sb/ip",
-  "ip_type": "IPV6"
+  "ip_type": "IPv6"
 }
 ```
 
