@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/TimothyYe/godns"
@@ -12,7 +13,7 @@ import (
 
 var (
 	// DuckUrl the API address for Duck DNS
-	DuckUrl = "https://www.duckdns.org/update?domains=%s&token=%s&ip=%s"
+	DuckUrl = "https://www.duckdns.org/update?domains=%s&token=%s&%s"
 )
 
 // Handler struct
@@ -51,10 +52,17 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		} else {
 			lastIP = currentIP
 			client := godns.GetHttpClient(handler.Configuration)
+			var ip string
+
+			if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+				ip = fmt.Sprintf("ip=%s", currentIP)
+			} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+				ip = fmt.Sprintf("ipv6=%s", currentIP)
+			}
 
 			for _, subDomain := range domain.SubDomains {
 				// update IP with HTTP GET request
-				resp, err := client.Get(fmt.Sprintf(DuckUrl, subDomain, handler.Configuration.LoginToken, currentIP))
+				resp, err := client.Get(fmt.Sprintf(DuckUrl, subDomain, handler.Configuration.LoginToken, ip))
 				if err != nil {
 					// handle error
 					log.Print("Failed to update sub domain:", subDomain)
@@ -65,8 +73,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 				body, err := ioutil.ReadAll(resp.Body)
 				if err != nil || string(body) != "OK" {
-					// handle error
-					log.Print("Failed to update sub domain:", subDomain, err.Error())
+					log.Println("Failed to update the IP")
 					continue
 				} else {
 					log.Print("IP updated to:", currentIP)
