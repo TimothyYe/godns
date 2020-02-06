@@ -40,7 +40,7 @@ type DNSRecord struct {
 	Proxied bool   `json:"proxied"`
 	Type    string `json:"type"`
 	ZoneID  string `json:"zone_id"`
-	TTL	int32  `json:"ttl"`
+	TTL     int32  `json:"ttl"`
 }
 
 // SetIP updates DNSRecord.IP
@@ -146,8 +146,14 @@ func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Re
 
 	req, _ := http.NewRequest(method, handler.API+url, body)
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Auth-Email", handler.Configuration.Email)
-	req.Header.Set("X-Auth-Key", handler.Configuration.Password)
+
+	if handler.Configuration.Email != "" && handler.Configuration.Password != "" {
+		req.Header.Set("X-Auth-Email", handler.Configuration.Email)
+		req.Header.Set("X-Auth-Key", handler.Configuration.Password)
+	} else if handler.Configuration.LoginToken != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", handler.Configuration.LoginToken))
+	}
+
 	return req, client
 }
 

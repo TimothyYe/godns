@@ -207,11 +207,13 @@ func CheckSettings(config *Settings) error {
 			return errors.New("password cannot be empty")
 		}
 	} else if config.Provider == CLOUDFLARE {
-		if config.Email == "" {
-			return errors.New("email cannot be empty")
-		}
-		if config.Password == "" {
-			return errors.New("password cannot be empty")
+		if config.LoginToken == "" {
+			if config.Email == "" {
+				return errors.New("email cannot be empty")
+			}
+			if config.Password == "" {
+				return errors.New("password cannot be empty")
+			}
 		}
 	} else if config.Provider == ALIDNS {
 		if config.Email == "" {

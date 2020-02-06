@@ -104,7 +104,7 @@ Usage of ./godns:
 * provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`.
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
-* login_token: Login token of your account.
+* login_token: API token of your account.
 * domains: Domains list, with your sub domains.
 * ip_url: A site helps you to get your public IP address.
 * interval: The interval `seconds` that GoDNS check your public IP.
@@ -112,13 +112,35 @@ Usage of ./godns:
 
 ### Config example for Cloudflare
 
-For Cloudflare, you need to provide email & Global API Key as password, and config all the domains & subdomains.
+For Cloudflare, you need to provide the email & Global API Key as password (or to use the API token) and config all the domains & subdomains.
+
+* Using email & Global API Key
 
 ```json
 {
   "provider": "Cloudflare",
   "email": "you@example.com",
   "password": "Global API Key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "https://myip.biturl.top",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+* Using the API Token
+
+```json
+{
+  "provider": "Cloudflare",
+  "login_token": "API Token",
   "domains": [{
       "domain_name": "example.com",
       "sub_domains": ["www","test"]
