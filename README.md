@@ -106,9 +106,37 @@ Usage of ./godns:
 * password: Password of your account.
 * login_token: API token of your account.
 * domains: Domains list, with your sub domains.
-* ip_url: A site helps you to get your public IP address.
+* ip_url: A site helps you to get your public IPv4 IP address.
+* ipv6_url: A site helps you to get your public IPv6 address.
+* ip_type: To configure GoDNS under IPv4 mode or IPv6 mode, available values are: `IPv4`, `IPv6`.
 * interval: The interval `seconds` that GoDNS check your public IP.
 * socks5_proxy: Socks5 proxy server.
+
+## IPv6 support
+
+Supported provider(s):
+* Cloudflare
+
+To enable the `IPv6` mode of GoDNS, you only need two steps:
+* Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured.
+* Add one `AAAA` record to your provider.
+
+For example:
+
+```json
+{
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": [
+        "ipv6"
+      ]
+    }
+  ],
+  "ipv6_url": "https://api-ipv6.ip.sb/ip",
+  "ip_type": "IPV6"
+}
+```
 
 ### Config example for Cloudflare
 

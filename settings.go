@@ -37,7 +37,7 @@ type Settings struct {
 	Socks5Proxy string   `json:"socks5_proxy"`
 	Notify      Notify   `json:"notify"`
 	IPInterface string   `json:"ip_interface"`
-	Mode        string   `json:"mode"`
+	IPType      string   `json:"ip_type"`
 }
 
 // LoadSettings -- Load settings from config file

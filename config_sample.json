@@ -19,6 +19,8 @@
     }
   ],
   "ip_url": "https://myip.biturl.top",
+  "ipv6_url": "https://api-ipv6.ip.sb/ip",
+  "ip_type": "IPv4",
   "interval": 300,
   "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36",
   "ip_interface": "eth0",

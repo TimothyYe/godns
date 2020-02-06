@@ -88,13 +88,12 @@ func GetIPFromInterface(configuration *Settings) (string, error) {
 			continue
 		}
 
-		//the code is not ready for updating the 'AAAA' record
 		if isIPv4(ip.String()) {
-			if strings.ToUpper(configuration.Mode) == IPV4 {
+			if strings.ToUpper(configuration.IPType) == IPV4 {
 				continue
 			}
 		} else {
-			if configuration.Mode != IPV6 {
+			if configuration.IPType != IPV6 {
 				continue
 			}
 		}
@@ -137,7 +136,7 @@ func GetHttpClient(configuration *Settings) *http.Client {
 func GetCurrentIP(configuration *Settings) (string, error) {
 	var err error
 
-	if configuration.IPUrl != "" {
+	if configuration.IPUrl != "" || configuration.IPV6Url != "" {
 		ip, err := GetIPOnline(configuration)
 		if err != nil {
 			log.Println("get ip online failed. Fallback to get ip from interface if possible.")
@@ -163,7 +162,6 @@ func GetIPOnline(configuration *Settings) (string, error) {
 	client := &http.Client{}
 
 	if configuration.Socks5Proxy != "" {
-
 		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
 		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
@@ -179,7 +177,7 @@ func GetIPOnline(configuration *Settings) (string, error) {
 	var response *http.Response
 	var err error
 
-	if configuration.Mode == IPV4 {
+	if configuration.IPType == "" || configuration.IPType == IPV4 {
 		response, err = client.Get(configuration.IPUrl)
 	} else {
 		response, err = client.Get(configuration.IPV6Url)
