@@ -163,7 +163,6 @@ func (handler *Handler) GetDomain(name string) int64 {
 
 // GetSubDomain returns subdomain by domain id
 func (handler *Handler) GetSubDomain(domainID int64, name string) (string, string) {
-	log.Println("debug:", domainID, name)
 	var ret, ip string
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domainID, 10))
@@ -212,7 +211,13 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	value.Add("domain_id", strconv.FormatInt(domainID, 10))
 	value.Add("record_id", subDomainID)
 	value.Add("sub_domain", subDomainName)
-	value.Add("record_type", "A")
+
+	if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+		value.Add("record_type", "A")
+	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+		value.Add("record_type", "AAAA")
+	}
+
 	value.Add("record_line", "默认")
 	value.Add("value", ip)
 
