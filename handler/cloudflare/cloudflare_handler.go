@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/TimothyYe/godns"
@@ -194,8 +195,16 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 
 	var empty []DNSRecord
 	var r DNSRecordResponse
+	var recordType string
 
-	req, client := handler.newRequest("GET", "/zones/"+zoneID+"/dns_records?type=A", nil)
+	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+		recordType = "A"
+	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+		recordType = "AAAA"
+	}
+
+	log.Println("Querying records with type:", recordType)
+	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s", recordType), nil)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Request error:", err.Error())

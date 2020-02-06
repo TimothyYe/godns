@@ -46,6 +46,10 @@ const (
 	GOOGLE = "Google"
 	// DUCK for Duck DNS
 	DUCK = "DuckDNS"
+	// IPV4 for IPV4 mode
+	IPV4 = "IPV4"
+	// IPV6 for IPV6 mode
+	IPV6 = "IPV6"
 )
 
 //GetIPFromInterface gets IP address from the specific interface
@@ -84,17 +88,16 @@ func GetIPFromInterface(configuration *Settings) (string, error) {
 			continue
 		}
 
-		//the code is not ready for updating an AAAA record
-		/*
-			if (isIPv4(ip.String())){
-				if (configuration.IPType=="IPv6"){
-					continue;
-				}
-			}else{
-				if (configuration.IPType!="IPv6"){
-					continue;
-				}
-			} */
+		if isIPv4(ip.String()) {
+			if strings.ToUpper(configuration.IPType) == IPV4 {
+				continue
+			}
+		} else {
+			if configuration.IPType != IPV6 {
+				continue
+			}
+		}
+
 		if !isIPv4(ip.String()) {
 			continue
 		}
@@ -133,7 +136,7 @@ func GetHttpClient(configuration *Settings) *http.Client {
 func GetCurrentIP(configuration *Settings) (string, error) {
 	var err error
 
-	if configuration.IPUrl != "" {
+	if configuration.IPUrl != "" || configuration.IPV6Url != "" {
 		ip, err := GetIPOnline(configuration)
 		if err != nil {
 			log.Println("get ip online failed. Fallback to get ip from interface if possible.")
@@ -159,7 +162,6 @@ func GetIPOnline(configuration *Settings) (string, error) {
 	client := &http.Client{}
 
 	if configuration.Socks5Proxy != "" {
-
 		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
 		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
@@ -172,7 +174,14 @@ func GetIPOnline(configuration *Settings) (string, error) {
 		httpTransport.Dial = dialer.Dial
 	}
 
-	response, err := client.Get(configuration.IPUrl)
+	var response *http.Response
+	var err error
+
+	if configuration.IPType == "" || configuration.IPType == IPV4 {
+		response, err = client.Get(configuration.IPUrl)
+	} else {
+		response, err = client.Get(configuration.IPV6Url)
+	}
 
 	if err != nil {
 		log.Println("Cannot get IP...")
