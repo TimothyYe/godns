@@ -204,6 +204,7 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
     }
   ],
   "ip_url": "https://myip.biturl.top",
+  "ip_type": "IPV4",
   "interval": 300,
   "socks5_proxy": ""
 }

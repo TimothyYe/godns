@@ -216,6 +216,9 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 		value.Add("record_type", "A")
 	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
 		value.Add("record_type", "AAAA")
+	} else {
+		log.Println("Error: must specify \"ip_type\" in config for DNSPod.");
+		return
 	}
 
 	value.Add("record_line", "默认")
@@ -238,6 +241,8 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 
 	if sjson.Get("status").Get("code").MustString() == "1" {
 		log.Println("New IP updated!")
+	} else {
+		log.Println("Failed to update IP record:", sjson.Get("status").Get("message").MustString())
 	}
 
 }
