@@ -2,7 +2,9 @@ package godns
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -234,30 +236,108 @@ func CheckSettings(config *Settings) error {
 	return nil
 }
 
+// SendNotify sends notify if IP is changed
+func SendTelegramNotify(configuration *Settings, domain, currentIP string) error {
+	if ! configuration.Notify.Telegram.Enabled {
+		return nil
+	}
+
+	if configuration.Notify.Telegram.BotApiKey == "" {
+		return errors.New("bot api key cannot be empty")
+	}
+
+	if configuration.Notify.Telegram.ChatId == "" {
+		return errors.New("chat id cannot be empty")
+	}
+
+
+	client := GetHttpClient(configuration)
+	tpl := configuration.Notify.Telegram.MsgTemplate
+	if tpl == "" {
+		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
+	}
+
+	msg := buildTemplate(currentIP, domain, tpl)
+	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
+			configuration.Notify.Telegram.BotApiKey,
+			configuration.Notify.Telegram.ChatId,
+			msg)
+	var response *http.Response
+	var err error
+
+	response, err = client.Get(url)
+
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+
+	body, _ := ioutil.ReadAll(response.Body)
+	type ResponseParameters struct {
+		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
+		RetryAfter      int   `json:"retry_after"`        // optional
+	}
+	type APIResponse struct {
+		Ok          bool                `json:"ok"`
+		Result      json.RawMessage     `json:"result"`
+		ErrorCode   int                 `json:"error_code"`
+		Description string              `json:"description"`
+		Parameters  *ResponseParameters `json:"parameters"`
+	}
+	var resp APIResponse
+	err = json.Unmarshal([]byte(body), &resp)
+	if err != nil {
+		fmt.Println("error:", err)
+		return errors.New("Failed to parse response")
+	}
+	if ! resp.Ok {
+		return errors.New(resp.Description)
+	}
+
+	return nil
+}
+
 // SendNotify sends mail notify if IP is changed
-func SendNotify(configuration *Settings, domain, currentIP string) error {
+func SendMailNotify(configuration *Settings, domain, currentIP string) error {
+	if ! configuration.Notify.Mail.Enabled {
+		return nil
+	}
+	log.Print("Sending notification to:", configuration.Notify.Mail.SendTo)
 	m := gomail.NewMessage()
 
-	m.SetHeader("From", configuration.Notify.SMTPUsername)
-	m.SetHeader("To", configuration.Notify.SendTo)
+	m.SetHeader("From", configuration.Notify.Mail.SMTPUsername)
+	m.SetHeader("To", configuration.Notify.Mail.SendTo)
 	m.SetHeader("Subject", "GoDNS Notification")
 	log.Println("currentIP:", currentIP)
 	log.Println("domain:", domain)
-	m.SetBody("text/html", buildTemplate(currentIP, domain))
+	m.SetBody("text/html", buildTemplate(currentIP, domain, mailTemplate))
 
-	d := gomail.NewPlainDialer(configuration.Notify.SMTPServer, configuration.Notify.SMTPPort, configuration.Notify.SMTPUsername, configuration.Notify.SMTPPassword)
+	d := gomail.NewPlainDialer(configuration.Notify.Mail.SMTPServer, configuration.Notify.Mail.SMTPPort, configuration.Notify.Mail.SMTPUsername, configuration.Notify.Mail.SMTPPassword)
 
 	// Send the email config by sendlist	.
 	if err := d.DialAndSend(m); err != nil {
-		log.Println("Send email notification with error:", err.Error())
 		return err
 	}
 	return nil
 }
 
-func buildTemplate(currentIP, domain string) string {
+// SendNotify sends notify if IP is changed
+func SendNotify(configuration *Settings, domain, currentIP string) error {
+	err := SendTelegramNotify(configuration, domain, currentIP)
+	if (err != nil) {
+		log.Println("Send telegram notification with error:", err.Error())
+	}
+	err = SendMailNotify(configuration, domain, currentIP)
+	if (err != nil) {
+		log.Println("Send email notification with error:", err.Error())
+	}
+	return nil
+}
+
+func buildTemplate(currentIP, domain string, tplsrc string) string {
 	t := template.New("notification template")
-	if _, err := t.Parse(mailTemplate); err != nil {
+	if _, err := t.Parse(tplsrc); err != nil {
 		log.Println("Failed to parse template")
 		return ""
 	}

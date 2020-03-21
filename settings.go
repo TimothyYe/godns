@@ -12,14 +12,28 @@ type Domain struct {
 	SubDomains []string `json:"sub_domains"`
 }
 
+// Notify struct for telegram notification
+type TelegramNotify struct {
+	Enabled      bool   `json:"enabled"`
+	BotApiKey    string `json:"bot_api_key"`
+	ChatId       string `json:"chat_id"`
+	MsgTemplate  string `json:"message_template"`
+}
+
 // Notify struct for SMTP notification
-type Notify struct {
+type MailNotify struct {
 	Enabled      bool   `json:"enabled"`
 	SMTPServer   string `json:"smtp_server"`
 	SMTPUsername string `json:"smtp_username"`
 	SMTPPassword string `json:"smtp_password"`
 	SMTPPort     int    `json:"smtp_port"`
 	SendTo       string `json:"send_to"`
+}
+
+// Notify struct
+type Notify struct {
+	Telegram    TelegramNotify `json:"telegram"`
+	Mail        MailNotify `json:"mail"`
 }
 
 // Settings struct
