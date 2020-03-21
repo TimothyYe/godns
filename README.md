@@ -337,18 +337,36 @@ Update config file and provide your SMTP options, a notification mail will be se
 
 ```json
   "notify": {
-    "enabled": true,
-    "smtp_server": "smtp.example.com",
-    "smtp_username": "user",
-    "smtp_password": "password",
-    "smtp_port": 25,
-    "send_to": "my_mail@example.com"
+    "mail": {
+      "enabled": true,
+      "smtp_server": "smtp.example.com",
+      "smtp_username": "user",
+      "smtp_password": "password",
+      "smtp_port": 25,
+      "send_to": "my_mail@example.com"
+    }
   }
 ```
 
 Notification mail example:  
 
 <img src="https://github.com/TimothyYe/godns/blob/master/snapshots/mail.png?raw=true" />  
+
+### Telegram notification support
+
+Update config file and provide your Telegram options, a notification message will be sent to your telegram channel once the IP is changed and updated.  
+
+```json
+  "notify": {
+    "telegram": {
+      "enabled": true,
+      "bot_api_key": "11111:aaaa-bbbb",
+      "chat_id": "-123456",
+      "message_template": "Domain *{{ .Domain }}* is updated to %0A{{ .CurrentIP }}"
+    },
+  }
+```
+Markdown is supported in message template, and use `%0A` for newline.
 
 ### SOCKS5 proxy support
 

@@ -105,12 +105,9 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 						log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
 						handler.updateRecord(rec, currentIP)
 
-						// Send mail notification if notify is enabled
-						if handler.Configuration.Notify.Enabled {
-							log.Print("Sending notification to:", handler.Configuration.Notify.SendTo)
-							if err := godns.SendNotify(handler.Configuration, rec.Name, currentIP); err != nil {
-								log.Println("Failed to send notification")
-							}
+						// Send notification
+						if err := godns.SendNotify(handler.Configuration, rec.Name, currentIP); err != nil {
+							log.Println("Failed to send notification")
 						}
 					} else {
 						log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
