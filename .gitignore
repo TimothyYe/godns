@@ -28,7 +28,9 @@ config.json
 *.log
 *.swp
 *.gz
-cmd/godns/godns
+godns
+godns.exe
+config.json
 cmd/godns/config.json
 
 /.idea
