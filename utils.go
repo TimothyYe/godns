@@ -181,15 +181,16 @@ func GetIPOnline(configuration *Settings) (string, error) {
 
 // CheckSettings check the format of settings
 func CheckSettings(config *Settings) error {
-	if config.Provider == DNSPOD {
+	switch config.Provider {
+	case DNSPOD:
 		if config.Password == "" && config.LoginToken == "" {
 			return errors.New("password or login token cannot be empty")
 		}
-	} else if config.Provider == HE {
+	case HE:
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
-	} else if config.Provider == CLOUDFLARE {
+	case CLOUDFLARE:
 		if config.LoginToken == "" {
 			if config.Email == "" {
 				return errors.New("email cannot be empty")
@@ -198,26 +199,27 @@ func CheckSettings(config *Settings) error {
 				return errors.New("password cannot be empty")
 			}
 		}
-	} else if config.Provider == ALIDNS {
+	case ALIDNS:
 		if config.Email == "" {
 			return errors.New("email cannot be empty")
 		}
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
-	} else if config.Provider == DUCK {
+	case DUCK:
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")
 		}
-	} else if config.Provider == GOOGLE {
+	case GOOGLE:
 		if config.Email == "" {
 			return errors.New("email cannot be empty")
 		}
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
-	} else {
+	default:
 		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS")
+
 	}
 
 	return nil
@@ -225,7 +227,7 @@ func CheckSettings(config *Settings) error {
 
 // SendNotify sends notify if IP is changed
 func SendTelegramNotify(configuration *Settings, domain, currentIP string) error {
-	if ! configuration.Notify.Telegram.Enabled {
+	if !configuration.Notify.Telegram.Enabled {
 		return nil
 	}
 
@@ -237,7 +239,6 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 		return errors.New("chat id cannot be empty")
 	}
 
-
 	client := GetHttpClient(configuration)
 	tpl := configuration.Notify.Telegram.MsgTemplate
 	if tpl == "" {
@@ -246,9 +247,9 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 
 	msg := buildTemplate(currentIP, domain, tpl)
 	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
-			configuration.Notify.Telegram.BotApiKey,
-			configuration.Notify.Telegram.ChatId,
-			msg)
+		configuration.Notify.Telegram.BotApiKey,
+		configuration.Notify.Telegram.ChatId,
+		msg)
 	var response *http.Response
 	var err error
 
@@ -278,7 +279,7 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 		fmt.Println("error:", err)
 		return errors.New("Failed to parse response")
 	}
-	if ! resp.Ok {
+	if !resp.Ok {
 		return errors.New(resp.Description)
 	}
 
@@ -287,7 +288,7 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 
 // SendNotify sends mail notify if IP is changed
 func SendMailNotify(configuration *Settings, domain, currentIP string) error {
-	if ! configuration.Notify.Mail.Enabled {
+	if !configuration.Notify.Mail.Enabled {
 		return nil
 	}
 	log.Print("Sending notification to:", configuration.Notify.Mail.SendTo)
@@ -312,11 +313,11 @@ func SendMailNotify(configuration *Settings, domain, currentIP string) error {
 // SendNotify sends notify if IP is changed
 func SendNotify(configuration *Settings, domain, currentIP string) error {
 	err := SendTelegramNotify(configuration, domain, currentIP)
-	if (err != nil) {
+	if err != nil {
 		log.Println("Send telegram notification with error:", err.Error())
 	}
 	err = SendMailNotify(configuration, domain, currentIP)
-	if (err != nil) {
+	if err != nil {
 		log.Println("Send email notification with error:", err.Error())
 	}
 	return nil
