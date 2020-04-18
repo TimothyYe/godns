@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/bogdanovich/dns_resolver"
 	"golang.org/x/net/proxy"
 	gomail "gopkg.in/gomail.v2"
 )
@@ -345,4 +346,33 @@ func buildTemplate(currentIP, domain string, tplsrc string) string {
 	}
 
 	return tpl.String()
+}
+
+// ResolveDNS will query DNS for a given hostname.
+func ResolveDNS(hostname, resolver string) string {
+
+	// If no DNS server is set in config file, falls back to default resolver.
+	if resolver == "" {
+		dnsAdress, err := net.LookupHost(hostname)
+		if err != nil {
+			if strings.HasSuffix(err.Error(), "no such host") {
+				return "<nil>"
+			}
+			log.Fatalf(err.Error())
+		}
+		return dnsAdress[0]
+	}
+	res := dns_resolver.New([]string{resolver})
+	// In case of i/o timeout
+	res.RetryTimes = 5
+
+	ip, err := res.LookupHost(hostname)
+	if err != nil {
+		if strings.HasSuffix(err.Error(), "NXDOMAIN") {
+			return "<nil>"
+		}
+		log.Fatalf(err.Error())
+	}
+	return ip[0].String()
+
 }

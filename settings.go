@@ -14,10 +14,10 @@ type Domain struct {
 
 // Notify struct for telegram notification
 type TelegramNotify struct {
-	Enabled      bool   `json:"enabled"`
-	BotApiKey    string `json:"bot_api_key"`
-	ChatId       string `json:"chat_id"`
-	MsgTemplate  string `json:"message_template"`
+	Enabled     bool   `json:"enabled"`
+	BotApiKey   string `json:"bot_api_key"`
+	ChatId      string `json:"chat_id"`
+	MsgTemplate string `json:"message_template"`
 }
 
 // Notify struct for SMTP notification
@@ -32,8 +32,8 @@ type MailNotify struct {
 
 // Notify struct
 type Notify struct {
-	Telegram    TelegramNotify `json:"telegram"`
-	Mail        MailNotify `json:"mail"`
+	Telegram TelegramNotify `json:"telegram"`
+	Mail     MailNotify     `json:"mail"`
 }
 
 // Settings struct
@@ -52,6 +52,7 @@ type Settings struct {
 	Notify      Notify   `json:"notify"`
 	IPInterface string   `json:"ip_interface"`
 	IPType      string   `json:"ip_type"`
+	Resolver    string   `json:"resolver"`
 }
 
 // LoadSettings -- Load settings from config file
