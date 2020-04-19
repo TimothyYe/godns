@@ -37,7 +37,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
-	var lastIP string
 	for {
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
@@ -48,12 +47,14 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		log.Println("currentIP is:", currentIP)
 
 		//check against locally cached IP, if no change, skip update
-		if currentIP == lastIP {
-			log.Printf("IP is the same as cached one. Skip update.\n")
-		} else {
-			lastIP = currentIP
 
-			for _, subDomain := range domain.SubDomains {
+		for _, subDomain := range domain.SubDomains {
+			hostname := subDomain + "." + domain.DomainName
+			lastIP := godns.ResolveDNS(hostname, handler.Configuration.Resolver)
+			//check against currently known IP, if no change, skip update
+			if currentIP == lastIP {
+				log.Printf("IP is the same as cached one. Skip update.\n")
+			} else {
 				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 
@@ -63,6 +64,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				}
 			}
 		}
+
 		// Sleep with interval
 		log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
