@@ -35,8 +35,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
-	var lastIP string
-
 	for {
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
@@ -47,20 +45,23 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		log.Println("currentIP is:", currentIP)
 
 		//check against locally cached IP, if no change, skip update
-		if currentIP == lastIP {
-			log.Printf("IP is the same as cached one. Skip update.\n")
-		} else {
-			lastIP = currentIP
-			client := godns.GetHttpClient(handler.Configuration)
-			var ip string
 
-			if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
-				ip = fmt.Sprintf("ip=%s", currentIP)
-			} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
-				ip = fmt.Sprintf("ipv6=%s", currentIP)
-			}
+		client := godns.GetHttpClient(handler.Configuration)
+		var ip string
 
-			for _, subDomain := range domain.SubDomains {
+		if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+			ip = fmt.Sprintf("ip=%s", currentIP)
+		} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+			ip = fmt.Sprintf("ipv6=%s", currentIP)
+		}
+
+		for _, subDomain := range domain.SubDomains {
+			hostname := subDomain + "." + domain.DomainName
+			lastIP := godns.ResolveDNS(hostname, handler.Configuration.Resolver)
+			//check against currently known IP, if no change, skip update
+			if currentIP == lastIP {
+				log.Printf("IP is the same as cached one. Skip update.\n")
+			} else {
 				// update IP with HTTP GET request
 				resp, err := client.Get(fmt.Sprintf(DuckUrl, subDomain, handler.Configuration.LoginToken, ip))
 				if err != nil {

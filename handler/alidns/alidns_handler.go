@@ -28,7 +28,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
-	var lastIP string
 	aliDNS := NewAliDNS(handler.Configuration.Email, handler.Configuration.Password)
 
 	for {
@@ -39,14 +38,15 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			continue
 		}
 		log.Println("currentIP is:", currentIP)
+		for _, subDomain := range domain.SubDomains {
+			hostname := subDomain + "." + domain.DomainName
+			lastIP := godns.ResolveDNS(hostname, handler.Configuration.Resolver)
+			//check against currently known IP, if no change, skip update
+			if currentIP == lastIP {
+				log.Printf("IP is the same as cached one. Skip update.\n")
+			} else {
+				lastIP = currentIP
 
-		//check against locally cached IP, if no change, skip update
-		if currentIP == lastIP {
-			log.Printf("IP is the same as cached one. Skip update.\n")
-		} else {
-			lastIP = currentIP
-
-			for _, subDomain := range domain.SubDomains {
 				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				records := aliDNS.GetDomainRecords(domain.DomainName, subDomain)
 				if records == nil || len(records) == 0 {

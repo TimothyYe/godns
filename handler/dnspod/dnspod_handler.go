@@ -36,7 +36,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
-	var lastIP string
 	for {
 		log.Printf("Checking IP for domain %s \r\n", domain.DomainName)
 		domainID := handler.GetDomain(domain.DomainName)
@@ -53,13 +52,14 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 		log.Println("currentIP is:", currentIP)
 
-		//check against locally cached IP, if no change, skip update
-		if currentIP == lastIP {
-			log.Printf("IP is the same as cached one. Skip update.\n")
-		} else {
-			lastIP = currentIP
-
-			for _, subDomain := range domain.SubDomains {
+		for _, subDomain := range domain.SubDomains {
+			hostname := subDomain + "." + domain.DomainName
+			lastIP := godns.ResolveDNS(hostname, handler.Configuration.Resolver)
+			//check against currently known IP, if no change, skip update
+			if currentIP == lastIP {
+				log.Printf("IP is the same as cached one. Skip update.\n")
+			} else {
+				lastIP = currentIP
 
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
@@ -213,7 +213,7 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
 		value.Add("record_type", "AAAA")
 	} else {
-		log.Println("Error: must specify \"ip_type\" in config for DNSPod.");
+		log.Println("Error: must specify \"ip_type\" in config for DNSPod.")
 		return
 	}
 
