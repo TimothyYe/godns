@@ -5,9 +5,11 @@ import (
 	"github.com/TimothyYe/godns/handler/alidns"
 	"github.com/TimothyYe/godns/handler/cloudflare"
 	"github.com/TimothyYe/godns/handler/dnspod"
+	"github.com/TimothyYe/godns/handler/dreamhost"
 	"github.com/TimothyYe/godns/handler/duck"
 	"github.com/TimothyYe/godns/handler/google"
 	"github.com/TimothyYe/godns/handler/he"
+	"github.com/TimothyYe/godns/handler/dreamhost"
 )
 
 // IHandler is the interface for all DNS handlers
@@ -25,6 +27,8 @@ func CreateHandler(provider string) IHandler {
 		handler = IHandler(&cloudflare.Handler{})
 	case godns.DNSPOD:
 		handler = IHandler(&dnspod.Handler{})
+	case godns.DREAMHOST:
+		handler = IHandler(&dreamhost.Handler{})
 	case godns.HE:
 		handler = IHandler(&he.Handler{})
 	case godns.ALIDNS:
