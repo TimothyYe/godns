@@ -49,6 +49,8 @@ const (
 	GOOGLE = "Google"
 	// DUCK for Duck DNS
 	DUCK = "DuckDNS"
+	// DREAMHOST for Dreamhost
+	DREAMHOST = "Dreamhost"
 	// IPV4 for IPV4 mode
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode
@@ -218,6 +220,11 @@ func CheckSettings(config *Settings) error {
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
+	case DREAMHOST:
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
+
 	default:
 		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS")
 
