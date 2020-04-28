@@ -102,7 +102,7 @@ Usage of ./godns:
 
 ## Config fields
 
-* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`.
+* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`, `Dreamhost`.
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
 * login_token: API token of your account.
@@ -117,10 +117,11 @@ Usage of ./godns:
 
 Supported provider(s):
 * Cloudflare
-* HE.net
 * DNSPod
+* Dreamhost
 * DuckDNS
 * Google Domains
+* HE.net
 
 To enable the `IPv6` mode of GoDNS, you only need two steps:
 * Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured.

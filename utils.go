@@ -226,14 +226,14 @@ func CheckSettings(config *Settings) error {
 		}
 
 	default:
-		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS")
+		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS/Dreamhost")
 
 	}
 
 	return nil
 }
 
-// SendNotify sends notify if IP is changed
+// SendTelegramNotify sends notify if IP is changed
 func SendTelegramNotify(configuration *Settings, domain, currentIP string) error {
 	if !configuration.Notify.Telegram.Enabled {
 		return nil
@@ -294,7 +294,7 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 	return nil
 }
 
-// SendNotify sends mail notify if IP is changed
+// SendMailNotify sends mail notify if IP is changed
 func SendMailNotify(configuration *Settings, domain, currentIP string) error {
 	if !configuration.Notify.Mail.Enabled {
 		return nil

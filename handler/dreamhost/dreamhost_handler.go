@@ -81,12 +81,17 @@ func (handler *Handler) UpdateIP(hostname, currentIP, lastIP string) {
 
 // updateDNS can add or remove DNS records.
 func (handler *Handler) updateDNS(dns, ip, hostname, action string) {
+	ipType := "A"
+	if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+		ipType = "AAAA"
+	}
+
 	// Generates UUID
 	uid, _ := uuid.NewRandom()
 	values := url.Values{}
 	values.Add("record", hostname)
 	values.Add("key", handler.Configuration.LoginToken)
-	values.Add("type", "A")
+	values.Add("type", ipType)
 	values.Add("unique_id", uid.String())
 	switch action {
 	case "remove":
