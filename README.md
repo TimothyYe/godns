@@ -32,6 +32,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * HE.net (Hurricane Electric) ([https://dns.he.net/](https://dns.he.net/))
 * AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
 * DuckDNS ([https://www.duckdns.org](https://www.duckdns.org))
+* Dreamhost ([https://www.dreamhost.com](https://www.dreamhost.com))
 
 ## Supported Platforms
 
@@ -101,7 +102,7 @@ Usage of ./godns:
 
 ## Config fields
 
-* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`.
+* provider: The providers that GoDNS supports, available values are: `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS`, `Dreamhost`.
 * email: Email or account name of your DNS provider.
 * password: Password of your account.
 * login_token: API token of your account.
@@ -116,10 +117,11 @@ Usage of ./godns:
 
 Supported provider(s):
 * Cloudflare
-* HE.net
 * DNSPod
+* Dreamhost
 * DuckDNS
 * Google Domains
+* HE.net
 
 To enable the `IPv6` mode of GoDNS, you only need two steps:
 * Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured.
@@ -206,6 +208,30 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
   "ip_url": "https://myip.biturl.top",
   "ip_type": "IPV4",
   "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+### Config example for Dreamhost
+
+For Dreamhost, you need to provide your API Token(you can create it [here](https://panel.dreamhost.com/?tree=home.api)), and config all the domains & subdomains.
+
+```json
+{
+  "provider": "Dreamhost",
+  "login_token": "your_api_key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "ip_url": "https://myip.biturl.top",
+  "ip_type": "IPV4",
+  "interval": 300,
+  "resolver": "ns1.dreamhost.com",
   "socks5_proxy": ""
 }
 ```
