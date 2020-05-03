@@ -140,6 +140,7 @@ For example:
       ]
     }
   ],
+  "resolver": "2001:4860:4860::8888",
   "ipv6_url": "https://api-ipv6.ip.sb/ip",
   "ip_type": "IPv6"
 }
@@ -164,6 +165,7 @@ For Cloudflare, you need to provide the email & Global API Key as password (or t
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
@@ -184,6 +186,7 @@ For Cloudflare, you need to provide the email & Global API Key as password (or t
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
@@ -206,6 +209,7 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "ip_type": "IPV4",
   "interval": 300,
@@ -229,6 +233,7 @@ For Dreamhost, you need to provide your API Token(you can create it [here](https
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "ip_type": "IPV4",
   "interval": 300,
@@ -254,6 +259,7 @@ For Google Domains, you need to provide email & password, and config all the dom
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
@@ -278,6 +284,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
@@ -301,6 +308,7 @@ For DuckDNS, only need to provide the `token`, config 1 default domain & subdoma
       ]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
@@ -324,6 +332,7 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
       "sub_domains": ["www","test"]
     }
   ],
+  "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
   "interval": 300,
   "socks5_proxy": ""
