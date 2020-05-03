@@ -5,20 +5,13 @@ import (
 )
 
 func TestGetCurrentIP(t *testing.T) {
-	conf := &Settings{IPUrl: "http://members.3322.org/dyndns/getip"}
+	conf := &Settings{IPUrl: "https://myip.biturl.top"}
 	ip, _ := GetCurrentIP(conf)
 
 	if ip == "" {
 		t.Log("IP is empty...")
 	} else {
 		t.Log("IP is:" + ip)
-	}
-
-	conf = &Settings{Socks5Proxy: "localhost:8899", IPUrl: "http://members.3322.org/dyndns/getip"}
-	ip, err := GetCurrentIP(conf)
-
-	if ip != "" && err == nil {
-		t.Error("should return error")
 	}
 }
 
