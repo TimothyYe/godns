@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -14,8 +13,8 @@ import (
 )
 
 var (
-	// GoogleUrl the API address for Google Domains
-	GoogleUrl = "https://domains.google.com/nic/update"
+	// GoogleURL the API address for Google Domains
+	GoogleURL = "https://%s:%s@domains.google.com/nic/update?hostname=%s.%s&myip=%s"
 )
 
 // Handler struct
@@ -51,7 +50,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			if currentIP == lastIP {
 				log.Printf("IP is the same as cached one. Skip update.\n")
 			} else {
-
 				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 
@@ -70,19 +68,20 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 // UpdateIP update subdomain with current IP
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
-	values := url.Values{}
-	values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
-	values.Add("myip", currentIP)
-
 	client := godns.GetHttpClient(handler.Configuration)
-	req, _ := http.NewRequest("POST", GoogleUrl, strings.NewReader(values.Encode()))
-	req.SetBasicAuth(handler.Configuration.Email, handler.Configuration.Password)
+	resp, err := client.Get(fmt.Sprintf(GoogleURL,
+		handler.Configuration.Email,
+		handler.Configuration.Password,
+		subDomain,
+		domain,
+		currentIP))
 
-	if handler.Configuration.UserAgent != "" {
-		req.Header.Add("User-Agent", handler.Configuration.UserAgent)
+	if err != nil {
+		// handle error
+		log.Print("Failed to update sub domain:", subDomain)
 	}
 
-	resp, err := client.Do(req)
+	defer resp.Body.Close()
 
 	if err != nil {
 		log.Println("Request error...")
@@ -90,7 +89,11 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	} else {
 		body, _ := ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
-			log.Println("Update IP success:", string(body))
+			if strings.Contains(string(body), "good") {
+				log.Println("Update IP success:", string(body))
+			} else if strings.Contains(string(body), "nochg") {
+				log.Println("IP not changed:", string(body))
+			}
 		} else {
 			log.Println("Update IP failed:", string(body))
 		}
