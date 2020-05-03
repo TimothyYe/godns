@@ -112,6 +112,7 @@ Usage of ./godns:
 * ip_type: To configure GoDNS under IPv4 mode or IPv6 mode, available values are: `IPv4`, `IPv6`.
 * interval: The interval `seconds` that GoDNS check your public IP.
 * socks5_proxy: Socks5 proxy server.
+* resolver: The address of the public DNS server. For example, to run GoDNS in `IPv4` mode, you can set resolver as `8.8.8.8`, to GoDNS in `IPv6` mode, you can set resolver as `2001:4860:4860::8888`.
 
 ## IPv6 support
 
