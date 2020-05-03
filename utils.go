@@ -12,7 +12,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/bogdanovich/dns_resolver"
+	"github.com/TimothyYe/godns/dns_resolver"
+	"github.com/miekg/dns"
 	"golang.org/x/net/proxy"
 	gomail "gopkg.in/gomail.v2"
 )
@@ -103,8 +104,9 @@ func GetIPFromInterface(configuration *Settings) (string, error) {
 			}
 		}
 
-		return ip.String(), nil
-
+		if ip.String() != "" {
+			return ip.String(), nil
+		}
 	}
 	return "", errors.New("can't get a vaild address from " + configuration.IPInterface)
 }
@@ -356,7 +358,13 @@ func buildTemplate(currentIP, domain string, tplsrc string) string {
 }
 
 // ResolveDNS will query DNS for a given hostname.
-func ResolveDNS(hostname, resolver string) string {
+func ResolveDNS(hostname, resolver, ipType string) string {
+	var dnsType uint16
+	if ipType == "" || strings.ToUpper(ipType) == IPV4 {
+		dnsType = dns.TypeA
+	} else {
+		dnsType = dns.TypeAAAA
+	}
 
 	// If no DNS server is set in config file, falls back to default resolver.
 	if resolver == "" {
@@ -373,7 +381,7 @@ func ResolveDNS(hostname, resolver string) string {
 	// In case of i/o timeout
 	res.RetryTimes = 5
 
-	ip, err := res.LookupHost(hostname)
+	ip, err := res.LookupHost(hostname, dnsType)
 	if err != nil {
 		if strings.HasSuffix(err.Error(), "NXDOMAIN") {
 			return "<nil>"
