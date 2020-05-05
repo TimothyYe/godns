@@ -116,10 +116,10 @@ func isIPv4(ip string) bool {
 }
 
 // GetHttpClient creates the HTTP client and return it
-func GetHttpClient(configuration *Settings) *http.Client {
+func GetHttpClient(configuration *Settings, use_proxy bool) *http.Client {
 	client := &http.Client{}
 
-	if configuration.Socks5Proxy != "" {
+	if use_proxy && configuration.Socks5Proxy != "" {
 		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
 		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
@@ -249,7 +249,7 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 		return errors.New("chat id cannot be empty")
 	}
 
-	client := GetHttpClient(configuration)
+	client := GetHttpClient(configuration, configuration.Notify.Telegram.UseProxy)
 	tpl := configuration.Notify.Telegram.MsgTemplate
 	if tpl == "" {
 		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"

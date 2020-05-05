@@ -398,7 +398,8 @@ Update config file and provide your Telegram options, a notification message wil
       "enabled": true,
       "bot_api_key": "11111:aaaa-bbbb",
       "chat_id": "-123456",
-      "message_template": "Domain *{{ .Domain }}* is updated to %0A{{ .CurrentIP }}"
+      "message_template": "Domain *{{ .Domain }}* is updated to %0A{{ .CurrentIP }}",
+      "use_proxy": false
     },
   }
 ```
@@ -410,6 +411,7 @@ You can also use SOCKS5 proxy, just fill SOCKS5 address to the ```socks5_proxy``
 
 ```json
 "socks5_proxy": "127.0.0.1:7070"
+"use_proxy": true
 ```
 
 Now all the queries will go through the specified SOCKS5 proxy.

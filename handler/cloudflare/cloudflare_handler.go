@@ -77,7 +77,15 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	}()
 
 	var lastIP string
+	looping := false
 	for {
+		if looping {
+			// Sleep with interval
+			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
+		}
+		looping = true
+
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 		if err != nil {
 			log.Println("Error in GetCurrentIP:", err)
@@ -117,9 +125,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				log.Println("Failed to find zone for domain:", domain.DomainName)
 			}
 		}
-		// Sleep with interval
-		log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
-		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
 
@@ -137,7 +142,7 @@ func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
 
 // Create a new request with auth in place and optional proxy
 func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
-	client := godns.GetHttpClient(handler.Configuration)
+	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 	if client == nil {
 		log.Println("cannot create HTTP client")
 	}

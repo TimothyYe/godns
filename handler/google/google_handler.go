@@ -36,7 +36,16 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
+	looping := false
+
 	for {
+		if looping {
+			// Sleep with interval
+			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
+		}
+
+		looping = true
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 		if err != nil {
 			log.Println("get_currentIP:", err)
@@ -59,16 +68,13 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				}
 			}
 		}
-		// Sleep with interval
-		log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
-		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 
 }
 
 // UpdateIP update subdomain with current IP
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
-	client := godns.GetHttpClient(handler.Configuration)
+	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 	resp, err := client.Get(fmt.Sprintf(GoogleURL,
 		handler.Configuration.Email,
 		handler.Configuration.Password,

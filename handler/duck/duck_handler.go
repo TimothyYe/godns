@@ -35,7 +35,16 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
+	looping := false
+
 	for {
+		if looping {
+			// Sleep with interval
+			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
+		}
+
+		looping = true
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
 		if err != nil {
@@ -46,7 +55,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 		//check against locally cached IP, if no change, skip update
 
-		client := godns.GetHttpClient(handler.Configuration)
+		client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 		var ip string
 
 		if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
@@ -86,9 +95,5 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				}
 			}
 		}
-
-		// Sleep with interval
-		log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
-		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
