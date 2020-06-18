@@ -18,6 +18,7 @@ type TelegramNotify struct {
 	BotApiKey   string `json:"bot_api_key"`
 	ChatId      string `json:"chat_id"`
 	MsgTemplate string `json:"message_template"`
+	UseProxy    bool   `json:"use_proxy"`
 }
 
 // Notify struct for SMTP notification
@@ -53,6 +54,7 @@ type Settings struct {
 	IPInterface string   `json:"ip_interface"`
 	IPType      string   `json:"ip_type"`
 	Resolver    string   `json:"resolver"`
+	UseProxy    bool     `json:"use_proxy"`
 }
 
 // LoadSettings -- Load settings from config file

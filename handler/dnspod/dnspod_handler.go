@@ -36,7 +36,16 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 	}()
 
+	looping := false
 	for {
+		if looping {
+			// Sleep with interval
+			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
+		}
+
+		looping = true
+
 		log.Printf("Checking IP for domain %s \r\n", domain.DomainName)
 		domainID := handler.GetDomain(domain.DomainName)
 
@@ -82,9 +91,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				}
 			}
 		}
-		// Sleep with interval
-		log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
-		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
 
@@ -245,7 +251,7 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 
 // PostData post data and invoke DNSPod API
 func (handler *Handler) PostData(url string, content url.Values) (string, error) {
-	client := godns.GetHttpClient(handler.Configuration)
+	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 
 	if client == nil {
 		return "", errors.New("failed to create HTTP client")
