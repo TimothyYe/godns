@@ -12,7 +12,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/TimothyYe/godns/dns_resolver"
+	dnsResolver "github.com/TimothyYe/godns/resolver"
+
 	"github.com/miekg/dns"
 	"golang.org/x/net/proxy"
 	gomail "gopkg.in/gomail.v2"
@@ -377,7 +378,7 @@ func ResolveDNS(hostname, resolver, ipType string) string {
 		}
 		return dnsAdress[0]
 	}
-	res := dns_resolver.New([]string{resolver})
+	res := dnsResolver.New([]string{resolver})
 	// In case of i/o timeout
 	res.RetryTimes = 5
 
