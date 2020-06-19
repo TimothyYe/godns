@@ -1,4 +1,4 @@
-// Package dns_resolver is a simple dns resolver
+// Package resolver is a simple dns resolver
 // based on miekg/dns
 package resolver
 
@@ -13,42 +13,42 @@ import (
 	"github.com/miekg/dns"
 )
 
-// DnsResolver represents a dns resolver
-type DnsResolver struct {
+// DNSResolver represents a dns resolver
+type DNSResolver struct {
 	Servers    []string
 	RetryTimes int
 	r          *rand.Rand
 }
 
 // New initializes DnsResolver.
-func New(servers []string) *DnsResolver {
+func New(servers []string) *DNSResolver {
 	for i := range servers {
 		servers[i] = net.JoinHostPort(servers[i], "53")
 	}
 
-	return &DnsResolver{servers, len(servers) * 2, rand.New(rand.NewSource(time.Now().UnixNano()))}
+	return &DNSResolver{servers, len(servers) * 2, rand.New(rand.NewSource(time.Now().UnixNano()))}
 }
 
 // NewFromResolvConf initializes DnsResolver from resolv.conf like file.
-func NewFromResolvConf(path string) (*DnsResolver, error) {
+func NewFromResolvConf(path string) (*DNSResolver, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return &DnsResolver{}, errors.New("no such file or directory: " + path)
+		return &DNSResolver{}, errors.New("no such file or directory: " + path)
 	}
 	config, err := dns.ClientConfigFromFile(path)
 	servers := []string{}
 	for _, ipAddress := range config.Servers {
 		servers = append(servers, net.JoinHostPort(ipAddress, "53"))
 	}
-	return &DnsResolver{servers, len(servers) * 2, rand.New(rand.NewSource(time.Now().UnixNano()))}, err
+	return &DNSResolver{servers, len(servers) * 2, rand.New(rand.NewSource(time.Now().UnixNano()))}, err
 }
 
 // LookupHost returns IP addresses of provied host.
 // In case of timeout retries query RetryTimes times.
-func (r *DnsResolver) LookupHost(host string, dnsType uint16) ([]net.IP, error) {
+func (r *DNSResolver) LookupHost(host string, dnsType uint16) ([]net.IP, error) {
 	return r.lookupHost(host, dnsType, r.RetryTimes)
 }
 
-func (r *DnsResolver) lookupHost(host string, dnsType uint16, triesLeft int) ([]net.IP, error) {
+func (r *DNSResolver) lookupHost(host string, dnsType uint16, triesLeft int) ([]net.IP, error) {
 	m1 := new(dns.Msg)
 	m1.Id = dns.Id()
 	m1.RecursionDesired = true
