@@ -289,7 +289,7 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
 		fmt.Println("error:", err)
-		return errors.New("Failed to parse response")
+		return errors.New("failed to parse response")
 	}
 	if !resp.Ok {
 		return errors.New(resp.Description)
@@ -313,7 +313,7 @@ func SendMailNotify(configuration *Settings, domain, currentIP string) error {
 	log.Println("domain:", domain)
 	m.SetBody("text/html", buildTemplate(currentIP, domain, mailTemplate))
 
-	d := gomail.NewPlainDialer(configuration.Notify.Mail.SMTPServer, configuration.Notify.Mail.SMTPPort, configuration.Notify.Mail.SMTPUsername, configuration.Notify.Mail.SMTPPassword)
+	d := gomail.NewDialer(configuration.Notify.Mail.SMTPServer, configuration.Notify.Mail.SMTPPort, configuration.Notify.Mail.SMTPUsername, configuration.Notify.Mail.SMTPPassword)
 
 	// Send the email config by sendlist	.
 	if err := d.DialAndSend(m); err != nil {
@@ -342,14 +342,14 @@ func SendSlackNotify(configuration *Settings, domain, currentIP string) error {
 	}
 
 	msg := buildTemplate(currentIP, domain, tpl)
-	
+
 	var response *http.Response
 	var err error
 
 	formData := url.Values{
-		"token": {configuration.Notify.Slack.BotApiToken},
+		"token":   {configuration.Notify.Slack.BotApiToken},
 		"channel": {configuration.Notify.Slack.Channel},
-		"text": {msg},
+		"text":    {msg},
 	}
 
 	response, err = client.PostForm("https://slack.com/api/chat.postMessage", formData)
@@ -376,13 +376,13 @@ func SendSlackNotify(configuration *Settings, domain, currentIP string) error {
 	err = json.Unmarshal([]byte(body), &resp)
 	if err != nil {
 		fmt.Println("error:", err)
-		return errors.New("Failed to parse response")
+		return errors.New("failed to parse response")
 	}
 	if !resp.Ok {
 		return errors.New(resp.Description)
 	}
 
- 	return nil
+	return nil
 }
 
 // SendNotify sends notify if IP is changed
