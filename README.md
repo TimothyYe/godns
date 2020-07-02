@@ -405,6 +405,24 @@ Update config file and provide your Telegram options, a notification message wil
 ```
 Markdown is supported in message template, and use `%0A` for newline.
 
+### Slack notification support
+
+Update config file and provide your Slack options, a notification message will be sent to your slack channel once the IP is changed and updated.  
+
+```json
+  "notify": {
+    "slack": {
+      "enabled": true,
+      "bot_api_token": "xoxb-xxx",
+      "channel": "your_channel",
+      "message_template": "Domain *{{ .Domain }}* is updated to \n{{ .CurrentIP }}",
+      "use_proxy": false
+    },
+  }
+```
+Markdown is supported in message template, and use `\n` for newline.
+
+
 ### SOCKS5 proxy support
 
 You can also use SOCKS5 proxy, just fill SOCKS5 address to the ```socks5_proxy``` item:
