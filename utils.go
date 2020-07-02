@@ -10,6 +10,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"strings"
 
 	dnsResolver "github.com/TimothyYe/godns/resolver"
@@ -321,6 +322,69 @@ func SendMailNotify(configuration *Settings, domain, currentIP string) error {
 	return nil
 }
 
+// SendSlack sends slack if IP is changed
+func SendSlackNotify(configuration *Settings, domain, currentIP string) error {
+	if !configuration.Notify.Slack.Enabled {
+		return nil
+	}
+
+	if configuration.Notify.Slack.BotApiToken == "" {
+		return errors.New("bot api token cannot be empty")
+	}
+
+	if configuration.Notify.Slack.Channel == "" {
+		return errors.New("channel cannot be empty")
+	}
+	client := GetHttpClient(configuration, configuration.Notify.Slack.UseProxy)
+	tpl := configuration.Notify.Slack.MsgTemplate
+	if tpl == "" {
+		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* is updated"
+	}
+
+	msg := buildTemplate(currentIP, domain, tpl)
+	
+	var response *http.Response
+	var err error
+
+	formData := url.Values{
+		"token": {configuration.Notify.Slack.BotApiToken},
+		"channel": {configuration.Notify.Slack.Channel},
+		"text": {msg},
+	}
+
+	response, err = client.PostForm("https://slack.com/api/chat.postMessage", formData)
+
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+
+	body, _ := ioutil.ReadAll(response.Body)
+	type ResponseParameters struct {
+		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
+		RetryAfter      int   `json:"retry_after"`        // optional
+	}
+	type APIResponse struct {
+		Ok          bool                `json:"ok"`
+		Result      json.RawMessage     `json:"result"`
+		ErrorCode   int                 `json:"error_code"`
+		Description string              `json:"description"`
+		Parameters  *ResponseParameters `json:"parameters"`
+	}
+	var resp APIResponse
+	err = json.Unmarshal([]byte(body), &resp)
+	if err != nil {
+		fmt.Println("error:", err)
+		return errors.New("Failed to parse response")
+	}
+	if !resp.Ok {
+		return errors.New(resp.Description)
+	}
+
+ 	return nil
+}
+
 // SendNotify sends notify if IP is changed
 func SendNotify(configuration *Settings, domain, currentIP string) error {
 	err := SendTelegramNotify(configuration, domain, currentIP)
@@ -330,6 +394,10 @@ func SendNotify(configuration *Settings, domain, currentIP string) error {
 	err = SendMailNotify(configuration, domain, currentIP)
 	if err != nil {
 		log.Println("Send email notification with error:", err.Error())
+	}
+	err = SendSlackNotify(configuration, domain, currentIP)
+	if err != nil {
+		log.Println("Send slack notification with error:", err.Error())
 	}
 	return nil
 }

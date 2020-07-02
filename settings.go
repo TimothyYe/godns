@@ -12,6 +12,15 @@ type Domain struct {
 	SubDomains []string `json:"sub_domains"`
 }
 
+// Notify struct for slack notification
+type SlackNotify struct {
+	Enabled     bool   `json:"enabled"`
+	BotApiToken   string `json:"bot_api_token"`
+	Channel      string `json:"channel"`
+	MsgTemplate string `json:"message_template"`
+	UseProxy    bool   `json:"use_proxy"`
+}
+
 // Notify struct for telegram notification
 type TelegramNotify struct {
 	Enabled     bool   `json:"enabled"`
@@ -35,6 +44,7 @@ type MailNotify struct {
 type Notify struct {
 	Telegram TelegramNotify `json:"telegram"`
 	Mail     MailNotify     `json:"mail"`
+	Slack	 SlackNotify	`json:"slack"`
 }
 
 // Settings struct
