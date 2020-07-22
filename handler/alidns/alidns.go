@@ -74,7 +74,7 @@ func getHTTPBody(url string) ([]byte, error) {
 	if resp.StatusCode == http.StatusOK {
 		return body, err
 	}
-	return nil, fmt.Errorf("Status %d, Error:%s", resp.StatusCode, body)
+	return nil, fmt.Errorf("status %d, Error:%s", resp.StatusCode, body)
 }
 
 // NewAliDNS function creates instance of AliDNS and return
@@ -124,7 +124,7 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 
 	urlPath := d.genRequestURL(parms)
 	if urlPath == "" {
-		return errors.New("Failed to generate request URL")
+		return errors.New("failed to generate request URL")
 	}
 	_, err := getHTTPBody(urlPath)
 	if err != nil {
