@@ -204,7 +204,7 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 	}
 
 	log.Println("Querying records with type:", recordType)
-	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s", recordType), nil)
+	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s&page=1&per_page=500", recordType), nil)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Request error:", err.Error())
