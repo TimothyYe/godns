@@ -96,8 +96,6 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		if currentIP == lastIP {
 			log.Printf("IP is the same as cached one. Skip update.\n")
 		} else {
-			lastIP = currentIP
-
 			log.Println("Checking IP for domain", domain.DomainName)
 			zoneID := handler.getZone(domain.DomainName)
 			if zoneID != "" {
@@ -111,7 +109,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 					}
 					if rec.IP != currentIP {
 						log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
-						handler.updateRecord(rec, currentIP)
+						lastIP = handler.updateRecord(rec, currentIP)
 
 						// Send notification
 						if err := godns.SendNotify(handler.Configuration, rec.Name, currentIP); err != nil {
@@ -206,7 +204,7 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 	}
 
 	log.Println("Querying records with type:", recordType)
-	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s", recordType), nil)
+	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s&page=1&per_page=500", recordType), nil)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Request error:", err.Error())
@@ -230,10 +228,11 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 }
 
 // Update DNS A Record with new IP
-func (handler *Handler) updateRecord(record DNSRecord, newIP string) {
+func (handler *Handler) updateRecord(record DNSRecord, newIP string)  string {
 
 	var r DNSRecordUpdateResponse
 	record.SetIP(newIP)
+	var lastIP string
 
 	j, _ := json.Marshal(record)
 	req, client := handler.newRequest("PUT",
@@ -243,7 +242,7 @@ func (handler *Handler) updateRecord(record DNSRecord, newIP string) {
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Request error:", err.Error())
-		return
+		return ""
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -251,12 +250,14 @@ func (handler *Handler) updateRecord(record DNSRecord, newIP string) {
 	if err != nil {
 		log.Printf("Decoder error: %+v\n", err)
 		log.Printf("Response body: %+v\n", string(body))
-		return
+		return ""
 	}
 	if r.Success != true {
 		body, _ := ioutil.ReadAll(resp.Body)
 		log.Printf("Response failed: %+v\n", string(body))
 	} else {
 		log.Printf("Record updated: %+v - %+v", record.Name, record.IP)
+		lastIP = record.IP
 	}
+	return lastIP
 }
