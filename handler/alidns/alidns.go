@@ -92,9 +92,8 @@ func NewAliDNS(key, secret string) *AliDNS {
 func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 	resp := &domainRecordsResp{}
 	parms := map[string]string{
-		"Action":     "DescribeDomainRecords",
-		"DomainName": domain,
-		"RRKeyWord":  rr,
+		"Action":    "DescribeSubDomainRecords",
+		"SubDomain": fmt.Sprintf("%s.%s", rr, domain),
 	}
 	urlPath := d.genRequestURL(parms)
 	body, err := getHTTPBody(urlPath)
