@@ -124,7 +124,11 @@ Supported provider(s):
 * Google Domains
 * HE.net
 
-To enable the `IPv6` mode of GoDNS, you only need two steps:
+To enable the `IPv6` support of GoDNS, there are 2 solutions you can choose:
+* Get IPv6 address online
+* Get IPv6 address from your network interface
+
+To get IPv6 address online:  
 * Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured.
 * Add one `AAAA` record to your provider.
 
@@ -145,6 +149,10 @@ For example:
   "ip_type": "IPv6"
 }
 ```
+
+To get IPv6 address from your interface:
+
+It is quite simple, just left "ip_url" & "ipv6_url" as empty. Please note that an IPv6 address configured for your interface is the prerequisite for this feature. 
 
 ### Config example for Cloudflare
 
@@ -364,8 +372,6 @@ For some reasons if you want to get an IP directly from the interface, say `eth0
 
 If you set both `ip_url` and `ip_interface`, it first tries to get an IP address online, and if not succeed, gets
 an IP address from the interface as a fallback.
-
-Note that IPv6 address will be ignored currently.
 
 ### Email notification support
 
