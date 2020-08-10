@@ -54,6 +54,8 @@ const (
 	DUCK = "DuckDNS"
 	// DREAMHOST for Dreamhost
 	DREAMHOST = "Dreamhost"
+	// NOIP for NoIP
+	NOIP = "NoIP"
 	// IPV4 for IPV4 mode
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode
@@ -218,6 +220,8 @@ func CheckSettings(config *Settings) error {
 			return errors.New("login token cannot be empty")
 		}
 	case GOOGLE:
+		fallthrough
+	case NOIP:
 		if config.Email == "" {
 			return errors.New("email cannot be empty")
 		}
@@ -427,7 +431,7 @@ func buildTemplate(currentIP, domain string, tplsrc string) string {
 }
 
 // ResolveDNS will query DNS for a given hostname.
-func ResolveDNS(hostname, resolver, ipType string) string {
+func ResolveDNS(hostname, resolver, ipType string) (string, error) {
 	var dnsType uint16
 	if ipType == "" || strings.ToUpper(ipType) == IPV4 {
 		dnsType = dns.TypeA
@@ -439,12 +443,10 @@ func ResolveDNS(hostname, resolver, ipType string) string {
 	if resolver == "" {
 		dnsAdress, err := net.LookupHost(hostname)
 		if err != nil {
-			if strings.HasSuffix(err.Error(), "no such host") {
-				return "<nil>"
-			}
-			log.Fatalf(err.Error())
+			return "<nil>", err
 		}
-		return dnsAdress[0]
+
+		return dnsAdress[0], nil
 	}
 	res := dnsResolver.New([]string{resolver})
 	// In case of i/o timeout
@@ -452,11 +454,9 @@ func ResolveDNS(hostname, resolver, ipType string) string {
 
 	ip, err := res.LookupHost(hostname, dnsType)
 	if err != nil {
-		if strings.HasSuffix(err.Error(), "NXDOMAIN") {
-			return "<nil>"
-		}
-		log.Fatalf(err.Error())
+		return "<nil>", err
 	}
-	return ip[0].String()
+
+	return ip[0].String(), nil
 
 }

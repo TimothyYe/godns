@@ -33,6 +33,7 @@ Now I rewrite [DynDNS](https://github.com/TimothyYe/DynDNS) by Golang and call i
 * AliDNS ([https://help.aliyun.com/product/29697.html](https://help.aliyun.com/product/29697.html))
 * DuckDNS ([https://www.duckdns.org](https://www.duckdns.org))
 * Dreamhost ([https://www.dreamhost.com](https://www.dreamhost.com))
+* No-IP ([https://www.noip.com/](https://www.noip.com))
 
 ## Supported Platforms
 
@@ -123,6 +124,7 @@ Supported provider(s):
 * DuckDNS
 * Google Domains
 * HE.net
+* No-IP
 
 To enable the `IPv6` support of GoDNS, there are 2 solutions you can choose:
 * Get IPv6 address online
@@ -318,6 +320,27 @@ For DuckDNS, only need to provide the `token`, config 1 default domain & subdoma
   ],
   "resolver": "8.8.8.8",
   "ip_url": "https://myip.biturl.top",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+### Config example for No-IP 
+
+```json
+{
+  "provider": "NoIP",
+  "email": "mail@example.com", 
+  "password": "YourPassword",
+  "domains": [
+    {
+      "domain_name": "ddns.net",
+      "sub_domains": ["timothyye6"]
+    }
+  ],
+  "ip_type": "IPv4",
+  "ip_url": "https://myip.biturl.top",
+  "resolver": "8.8.8.8",
   "interval": 300,
   "socks5_proxy": ""
 }
