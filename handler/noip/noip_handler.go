@@ -1,11 +1,10 @@
-package he
+package noip
 
 import (
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -14,8 +13,8 @@ import (
 )
 
 var (
-	// HEUrl the API address for he.net
-	HEUrl = "https://dyn.dns.he.net/nic/update"
+	// NoIPUrl the API address for NoIP
+	NoIPUrl = "https://%s:%s@dynupdate.no-ip.com/nic/update?hostname=%s&%s"
 )
 
 // Handler struct
@@ -38,23 +37,31 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	}()
 
 	looping := false
+
 	for {
 		if looping {
 			// Sleep with interval
 			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
-		looping = true
 
+		looping = true
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
 		if err != nil {
 			log.Println("get_currentIP:", err)
 			continue
 		}
-		log.Println("currentIP is:", currentIP)
 
-		//check against locally cached IP, if no change, skip update
+		log.Println("currentIP is:", currentIP)
+		client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+
+		var ip string
+		if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+			ip = fmt.Sprintf("myip=%s", currentIP)
+		} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+			ip = fmt.Sprintf("myipv6=%s", currentIP)
+		}
 
 		for _, subDomain := range domain.SubDomains {
 			hostname := subDomain + "." + domain.DomainName
@@ -68,40 +75,40 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			if currentIP == lastIP {
 				log.Printf("IP is the same as cached one. Skip update.\n")
 			} else {
-				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
-				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
+				req, _ := http.NewRequest("GET", fmt.Sprintf(
+					NoIPUrl,
+					handler.Configuration.Email,
+					handler.Configuration.Password,
+					hostname,
+					ip), nil)
+
+				if handler.Configuration.UserAgent != "" {
+					req.Header.Add("User-Agent", handler.Configuration.UserAgent)
+				}
+
+				// update IP with HTTP GET request
+				resp, err := client.Do(req)
+				if err != nil {
+					// handle error
+					log.Print("Failed to update sub domain:", subDomain)
+					continue
+				}
+
+				defer resp.Body.Close()
+
+				body, err := ioutil.ReadAll(resp.Body)
+				if err != nil || !strings.Contains(string(body), "good") {
+					log.Println("Failed to update the IP")
+					continue
+				} else {
+					log.Print("IP updated to:", currentIP)
+				}
 
 				// Send notification
 				if err := godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP); err != nil {
 					log.Println("Failed to send notification")
 				}
 			}
-		}
-	}
-
-}
-
-// UpdateIP update subdomain with current IP
-func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
-	values := url.Values{}
-	values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
-	values.Add("password", handler.Configuration.Password)
-	values.Add("myip", currentIP)
-
-	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
-
-	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
-	resp, err := client.Do(req)
-
-	if err != nil {
-		log.Println("Request error...")
-		log.Println("Err:", err.Error())
-	} else {
-		body, _ := ioutil.ReadAll(resp.Body)
-		if resp.StatusCode == http.StatusOK {
-			log.Println("Update IP success:", string(body))
-		} else {
-			log.Println("Update IP failed:", string(body))
 		}
 	}
 }
