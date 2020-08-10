@@ -40,6 +40,6 @@ func TestLookupHostIPv6_ValidServer(t *testing.T) {
 	}
 
 	if result[0].String() != "2001:4860:4860::8888" {
-		t.Error("result shoudl be: 2001:4860:4860::8888")
+		t.Error("result should be: 2001:4860:4860::8888")
 	}
 }
