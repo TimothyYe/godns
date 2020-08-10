@@ -83,18 +83,26 @@ func (r *DNSResolver) lookupHost(host string, dnsType uint16, triesLeft int) ([]
 	}
 
 	if dnsType == dns.TypeA {
-		for _, record := range in.Answer {
-			if t, ok := record.(*dns.A); ok {
-				result = append(result, t.A)
+		if len(in.Answer) > 0 {
+			for _, record := range in.Answer {
+				if t, ok := record.(*dns.A); ok {
+					result = append(result, t.A)
+				}
 			}
+		} else {
+			return result, errors.New("empty result")
 		}
 	}
 
 	if dnsType == dns.TypeAAAA {
-		for _, record := range in.Answer {
-			if t, ok := record.(*dns.AAAA); ok {
-				result = append(result, t.AAAA)
+		if len(in.Answer) > 0 {
+			for _, record := range in.Answer {
+				if t, ok := record.(*dns.AAAA); ok {
+					result = append(result, t.AAAA)
+				}
 			}
+		} else {
+			return result, errors.New("Cannot resolve this domain, please make sure the IP type is right")
 		}
 	}
 
