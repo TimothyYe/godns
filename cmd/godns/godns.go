@@ -49,18 +49,18 @@ func main() {
 func dnsLoop() {
 	panicChan := make(chan godns.Domain)
 
-	log.Println("Creating DNS handler with provider:", configuration.Provider)
-	handler := handler.CreateHandler(configuration.Provider)
-	handler.SetConfiguration(&configuration)
+	log.Println("Creating DNS h with provider:", configuration.Provider)
+	h := handler.CreateHandler(configuration.Provider)
+	h.SetConfiguration(&configuration)
 	for i := range configuration.Domains {
-		go handler.DomainLoop(&configuration.Domains[i], panicChan)
+		go h.DomainLoop(&configuration.Domains[i], panicChan)
 	}
 
 	panicCount := 0
 	for {
 		failDomain := <-panicChan
 		log.Println("Got panic in goroutine, will start a new one... :", panicCount)
-		go handler.DomainLoop(&failDomain, panicChan)
+		go h.DomainLoop(&failDomain, panicChan)
 
 		panicCount++
 		if panicCount >= godns.PanicMax {

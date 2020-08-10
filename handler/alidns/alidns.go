@@ -133,7 +133,7 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 }
 
 func (d *AliDNS) genRequestURL(parms map[string]string) string {
-	pArr := []string{}
+	var pArr []string
 	ps := map[string]string{}
 	for k, v := range publicParm {
 		ps[k] = v

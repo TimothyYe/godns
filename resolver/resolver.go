@@ -34,8 +34,13 @@ func NewFromResolvConf(path string) (*DNSResolver, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return &DNSResolver{}, errors.New("no such file or directory: " + path)
 	}
+
 	config, err := dns.ClientConfigFromFile(path)
-	servers := []string{}
+	if err != nil {
+		return &DNSResolver{}, err
+	}
+
+	var servers []string
 	for _, ipAddress := range config.Servers {
 		servers = append(servers, net.JoinHostPort(ipAddress, "53"))
 	}
@@ -56,14 +61,14 @@ func (r *DNSResolver) lookupHost(host string, dnsType uint16, triesLeft int) ([]
 
 	switch dnsType {
 	case dns.TypeA:
-		m1.Question[0] = dns.Question{dns.Fqdn(host), dns.TypeA, dns.ClassINET}
+		m1.Question[0] = dns.Question{Name: dns.Fqdn(host), Qtype: dns.TypeA, Qclass: dns.ClassINET}
 	case dns.TypeAAAA:
-		m1.Question[0] = dns.Question{dns.Fqdn(host), dns.TypeAAAA, dns.ClassINET}
+		m1.Question[0] = dns.Question{Name: dns.Fqdn(host), Qtype: dns.TypeAAAA, Qclass: dns.ClassINET}
 	}
 
 	in, err := dns.Exchange(m1, r.Servers[r.r.Intn(len(r.Servers))])
 
-	result := []net.IP{}
+	var result []net.IP
 
 	if err != nil {
 		if strings.HasSuffix(err.Error(), "i/o timeout") && triesLeft > 0 {

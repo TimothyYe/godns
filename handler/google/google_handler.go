@@ -85,6 +85,7 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	if err != nil {
 		// handle error
 		log.Print("Failed to update sub domain:", subDomain)
+		return
 	}
 
 	defer resp.Body.Close()

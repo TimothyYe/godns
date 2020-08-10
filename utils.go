@@ -17,7 +17,7 @@ import (
 
 	"github.com/miekg/dns"
 	"golang.org/x/net/proxy"
-	gomail "gopkg.in/gomail.v2"
+	"gopkg.in/gomail.v2"
 )
 
 var (
@@ -118,10 +118,10 @@ func isIPv4(ip string) bool {
 }
 
 // GetHttpClient creates the HTTP client and return it
-func GetHttpClient(configuration *Settings, use_proxy bool) *http.Client {
+func GetHttpClient(configuration *Settings, useProxy bool) *http.Client {
 	client := &http.Client{}
 
-	if use_proxy && configuration.Socks5Proxy != "" {
+	if useProxy && configuration.Socks5Proxy != "" {
 		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
 		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
@@ -258,14 +258,14 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 	}
 
 	msg := buildTemplate(currentIP, domain, tpl)
-	url := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
+	reqURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
 		configuration.Notify.Telegram.BotApiKey,
 		configuration.Notify.Telegram.ChatId,
 		msg)
 	var response *http.Response
 	var err error
 
-	response, err = client.Get(url)
+	response, err = client.Get(reqURL)
 
 	if err != nil {
 		return err
@@ -286,7 +286,7 @@ func SendTelegramNotify(configuration *Settings, domain, currentIP string) error
 		Parameters  *ResponseParameters `json:"parameters"`
 	}
 	var resp APIResponse
-	err = json.Unmarshal([]byte(body), &resp)
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		fmt.Println("error:", err)
 		return errors.New("failed to parse response")
@@ -373,7 +373,7 @@ func SendSlackNotify(configuration *Settings, domain, currentIP string) error {
 		Parameters  *ResponseParameters `json:"parameters"`
 	}
 	var resp APIResponse
-	err = json.Unmarshal([]byte(body), &resp)
+	err = json.Unmarshal(body, &resp)
 	if err != nil {
 		fmt.Println("error:", err)
 		return errors.New("failed to parse response")
