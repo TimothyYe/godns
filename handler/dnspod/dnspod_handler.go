@@ -177,6 +177,15 @@ func (handler *Handler) GetSubDomain(domainID int64, name string) (string, strin
 	value.Add("length", "1")
 	value.Add("sub_domain", name)
 
+	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+		value.Add("record_type", "A")
+	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+		value.Add("record_type", "AAAA")
+	} else {
+		log.Println("Error: must specify \"ip_type\" in config for DNSPod.")
+		return "", ""
+	}
+
 	response, err := handler.PostData("/Record.List", value)
 
 	if err != nil {
