@@ -7,7 +7,7 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
  ```
 
-[![MIT licensed][9]][10] [![LICENSE](https://img.shields.io/badge/license-NPL%20(The%20996%20Prohibited%20License)-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE) [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
+[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
 
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
 [4]: https://microbadger.com/images/timothyye/godns
