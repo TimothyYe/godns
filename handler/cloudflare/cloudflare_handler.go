@@ -163,7 +163,7 @@ func (handler *Handler) getZone(domain string) string {
 
 	var z ZoneResponse
 
-	req, client := handler.newRequest("GET", "/zones", nil)
+	req, client := handler.newRequest("GET", fmt.Sprintf("/zones?name=%s", domain), nil)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Request error:", err.Error())
