@@ -128,6 +128,9 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 // Check if record is present in domain conf
 func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
+	if record.Name == domain.DomainName {
+		return true
+	}
 	for _, subDomain := range domain.SubDomains {
 		sd := fmt.Sprintf("%s.%s", subDomain, domain.DomainName)
 		if record.Name == sd {
