@@ -9,8 +9,8 @@ install:
 image:
 		# Build docker image
 		go clean
-		docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7 -t timothyye/godns:${VERSION} . --push
-		docker buildx build --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7 -t timothyye/godns:latest . --push
+		docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t timothyye/godns:${VERSION} . --push
+		docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t timothyye/godns:latest . --push
 release:
 		# Clean
 		go clean
