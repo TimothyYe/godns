@@ -2,7 +2,7 @@
 BINARY=godns
 # Builds the project
 build:
-		GO111MODULE=on go build cmd/godns/godns.go -o ${BINARY} -ldflags "-X main.Version=${VERSION}"
+		GO111MODULE=on go build -ldflags "-X main.Version=${VERSION}" -o ${BINARY} cmd/godns/godns.go 
 # Installs our project: copies binaries
 install:
 		GO111MODULE=on go install
