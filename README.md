@@ -582,7 +582,7 @@ With `/path/to/config.json` your local configuration file, run:
 ```bash
 docker run \
 -d --name godns --restart=always \
--v /path/to/config.json:/usr/local/godns/config.json \
+-v /path/to/config.json:/config.json \
 timothyye/godns:latest
 ```
 
