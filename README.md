@@ -59,16 +59,16 @@
 ---
 ## Supported DNS Providers
 
-| Provider                              |   IPv4  support    |    IPv6 support    |
-| ------------------------------------- | :----------------: | :----------------: |
-| [Cloudflare][cloudflare]              | :white_check_mark: | :white_check_mark: |
-| [Google Domains][google.domains]      | :white_check_mark: | :white_check_mark: |
-| [DNSPod][dnspod]                      | :white_check_mark: | :white_check_mark: |
-| [HE.net (Hurricane Electric)][he.net] | :white_check_mark: | :white_check_mark: |
-| [AliDNS][alidns]                      | :white_check_mark: |        :x:         |
-| [DuckDNS][duckdns]                    | :white_check_mark: | :white_check_mark: |
-| [Dreamhost][dreamhost]                | :white_check_mark: | :white_check_mark: |
-| [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |
+| Provider                              |   IPv4  support    |    IPv6 support    |    Root Domain     |     Subdomains     |
+| ------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: |
+| [Cloudflare][cloudflare]              | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Google Domains][google.domains]      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [DNSPod][dnspod]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [HE.net (Hurricane Electric)][he.net] | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [AliDNS][alidns]                      | :white_check_mark: |        :x:         |        :x:         | :white_check_mark: |
+| [DuckDNS][duckdns]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Dreamhost][dreamhost]                | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -78,6 +78,8 @@
 [duckdns]: https://www.duckdns.org
 [dreamhost]: https://www.dreamhost.com
 [no-ip]: https://www.noip.com
+
+Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
 ## Supported Platforms
 
