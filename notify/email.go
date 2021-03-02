@@ -1,4 +1,42 @@
-package godns
+package notify
+
+import (
+	"log"
+
+	"github.com/TimothyYe/godns"
+	"gopkg.in/gomail.v2"
+)
+
+type EmailNotify struct {
+	conf *godns.Settings
+}
+
+func (n *EmailNotify) Send(domain, currentIP string) error {
+	if !n.conf.Notify.Mail.Enabled {
+		return nil
+	}
+	log.Print("Sending notification to:", n.conf.Notify.Mail.SendTo)
+	m := gomail.NewMessage()
+
+	m.SetHeader("From", n.conf.Notify.Mail.SMTPUsername)
+	m.SetHeader("To", n.conf.Notify.Mail.SendTo)
+	m.SetHeader("Subject", "GoDNS Notification")
+	log.Println("currentIP:", currentIP)
+	log.Println("domain:", domain)
+	m.SetBody("text/html", buildTemplate(currentIP, domain, mailTemplate))
+
+	d := gomail.NewDialer(
+		n.conf.Notify.Mail.SMTPServer,
+		n.conf.Notify.Mail.SMTPPort,
+		n.conf.Notify.Mail.SMTPUsername,
+		n.conf.Notify.Mail.SMTPPassword)
+
+	// Send the email config by sendlist	.
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+	return nil
+}
 
 var mailTemplate = `
 <html>

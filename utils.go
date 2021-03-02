@@ -1,23 +1,16 @@
 package godns
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
-	"fmt"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
-	"net/url"
 	"strings"
 
 	dnsResolver "github.com/TimothyYe/godns/resolver"
 
 	"github.com/miekg/dns"
-	"golang.org/x/net/proxy"
-	"gopkg.in/gomail.v2"
 )
 
 var (
@@ -117,26 +110,6 @@ func GetIPFromInterface(configuration *Settings) (string, error) {
 
 func isIPv4(ip string) bool {
 	return strings.Count(ip, ":") < 2
-}
-
-// GetHttpClient creates the HTTP client and return it
-func GetHttpClient(configuration *Settings, useProxy bool) *http.Client {
-	client := &http.Client{}
-
-	if useProxy && configuration.Socks5Proxy != "" {
-		log.Println("use socks5 proxy:" + configuration.Socks5Proxy)
-		dialer, err := proxy.SOCKS5("tcp", configuration.Socks5Proxy, nil, proxy.Direct)
-		if err != nil {
-			log.Println("can't connect to the proxy:", err)
-			return nil
-		}
-
-		httpTransport := &http.Transport{}
-		client.Transport = httpTransport
-		httpTransport.Dial = dialer.Dial
-	}
-
-	return client
 }
 
 //GetCurrentIP gets an IP from either internet or specific interface, depending on configuration
@@ -241,194 +214,22 @@ func CheckSettings(config *Settings) error {
 	return nil
 }
 
-// SendTelegramNotify sends notify if IP is changed
-func SendTelegramNotify(configuration *Settings, domain, currentIP string) error {
-	if !configuration.Notify.Telegram.Enabled {
-		return nil
-	}
-
-	if configuration.Notify.Telegram.BotApiKey == "" {
-		return errors.New("bot api key cannot be empty")
-	}
-
-	if configuration.Notify.Telegram.ChatId == "" {
-		return errors.New("chat id cannot be empty")
-	}
-
-	client := GetHttpClient(configuration, configuration.Notify.Telegram.UseProxy)
-	tpl := configuration.Notify.Telegram.MsgTemplate
-	if tpl == "" {
-		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
-	}
-
-	msg := buildTemplate(currentIP, domain, tpl)
-	reqURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
-		configuration.Notify.Telegram.BotApiKey,
-		configuration.Notify.Telegram.ChatId,
-		msg)
-	var response *http.Response
-	var err error
-
-	response, err = client.Get(reqURL)
-
-	if err != nil {
-		return err
-	}
-
-	defer response.Body.Close()
-
-	body, _ := ioutil.ReadAll(response.Body)
-	type ResponseParameters struct {
-		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
-		RetryAfter      int   `json:"retry_after"`        // optional
-	}
-	type APIResponse struct {
-		Ok          bool                `json:"ok"`
-		Result      json.RawMessage     `json:"result"`
-		ErrorCode   int                 `json:"error_code"`
-		Description string              `json:"description"`
-		Parameters  *ResponseParameters `json:"parameters"`
-	}
-	var resp APIResponse
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		fmt.Println("error:", err)
-		return errors.New("failed to parse response")
-	}
-	if !resp.Ok {
-		return errors.New(resp.Description)
-	}
-
-	return nil
-}
-
-// SendMailNotify sends mail notify if IP is changed
-func SendMailNotify(configuration *Settings, domain, currentIP string) error {
-	if !configuration.Notify.Mail.Enabled {
-		return nil
-	}
-	log.Print("Sending notification to:", configuration.Notify.Mail.SendTo)
-	m := gomail.NewMessage()
-
-	m.SetHeader("From", configuration.Notify.Mail.SMTPUsername)
-	m.SetHeader("To", configuration.Notify.Mail.SendTo)
-	m.SetHeader("Subject", "GoDNS Notification")
-	log.Println("currentIP:", currentIP)
-	log.Println("domain:", domain)
-	m.SetBody("text/html", buildTemplate(currentIP, domain, mailTemplate))
-
-	d := gomail.NewDialer(configuration.Notify.Mail.SMTPServer, configuration.Notify.Mail.SMTPPort, configuration.Notify.Mail.SMTPUsername, configuration.Notify.Mail.SMTPPassword)
-
-	// Send the email config by sendlist	.
-	if err := d.DialAndSend(m); err != nil {
-		return err
-	}
-	return nil
-}
-
-// SendSlack sends slack if IP is changed
-func SendSlackNotify(configuration *Settings, domain, currentIP string) error {
-	if !configuration.Notify.Slack.Enabled {
-		return nil
-	}
-
-	if configuration.Notify.Slack.BotApiToken == "" {
-		return errors.New("bot api token cannot be empty")
-	}
-
-	if configuration.Notify.Slack.Channel == "" {
-		return errors.New("channel cannot be empty")
-	}
-	client := GetHttpClient(configuration, configuration.Notify.Slack.UseProxy)
-	tpl := configuration.Notify.Slack.MsgTemplate
-	if tpl == "" {
-		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* is updated"
-	}
-
-	msg := buildTemplate(currentIP, domain, tpl)
-
-	var response *http.Response
-	var err error
-
-	formData := url.Values{
-		"token":   {configuration.Notify.Slack.BotApiToken},
-		"channel": {configuration.Notify.Slack.Channel},
-		"text":    {msg},
-	}
-
-	response, err = client.PostForm("https://slack.com/api/chat.postMessage", formData)
-
-	if err != nil {
-		return err
-	}
-
-	defer response.Body.Close()
-
-	body, _ := ioutil.ReadAll(response.Body)
-	type ResponseParameters struct {
-		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
-		RetryAfter      int   `json:"retry_after"`        // optional
-	}
-	type APIResponse struct {
-		Ok          bool                `json:"ok"`
-		Result      json.RawMessage     `json:"result"`
-		ErrorCode   int                 `json:"error_code"`
-		Description string              `json:"description"`
-		Parameters  *ResponseParameters `json:"parameters"`
-	}
-	var resp APIResponse
-	err = json.Unmarshal(body, &resp)
-	if err != nil {
-		fmt.Println("error:", err)
-		return errors.New("failed to parse response")
-	}
-	if !resp.Ok {
-		return errors.New(resp.Description)
-	}
-
-	return nil
-}
-
-// SendNotify sends notify if IP is changed
-func SendNotify(configuration *Settings, domain, currentIP string) error {
-	err := SendTelegramNotify(configuration, domain, currentIP)
-	if err != nil {
-		log.Println("Send telegram notification with error:", err.Error())
-	}
-	err = SendMailNotify(configuration, domain, currentIP)
-	if err != nil {
-		log.Println("Send email notification with error:", err.Error())
-	}
-	err = SendSlackNotify(configuration, domain, currentIP)
-	if err != nil {
-		log.Println("Send slack notification with error:", err.Error())
-	}
-	return nil
-}
-
-func buildTemplate(currentIP, domain string, tplsrc string) string {
-	t := template.New("notification template")
-	if _, err := t.Parse(tplsrc); err != nil {
-		log.Println("Failed to parse template")
-		return ""
-	}
-
-	data := struct {
-		CurrentIP string
-		Domain    string
-	}{
-		currentIP,
-		domain,
-	}
-
-	var tpl bytes.Buffer
-	if err := t.Execute(&tpl, data); err != nil {
-		log.Println(err.Error())
-		return ""
-	}
-
-	return tpl.String()
-}
+//// SendNotify sends notify if IP is changed
+//func SendNotify(configuration *Settings, domain, currentIP string) error {
+//	err := SendTelegramNotify(configuration, domain, currentIP)
+//	if err != nil {
+//		log.Println("Send telegram notification with error:", err.Error())
+//	}
+//	err = SendMailNotify(configuration, domain, currentIP)
+//	if err != nil {
+//		log.Println("Send email notification with error:", err.Error())
+//	}
+//	err = SendSlackNotify(configuration, domain, currentIP)
+//	if err != nil {
+//		log.Println("Send slack notification with error:", err.Error())
+//	}
+//	return nil
+//}
 
 // ResolveDNS will query DNS for a given hostname.
 func ResolveDNS(hostname, resolver, ipType string) (string, error) {
