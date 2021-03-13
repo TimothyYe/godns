@@ -16,12 +16,15 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/TimothyYe/godns"
 )
 
 // AliDNS token
 type AliDNS struct {
 	AccessKeyID     string
 	AccessKeySecret string
+	IPType          string
 }
 
 var (
@@ -78,11 +81,12 @@ func getHTTPBody(url string) ([]byte, error) {
 }
 
 // NewAliDNS function creates instance of AliDNS and return
-func NewAliDNS(key, secret string) *AliDNS {
+func NewAliDNS(key, secret, ipType string) *AliDNS {
 	once.Do(func() {
 		instance = &AliDNS{
 			AccessKeyID:     key,
 			AccessKeySecret: secret,
+			IPType:          ipType,
 		}
 	})
 	return instance
@@ -95,6 +99,13 @@ func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 		"Action":    "DescribeSubDomainRecords",
 		"SubDomain": fmt.Sprintf("%s.%s", rr, domain),
 	}
+
+	if d.IPType == "" || strings.ToUpper(d.IPType) == godns.IPV4 {
+		parms["Type"] = godns.IPTypeA
+	} else if strings.ToUpper(d.IPType) == godns.IPV6 {
+		parms["Type"] = godns.IPTypeAAAA
+	}
+
 	urlPath := d.genRequestURL(parms)
 	body, err := getHTTPBody(urlPath)
 	if err != nil {
@@ -115,10 +126,15 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 		"Action":   "UpdateDomainRecord",
 		"RecordId": r.RecordID,
 		"RR":       r.RR,
-		"Type":     r.Type,
 		"Value":    r.Value,
 		"TTL":      strconv.Itoa(r.TTL),
 		"Line":     r.Line,
+	}
+
+	if d.IPType == "" || strings.ToUpper(d.IPType) == godns.IPV4 {
+		parms["Type"] = godns.IPTypeA
+	} else if strings.ToUpper(d.IPType) == godns.IPV6 {
+		parms["Type"] = godns.IPTypeAAAA
 	}
 
 	urlPath := d.genRequestURL(parms)
