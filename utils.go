@@ -216,23 +216,6 @@ func CheckSettings(config *Settings) error {
 	return nil
 }
 
-//// SendNotify sends notify if IP is changed
-//func SendNotify(configuration *Settings, domain, currentIP string) error {
-//	err := SendTelegramNotify(configuration, domain, currentIP)
-//	if err != nil {
-//		log.Println("Send telegram notification with error:", err.Error())
-//	}
-//	err = SendMailNotify(configuration, domain, currentIP)
-//	if err != nil {
-//		log.Println("Send email notification with error:", err.Error())
-//	}
-//	err = SendSlackNotify(configuration, domain, currentIP)
-//	if err != nil {
-//		log.Println("Send slack notification with error:", err.Error())
-//	}
-//	return nil
-//}
-
 // GetHttpClient creates the HTTP client and return it
 func GetHttpClient(conf *Settings, useProxy bool) *http.Client {
 	client := &http.Client{}
