@@ -31,7 +31,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	}()
 
 	looping := false
-	aliDNS := NewAliDNS(handler.Configuration.Email, handler.Configuration.Password)
+	aliDNS := NewAliDNS(handler.Configuration.Email, handler.Configuration.Password, handler.Configuration.IPType)
 
 	for {
 		if looping {

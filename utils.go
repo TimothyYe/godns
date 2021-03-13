@@ -55,6 +55,10 @@ const (
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode
 	IPV6 = "IPV6"
+	// IPTypeA
+	IPTypeA = "A"
+	// IPTypeAAAA
+	IPTypeAAAA = "AAAA"
 )
 
 //GetIPFromInterface gets IP address from the specific interface

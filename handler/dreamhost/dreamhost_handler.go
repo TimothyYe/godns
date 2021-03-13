@@ -90,9 +90,11 @@ func (handler *Handler) UpdateIP(hostname, currentIP, lastIP string) {
 
 // updateDNS can add or remove DNS records.
 func (handler *Handler) updateDNS(dns, ip, hostname, action string) {
-	ipType := "A"
-	if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
-		ipType = "AAAA"
+	var ipType string
+	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+		ipType = godns.IPTypeA
+	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+		ipType = godns.IPTypeAAAA
 	}
 
 	// Generates UUID
