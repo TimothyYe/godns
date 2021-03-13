@@ -201,9 +201,9 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 	var recordType string
 
 	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
-		recordType = "A"
+		recordType = godns.IPTypeA
 	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
-		recordType = "AAAA"
+		recordType = godns.IPTypeAAAA
 	}
 
 	log.Println("Querying records with type:", recordType)

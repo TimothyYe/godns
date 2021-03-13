@@ -229,9 +229,9 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	value.Add("sub_domain", subDomainName)
 
 	if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
-		value.Add("record_type", "A")
+		value.Add("record_type", godns.IPTypeA)
 	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
-		value.Add("record_type", "AAAA")
+		value.Add("record_type", godns.IPTypeAAAA)
 	} else {
 		log.Println("Error: must specify \"ip_type\" in config for DNSPod.")
 		return
