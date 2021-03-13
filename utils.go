@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 
+	"golang.org/x/net/proxy"
+
 	dnsResolver "github.com/TimothyYe/godns/resolver"
 
 	"github.com/miekg/dns"
@@ -230,6 +232,26 @@ func CheckSettings(config *Settings) error {
 //	}
 //	return nil
 //}
+
+// GetHttpClient creates the HTTP client and return it
+func GetHttpClient(conf *Settings, useProxy bool) *http.Client {
+	client := &http.Client{}
+
+	if useProxy && conf.Socks5Proxy != "" {
+		log.Println("use socks5 proxy:" + conf.Socks5Proxy)
+		dialer, err := proxy.SOCKS5("tcp", conf.Socks5Proxy, nil, proxy.Direct)
+		if err != nil {
+			log.Println("can't connect to the proxy:", err)
+			return nil
+		}
+
+		httpTransport := &http.Transport{}
+		client.Transport = httpTransport
+		httpTransport.Dial = dialer.Dial
+	}
+
+	return client
+}
 
 // ResolveDNS will query DNS for a given hostname.
 func ResolveDNS(hostname, resolver, ipType string) (string, error) {

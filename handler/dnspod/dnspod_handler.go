@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/TimothyYe/godns/notify"
+
 	"github.com/TimothyYe/godns"
 	"github.com/bitly/go-simplejson"
 )
@@ -88,9 +90,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
 
 					// Send notification
-					if err := godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP); err != nil {
-						log.Println("Failed to send notification")
-					}
+					notify.GetNotifyManager(handler.Configuration).Send(fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 				} else {
 					log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
 				}

@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/TimothyYe/godns/notify"
+
 	"github.com/TimothyYe/godns"
 	"github.com/google/uuid"
 )
@@ -71,9 +73,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				handler.UpdateIP(hostname, currentIP, lastIP)
 
 				// Send notification
-				if err := godns.SendNotify(handler.Configuration, fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP); err != nil {
-					log.Println("Failed to send notification")
-				}
+				notify.GetNotifyManager(handler.Configuration).Send(fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 			}
 		}
 	}

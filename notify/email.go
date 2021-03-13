@@ -11,10 +11,11 @@ type EmailNotify struct {
 	conf *godns.Settings
 }
 
+func NewEmailNotify(conf *godns.Settings) INotify {
+	return &EmailNotify{conf: conf}
+}
+
 func (n *EmailNotify) Send(domain, currentIP string) error {
-	if !n.conf.Notify.Mail.Enabled {
-		return nil
-	}
 	log.Print("Sending notification to:", n.conf.Notify.Mail.SendTo)
 	m := gomail.NewMessage()
 

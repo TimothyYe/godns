@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/TimothyYe/godns/notify"
+
 	"github.com/TimothyYe/godns"
 )
 
@@ -112,9 +114,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 						lastIP = handler.updateRecord(rec, currentIP)
 
 						// Send notification
-						if err := godns.SendNotify(handler.Configuration, rec.Name, currentIP); err != nil {
-							log.Println("Failed to send notification")
-						}
+						notify.GetNotifyManager(handler.Configuration).Send(rec.Name, currentIP)
 					} else {
 						log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
 					}
@@ -231,7 +231,7 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 }
 
 // Update DNS A Record with new IP
-func (handler *Handler) updateRecord(record DNSRecord, newIP string)  string {
+func (handler *Handler) updateRecord(record DNSRecord, newIP string) string {
 
 	var r DNSRecordUpdateResponse
 	record.SetIP(newIP)
