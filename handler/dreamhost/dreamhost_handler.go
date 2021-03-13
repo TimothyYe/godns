@@ -35,7 +35,7 @@ func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("Recovered in %v: %v\n", err, debug.Stack())
+			log.Printf("Recovered in %v: %v\n", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()

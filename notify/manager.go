@@ -56,7 +56,8 @@ func initNotifications(conf *godns.Settings) map[string]INotify {
 
 func (n *notifyManager) Send(domain, currentIP string) {
 	for _, sender := range n.notifications {
-		err := sender.Send(domain, currentIP)
-		log.Println("Send notification with error:", err.Error())
+		if err := sender.Send(domain, currentIP); err != nil {
+			log.Println("Send notification with error:", err.Error())
+		}
 	}
 }

@@ -16,7 +16,7 @@ func NewEmailNotify(conf *godns.Settings) INotify {
 }
 
 func (n *EmailNotify) Send(domain, currentIP string) error {
-	log.Print("Sending notification to:", n.conf.Notify.Mail.SendTo)
+	log.Print("Sending notification to: ", n.conf.Notify.Mail.SendTo)
 	m := gomail.NewMessage()
 
 	m.SetHeader("From", n.conf.Notify.Mail.SMTPUsername)
