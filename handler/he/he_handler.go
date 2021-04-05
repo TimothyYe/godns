@@ -59,7 +59,14 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		//check against locally cached IP, if no change, skip update
 
 		for _, subDomain := range domain.SubDomains {
-			hostname := subDomain + "." + domain.DomainName
+			var hostname string
+
+			if subDomain != godns.RootDomain {
+				hostname = subDomain + "." + domain.DomainName
+			} else {
+				hostname = domain.DomainName
+			}
+
 			lastIP, err := godns.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
 			if err != nil {
 				log.Println(err)
@@ -70,7 +77,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			if currentIP == lastIP {
 				log.Printf("IP is the same as cached one. Skip update.\n")
 			} else {
-				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+				log.Printf("%s.%s - Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 
 				// Send notification
@@ -84,7 +91,12 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 // UpdateIP update subdomain with current IP
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	values := url.Values{}
-	values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
+
+	if subDomain != godns.RootDomain {
+		values.Add("hostname", fmt.Sprintf("%s.%s", subDomain, domain))
+	} else {
+		values.Add("hostname", domain)
+	}
 	values.Add("password", handler.Configuration.Password)
 	values.Add("myip", currentIP)
 
