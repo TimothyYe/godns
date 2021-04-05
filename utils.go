@@ -59,6 +59,8 @@ const (
 	IPTypeA = "A"
 	// IPTypeAAAA
 	IPTypeAAAA = "AAAA"
+	// RootDomain
+	RootDomain = "@"
 )
 
 //GetIPFromInterface gets IP address from the specific interface
