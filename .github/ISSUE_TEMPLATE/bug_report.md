@@ -1,21 +1,21 @@
-**Describe the bug**
+**Describe the bug**  
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+**To Reproduce**  
 Steps to reproduce the behavior.
 
-**Your GoDNS configuration**
+**Your GoDNS configuration**  
 Past your GoDNS configuration here, please remember to remove the sensitive information.
 
-**Expected behavior**
+**Expected behavior**  
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+**Screenshots**  
 If applicable, add screenshots to help explain your problem.
 
-**Environment (please complete the following information):**
+**Environment (please complete the following information):**  
  - DNS Provider: [e.g. Cloudflare]
  - OS: [e.g. Linux]
 
-**Additional context**
+**Additional context**  
 Add any other context about the problem here.
