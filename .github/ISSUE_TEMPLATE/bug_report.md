@@ -1,7 +1,11 @@
 **Describe the bug**  
 A clear and concise description of what the bug is.
 
-**To Reproduce**  
+**The frequency of this issue**  
+- [ ] This issue is easy to reproduce.
+- [ ] This issue is not easy to reproduce.
+
+**Steps to Reproduce**  
 Steps to reproduce the behavior.
 
 **Your GoDNS configuration**  
