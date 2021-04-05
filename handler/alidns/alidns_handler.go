@@ -49,7 +49,13 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 		log.Println("currentIP is:", currentIP)
 		for _, subDomain := range domain.SubDomains {
-			hostname := subDomain + "." + domain.DomainName
+			var hostname string
+			if subDomain != godns.RootDomain {
+				hostname = subDomain + "." + domain.DomainName
+			} else {
+				hostname = domain.DomainName
+			}
+
 			lastIP, err := godns.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
 			if err != nil {
 				log.Println(err)
@@ -61,7 +67,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			} else {
 				lastIP = currentIP
 
-				log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+				log.Printf("%s.%s - Start to update record IP...\n", subDomain, domain.DomainName)
 				records := aliDNS.GetDomainRecords(domain.DomainName, subDomain)
 				if records == nil || len(records) == 0 {
 					log.Printf("Cannot get subdomain %s from AliDNS.\r\n", subDomain)
