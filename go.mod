@@ -3,7 +3,7 @@ module github.com/TimothyYe/godns
 require (
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
-	github.com/bogdanovich/dns_resolver v0.0.0-20170211073258-a8e42bc6a5b6
+	github.com/bogdanovich/dns_resolver v0.0.0-20170211073258-a8e42bc6a5b6 // indirect
 	github.com/fatih/color v1.7.0
 	github.com/google/uuid v1.1.1
 	github.com/kr/pretty v0.1.0 // indirect

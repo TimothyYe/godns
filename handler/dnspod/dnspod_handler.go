@@ -64,7 +64,13 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		log.Println("currentIP is:", currentIP)
 
 		for _, subDomain := range domain.SubDomains {
-			hostname := subDomain + "." + domain.DomainName
+			var hostname string
+			if subDomain != godns.RootDomain {
+				hostname = subDomain + "." + domain.DomainName
+			} else {
+				hostname = domain.DomainName
+			}
+
 			lastIP, err := godns.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
 			if err != nil {
 				log.Println(err)
