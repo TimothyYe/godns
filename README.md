@@ -33,6 +33,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 - [Configuration](#configuration)
   - [Overview](#overview)
   - [Configuration properties](#configuration-properties)
+  - [Update root domain](#update-root-domain)
   - [Configuration examples](#configuration-examples)
     - [Cloudflare](#cloudflare)
     - [DNSPod](#dnspod)
