@@ -2,6 +2,7 @@ package godns
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
@@ -165,8 +166,17 @@ func GetIPOnline(configuration *Settings) (string, error) {
 
 	defer response.Body.Close()
 
+	if response.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to get online IP:%d", response.StatusCode)
+	}
+
 	body, _ := ioutil.ReadAll(response.Body)
-	return strings.Trim(string(body), "\n"), nil
+	onlineIP := strings.Trim(string(body), "\n")
+	if onlineIP == "" {
+		return "", errors.New("failed to get online IP")
+	}
+
+	return onlineIP, nil
 }
 
 // CheckSettings check the format of settings
