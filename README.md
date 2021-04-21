@@ -495,6 +495,8 @@ To receive a [Slack](https://slack.com) message each time the IP changes, update
   }
 ```
 
+The `message_template` property supports [markdown](https://www.markdownguide.org). New lines needs to be escaped with `\n`.
+
 #### Discord
 
 To receive a [Discord](https://discord.gg) message each time the IP changes, update your configuration with the following snippit:
@@ -509,8 +511,6 @@ To receive a [Discord](https://discord.gg) message each time the IP changes, upd
         }
   }
 ```
-
-The `message_template` property supports [markdown](https://www.markdownguide.org). New lines needs to be escaped with `\n`.
 
 ### Miscellaneous topics
 
