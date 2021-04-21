@@ -42,7 +42,7 @@ type MailNotify struct {
 
 type DiscordNotify struct {
 	Enabled     bool   `json:"enabled"`
-	BotApiKey   string `json:"bot_api_key"`
+	BotApiToken string `json:"bot_api_token"`
 	Channel     string `json:"channel"`
 	MsgTemplate string `json:"message_template"`
 }

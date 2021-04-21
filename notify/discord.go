@@ -17,12 +17,12 @@ func NewDiscordNotify(conf *godns.Settings) INotify {
 
 func (n *DiscordNotify) Send(domain, currentIP string) error {
 
-	if n.conf.Notify.Discord.BotApiKey == "" {
-		return errors.New("bot api key cannot be empty")
+	if n.conf.Notify.Discord.BotApiToken == "" {
+		return errors.New("bot api token cannot be empty")
 	}
 
 	if n.conf.Notify.Discord.Channel == "" {
-		return errors.New("bot channel id cannot be empty")
+		return errors.New("channel id cannot be empty")
 	}
 
 	tpl := n.conf.Notify.Discord.MsgTemplate
@@ -32,7 +32,7 @@ func (n *DiscordNotify) Send(domain, currentIP string) error {
 	msg := buildTemplate(currentIP, domain, tpl)
 
 	//Create discordgo client
-	d, err := discordgo.New("Bot " + n.conf.Notify.Discord.BotApiKey)
+	d, err := discordgo.New("Bot " + n.conf.Notify.Discord.BotApiToken)
 	if err != nil {
 		return errors.New("error creating discord bot")
 	}
