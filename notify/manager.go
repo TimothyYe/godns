@@ -11,6 +11,7 @@ const (
 	Email    = "email"
 	Slack    = "slack"
 	Telegram = "telegram"
+	Discord  = "discord"
 )
 
 var (
@@ -51,6 +52,10 @@ func initNotifications(conf *godns.Settings) map[string]INotify {
 		notifyMap[Telegram] = NewTelegramNotify(conf)
 	}
 
+	if conf.Notify.Discord.Enabled {
+		notifyMap[Discord] = NewDiscordNotify(conf)
+	}
+	
 	return notifyMap
 }
 
