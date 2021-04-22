@@ -15,8 +15,8 @@ type Domain struct {
 // Notify struct for slack notification
 type SlackNotify struct {
 	Enabled     bool   `json:"enabled"`
-	BotApiToken   string `json:"bot_api_token"`
-	Channel      string `json:"channel"`
+	BotApiToken string `json:"bot_api_token"`
+	Channel     string `json:"channel"`
 	MsgTemplate string `json:"message_template"`
 	UseProxy    bool   `json:"use_proxy"`
 }
@@ -40,11 +40,19 @@ type MailNotify struct {
 	SendTo       string `json:"send_to"`
 }
 
+type DiscordNotify struct {
+	Enabled     bool   `json:"enabled"`
+	BotApiToken string `json:"bot_api_token"`
+	Channel     string `json:"channel"`
+	MsgTemplate string `json:"message_template"`
+}
+
 // Notify struct
 type Notify struct {
 	Telegram TelegramNotify `json:"telegram"`
 	Mail     MailNotify     `json:"mail"`
-	Slack	 SlackNotify	`json:"slack"`
+	Slack    SlackNotify    `json:"slack"`
+	Discord  DiscordNotify  `json:"discord"`
 }
 
 // Settings struct
