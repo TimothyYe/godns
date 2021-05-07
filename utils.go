@@ -124,9 +124,10 @@ func isIPv4(ip string) bool {
 //GetCurrentIP gets an IP from either internet or specific interface, depending on configuration
 func GetCurrentIP(configuration *Settings) (string, error) {
 	var err error
+	var ip string
 
 	if configuration.IPUrl != "" || configuration.IPV6Url != "" {
-		ip, err := GetIPOnline(configuration)
+		ip, err = GetIPOnline(configuration)
 		if err != nil {
 			log.Println("get ip online failed. Fallback to get ip from interface if possible.")
 		} else {
@@ -135,7 +136,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 	}
 
 	if configuration.IPInterface != "" {
-		ip, err := GetIPFromInterface(configuration)
+		ip, err = GetIPFromInterface(configuration)
 		if err != nil {
 			log.Println("get ip from interface failed. There is no more ways to try.")
 		} else {
