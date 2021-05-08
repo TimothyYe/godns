@@ -45,7 +45,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	for {
 		if looping {
 			// Sleep with interval
-			log.Debug("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 		looping = true
@@ -70,7 +70,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			if currentIP == lastIP {
 				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
 			} else {
-				log.Info("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+				log.Infof("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(hostname, currentIP, lastIP)
 
 				// Send notification

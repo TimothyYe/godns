@@ -38,9 +38,9 @@ func main() {
 	}
 
 	if configuration.DebugInfo {
-		log.SetLevel(log.InfoLevel)
-	} else {
 		log.SetLevel(log.DebugLevel)
+	} else {
+		log.SetLevel(log.InfoLevel)
 	}
 
 	if err := godns.CheckSettings(&configuration); err != nil {
