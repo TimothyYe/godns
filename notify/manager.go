@@ -1,8 +1,9 @@
 package notify
 
 import (
-	"log"
 	"sync"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns"
 )
@@ -55,14 +56,14 @@ func initNotifications(conf *godns.Settings) map[string]INotify {
 	if conf.Notify.Discord.Enabled {
 		notifyMap[Discord] = NewDiscordNotify(conf)
 	}
-	
+
 	return notifyMap
 }
 
 func (n *notifyManager) Send(domain, currentIP string) {
 	for _, sender := range n.notifications {
 		if err := sender.Send(domain, currentIP); err != nil {
-			log.Println("Send notification with error:", err.Error())
+			log.Error("Send notification with error:", err)
 		}
 	}
 }

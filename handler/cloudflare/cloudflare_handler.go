@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"runtime/debug"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns/notify"
 
@@ -73,7 +74,7 @@ func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -83,22 +84,22 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	for {
 		if looping {
 			// Sleep with interval
-			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debug("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 		looping = true
 
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 		if err != nil {
-			log.Println("Error in GetCurrentIP:", err)
+			log.Error("Error in GetCurrentIP:", err)
 			continue
 		}
-		log.Println("Current IP is:", currentIP)
+		log.Debug("Current IP is:", currentIP)
 		//check against locally cached IP, if no change, skip update
 		if currentIP == lastIP {
-			log.Printf("IP is the same as cached one. Skip update.\n")
+			log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
 		} else {
-			log.Println("Checking IP for domain", domain.DomainName)
+			log.Info("Checking IP for domain", domain.DomainName)
 			zoneID := handler.getZone(domain.DomainName)
 			if zoneID != "" {
 				records := handler.getDNSRecords(zoneID)
@@ -106,21 +107,21 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 				// update records
 				for _, rec := range records {
 					if !recordTracked(domain, &rec) {
-						log.Println("Skiping record:", rec.Name)
+						log.Debug("Skiping record:", rec.Name)
 						continue
 					}
 					if rec.IP != currentIP {
-						log.Printf("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
+						log.Info("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
 						lastIP = handler.updateRecord(rec, currentIP)
 
 						// Send notification
 						notify.GetNotifyManager(handler.Configuration).Send(rec.Name, currentIP)
 					} else {
-						log.Printf("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
+						log.Infof("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
 					}
 				}
 			} else {
-				log.Println("Failed to find zone for domain:", domain.DomainName)
+				log.Info("Failed to find zone for domain:", domain.DomainName)
 			}
 		}
 	}
@@ -144,7 +145,7 @@ func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
 func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
 	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 	if client == nil {
-		log.Println("cannot create HTTP client")
+		log.Info("cannot create HTTP client")
 	}
 
 	req, _ := http.NewRequest(method, handler.API+url, body)
@@ -168,19 +169,19 @@ func (handler *Handler) getZone(domain string) string {
 	req, client := handler.newRequest("GET", fmt.Sprintf("/zones?name=%s", domain), nil)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println("Request error:", err.Error())
+		log.Error("Request error:", err)
 		return ""
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &z)
 	if err != nil {
-		log.Printf("Decoder error: %+v\n", err)
-		log.Printf("Response body: %+v\n", string(body))
+		log.Errorf("Decoder error: %+v\n", err)
+		log.Debugf("Response body: %+v\n", string(body))
 		return ""
 	}
 	if z.Success != true {
-		log.Printf("Response failed: %+v\n", string(body))
+		log.Infof("Response failed: %+v\n", string(body))
 		return ""
 	}
 
@@ -205,24 +206,24 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 		recordType = godns.IPTypeAAAA
 	}
 
-	log.Println("Querying records with type:", recordType)
+	log.Info("Querying records with type:", recordType)
 	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s&page=1&per_page=500", recordType), nil)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println("Request error:", err.Error())
+		log.Error("Request error:", err)
 		return empty
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
-		log.Printf("Decoder error: %+v\n", err)
-		log.Printf("Response body: %+v\n", string(body))
+		log.Infof("Decoder error: %+v\n", err)
+		log.Debugf("Response body: %+v\n", string(body))
 		return empty
 	}
 	if r.Success != true {
 		body, _ := ioutil.ReadAll(resp.Body)
-		log.Printf("Response failed: %+v\n", string(body))
+		log.Infof("Response failed: %+v\n", string(body))
 		return empty
 
 	}
@@ -243,22 +244,22 @@ func (handler *Handler) updateRecord(record DNSRecord, newIP string) string {
 	)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println("Request error:", err.Error())
+		log.Error("Request error:", err)
 		return ""
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
-		log.Printf("Decoder error: %+v\n", err)
-		log.Printf("Response body: %+v\n", string(body))
+		log.Errorf("Decoder error: %+v\n", err)
+		log.Debugf("Response body: %+v\n", string(body))
 		return ""
 	}
 	if r.Success != true {
 		body, _ := ioutil.ReadAll(resp.Body)
-		log.Printf("Response failed: %+v\n", string(body))
+		log.Infof("Response failed: %+v\n", string(body))
 	} else {
-		log.Printf("Record updated: %+v - %+v", record.Name, record.IP)
+		log.Infof("Record updated: %+v - %+v", record.Name, record.IP)
 		lastIP = record.IP
 	}
 	return lastIP

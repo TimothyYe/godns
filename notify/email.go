@@ -1,7 +1,7 @@
 package notify
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns"
 	"gopkg.in/gomail.v2"
@@ -16,14 +16,14 @@ func NewEmailNotify(conf *godns.Settings) INotify {
 }
 
 func (n *EmailNotify) Send(domain, currentIP string) error {
-	log.Print("Sending notification to: ", n.conf.Notify.Mail.SendTo)
+	log.Debug("Sending notification to: ", n.conf.Notify.Mail.SendTo)
 	m := gomail.NewMessage()
 
 	m.SetHeader("From", n.conf.Notify.Mail.SMTPUsername)
 	m.SetHeader("To", n.conf.Notify.Mail.SendTo)
 	m.SetHeader("Subject", "GoDNS Notification")
-	log.Println("currentIP:", currentIP)
-	log.Println("domain:", domain)
+	log.Debug("currentIP:", currentIP)
+	log.Debug("domain:", domain)
 	m.SetBody("text/html", buildTemplate(currentIP, domain, mailTemplate))
 
 	d := gomail.NewDialer(

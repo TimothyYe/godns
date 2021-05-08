@@ -4,10 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
 	"net/http"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"golang.org/x/net/proxy"
 
@@ -68,13 +69,13 @@ const (
 func GetIPFromInterface(configuration *Settings) (string, error) {
 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
 	if err != nil {
-		log.Println("can't get network device "+configuration.IPInterface+":", err)
+		log.Error("can't get network device "+configuration.IPInterface+":", err)
 		return "", err
 	}
 
 	addrs, err := ifaces.Addrs()
 	if err != nil {
-		log.Println("can't get address from "+configuration.IPInterface+":", err)
+		log.Error("can't get address from "+configuration.IPInterface+":", err)
 		return "", err
 	}
 
@@ -129,7 +130,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 	if configuration.IPUrl != "" || configuration.IPV6Url != "" {
 		ip, err = GetIPOnline(configuration)
 		if err != nil {
-			log.Println("get ip online failed. Fallback to get ip from interface if possible.")
+			log.Error("get ip online failed. Fallback to get ip from interface if possible.")
 		} else {
 			return ip, nil
 		}
@@ -138,7 +139,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 	if configuration.IPInterface != "" {
 		ip, err = GetIPFromInterface(configuration)
 		if err != nil {
-			log.Println("get ip from interface failed. There is no more ways to try.")
+			log.Error("get ip from interface failed. There is no more ways to try.")
 		} else {
 			return ip, nil
 		}
@@ -161,7 +162,7 @@ func GetIPOnline(configuration *Settings) (string, error) {
 	}
 
 	if err != nil {
-		log.Println("Cannot get IP...")
+		log.Error("Cannot get IP:", err)
 		return "", err
 	}
 
@@ -238,10 +239,10 @@ func GetHttpClient(conf *Settings, useProxy bool) *http.Client {
 	client := &http.Client{}
 
 	if useProxy && conf.Socks5Proxy != "" {
-		log.Println("use socks5 proxy:" + conf.Socks5Proxy)
+		log.Debug("use socks5 proxy:" + conf.Socks5Proxy)
 		dialer, err := proxy.SOCKS5("tcp", conf.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {
-			log.Println("can't connect to the proxy:", err)
+			log.Error("can't connect to the proxy:", err)
 			return nil
 		}
 

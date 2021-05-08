@@ -22,7 +22,6 @@ var (
 
 func init() {
 	log.SetOutput(os.Stdout)
-	log.SetLevel(log.WarnLevel)
 }
 
 func main() {
@@ -36,6 +35,12 @@ func main() {
 	// Load settings from configurations file
 	if err := godns.LoadSettings(*optConf, &configuration); err != nil {
 		log.Fatal(err)
+	}
+
+	if configuration.DebugInfo {
+		log.SetLevel(log.InfoLevel)
+	} else {
+		log.SetLevel(log.DebugLevel)
 	}
 
 	if err := godns.CheckSettings(&configuration); err != nil {
