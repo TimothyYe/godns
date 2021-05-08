@@ -2,10 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
-	"log"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns"
 	"github.com/TimothyYe/godns/handler"
@@ -21,6 +20,11 @@ var (
 	Version = "0.1"
 )
 
+func init() {
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.WarnLevel)
+}
+
 func main() {
 	flag.Parse()
 	if *optHelp {
@@ -31,25 +35,22 @@ func main() {
 
 	// Load settings from configurations file
 	if err := godns.LoadSettings(*optConf, &configuration); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	if err := godns.CheckSettings(&configuration); err != nil {
-		fmt.Println("Settings is invalid! ", err.Error())
-		os.Exit(1)
+		log.Fatal("Settings is invalid! ", err.Error())
 	}
 
 	// Init log settings
-	log.SetPrefix("[GoDNS] ")
-	log.Println("GoDNS started, entering main loop...")
+	log.Info("GoDNS started, entering main loop...")
 	dnsLoop()
 }
 
 func dnsLoop() {
 	panicChan := make(chan godns.Domain)
 
-	log.Println("Creating DNS handler with provider:", configuration.Provider)
+	log.Info("Creating DNS handler with provider:", configuration.Provider)
 	h := handler.CreateHandler(configuration.Provider)
 	h.SetConfiguration(&configuration)
 	for i := range configuration.Domains {
@@ -59,7 +60,7 @@ func dnsLoop() {
 	panicCount := 0
 	for {
 		failDomain := <-panicChan
-		log.Println("Got panic in goroutine, will start a new one... :", panicCount)
+		log.Debug("Got panic in goroutine, will start a new one... :", panicCount)
 		go h.DomainLoop(&failDomain, panicChan)
 
 		panicCount++
