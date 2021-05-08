@@ -5,13 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"runtime/debug"
 	"strconv"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns/notify"
 
@@ -33,7 +34,7 @@ func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -42,13 +43,13 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	for {
 		if looping {
 			// Sleep with interval
-			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 
 		looping = true
 
-		log.Printf("Checking IP for domain %s \r\n", domain.DomainName)
+		log.Infof("Checking IP for domain %s \r\n", domain.DomainName)
 		domainID := handler.GetDomain(domain.DomainName)
 
 		if domainID == -1 {
@@ -58,10 +59,10 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
 		if err != nil {
-			log.Println("get_currentIP:", err)
+			log.Error("get_currentIP:", err)
 			continue
 		}
-		log.Println("currentIP is:", currentIP)
+		log.Debug("currentIP is:", currentIP)
 
 		for _, subDomain := range domain.SubDomains {
 			var hostname string
@@ -79,26 +80,26 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 			//check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
-				log.Printf("IP is the same as cached one. Skip update.\n")
+				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
 			} else {
 				lastIP = currentIP
 
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
 				if subDomainID == "" || ip == "" {
-					log.Printf("Domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+					log.Infof("Domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
 					continue
 				}
 
 				// Continue to check the IP of subdomain
 				if len(ip) > 0 && strings.TrimRight(currentIP, "\n") != strings.TrimRight(ip, "\n") {
-					log.Printf("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+					log.Infof("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
 
 					// Send notification
 					notify.GetNotifyManager(handler.Configuration).Send(fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 				} else {
-					log.Printf("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+					log.Infof("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
 				}
 			}
 		}
@@ -137,14 +138,14 @@ func (handler *Handler) GetDomain(name string) int64 {
 	response, err := handler.PostData("/Domain.List", values)
 
 	if err != nil {
-		log.Println("Failed to get domain list...")
+		log.Error("Failed to get domain list:", err)
 		return -1
 	}
 
 	sjson, parseErr := simplejson.NewJson([]byte(response))
 
 	if parseErr != nil {
-		log.Println(parseErr)
+		log.Error(parseErr)
 		return -1
 	}
 
@@ -165,10 +166,10 @@ func (handler *Handler) GetDomain(name string) int64 {
 			}
 		}
 		if len(domains) == 0 {
-			log.Println("domains slice is empty.")
+			log.Info("domains slice is empty.")
 		}
 	} else {
-		log.Println("get_domain:status code:", sjson.Get("status").Get("code").MustString())
+		log.Info("get_domain:status code:", sjson.Get("status").Get("code").MustString())
 	}
 
 	return ret
@@ -188,21 +189,21 @@ func (handler *Handler) GetSubDomain(domainID int64, name string) (string, strin
 	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
 		value.Add("record_type", "AAAA")
 	} else {
-		log.Println("Error: must specify \"ip_type\" in config for DNSPod.")
+		log.Error("Error: must specify \"ip_type\" in config for DNSPod.")
 		return "", ""
 	}
 
 	response, err := handler.PostData("/Record.List", value)
 
 	if err != nil {
-		log.Println("Failed to get domain list")
+		log.Error("Failed to get domain list:", err)
 		return "", ""
 	}
 
 	sjson, parseErr := simplejson.NewJson([]byte(response))
 
 	if parseErr != nil {
-		log.Println(parseErr)
+		log.Error(parseErr)
 		return "", ""
 	}
 
@@ -218,10 +219,10 @@ func (handler *Handler) GetSubDomain(domainID int64, name string) (string, strin
 			}
 		}
 		if len(records) == 0 {
-			log.Println("records slice is empty.")
+			log.Info("records slice is empty.")
 		}
 	} else {
-		log.Println("get_subdomain:status code:", sjson.Get("status").Get("code").MustString())
+		log.Info("get_subdomain:status code:", sjson.Get("status").Get("code").MustString())
 	}
 
 	return ret, ip
@@ -239,7 +240,7 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
 		value.Add("record_type", godns.IPTypeAAAA)
 	} else {
-		log.Println("Error: must specify \"ip_type\" in config for DNSPod.")
+		log.Info("Error: must specify \"ip_type\" in config for DNSPod.")
 		return
 	}
 
@@ -249,22 +250,21 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	response, err := handler.PostData("/Record.Modify", value)
 
 	if err != nil {
-		log.Println("Failed to update record to new IP!")
-		log.Println(err)
+		log.Error("Failed to update record to new IP:", err)
 		return
 	}
 
 	sjson, parseErr := simplejson.NewJson([]byte(response))
 
 	if parseErr != nil {
-		log.Println(parseErr)
+		log.Error(parseErr)
 		return
 	}
 
 	if sjson.Get("status").Get("code").MustString() == "1" {
-		log.Println("New IP updated!")
+		log.Info("New IP updated!")
 	} else {
-		log.Println("Failed to update IP record:", sjson.Get("status").Get("message").MustString())
+		log.Info("Failed to update IP record:", sjson.Get("status").Get("message").MustString())
 	}
 
 }
@@ -286,8 +286,7 @@ func (handler *Handler) PostData(url string, content url.Values) (string, error)
 	response, err := client.Do(req)
 
 	if err != nil {
-		log.Println("Post failed...")
-		log.Println(err)
+		log.Error("Post failed:", err)
 		return "", err
 	}
 

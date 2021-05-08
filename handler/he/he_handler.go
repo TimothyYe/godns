@@ -3,12 +3,13 @@ package he
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"runtime/debug"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns/notify"
 
@@ -34,7 +35,7 @@ func (handler *Handler) SetConfiguration(conf *godns.Settings) {
 func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Printf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -43,7 +44,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 	for {
 		if looping {
 			// Sleep with interval
-			log.Printf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 		looping = true
@@ -51,10 +52,10 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		currentIP, err := godns.GetCurrentIP(handler.Configuration)
 
 		if err != nil {
-			log.Println("get_currentIP:", err)
+			log.Error("get_currentIP:", err)
 			continue
 		}
-		log.Println("currentIP is:", currentIP)
+		log.Debug("currentIP is:", currentIP)
 
 		//check against locally cached IP, if no change, skip update
 
@@ -69,15 +70,15 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 			lastIP, err := godns.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
 			if err != nil {
-				log.Println(err)
+				log.Error(err)
 				continue
 			}
 
 			//check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
-				log.Printf("IP is the same as cached one. Skip update.\n")
+				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
 			} else {
-				log.Printf("%s.%s - Start to update record IP...\n", subDomain, domain.DomainName)
+				log.Infof("%s.%s - Start to update record IP...\n", subDomain, domain.DomainName)
 				handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 
 				// Send notification
@@ -106,14 +107,13 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	resp, err := client.Do(req)
 
 	if err != nil {
-		log.Println("Request error...")
-		log.Println("Err:", err.Error())
+		log.Error("Request error:", err)
 	} else {
 		body, _ := ioutil.ReadAll(resp.Body)
 		if resp.StatusCode == http.StatusOK {
-			log.Println("Update IP success:", string(body))
+			log.Info("Update IP success:", string(body))
 		} else {
-			log.Println("Update IP failed:", string(body))
+			log.Info("Update IP failed:", string(body))
 		}
 	}
 }

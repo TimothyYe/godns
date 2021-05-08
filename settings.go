@@ -66,13 +66,13 @@ type Settings struct {
 	IPV6Url     string   `json:"ipv6_url"`
 	Interval    int      `json:"interval"`
 	UserAgent   string   `json:"user_agent,omitempty"`
-	LogPath     string   `json:"log_path"`
 	Socks5Proxy string   `json:"socks5_proxy"`
 	Notify      Notify   `json:"notify"`
 	IPInterface string   `json:"ip_interface"`
 	IPType      string   `json:"ip_type"`
 	Resolver    string   `json:"resolver"`
 	UseProxy    bool     `json:"use_proxy"`
+	DebugInfo   bool     `json:"debug_info"`
 }
 
 // LoadSettings -- Load settings from config file

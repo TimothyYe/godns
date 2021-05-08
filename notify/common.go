@@ -2,14 +2,15 @@ package notify
 
 import (
 	"bytes"
-	"log"
 	"text/template"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func buildTemplate(currentIP, domain string, tplsrc string) string {
 	t := template.New("notification template")
 	if _, err := t.Parse(tplsrc); err != nil {
-		log.Println("Failed to parse template")
+		log.Error("Failed to parse template:", err)
 		return ""
 	}
 
@@ -23,7 +24,7 @@ func buildTemplate(currentIP, domain string, tplsrc string) string {
 
 	var tpl bytes.Buffer
 	if err := t.Execute(&tpl, data); err != nil {
-		log.Println(err.Error())
+		log.Error(err)
 		return ""
 	}
 

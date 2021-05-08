@@ -52,6 +52,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [IPv6 support](#ipv6-support)
     - [Network interface IP address](#network-interface-ip-address)
     - [SOCKS5 proxy support](#socks5-proxy-support)
+    - [Display debug info](#display-debug-info)
 - [Running GoDNS](#running-godns)
   - [As a manual daemon](#as-a-manual-daemon)
   - [As a managed daemon (with upstart)](#as-a-managed-daemon-with-upstart)
@@ -580,9 +581,17 @@ You can make all remote calls go through a [SOCKS5 proxy](https://en.wikipedia.o
 ...
 ```
 
+#### Display debug info 
+
+To display debug info, set `debug_info` as `true` to enable this feature. By default, the debug info is disabled.
+
+```json
+  "debug_info": true,
+```
+
 ## Running GoDNS
 
-There are few ways to run GoDNS.
+There are a few ways to run GoDNS.
 
 ### As a manual daemon
 
