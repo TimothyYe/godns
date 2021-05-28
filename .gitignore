@@ -24,7 +24,6 @@ _testmain.go
 
 *.exe
 *.test
-config.json
 *.log
 *.swp
 *.gz
