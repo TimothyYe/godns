@@ -10,7 +10,7 @@
 [![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
 
 [3]: https://images.microbadger.com/badges/image/timothyye/godns.svg
-[4]: https://microbadger.com/images/timothyye/godns
+[4]: https://img.shields.io/docker/image-size/timothyye/godns/latest
 [9]: https://img.shields.io/badge/license-Apache-blue.svg
 [10]: LICENSE
 [11]: https://goreportcard.com/badge/github.com/timothyye/godns
