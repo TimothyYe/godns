@@ -39,3 +39,4 @@ cmd/godns/config.*.json
 /godns.iws
 .current_ip
 .DS_Store
+/vendor
