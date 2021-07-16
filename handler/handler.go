@@ -10,6 +10,7 @@ import (
 	"github.com/TimothyYe/godns/handler/google"
 	"github.com/TimothyYe/godns/handler/he"
 	"github.com/TimothyYe/godns/handler/noip"
+	"github.com/TimothyYe/godns/handler/scaleway"
 )
 
 // IHandler is the interface for all DNS handlers
@@ -39,6 +40,8 @@ func CreateHandler(provider string) IHandler {
 		handler = IHandler(&duck.Handler{})
 	case godns.NOIP:
 		handler = IHandler(&noip.Handler{})
+	case godns.SCALEWAY:
+		handler = IHandler(&scaleway.Handler{})
 	}
 
 	return handler
