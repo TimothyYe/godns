@@ -43,6 +43,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [DuckDNS](#duckdns)
     - [No-IP](#no-ip)
     - [HE.net](#henet)
+    - [Scaleway](#scaleway)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -74,6 +75,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 | [DuckDNS][duckdns]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dreamhost][dreamhost]                | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Scaleway][Scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -83,6 +85,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 [duckdns]: https://www.duckdns.org
 [dreamhost]: https://www.dreamhost.com
 [no-ip]: https://www.noip.com
+[Scaleway]: https://www.scaleway.com/
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -435,6 +438,32 @@ Fill in your own DDNS key or generate a random DDNS key for this new created "A 
 Remember the DDNS key and set it in the `password` property in the configuration file.
 
 __NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key are the same.
+</details>
+
+#### Scaleway
+
+For Scaleway, you need to provide an API Secret Key as the `login_token` ([How to generate an API key](https://www.scaleway.com/en/docs/generate-api-keys/)), and configure the domains and subdomains. `domain_name` should equal a DNS zone, or the root domain in Scaleway. TTL for the DNS records will be set to the `interval` value. Make sure `A` or `AAAA` records exist for the relevant sub domains, these can be set up in the [Scaleway console](https://www.scaleway.com/en/docs/scaleway-dns/#-Managing-Records).
+
+<details>
+<summary>Example</summary>
+```json
+{
+  "provider": "Scaleway",
+  "login_token": "API Secret Key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","@"]
+    },{
+      "domain_name": "samplednszone.example.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_url": "https://myip.biturl.top",
+  "ip_type": "IPv4",
+  "interval": 300
+}
+```
 </details>
 
 ### Notifications

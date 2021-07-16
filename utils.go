@@ -53,6 +53,8 @@ const (
 	DREAMHOST = "Dreamhost"
 	// NOIP for NoIP
 	NOIP = "NoIP"
+	// SCALEWAY for Scaleway
+	SCALEWAY = "Scaleway"
 	// IPV4 for IPV4 mode
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode
@@ -225,9 +227,13 @@ func CheckSettings(config *Settings) error {
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")
 		}
+	case SCALEWAY:
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
 
 	default:
-		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS/Dreamhost")
+		return errors.New("please provide supported DNS provider: DNSPod/HE/AliDNS/Cloudflare/GoogleDomain/DuckDNS/Dreamhost/Scaleway")
 
 	}
 
