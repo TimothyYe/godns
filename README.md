@@ -653,6 +653,7 @@ Note: when the program stops, it will not be restarted.
 
 ### As a Docker container
 
+Visit https://hub.docker.com/r/timothyye/godns to fetch the latest docker image.  
 With `/path/to/config.json` your local configuration file, run:
 
 ```bash
