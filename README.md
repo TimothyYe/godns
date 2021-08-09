@@ -446,6 +446,7 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
 
 <details>
 <summary>Example</summary>
+ 
 ```json
 {
   "provider": "Scaleway",
