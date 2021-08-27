@@ -193,7 +193,7 @@ For Cloudflare, you need to provide the email & Global API Key as password (or t
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -217,7 +217,7 @@ For Cloudflare, you need to provide the email & Global API Key as password (or t
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -245,7 +245,7 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -273,7 +273,7 @@ For Dreamhost, you need to provide your API Token(you can create it [here](https
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "resolver": "ns1.dreamhost.com",
@@ -303,7 +303,7 @@ For Google Domains, you need to provide email & password, and config all the dom
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -333,7 +333,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -362,7 +362,7 @@ For DuckDNS, only need to provide the `token`, config 1 default domain & subdoma
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -387,7 +387,7 @@ For DuckDNS, only need to provide the `token`, config 1 default domain & subdoma
     }
   ],
   "ip_type": "IPv4",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "resolver": "8.8.8.8",
   "interval": 300,
   "socks5_proxy": ""
@@ -416,7 +416,7 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -460,7 +460,7 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300
 }
