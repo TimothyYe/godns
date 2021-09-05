@@ -18,7 +18,7 @@
       ]
     }
   ],
-  "ip_url": "https://myip.biturl.top",
+  "ip_url": "https://api.ip.sb/ip",
   "ipv6_url": "https://api-ipv6.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
