@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 
+	"regexp"
+
 	log "github.com/sirupsen/logrus"
 
 	"golang.org/x/net/proxy"
@@ -176,9 +178,17 @@ func GetIPOnline(configuration *Settings) (string, error) {
 
 	body, _ := ioutil.ReadAll(response.Body)
 	onlineIP := strings.Trim(string(body), "\n")
+
+
 	if onlineIP == "" {
 		return "", errors.New("failed to get online IP")
 	}
+
+	re := regexp.MustCompile(`(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}`)
+
+	submatchall := re.FindAllString(onlineIP, -1)
+
+	onlineIP = submatchall[0]
 
 	return onlineIP, nil
 }
