@@ -590,10 +590,8 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
 For some reasons if you want to get the IP address associated to a network interface (instead of performing an online lookup), you can specify it in the configuration file this way:
 
 ```json
-...
   "ip_url": "",
   "ip_interface": "interface-name",
-...
 ```
 
 With `interface-name` replaced by the name of the network interface, e.g. `eth0` on Linux or `Local Area Connection` on Windows.
@@ -605,10 +603,8 @@ Note: If `ip_url` is also specified, it will be used to perform an online lookup
 You can make all remote calls go through a [SOCKS5 proxy](https://en.wikipedia.org/wiki/SOCKS#SOCKS5) by specifying it in the configuration file this way:
 
 ```json
-...
 "socks5_proxy": "127.0.0.1:7070"
 "use_proxy": true
-...
 ```
 
 #### Display debug info 
