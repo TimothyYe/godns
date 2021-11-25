@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -79,6 +80,9 @@ const (
 		`(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))`
 	// Regex pattern to match IPV4 and IPV6 address
 	IPPattern = "(" + IPv4Pattern + ")|(" + IPv6Pattern + ")"
+
+	// defaultTimeout is the default timeout value, in seconds
+	defaultTimeout = 10
 )
 
 //GetIPFromInterface gets IP address from the specific interface
@@ -257,7 +261,9 @@ func CheckSettings(config *Settings) error {
 
 // GetHttpClient creates the HTTP client and return it
 func GetHttpClient(conf *Settings, useProxy bool) *http.Client {
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * defaultTimeout,
+	}
 
 	if useProxy && conf.Socks5Proxy != "" {
 		log.Debug("use socks5 proxy:" + conf.Socks5Proxy)
