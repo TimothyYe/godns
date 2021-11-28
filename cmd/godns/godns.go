@@ -2,17 +2,18 @@ package main
 
 import (
 	"flag"
+	"github.com/TimothyYe/godns/internal/handler"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"os"
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/TimothyYe/godns"
-	"github.com/TimothyYe/godns/handler"
 	"github.com/fatih/color"
 )
 
 var (
-	configuration godns.Settings
+	configuration settings.Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
 	optHelp       = flag.Bool("h", false, "Show help")
 
@@ -27,13 +28,13 @@ func init() {
 func main() {
 	flag.Parse()
 	if *optHelp {
-		color.Cyan(godns.Logo, Version)
+		color.Cyan(utils.Logo, Version)
 		flag.Usage()
 		return
 	}
 
 	// Load settings from configurations file
-	if err := godns.LoadSettings(*optConf, &configuration); err != nil {
+	if err := settings.LoadSettings(*optConf, &configuration); err != nil {
 		log.Fatal(err)
 	}
 
@@ -43,7 +44,7 @@ func main() {
 		log.SetLevel(log.InfoLevel)
 	}
 
-	if err := godns.CheckSettings(&configuration); err != nil {
+	if err := utils.CheckSettings(&configuration); err != nil {
 		log.Fatal("Settings is invalid! ", err.Error())
 	}
 
@@ -53,7 +54,7 @@ func main() {
 }
 
 func dnsLoop() {
-	panicChan := make(chan godns.Domain)
+	panicChan := make(chan settings.Domain)
 
 	log.Info("Creating DNS handler with provider:", configuration.Provider)
 	h := handler.CreateHandler(configuration.Provider)
@@ -69,7 +70,7 @@ func dnsLoop() {
 		go h.DomainLoop(&failDomain, panicChan)
 
 		panicCount++
-		if panicCount >= godns.PanicMax {
+		if panicCount >= utils.PanicMax {
 			os.Exit(1)
 		}
 	}
