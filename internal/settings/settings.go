@@ -1,9 +1,22 @@
 package settings
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
+	"strings"
+
+	jsoniter "github.com/json-iterator/go"
+)
+
+var (
+	json = jsoniter.ConfigCompatibleWithStandardLibrary
+)
+
+const (
+	extJSON = "json"
+	extYAML = "yaml"
 )
 
 // Domain struct
@@ -77,18 +90,38 @@ type Settings struct {
 
 // LoadSettings -- Load settings from config file
 func LoadSettings(configPath string, settings *Settings) error {
+	// get config file extension
+	fileExt := strings.ToLower(filepath.Ext(configPath))
+	if fileExt == "" {
+		return errors.New("invalid file extension")
+	}
+
+	// get file name without extension
+	fileName := strings.TrimSuffix(filepath.Base(configPath), fileExt)
+	fileExt = fileExt[1:]
+
+	if fileName == "" {
+		return errors.New("invalid config file name")
+	}
+
 	// LoadSettings from config file
-	file, err := ioutil.ReadFile(configPath)
+	content, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		fmt.Println("Error occurs while reading config file, please make sure config file exists!")
 		return err
 	}
 
-	err = json.Unmarshal(file, settings)
-	if err != nil {
-		fmt.Println("Error occurs while unmarshal config file, please make sure config file correct!")
-		return err
+	switch fileExt {
+	case extJSON:
+		if err := json.Unmarshal(content, settings); err != nil {
+			return err
+		}
+	case extYAML:
+	default:
+		return errors.New("invalid extension for config file:" + fileExt)
 	}
+
+	fmt.Println("settings:", settings)
 
 	if settings.Interval == 0 {
 		// set default interval as 5 minutes if interval is 0
