@@ -2,9 +2,9 @@ package dreamhost
 
 import (
 	"fmt"
-	"github.com/TimothyYe/godns/internal/notify"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
+	"github.com/TimothyYe/godns/pkg/notify"
 	"io/ioutil"
 	"net/http"
 	"net/url"
