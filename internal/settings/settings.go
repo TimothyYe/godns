@@ -3,6 +3,7 @@ package settings
 import (
 	"errors"
 	"fmt"
+	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"path/filepath"
 	"strings"
@@ -117,6 +118,9 @@ func LoadSettings(configPath string, settings *Settings) error {
 			return err
 		}
 	case extYAML:
+		if err := yaml.Unmarshal(content, settings); err != nil {
+			return err
+		}
 	default:
 		return errors.New("invalid extension for config file:" + fileExt)
 	}
