@@ -1,15 +1,15 @@
 package handler
 
 import (
-	"github.com/TimothyYe/godns/handler/alidns"
-	"github.com/TimothyYe/godns/handler/cloudflare"
-	"github.com/TimothyYe/godns/handler/dnspod"
-	"github.com/TimothyYe/godns/handler/dreamhost"
-	"github.com/TimothyYe/godns/handler/duck"
-	"github.com/TimothyYe/godns/handler/google"
-	"github.com/TimothyYe/godns/handler/he"
-	"github.com/TimothyYe/godns/handler/noip"
-	"github.com/TimothyYe/godns/handler/scaleway"
+	"github.com/TimothyYe/godns/internal/handler/alidns"
+	"github.com/TimothyYe/godns/internal/handler/cloudflare"
+	"github.com/TimothyYe/godns/internal/handler/dnspod"
+	"github.com/TimothyYe/godns/internal/handler/dreamhost"
+	"github.com/TimothyYe/godns/internal/handler/duck"
+	"github.com/TimothyYe/godns/internal/handler/google"
+	"github.com/TimothyYe/godns/internal/handler/he"
+	"github.com/TimothyYe/godns/internal/handler/noip"
+	"github.com/TimothyYe/godns/internal/handler/scaleway"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 )

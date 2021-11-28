@@ -162,7 +162,7 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) error {
 	}
 
 	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
-	log.Debugf("Requesting update for '%s.%s': '%s'", subDomain, domain, reqBody)
+	log.Debugf("Requesting update for '%s.%s': '%v'", subDomain, domain, reqBody)
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Error("Request error:", err)

@@ -6,18 +6,18 @@ import (
 
 func TestLoadSetting(t *testing.T) {
 	var settings Settings
-	err := LoadSettings("./config_sample.json", &settings)
+	err := LoadSettings("../../configs/config_sample.json", &settings)
 
 	if err != nil {
-		t.Error(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	if settings.IPUrl == "" {
-		t.Error("cannot load ip_url from config file")
+		t.Fatal("cannot load ip_url from config file")
 	}
 
 	err = LoadSettings("./file/does/not/exists", &settings)
 	if err == nil {
-		t.Error("file doesn't exist, should return error")
+		t.Fatal("file doesn't exist, should return error")
 	}
 }

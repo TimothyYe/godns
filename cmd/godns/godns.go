@@ -2,13 +2,13 @@ package main
 
 import (
 	"flag"
+	"github.com/TimothyYe/godns/internal/handler"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 	"os"
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/TimothyYe/godns/handler"
 	"github.com/fatih/color"
 )
 
