@@ -1,17 +1,17 @@
 package notify
 
 import (
+	"github.com/TimothyYe/godns/internal/settings"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/TimothyYe/godns"
 	"gopkg.in/gomail.v2"
 )
 
 type EmailNotify struct {
-	conf *godns.Settings
+	conf *settings.Settings
 }
 
-func NewEmailNotify(conf *godns.Settings) INotify {
+func NewEmailNotify(conf *settings.Settings) INotify {
 	return &EmailNotify{conf: conf}
 }
 

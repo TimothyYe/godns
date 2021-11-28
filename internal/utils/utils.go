@@ -1,8 +1,10 @@
-package godns
+package utils
 
 import (
 	"errors"
 	"fmt"
+	"github.com/TimothyYe/godns/internal/settings"
+	dnsResolver "github.com/TimothyYe/godns/pkg/resolver"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -13,8 +15,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"golang.org/x/net/proxy"
-
-	dnsResolver "github.com/TimothyYe/godns/resolver"
 
 	"github.com/miekg/dns"
 )
@@ -86,7 +86,7 @@ const (
 )
 
 //GetIPFromInterface gets IP address from the specific interface
-func GetIPFromInterface(configuration *Settings) (string, error) {
+func GetIPFromInterface(configuration *settings.Settings) (string, error) {
 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
 	if err != nil {
 		log.Error("can't get network device "+configuration.IPInterface+":", err)
@@ -143,7 +143,7 @@ func isIPv4(ip string) bool {
 }
 
 //GetCurrentIP gets an IP from either internet or specific interface, depending on configuration
-func GetCurrentIP(configuration *Settings) (string, error) {
+func GetCurrentIP(configuration *settings.Settings) (string, error) {
 	var err error
 	var ip string
 
@@ -169,7 +169,7 @@ func GetCurrentIP(configuration *Settings) (string, error) {
 }
 
 // GetIPOnline gets public IP from internet
-func GetIPOnline(configuration *Settings) (string, error) {
+func GetIPOnline(configuration *settings.Settings) (string, error) {
 	client := &http.Client{}
 
 	var response *http.Response
@@ -203,7 +203,7 @@ func GetIPOnline(configuration *Settings) (string, error) {
 }
 
 // CheckSettings check the format of settings
-func CheckSettings(config *Settings) error {
+func CheckSettings(config *settings.Settings) error {
 	switch config.Provider {
 	case DNSPOD:
 		if config.Password == "" && config.LoginToken == "" {
@@ -260,7 +260,7 @@ func CheckSettings(config *Settings) error {
 }
 
 // GetHttpClient creates the HTTP client and return it
-func GetHttpClient(conf *Settings, useProxy bool) *http.Client {
+func GetHttpClient(conf *settings.Settings, useProxy bool) *http.Client {
 	client := &http.Client{
 		Timeout: time.Second * defaultTimeout,
 	}

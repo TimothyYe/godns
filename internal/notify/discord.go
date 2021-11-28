@@ -2,16 +2,16 @@ package notify
 
 import (
 	"errors"
+	"github.com/TimothyYe/godns/internal/settings"
 
-	"github.com/TimothyYe/godns"
 	"github.com/bwmarrin/discordgo"
 )
 
 type DiscordNotify struct {
-	conf *godns.Settings
+	conf *settings.Settings
 }
 
-func NewDiscordNotify(conf *godns.Settings) INotify {
+func NewDiscordNotify(conf *settings.Settings) INotify {
 	return &DiscordNotify{conf: conf}
 }
 

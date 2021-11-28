@@ -1,11 +1,12 @@
-package godns
+package utils
 
 import (
+	"github.com/TimothyYe/godns/internal/settings"
 	"testing"
 )
 
 func TestGetCurrentIP(t *testing.T) {
-	conf := &Settings{IPUrl: "https://myip.biturl.top"}
+	conf := &settings.Settings{IPUrl: "https://myip.biturl.top"}
 	ip, _ := GetCurrentIP(conf)
 
 	if ip == "" {
@@ -16,24 +17,24 @@ func TestGetCurrentIP(t *testing.T) {
 }
 
 func TestCheckSettings(t *testing.T) {
-	settingError := &Settings{}
+	settingError := &settings.Settings{}
 	if err := CheckSettings(settingError); err == nil {
 		t.Error("setting is invalid, should return error")
 	}
 
-	settingDNSPod := &Settings{Provider: "DNSPod", LoginToken: "aaa"}
+	settingDNSPod := &settings.Settings{Provider: "DNSPod", LoginToken: "aaa"}
 	if err := CheckSettings(settingDNSPod); err == nil {
 		t.Log("setting with login token, passed")
 	} else {
 		t.Error("setting with login token, should be passed")
 	}
 
-	settingDNSPod = &Settings{Provider: "DNSPod"}
+	settingDNSPod = &settings.Settings{Provider: "DNSPod"}
 	if err := CheckSettings(settingDNSPod); err == nil {
 		t.Error("setting with invalid parameters, should be failed")
 	}
 
-	settingHE := &Settings{Provider: "HE", Password: ""}
+	settingHE := &settings.Settings{Provider: "HE", Password: ""}
 	if err := CheckSettings(settingHE); err != nil {
 		t.Log("HE setting without password, passed")
 	} else {

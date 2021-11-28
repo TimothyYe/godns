@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"github.com/TimothyYe/godns"
 	"github.com/TimothyYe/godns/handler/alidns"
 	"github.com/TimothyYe/godns/handler/cloudflare"
 	"github.com/TimothyYe/godns/handler/dnspod"
@@ -11,12 +10,14 @@ import (
 	"github.com/TimothyYe/godns/handler/he"
 	"github.com/TimothyYe/godns/handler/noip"
 	"github.com/TimothyYe/godns/handler/scaleway"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 )
 
 // IHandler is the interface for all DNS handlers
 type IHandler interface {
-	SetConfiguration(*godns.Settings)
-	DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain)
+	SetConfiguration(*settings.Settings)
+	DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain)
 }
 
 // CreateHandler creates DNS handler by different providers
@@ -24,23 +25,23 @@ func CreateHandler(provider string) IHandler {
 	var handler IHandler
 
 	switch provider {
-	case godns.CLOUDFLARE:
+	case utils.CLOUDFLARE:
 		handler = IHandler(&cloudflare.Handler{})
-	case godns.DNSPOD:
+	case utils.DNSPOD:
 		handler = IHandler(&dnspod.Handler{})
-	case godns.DREAMHOST:
+	case utils.DREAMHOST:
 		handler = IHandler(&dreamhost.Handler{})
-	case godns.HE:
+	case utils.HE:
 		handler = IHandler(&he.Handler{})
-	case godns.ALIDNS:
+	case utils.ALIDNS:
 		handler = IHandler(&alidns.Handler{})
-	case godns.GOOGLE:
+	case utils.GOOGLE:
 		handler = IHandler(&google.Handler{})
-	case godns.DUCK:
+	case utils.DUCK:
 		handler = IHandler(&duck.Handler{})
-	case godns.NOIP:
+	case utils.NOIP:
 		handler = IHandler(&noip.Handler{})
-	case godns.SCALEWAY:
+	case utils.SCALEWAY:
 		handler = IHandler(&scaleway.Handler{})
 	}
 

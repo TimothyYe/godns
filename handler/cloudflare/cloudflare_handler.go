@@ -4,6 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/TimothyYe/godns/internal/notify"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,15 +15,11 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-
-	"github.com/TimothyYe/godns/notify"
-
-	"github.com/TimothyYe/godns"
 )
 
 // Handler struct definition
 type Handler struct {
-	Configuration *godns.Settings
+	Configuration *settings.Settings
 	API           string
 }
 
@@ -65,13 +64,13 @@ type Zone struct {
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *Handler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.API = "https://api.cloudflare.com/client/v4"
 }
 
 // DomainLoop the main logic loop
-func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
@@ -89,7 +88,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 		looping = true
 
-		currentIP, err := godns.GetCurrentIP(handler.Configuration)
+		currentIP, err := utils.GetCurrentIP(handler.Configuration)
 		if err != nil {
 			log.Error("Error in GetCurrentIP:", err)
 			continue
@@ -128,12 +127,12 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 }
 
 // Check if record is present in domain conf
-func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
+func recordTracked(domain *settings.Domain, record *DNSRecord) bool {
 	for _, subDomain := range domain.SubDomains {
 		sd := fmt.Sprintf("%s.%s", subDomain, domain.DomainName)
 		if record.Name == sd {
 			return true
-		} else if subDomain == godns.RootDomain && record.Name == domain.DomainName {
+		} else if subDomain == utils.RootDomain && record.Name == domain.DomainName {
 			return true
 		}
 	}
@@ -143,7 +142,7 @@ func recordTracked(domain *godns.Domain, record *DNSRecord) bool {
 
 // Create a new request with auth in place and optional proxy
 func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
-	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 	if client == nil {
 		log.Info("cannot create HTTP client")
 	}
@@ -200,10 +199,10 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 	var r DNSRecordResponse
 	var recordType string
 
-	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
-		recordType = godns.IPTypeA
-	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
-		recordType = godns.IPTypeAAAA
+	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == utils.IPV4 {
+		recordType = utils.IPTypeA
+	} else if strings.ToUpper(handler.Configuration.IPType) == utils.IPV6 {
+		recordType = utils.IPTypeAAAA
 	}
 
 	log.Info("Querying records with type:", recordType)

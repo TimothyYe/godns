@@ -2,6 +2,9 @@ package google
 
 import (
 	"fmt"
+	"github.com/TimothyYe/godns/internal/notify"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"net/http"
 	"runtime/debug"
@@ -9,10 +12,6 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-
-	"github.com/TimothyYe/godns/notify"
-
-	"github.com/TimothyYe/godns"
 )
 
 var (
@@ -22,16 +21,16 @@ var (
 
 // Handler struct
 type Handler struct {
-	Configuration *godns.Settings
+	Configuration *settings.Settings
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *Handler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
 // DomainLoop the main logic loop
-func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
@@ -49,7 +48,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		}
 
 		looping = true
-		currentIP, err := godns.GetCurrentIP(handler.Configuration)
+		currentIP, err := utils.GetCurrentIP(handler.Configuration)
 		if err != nil {
 			log.Error("get_currentIP:", err)
 			continue
@@ -57,7 +56,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 		log.Debug("currentIP is:", currentIP)
 		for _, subDomain := range domain.SubDomains {
 			hostname := subDomain + "." + domain.DomainName
-			lastIP, err := godns.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
+			lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
 			if err != nil {
 				log.Error(err)
 				continue
@@ -80,7 +79,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 // UpdateIP update subdomain with current IP
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
-	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 	resp, err := client.Get(fmt.Sprintf(GoogleURL,
 		handler.Configuration.Email,
 		handler.Configuration.Password,

@@ -1,11 +1,10 @@
 package notify
 
 import (
+	"github.com/TimothyYe/godns/internal/settings"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
-
-	"github.com/TimothyYe/godns"
 )
 
 const (
@@ -28,7 +27,7 @@ type notifyManager struct {
 	notifications map[string]INotify
 }
 
-func GetNotifyManager(conf *godns.Settings) *notifyManager {
+func GetNotifyManager(conf *settings.Settings) *notifyManager {
 	once.Do(func() {
 		instance = &notifyManager{
 			notifications: initNotifications(conf),
@@ -38,7 +37,7 @@ func GetNotifyManager(conf *godns.Settings) *notifyManager {
 	return instance
 }
 
-func initNotifications(conf *godns.Settings) map[string]INotify {
+func initNotifications(conf *settings.Settings) map[string]INotify {
 	notifyMap := map[string]INotify{}
 
 	if conf.Notify.Mail.Enabled {

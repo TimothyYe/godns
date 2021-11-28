@@ -4,18 +4,18 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/TimothyYe/godns"
 )
 
 type SlackNotify struct {
-	conf *godns.Settings
+	conf *settings.Settings
 }
 
-func NewSlackNotify(conf *godns.Settings) INotify {
+func NewSlackNotify(conf *settings.Settings) INotify {
 	return &SlackNotify{conf: conf}
 }
 
@@ -27,7 +27,7 @@ func (n *SlackNotify) Send(domain, currentIP string) error {
 	if n.conf.Notify.Slack.Channel == "" {
 		return errors.New("channel cannot be empty")
 	}
-	client := godns.GetHttpClient(n.conf, n.conf.Notify.Slack.UseProxy)
+	client := utils.GetHttpClient(n.conf, n.conf.Notify.Slack.UseProxy)
 	tpl := n.conf.Notify.Slack.MsgTemplate
 	if tpl == "" {
 		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* is updated"

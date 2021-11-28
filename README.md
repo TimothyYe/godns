@@ -140,7 +140,7 @@ Usage of ./godns:
 
 ### Overview
 
-* Make a copy of [config_sample.json](./config_sample.json) and name it `config.json`
+* Make a copy of [config_sample.json](configs/config_sample.json) and name it `config.json`
 * Configure your provider, domain/subdomain info, credentials, etc.
 * Configure a notification medium (e.g. SMTP to receive emails) to get notified when your IP address changes
 * Place the file in the same directory of GoDNS or use the `-c=path/to/your/file.json` option
@@ -429,11 +429,11 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
 
 Add a new "A record" and make sure that "Enable entry for dynamic dns" is checked:
 
-<img src="./snapshots/he1.png" width="640" />
+<img src="assets/snapshots/he1.png" width="640" />
 
 Fill in your own DDNS key or generate a random DDNS key for this new created "A record":
 
-<img src="./snapshots/he2.png" width="640" />
+<img src="assets/snapshots/he2.png" width="640" />
 
 Remember the DDNS key and set it in the `password` property in the configuration file.
 

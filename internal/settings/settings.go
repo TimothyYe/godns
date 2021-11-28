@@ -1,4 +1,4 @@
-package godns
+package settings
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ type Domain struct {
 	SubDomains []string `json:"sub_domains"`
 }
 
-// Notify struct for slack notification
+// SlackNotify struct for slack notification
 type SlackNotify struct {
 	Enabled     bool   `json:"enabled"`
 	BotApiToken string `json:"bot_api_token"`
@@ -21,7 +21,7 @@ type SlackNotify struct {
 	UseProxy    bool   `json:"use_proxy"`
 }
 
-// Notify struct for telegram notification
+// TelegramNotify struct for telegram notification
 type TelegramNotify struct {
 	Enabled     bool   `json:"enabled"`
 	BotApiKey   string `json:"bot_api_key"`
@@ -30,7 +30,7 @@ type TelegramNotify struct {
 	UseProxy    bool   `json:"use_proxy"`
 }
 
-// Notify struct for SMTP notification
+// MailNotify struct for SMTP notification
 type MailNotify struct {
 	Enabled      bool   `json:"enabled"`
 	SMTPServer   string `json:"smtp_server"`

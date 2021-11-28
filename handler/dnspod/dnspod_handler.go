@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/TimothyYe/godns/internal/notify"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -14,24 +17,21 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/TimothyYe/godns/notify"
-
-	"github.com/TimothyYe/godns"
 	"github.com/bitly/go-simplejson"
 )
 
 // Handler struct definition
 type Handler struct {
-	Configuration *godns.Settings
+	Configuration *settings.Settings
 }
 
 // SetConfiguration pass dns settings and store it to handler instance
-func (handler *Handler) SetConfiguration(conf *godns.Settings) {
+func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
 // DomainLoop the main logic loop
-func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.Domain) {
+func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
@@ -56,7 +56,7 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 			continue
 		}
 
-		currentIP, err := godns.GetCurrentIP(handler.Configuration)
+		currentIP, err := utils.GetCurrentIP(handler.Configuration)
 
 		if err != nil {
 			log.Error("get_currentIP:", err)
@@ -66,13 +66,13 @@ func (handler *Handler) DomainLoop(domain *godns.Domain, panicChan chan<- godns.
 
 		for _, subDomain := range domain.SubDomains {
 			var hostname string
-			if subDomain != godns.RootDomain {
+			if subDomain != utils.RootDomain {
 				hostname = subDomain + "." + domain.DomainName
 			} else {
 				hostname = domain.DomainName
 			}
 
-			lastIP, err := godns.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
+			lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
 			if err != nil {
 				log.Println(err)
 				continue
@@ -184,9 +184,9 @@ func (handler *Handler) GetSubDomain(domainID int64, name string) (string, strin
 	value.Add("length", "1")
 	value.Add("sub_domain", name)
 
-	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
+	if handler.Configuration.IPType == "" || strings.ToUpper(handler.Configuration.IPType) == utils.IPV4 {
 		value.Add("record_type", "A")
-	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
+	} else if strings.ToUpper(handler.Configuration.IPType) == utils.IPV6 {
 		value.Add("record_type", "AAAA")
 	} else {
 		log.Error("Error: must specify \"ip_type\" in config for DNSPod.")
@@ -235,10 +235,10 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	value.Add("record_id", subDomainID)
 	value.Add("sub_domain", subDomainName)
 
-	if strings.ToUpper(handler.Configuration.IPType) == godns.IPV4 {
-		value.Add("record_type", godns.IPTypeA)
-	} else if strings.ToUpper(handler.Configuration.IPType) == godns.IPV6 {
-		value.Add("record_type", godns.IPTypeAAAA)
+	if strings.ToUpper(handler.Configuration.IPType) == utils.IPV4 {
+		value.Add("record_type", utils.IPTypeA)
+	} else if strings.ToUpper(handler.Configuration.IPType) == utils.IPV6 {
+		value.Add("record_type", utils.IPTypeAAAA)
 	} else {
 		log.Info("Error: must specify \"ip_type\" in config for DNSPod.")
 		return
@@ -271,7 +271,7 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 
 // PostData post data and invoke DNSPod API
 func (handler *Handler) PostData(url string, content url.Values) (string, error) {
-	client := godns.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
 
 	if client == nil {
 		return "", errors.New("failed to create HTTP client")

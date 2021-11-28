@@ -2,10 +2,9 @@ package cloudflare
 
 import (
 	"encoding/json"
+	"github.com/TimothyYe/godns/internal/settings"
 	"strings"
 	"testing"
-
-	"github.com/TimothyYe/godns"
 )
 
 func TestResponseToJSON(t *testing.T) {
@@ -154,7 +153,7 @@ func TestRecordTracked(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	domain := &godns.Domain{
+	domain := &settings.Domain{
 		DomainName: "example.com",
 		SubDomains: []string{"www"},
 	}

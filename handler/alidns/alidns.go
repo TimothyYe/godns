@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -16,8 +17,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/TimothyYe/godns"
 )
 
 // AliDNS token
@@ -100,10 +99,10 @@ func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 		"SubDomain": fmt.Sprintf("%s.%s", rr, domain),
 	}
 
-	if d.IPType == "" || strings.ToUpper(d.IPType) == godns.IPV4 {
-		parms["Type"] = godns.IPTypeA
-	} else if strings.ToUpper(d.IPType) == godns.IPV6 {
-		parms["Type"] = godns.IPTypeAAAA
+	if d.IPType == "" || strings.ToUpper(d.IPType) == utils.IPV4 {
+		parms["Type"] = utils.IPTypeA
+	} else if strings.ToUpper(d.IPType) == utils.IPV6 {
+		parms["Type"] = utils.IPTypeAAAA
 	}
 
 	urlPath := d.genRequestURL(parms)
@@ -131,10 +130,10 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 		"Line":     r.Line,
 	}
 
-	if d.IPType == "" || strings.ToUpper(d.IPType) == godns.IPV4 {
-		parms["Type"] = godns.IPTypeA
-	} else if strings.ToUpper(d.IPType) == godns.IPV6 {
-		parms["Type"] = godns.IPTypeAAAA
+	if d.IPType == "" || strings.ToUpper(d.IPType) == utils.IPV4 {
+		parms["Type"] = utils.IPTypeA
+	} else if strings.ToUpper(d.IPType) == utils.IPV6 {
+		parms["Type"] = utils.IPTypeAAAA
 	}
 
 	urlPath := d.genRequestURL(parms)

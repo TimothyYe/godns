@@ -4,17 +4,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/TimothyYe/godns"
 )
 
 type TelegramNotify struct {
-	conf *godns.Settings
+	conf *settings.Settings
 }
 
-func NewTelegramNotify(conf *godns.Settings) INotify {
+func NewTelegramNotify(conf *settings.Settings) INotify {
 	return &TelegramNotify{conf: conf}
 }
 
@@ -27,7 +27,7 @@ func (n *TelegramNotify) Send(domain, currentIP string) error {
 		return errors.New("chat id cannot be empty")
 	}
 
-	client := godns.GetHttpClient(n.conf, n.conf.Notify.Telegram.UseProxy)
+	client := utils.GetHttpClient(n.conf, n.conf.Notify.Telegram.UseProxy)
 	tpl := n.conf.Notify.Telegram.MsgTemplate
 	if tpl == "" {
 		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
