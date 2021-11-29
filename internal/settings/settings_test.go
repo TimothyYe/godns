@@ -33,4 +33,6 @@ func TestLoadYAMLSetting(t *testing.T) {
 	if settings.IPUrl == "" {
 		t.Fatal("cannot load ip_url from config file")
 	}
+
+	t.Log(settings)
 }
