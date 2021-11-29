@@ -32,6 +32,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 - [Usage](#usage)
 - [Configuration](#configuration)
   - [Overview](#overview)
+  - [Configuration file format](#configuration-file-format)
   - [Configuration properties](#configuration-properties)
   - [Update root domain](#update-root-domain)
   - [Configuration examples](#configuration-examples)
