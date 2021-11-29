@@ -1,0 +1,33 @@
+provider: DNSPod
+password:
+login_token:
+domains:
+  - domain_name: example.com
+    sub_domains:
+      - www
+      - test
+ip_url: https://api.ip.sb/ip
+ipv6_url: https://api-ipv6.ip.sb/ip
+ip_type: IPv4
+interval: 300
+resolver: 8.8.8.8
+user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36"
+ip_interface: eth0
+socks5_proxy:
+use_proxy: false
+debug_info: false
+notify:
+  telegram:
+    enabled: false
+    bot_api_key:
+    chat_id:
+    message_template:
+    use_proxy: false
+  mail:
+    enabled: false
+    smtp_server:
+    smtp_username:
+    smtp_password:
+    smtp_port: 25
+    send_to:
+
