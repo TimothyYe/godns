@@ -140,10 +140,19 @@ Usage of ./godns:
 
 ### Overview
 
-* Make a copy of [config_sample.json](configs/config_sample.json) and name it `config.json`
+* Make a copy of [config_sample.json](configs/config_sample.json) and name it as `config.json`, or make a copy of [config_sample.yaml](configs/config_sample.yaml) and name it as `config.yaml`.
 * Configure your provider, domain/subdomain info, credentials, etc.
 * Configure a notification medium (e.g. SMTP to receive emails) to get notified when your IP address changes
 * Place the file in the same directory of GoDNS or use the `-c=path/to/your/file.json` option
+
+### Configuration file format
+
+GoDNS supports 2 different configuration file formats:
+
+* JSON
+* YAML
+
+By default, GoDNS uses `JSON` config file. However, you can specify to use the `YAML` format via: `./godns -c /path/to/config.yaml` 
 
 ### Configuration properties
 
