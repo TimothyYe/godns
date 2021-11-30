@@ -500,7 +500,7 @@ Emails are sent over [SMTP](https://en.wikipedia.org/wiki/Simple_Mail_Transfer_P
 
 Each time the IP changes, you will receive an email like that:
 
-<img src="https://github.com/TimothyYe/godns/blob/master/snapshots/mail.png?raw=true" />
+<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/mail.png?raw=true" />
 
 #### Telegram
 
