@@ -40,3 +40,5 @@ cmd/godns/config.*.json
 .current_ip
 .DS_Store
 /vendor
+
+dist/

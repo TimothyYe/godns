@@ -119,9 +119,9 @@ Alternatively, you can sign in to [DuckDNS](https://www.duckdns.org) (with a soc
 Build GoDNS by running (from the root of the repository):
 
 ```bash
-cd cmd/godns  # go to the GoDNS directory
-go get -v     # get dependencies
-go build      # build
+cd cmd/godns        # go to the GoDNS directory
+go mod download     # get dependencies
+go build            # build
 ```
 
 You can also download a compiled binary from the [releases](https://github.com/TimothyYe/godns/releases).
