@@ -62,12 +62,24 @@ type DiscordNotify struct {
 	MsgTemplate string `json:"message_template" yaml:"message_template"`
 }
 
+type PushoverNotify struct {
+	Enabled     bool   `json:"enabled" yaml:"enabled"`
+	Token       string `json:"token" yaml:"token"`
+	User        string `json:"user" yaml:"user"`
+	MsgTemplate string `json:"message_template" yaml:"message_template"`
+	Device      string `json:"device" yaml:"device"`
+	Title       string `json:"title" yaml:"title"`
+	Priority    int    `json:"priority" yaml:"priority"`
+	Html        int    `json:"html" yaml:"html"`
+}
+
 // Notify struct
 type Notify struct {
 	Telegram TelegramNotify `json:"telegram" yaml:"telegram"`
 	Mail     MailNotify     `json:"mail" yaml:"mail"`
 	Slack    SlackNotify    `json:"slack" yaml:"slack"`
 	Discord  DiscordNotify  `json:"discord" yaml:"discord"`
+	Pushover PushoverNotify `json:"pushover" yaml:"pushover"`
 }
 
 // Settings struct

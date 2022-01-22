@@ -1,8 +1,9 @@
 package notify
 
 import (
-	"github.com/TimothyYe/godns/internal/settings"
 	"sync"
+
+	"github.com/TimothyYe/godns/internal/settings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -12,6 +13,7 @@ const (
 	Slack    = "slack"
 	Telegram = "telegram"
 	Discord  = "discord"
+	Pushover = "pushover"
 )
 
 var (
@@ -50,6 +52,10 @@ func initNotifications(conf *settings.Settings) map[string]INotify {
 
 	if conf.Notify.Telegram.Enabled {
 		notifyMap[Telegram] = NewTelegramNotify(conf)
+	}
+
+	if conf.Notify.Pushover.Enabled {
+		notifyMap[Pushover] = NewPushoverNotify(conf)
 	}
 
 	if conf.Notify.Discord.Enabled {
