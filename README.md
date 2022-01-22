@@ -39,7 +39,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Cloudflare](#cloudflare)
     - [DNSPod](#dnspod)
     - [Dreamhost](#dreamhost)
-    - [Dynv6.com](#dynv6)
+    - [Dynv6](#dynv6)
     - [Google Domains](#google-domains)
     - [AliDNS](#alidns)
     - [DuckDNS](#duckdns)

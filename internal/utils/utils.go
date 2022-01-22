@@ -54,8 +54,8 @@ const (
 	DUCK = "DuckDNS"
 	// DREAMHOST for Dreamhost
 	DREAMHOST = "Dreamhost"
-	// DYNV6 for dynv6.com
-	DYNV6 = "dynv6"
+	// DYNV6 for Dynv6
+	DYNV6 = "Dynv6"
 	// NOIP for NoIP
 	NOIP = "NoIP"
 	// SCALEWAY for Scaleway
