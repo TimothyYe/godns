@@ -71,7 +71,6 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 			//check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
 				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
-				notify.GetNotifyManager(handler.Configuration).Send(hostname, currentIP)
 			} else {
 				err := handler.update(client, hostname, currentIP)
 				if err != nil {
