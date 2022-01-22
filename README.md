@@ -570,7 +570,6 @@ To receive a [Pushover](https://pushover.net/) message each time the IP changes,
       "priority": 0,
       "html": 1
     }
-   },
   }
 ```
 
