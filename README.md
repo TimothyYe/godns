@@ -39,6 +39,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Cloudflare](#cloudflare)
     - [DNSPod](#dnspod)
     - [Dreamhost](#dreamhost)
+    - [Dynv6.com](#dynv6)
     - [Google Domains](#google-domains)
     - [AliDNS](#alidns)
     - [DuckDNS](#duckdns)
@@ -71,6 +72,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 | [Cloudflare][cloudflare]              | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Google Domains][google.domains]      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [DNSPod][dnspod]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Dynv6][dynv6]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [HE.net (Hurricane Electric)][he.net] | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [AliDNS][alidns]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [DuckDNS][duckdns]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
@@ -81,6 +83,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
 [dnspod]: https://www.dnspod.cn
+[dynv6]: https://dynv6.com
 [he.net]: https://dns.he.net
 [alidns]: https://help.aliyun.com/product/29697.html
 [duckdns]: https://www.duckdns.org
@@ -287,6 +290,35 @@ For Dreamhost, you need to provide your API Token(you can create it [here](https
   "ip_type": "IPv4",
   "interval": 300,
   "resolver": "ns1.dreamhost.com",
+  "socks5_proxy": ""
+}
+```
+</details>
+
+#### Dynv6
+
+For Dynv6, only need to provide the `token`, config 1 default domain & subdomains.
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "Dynv6",
+  "password": "",
+  "login_token": "1234567ABCDEFGabcdefg123456789",
+  "domains": [
+    {
+      "domain_name": "dynv6.net",
+      "sub_domains": [
+        "myname"
+      ]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_url": "https://api.ip.sb/ip",
+  "ip_type": "IPv4",
+  "interval": 300,
   "socks5_proxy": ""
 }
 ```
