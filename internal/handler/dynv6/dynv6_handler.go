@@ -44,7 +44,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	for {
 		if looping {
 			// Sleep with interval
-			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 
@@ -70,7 +70,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 			//check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
-				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
+				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
 				err := handler.update(client, hostname, currentIP)
 				if err != nil {
