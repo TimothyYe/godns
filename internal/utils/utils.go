@@ -3,14 +3,15 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"github.com/TimothyYe/godns/internal/settings"
-	dnsResolver "github.com/TimothyYe/godns/pkg/resolver"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/TimothyYe/godns/internal/settings"
+	dnsResolver "github.com/TimothyYe/godns/pkg/resolver"
 
 	log "github.com/sirupsen/logrus"
 
@@ -53,6 +54,8 @@ const (
 	DUCK = "DuckDNS"
 	// DREAMHOST for Dreamhost
 	DREAMHOST = "Dreamhost"
+	// DYNV6 for Dynv6
+	DYNV6 = "Dynv6"
 	// NOIP for NoIP
 	NOIP = "NoIP"
 	// SCALEWAY for Scaleway
@@ -230,6 +233,10 @@ func CheckSettings(config *settings.Settings) error {
 			return errors.New("password cannot be empty")
 		}
 	case DUCK:
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
+	case DYNV6:
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")
 		}

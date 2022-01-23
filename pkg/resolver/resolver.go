@@ -4,6 +4,7 @@ package resolver
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"net"
 	"os"
@@ -102,7 +103,7 @@ func (r *DNSResolver) lookupHost(host string, dnsType uint16, triesLeft int) ([]
 				}
 			}
 		} else {
-			return result, errors.New("Cannot resolve this domain, please make sure the IP type is right")
+			return result, fmt.Errorf("cannot resolve domain %s, please make sure the IP type is right", host)
 		}
 	}
 

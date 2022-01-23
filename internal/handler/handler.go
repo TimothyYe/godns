@@ -6,6 +6,7 @@ import (
 	"github.com/TimothyYe/godns/internal/handler/dnspod"
 	"github.com/TimothyYe/godns/internal/handler/dreamhost"
 	"github.com/TimothyYe/godns/internal/handler/duck"
+	"github.com/TimothyYe/godns/internal/handler/dynv6"
 	"github.com/TimothyYe/godns/internal/handler/google"
 	"github.com/TimothyYe/godns/internal/handler/he"
 	"github.com/TimothyYe/godns/internal/handler/noip"
@@ -43,6 +44,8 @@ func CreateHandler(provider string) IHandler {
 		handler = IHandler(&noip.Handler{})
 	case utils.SCALEWAY:
 		handler = IHandler(&scaleway.Handler{})
+	case utils.DYNV6:
+		handler = IHandler(&dynv6.Handler{})
 	}
 
 	return handler
