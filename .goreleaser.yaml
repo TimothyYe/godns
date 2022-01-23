@@ -9,6 +9,7 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    dir: ./cmd/godns
     goos:
       - linux
       - windows
