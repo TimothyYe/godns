@@ -50,6 +50,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Telegram](#telegram)
     - [Slack](#slack)
     - [Discord](#discord)
+    - [Pushover](#pushover)
   - [Miscellaneous topics](#miscellaneous-topics)
     - [IPv6 support](#ipv6-support)
     - [Network interface IP address](#network-interface-ip-address)
@@ -552,6 +553,29 @@ To receive a [Discord](https://discord.gg) message each time the IP changes, upd
         }
   }
 ```
+
+#### Pushover
+
+To receive a [Pushover](https://pushover.net/) message each time the IP changes, update your configuration with the following snippet:
+
+```json
+  "notify": {
+    "pushover": {
+      "enabled": true,
+      "token": "abcdefghijklmnopqrstuvwxyz1234",
+      "user": "abcdefghijklmnopqrstuvwxyz1234",
+      "message_template": "",
+      "device": "",
+      "title": "",
+      "priority": 0,
+      "html": 1
+    }
+  }
+```
+
+The `message_template` property supports [html](https://pushover.net/api#html) if the `html` parameter is `1`. If it is left empty a default message will be used.
+If the `device` and `title` parameters are left empty, Pushover will choose defaults [see](https://pushover.net/api#messages). More details on the priority parameter
+can be found on the Pushover [API description](https://pushover.net/api#priority).
 
 ### Miscellaneous topics
 
