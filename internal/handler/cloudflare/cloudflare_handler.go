@@ -98,7 +98,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		if currentIP == lastIP {
 			log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
 		} else {
-			log.Info("Checking IP for domain", domain.DomainName)
+			log.Info("Checking IP for domain ", domain.DomainName)
 			zoneID := handler.getZone(domain.DomainName)
 			if zoneID != "" {
 				records := handler.getDNSRecords(zoneID)
