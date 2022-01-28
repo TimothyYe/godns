@@ -1,4 +1,4 @@
-name: goreleaser
+name: Auto Release
 
 on:
   push:
