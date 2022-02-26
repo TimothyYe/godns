@@ -41,7 +41,7 @@ func applyProxy(proxyAddress string, transport *http.Transport) (*http.Transport
 	if err != nil {
 		return transport, err
 	}
-	log.Info("Connected to proxy : %s", proxyAddress)
+	log.Infof("Connected to proxy : %s", proxyAddress)
 	transport.Dial = dialer.Dial
 	return transport, nil
 }
