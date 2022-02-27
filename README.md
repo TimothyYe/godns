@@ -46,6 +46,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [No-IP](#no-ip)
     - [HE.net](#henet)
     - [Scaleway](#scaleway)
+    - [Linode](#linode)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -80,6 +81,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 | [Dreamhost][dreamhost]                | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Scaleway][Scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -91,6 +93,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 [dreamhost]: https://www.dreamhost.com
 [no-ip]: https://www.noip.com
 [Scaleway]: https://www.scaleway.com/
+[Linode]: https://www.linode.com
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -494,6 +497,37 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
 {
   "provider": "Scaleway",
   "login_token": "API Secret Key",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","@"]
+    },{
+      "domain_name": "samplednszone.example.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_url": "https://api.ip.sb/ip",
+  "ip_type": "IPv4",
+  "interval": 300
+}
+```
+</details>
+
+#### Linode
+
+To authenticate with the Linode API you will need to provide a Personal Access Token with "Read/Write" access on the "Domain" scope. Linode has [a help page about creating access tokens](https://www.linode.com/docs/guides/getting-started-with-the-linode-api/). Pass this token into the `login_token` field of the config file.
+
+The `domain_name` field of the config file must be the name of an existing Domain managed by Linode. Linode has [a help page about adding domains](https://www.linode.com/docs/guides/dns-manager/). The GoDNS Linode handler will not create domains automatically, but will create subdomains automatically.
+
+The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS records.
+
+<details>
+<summary>Example</summary>
+ 
+```json
+{
+  "provider": "Linode",
+  "login_token": ${PERSONAL_ACCESS_TOKEN},
   "domains": [{
       "domain_name": "example.com",
       "sub_domains": ["www","@"]

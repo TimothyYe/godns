@@ -9,6 +9,7 @@ import (
 	"github.com/TimothyYe/godns/internal/handler/dynv6"
 	"github.com/TimothyYe/godns/internal/handler/google"
 	"github.com/TimothyYe/godns/internal/handler/he"
+	"github.com/TimothyYe/godns/internal/handler/linode"
 	"github.com/TimothyYe/godns/internal/handler/noip"
 	"github.com/TimothyYe/godns/internal/handler/scaleway"
 	"github.com/TimothyYe/godns/internal/settings"
@@ -46,6 +47,8 @@ func CreateHandler(provider string) IHandler {
 		handler = IHandler(&scaleway.Handler{})
 	case utils.DYNV6:
 		handler = IHandler(&dynv6.Handler{})
+	case utils.LINODE:
+		handler = IHandler(&linode.Handler{})
 	}
 
 	return handler
