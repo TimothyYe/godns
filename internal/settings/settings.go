@@ -100,6 +100,7 @@ type Settings struct {
 	Resolver    string   `json:"resolver" yaml:"resolver"`
 	UseProxy    bool     `json:"use_proxy" yaml:"use_proxy"`
 	DebugInfo   bool     `json:"debug_info" yaml:"debug_info"`
+	RunOnce     bool     `json:"run_once" yaml:"run_once"`
 }
 
 // LoadSettings -- Load settings from config file

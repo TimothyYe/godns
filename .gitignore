@@ -42,3 +42,5 @@ cmd/godns/config.*.json
 /vendor
 
 dist/
+
+.vscode

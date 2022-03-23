@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+
 	"github.com/TimothyYe/godns/internal/handler"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
@@ -59,15 +60,23 @@ func dnsLoop() {
 	log.Info("Creating DNS handler with provider:", configuration.Provider)
 	h := handler.CreateHandler(configuration.Provider)
 	h.SetConfiguration(&configuration)
-	for i := range configuration.Domains {
-		go h.DomainLoop(&configuration.Domains[i], panicChan)
+	for _, domain := range configuration.Domains {
+		if configuration.RunOnce {
+			h.DomainLoop(&domain, panicChan, configuration.RunOnce)
+		} else {
+			go h.DomainLoop(&domain, panicChan, configuration.RunOnce)
+		}
+	}
+
+	if configuration.RunOnce {
+		os.Exit(0)
 	}
 
 	panicCount := 0
 	for {
 		failDomain := <-panicChan
 		log.Debug("Got panic in goroutine, will start a new one... :", panicCount)
-		go h.DomainLoop(&failDomain, panicChan)
+		go h.DomainLoop(&failDomain, panicChan, configuration.RunOnce)
 
 		panicCount++
 		if panicCount >= utils.PanicMax {

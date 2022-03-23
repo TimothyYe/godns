@@ -39,7 +39,7 @@ func createDNSClient(conf *settings.Settings) DNSClient {
 	return CreateLinodeDNSClient(&linodeApiClient)
 }
 
-func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain) {
+func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
@@ -47,7 +47,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		}
 	}()
 
-	for {
+	for while := true; while; while = !runOnce {
 		handler.domainLoop(domain)
 		log.Debugf("DNS update loop finished, will run again in %d seconds\r\n", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))

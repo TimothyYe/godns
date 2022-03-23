@@ -19,7 +19,7 @@ import (
 // IHandler is the interface for all DNS handlers
 type IHandler interface {
 	SetConfiguration(*settings.Settings)
-	DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain)
+	DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool)
 }
 
 // CreateHandler creates DNS handler by different providers
