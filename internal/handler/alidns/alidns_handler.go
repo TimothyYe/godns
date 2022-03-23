@@ -2,11 +2,12 @@ package alidns
 
 import (
 	"fmt"
+	"runtime/debug"
+	"time"
+
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 	"github.com/TimothyYe/godns/pkg/notify"
-	"runtime/debug"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -22,7 +23,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 }
 
 // DomainLoop the main logic loop
-func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain) {
+func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
@@ -33,7 +34,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	looping := false
 	aliDNS := NewAliDNS(handler.Configuration.Email, handler.Configuration.Password, handler.Configuration.IPType)
 
-	for {
+	for while := true; while; while = !runOnce {
 		if looping {
 			// Sleep with interval
 			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)

@@ -59,6 +59,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [SOCKS5 proxy support](#socks5-proxy-support)
     - [Display debug info](#display-debug-info)
 - [Running GoDNS](#running-godns)
+  - [Manually](#manually)
   - [As a manual daemon](#as-a-manual-daemon)
   - [As a managed daemon (with upstart)](#as-a-managed-daemon-with-upstart)
   - [As a managed daemon (with systemd)](#as-a-managed-daemon-with-systemd)
@@ -718,6 +719,24 @@ To display debug info, set `debug_info` as `true` to enable this feature. By def
 ## Running GoDNS
 
 There are a few ways to run GoDNS.
+
+### Manually
+
+Note: make sure to set the `run_once` parameter in your config file so the program will quit after the first run (the default is `false`).
+
+Can be added to `cron` or attached to other events on your system.
+
+```json
+{
+  "...": "...",
+  "run_once": true
+}
+```
+Then run
+
+```bash
+./godns
+```
 
 ### As a manual daemon
 
