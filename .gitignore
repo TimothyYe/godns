@@ -28,6 +28,7 @@ _testmain.go
 *.swp
 *.gz
 godns
+!godns/ # Don't ignore the godns directory, only the file
 godns.exe
 config.json
 cmd/godns/config.json

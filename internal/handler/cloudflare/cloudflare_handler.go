@@ -74,7 +74,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -84,7 +84,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	for while := true; while; while = !runOnce {
 		if looping {
 			// Sleep with interval
-			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 		looping = true
@@ -97,9 +97,9 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		log.Debug("Current IP is:", currentIP)
 		//check against locally cached IP, if no change, skip update
 		if currentIP == lastIP {
-			log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
+			log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 		} else {
-			log.Info("Checking IP for domain ", domain.DomainName)
+			log.Infof("Checking IP for domain %s", domain.DomainName)
 			zoneID := handler.getZone(domain.DomainName)
 			if zoneID != "" {
 				records := handler.getDNSRecords(zoneID)
@@ -111,17 +111,17 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 						continue
 					}
 					if rec.IP != currentIP {
-						log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)\r\n", currentIP, rec.IP)
+						log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", currentIP, rec.IP)
 						lastIP = handler.updateRecord(rec, currentIP)
 
 						// Send notification
 						notify.GetNotifyManager(handler.Configuration).Send(rec.Name, currentIP)
 					} else {
-						log.Infof("Record OK: %+v - %+v\r\n", rec.Name, rec.IP)
+						log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
 					}
 				}
 			} else {
-				log.Info("Failed to find zone for domain:", domain.DomainName)
+				log.Infof("Failed to find zone for domain: %s", domain.DomainName)
 			}
 		}
 	}
@@ -176,12 +176,12 @@ func (handler *Handler) getZone(domain string) string {
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &z)
 	if err != nil {
-		log.Errorf("Decoder error: %+v\n", err)
-		log.Debugf("Response body: %+v\n", string(body))
+		log.Errorf("Decoder error: %+v", err)
+		log.Debugf("Response body: %+v", string(body))
 		return ""
 	}
 	if z.Success != true {
-		log.Infof("Response failed: %+v\n", string(body))
+		log.Infof("Response failed: %+v", string(body))
 		return ""
 	}
 
@@ -206,7 +206,7 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 		recordType = utils.IPTypeAAAA
 	}
 
-	log.Info("Querying records with type:", recordType)
+	log.Infof("Querying records with type: %s", recordType)
 	req, client := handler.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s&page=1&per_page=500", recordType), nil)
 	resp, err := client.Do(req)
 	if err != nil {
@@ -217,13 +217,13 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
-		log.Infof("Decoder error: %+v\n", err)
-		log.Debugf("Response body: %+v\n", string(body))
+		log.Infof("Decoder error: %+v", err)
+		log.Debugf("Response body: %+v", string(body))
 		return empty
 	}
 	if r.Success != true {
 		body, _ := ioutil.ReadAll(resp.Body)
-		log.Infof("Response failed: %+v\n", string(body))
+		log.Infof("Response failed: %+v", string(body))
 		return empty
 
 	}
@@ -251,13 +251,13 @@ func (handler *Handler) updateRecord(record DNSRecord, newIP string) string {
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
-		log.Errorf("Decoder error: %+v\n", err)
-		log.Debugf("Response body: %+v\n", string(body))
+		log.Errorf("Decoder error: %+v", err)
+		log.Debugf("Response body: %+v", string(body))
 		return ""
 	}
 	if r.Success != true {
 		body, _ := ioutil.ReadAll(resp.Body)
-		log.Infof("Response failed: %+v\n", string(body))
+		log.Infof("Response failed: %+v", string(body))
 	} else {
 		log.Infof("Record updated: %+v - %+v", record.Name, record.IP)
 		lastIP = record.IP

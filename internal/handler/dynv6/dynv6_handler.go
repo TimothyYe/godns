@@ -34,7 +34,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -76,7 +76,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 				if err != nil {
 					log.Errorf("Failed to update domain %s: %v", hostname, err)
 				} else {
-					log.Info("IP updated to:", currentIP)
+					log.Infof("IP updated to: %s", currentIP)
 				}
 			}
 		}

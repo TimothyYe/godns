@@ -61,7 +61,7 @@ func (n *PushoverNotify) Send(domain, currentIP string) error {
 		form.Add("priority", strconv.FormatInt(int64(priority), 10))
 	}
 
-	log.Debugf("Pushover api request URL: %s, Form: %v\n", ReqURL, form)
+	log.Debugf("Pushover api request URL: %s, Form: %v", ReqURL, form)
 	response, err = client.PostForm(ReqURL, form)
 	if err != nil {
 		return err
@@ -83,7 +83,7 @@ func (n *PushoverNotify) Send(domain, currentIP string) error {
 		fmt.Println("error:", err)
 		return errors.New("failed to parse pushover api response")
 	}
-	log.Debugf("Pushover api response: %+v\n", resp)
+	log.Debugf("Pushover api response: %+v", resp)
 	if resp.Status != 1 {
 		return fmt.Errorf("pushover api call failed Status: %v, Errors: %v", resp.Status, resp.Errors)
 	}
