@@ -42,14 +42,14 @@ func createDNSClient(conf *settings.Settings) DNSClient {
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
 
 	for while := true; while; while = !runOnce {
 		handler.domainLoop(domain)
-		log.Debugf("DNS update loop finished, will run again in %d seconds\r\n", handler.Configuration.Interval)
+		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
@@ -57,7 +57,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 func (handler *Handler) domainLoop(domain *settings.Domain) {
 	ip, err := utils.GetCurrentIP(handler.Configuration)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 		return
 	}
 	if ip == handler.cachedIP {
@@ -66,7 +66,7 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 	}
 	err = updateDNS(domain, ip, handler.client)
 	if err != nil {
-		log.Info(err)
+		log.Error(err)
 		return
 	}
 	handler.cachedIP = ip

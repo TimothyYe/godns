@@ -33,7 +33,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -43,7 +43,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	for while := true; while; while = !runOnce {
 		if looping {
 			// Sleep with interval
-			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 
@@ -75,7 +75,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 			//check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
-				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
+				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
 				// update IP with HTTP GET request
 				resp, err := client.Get(fmt.Sprintf(DuckUrl, subDomain, handler.Configuration.LoginToken, ip))
@@ -92,7 +92,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 					log.Error("Failed to update the IP:", err)
 					continue
 				} else {
-					log.Info("IP updated to:", currentIP)
+					log.Infof("IP updated to: %s", currentIP)
 				}
 
 				// Send notification

@@ -35,7 +35,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -44,13 +44,13 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	for while := true; while; while = !runOnce {
 		if looping {
 			// Sleep with interval
-			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 
 		looping = true
 
-		log.Infof("Checking IP for domain %s \r\n", domain.DomainName)
+		log.Infof("Checking IP for domain %s", domain.DomainName)
 		domainID := handler.GetDomain(domain.DomainName)
 
 		if domainID == -1 {
@@ -81,26 +81,26 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 			//check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
-				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
+				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
 				lastIP = currentIP
 
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
 				if subDomainID == "" || ip == "" {
-					log.Infof("Domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s\n", subDomain, domain.DomainName, subDomainID, ip)
+					log.Infof("Domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s", subDomain, domain.DomainName, subDomainID, ip)
 					continue
 				}
 
 				// Continue to check the IP of subdomain
 				if len(ip) > 0 && strings.TrimRight(currentIP, "\n") != strings.TrimRight(ip, "\n") {
-					log.Infof("%s.%s Start to update record IP...\n", subDomain, domain.DomainName)
+					log.Infof("%s.%s Start to update record IP...", subDomain, domain.DomainName)
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
 
 					// Send notification
 					notify.GetNotifyManager(handler.Configuration).Send(fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 				} else {
-					log.Infof("%s.%s Current IP is same as domain IP, no need to update...\n", subDomain, domain.DomainName)
+					log.Infof("%s.%s Current IP is same as domain IP, no need to update...", subDomain, domain.DomainName)
 				}
 			}
 		}
@@ -170,7 +170,7 @@ func (handler *Handler) GetDomain(name string) int64 {
 			log.Info("domains slice is empty.")
 		}
 	} else {
-		log.Info("get_domain:status code:", sjson.Get("status").Get("code").MustString())
+		log.Infof("get_domain:status code: %s", sjson.Get("status").Get("code").MustString())
 	}
 
 	return ret
@@ -223,7 +223,7 @@ func (handler *Handler) GetSubDomain(domainID int64, name string) (string, strin
 			log.Info("records slice is empty.")
 		}
 	} else {
-		log.Info("get_subdomain:status code:", sjson.Get("status").Get("code").MustString())
+		log.Infof("get_subdomain:status code: %s", sjson.Get("status").Get("code").MustString())
 	}
 
 	return ret, ip
@@ -265,7 +265,7 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 	if sjson.Get("status").Get("code").MustString() == "1" {
 		log.Info("New IP updated!")
 	} else {
-		log.Info("Failed to update IP record:", sjson.Get("status").Get("message").MustString())
+		log.Infof("Failed to update IP record: %s", sjson.Get("status").Get("message").MustString())
 	}
 
 }

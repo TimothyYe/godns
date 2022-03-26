@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
+	"os"
 
 	"github.com/TimothyYe/godns/internal/handler"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
-	"os"
 
 	log "github.com/sirupsen/logrus"
 
@@ -57,7 +57,7 @@ func main() {
 func dnsLoop() {
 	panicChan := make(chan settings.Domain)
 
-	log.Info("Creating DNS handler with provider:", configuration.Provider)
+	log.Infof("Creating DNS handler with provider: %s", configuration.Provider)
 	h := handler.CreateHandler(configuration.Provider)
 	h.SetConfiguration(&configuration)
 	for _, domain := range configuration.Domains {

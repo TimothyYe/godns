@@ -66,7 +66,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v\n", err, string(debug.Stack()))
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
 			panicChan <- *domain
 		}
 	}()
@@ -75,7 +75,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	for while := true; while; while = !runOnce {
 		if looping {
 			// Sleep with interval
-			log.Debugf("Going to sleep, will start next checking in %d seconds...\r\n", handler.Configuration.Interval)
+			log.Debugf("Going to sleep, will start next checking in %d seconds...", handler.Configuration.Interval)
 			time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 		}
 
@@ -104,9 +104,9 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 			// Check against currently known IP, if no change, skip update
 			if currentIP == lastIP {
-				log.Infof("IP is the same as cached one (%s). Skip update.\n", currentIP)
+				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
-				log.Infof("%s.%s - Start to update record IP...\n", subDomain, domain.DomainName)
+				log.Infof("%s.%s - Start to update record IP...", subDomain, domain.DomainName)
 				err := handler.UpdateIP(domain.DomainName, subDomain, currentIP)
 				if err != nil {
 					log.Error(err)
