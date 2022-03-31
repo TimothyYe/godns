@@ -19,7 +19,7 @@
     }
   ],
   "ip_url": "https://api.ipify.org",
-  "ipv6_url": "https://ipify.org/",
+  "ipv6_url": "https://ipify.org",
   "ip_type": "IPv4",
   "interval": 300,
   "resolver": "8.8.8.8",
