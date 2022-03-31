@@ -58,6 +58,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Network interface IP address](#network-interface-ip-address)
     - [SOCKS5 proxy support](#socks5-proxy-support)
     - [Display debug info](#display-debug-info)
+    - [Recommended APIs](#recommended-apis)
 - [Running GoDNS](#running-godns)
   - [Manually](#manually)
   - [As a manual daemon](#as-a-manual-daemon)
@@ -715,6 +716,13 @@ To display debug info, set `debug_info` as `true` to enable this feature. By def
 ```json
   "debug_info": true,
 ```
+
+#### Recommended APIs
+
+- https://api.ipify.org 
+- https://myip.biturl.top
+- https://ip4.seeip.org
+- https://api-ipv4.ip.sb/ip
 
 ## Running GoDNS
 
