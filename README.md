@@ -722,6 +722,7 @@ To display debug info, set `debug_info` as `true` to enable this feature. By def
 - https://api.ipify.org 
 - https://myip.biturl.top
 - https://ip4.seeip.org
+- https://ipecho.net/plain
 - https://api-ipv4.ip.sb/ip
 
 ## Running GoDNS
