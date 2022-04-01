@@ -29,42 +29,47 @@ type Domain struct {
 
 // SlackNotify struct for Slack notification
 type SlackNotify struct {
-	Enabled     bool   `json:"enabled" yaml:"enabled"`
-	BotApiToken string `json:"bot_api_token" yaml:"bot_api_token"`
-	Channel     string `json:"channel" yaml:"channel"`
-	MsgTemplate string `json:"message_template" yaml:"message_template"`
-	UseProxy    bool   `json:"use_proxy" yaml:"use_proxy"`
+	Enabled         bool   `json:"enabled" yaml:"enabled"`
+	BotApiToken     string `json:"bot_api_token" yaml:"bot_api_token"`
+	BotApiTokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
+	Channel         string `json:"channel" yaml:"channel"`
+	MsgTemplate     string `json:"message_template" yaml:"message_template"`
+	UseProxy        bool   `json:"use_proxy" yaml:"use_proxy"`
 }
 
 // TelegramNotify struct for telegram notification
 type TelegramNotify struct {
-	Enabled     bool   `json:"enabled" yaml:"enabled"`
-	BotApiKey   string `json:"bot_api_key" yaml:"bot_api_key"`
-	ChatId      string `json:"chat_id" yaml:"chat_id"`
-	MsgTemplate string `json:"message_template" yaml:"message_template"`
-	UseProxy    bool   `json:"use_proxy" yaml:"use_proxy"`
+	Enabled       bool   `json:"enabled" yaml:"enabled"`
+	BotApiKey     string `json:"bot_api_key" yaml:"bot_api_key"`
+	BotApiKeyFile string `json:"bot_api_key_file" yaml:"bot_api_key_file"`
+	ChatId        string `json:"chat_id" yaml:"chat_id"`
+	MsgTemplate   string `json:"message_template" yaml:"message_template"`
+	UseProxy      bool   `json:"use_proxy" yaml:"use_proxy"`
 }
 
 // MailNotify struct for SMTP notification
 type MailNotify struct {
-	Enabled      bool   `json:"enabled" yaml:"enabled"`
-	SMTPServer   string `json:"smtp_server" yaml:"smtp_server"`
-	SMTPUsername string `json:"smtp_username" yaml:"smtp_username"`
-	SMTPPassword string `json:"smtp_password" yaml:"smtp_password"`
-	SMTPPort     int    `json:"smtp_port" yaml:"smtp_port"`
-	SendTo       string `json:"send_to" yaml:"send_to"`
+	Enabled          bool   `json:"enabled" yaml:"enabled"`
+	SMTPServer       string `json:"smtp_server" yaml:"smtp_server"`
+	SMTPUsername     string `json:"smtp_username" yaml:"smtp_username"`
+	SMTPPassword     string `json:"smtp_password" yaml:"smtp_password"`
+	SMTPPasswordFile string `json:"smtp_password" yaml:"smtp_password_file"`
+	SMTPPort         int    `json:"smtp_port" yaml:"smtp_port"`
+	SendTo           string `json:"send_to" yaml:"send_to"`
 }
 
 type DiscordNotify struct {
-	Enabled     bool   `json:"enabled" yaml:"enabled"`
-	BotApiToken string `json:"bot_api_token" yaml:"bot_api_token"`
-	Channel     string `json:"channel" yaml:"channel"`
-	MsgTemplate string `json:"message_template" yaml:"message_template"`
+	Enabled         bool   `json:"enabled" yaml:"enabled"`
+	BotApiToken     string `json:"bot_api_token" yaml:"bot_api_token"`
+	BotApiTokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
+	Channel         string `json:"channel" yaml:"channel"`
+	MsgTemplate     string `json:"message_template" yaml:"message_template"`
 }
 
 type PushoverNotify struct {
 	Enabled     bool   `json:"enabled" yaml:"enabled"`
 	Token       string `json:"token" yaml:"token"`
+	TokenFile   string `json:"token_file" yaml:"token:_file"`
 	User        string `json:"user" yaml:"user"`
 	MsgTemplate string `json:"message_template" yaml:"message_template"`
 	Device      string `json:"device" yaml:"device"`
@@ -84,23 +89,25 @@ type Notify struct {
 
 // Settings struct
 type Settings struct {
-	Provider    string   `json:"provider" yaml:"provider"`
-	Email       string   `json:"email" yaml:"email"`
-	Password    string   `json:"password" yaml:"password"`
-	LoginToken  string   `json:"login_token" yaml:"login_token"`
-	Domains     []Domain `json:"domains" yaml:"domains"`
-	IPUrl       string   `json:"ip_url" yaml:"ip_url"`
-	IPV6Url     string   `json:"ipv6_url" yaml:"ipv6_url"`
-	Interval    int      `json:"interval" yaml:"interval"`
-	UserAgent   string   `json:"user_agent,omitempty" yaml:"user_agent,omitempty"`
-	Socks5Proxy string   `json:"socks5_proxy" yaml:"socks5_proxy"`
-	Notify      Notify   `json:"notify" yaml:"notify"`
-	IPInterface string   `json:"ip_interface" yaml:"ip_interface"`
-	IPType      string   `json:"ip_type" yaml:"ip_type"`
-	Resolver    string   `json:"resolver" yaml:"resolver"`
-	UseProxy    bool     `json:"use_proxy" yaml:"use_proxy"`
-	DebugInfo   bool     `json:"debug_info" yaml:"debug_info"`
-	RunOnce     bool     `json:"run_once" yaml:"run_once"`
+	Provider       string   `json:"provider" yaml:"provider"`
+	Email          string   `json:"email" yaml:"email"`
+	Password       string   `json:"password" yaml:"password"`
+	PasswordFile   string   `json:"password_file" yaml:"password_file"`
+	LoginToken     string   `json:"login_token" yaml:"login_token"`
+	LoginTokenFile string   `json:"login_token_file" yaml:"login_token_file"`
+	Domains        []Domain `json:"domains" yaml:"domains"`
+	IPUrl          string   `json:"ip_url" yaml:"ip_url"`
+	IPV6Url        string   `json:"ipv6_url" yaml:"ipv6_url"`
+	Interval       int      `json:"interval" yaml:"interval"`
+	UserAgent      string   `json:"user_agent,omitempty" yaml:"user_agent,omitempty"`
+	Socks5Proxy    string   `json:"socks5_proxy" yaml:"socks5_proxy"`
+	Notify         Notify   `json:"notify" yaml:"notify"`
+	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
+	IPType         string   `json:"ip_type" yaml:"ip_type"`
+	Resolver       string   `json:"resolver" yaml:"resolver"`
+	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
+	DebugInfo      bool     `json:"debug_info" yaml:"debug_info"`
+	RunOnce        bool     `json:"run_once" yaml:"run_once"`
 }
 
 // LoadSettings -- Load settings from config file
@@ -146,5 +153,74 @@ func LoadSettings(configPath string, settings *Settings) error {
 		settings.Interval = 5 * 60
 	}
 
+	return loadSecretsFromFile(settings)
+}
+
+func loadSecretsFromFile(settings *Settings) error {
+	var err error
+
+	if settings.Password, err = readSecretFromFile(
+		settings.PasswordFile,
+		settings.Password,
+	); err != nil {
+		return fmt.Errorf("failed to load password from file: %w", err)
+	}
+
+	if settings.LoginTokenFile, err = readSecretFromFile(
+		settings.LoginTokenFile,
+		settings.LoginToken,
+	); err != nil {
+		return fmt.Errorf("failed to load login token from file: %w", err)
+	}
+
+	if settings.Notify.Slack.BotApiToken, err = readSecretFromFile(
+		settings.Notify.Slack.BotApiTokenFile,
+		settings.Notify.Slack.BotApiToken,
+	); err != nil {
+		return fmt.Errorf("failed to load slack api token from file: %w", err)
+	}
+
+	if settings.Notify.Telegram.BotApiKey, err = readSecretFromFile(
+		settings.Notify.Telegram.BotApiKeyFile,
+		settings.Notify.Telegram.BotApiKey,
+	); err != nil {
+		return fmt.Errorf("failed to load telegram bot api key from file: %w", err)
+	}
+
+	if settings.Notify.Mail.SMTPPassword, err = readSecretFromFile(
+		settings.Notify.Mail.SMTPPasswordFile,
+		settings.Notify.Mail.SMTPPassword,
+	); err != nil {
+		return fmt.Errorf("failed to load smtp password from file: %w", err)
+	}
+
+	if settings.Notify.Discord.BotApiToken, err = readSecretFromFile(
+		settings.Notify.Discord.BotApiTokenFile,
+		settings.Notify.Discord.BotApiToken,
+	); err != nil {
+		return fmt.Errorf("failed to load discord bot api token from file: %w", err)
+	}
+
+	if settings.Notify.Pushover.Token, err = readSecretFromFile(
+		settings.Notify.Pushover.TokenFile,
+		settings.Notify.Pushover.Token,
+	); err != nil {
+		return fmt.Errorf("failed to load pushover token from file: %w", err)
+	}
+
 	return nil
+}
+
+func readSecretFromFile(source, value string) (string, error) {
+	if source == "" {
+		return value, nil
+	}
+
+	content, err := ioutil.ReadFile(source)
+
+	if err != nil {
+		return value, err
+	}
+
+	return strings.TrimSpace(string(content)), nil
 }
