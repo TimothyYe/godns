@@ -166,7 +166,7 @@ func loadSecretsFromFile(settings *Settings) error {
 		return fmt.Errorf("failed to load password from file: %w", err)
 	}
 
-	if settings.LoginTokenFile, err = readSecretFromFile(
+	if settings.LoginToken, err = readSecretFromFile(
 		settings.LoginTokenFile,
 		settings.LoginToken,
 	); err != nil {
