@@ -12,10 +12,7 @@ import (
 )
 
 type DNSClient interface {
-	GetDomainID(string) (int, error)
-	GetDomainRecordID(int, string) (bool, int, error)
-	CreateDomainRecord(int, string) (int, error)
-	UpdateDomainRecord(int, int, string) error
+	UpdateDNSRecordIP(string, string, string) error
 }
 
 type Handler struct {
@@ -74,24 +71,8 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 }
 
 func updateDNS(domain *settings.Domain, ip string, client DNSClient) error {
-	domainID, err := client.GetDomainID(domain.DomainName)
-	if err != nil {
-		return err
-	}
-
 	for _, subdomainName := range domain.SubDomains {
-		if subdomainName == utils.RootDomain {
-			subdomainName = ""
-		}
-		recordExists, recordID, err := client.GetDomainRecordID(domainID, subdomainName)
-		if err != nil {
-			return err
-		}
-		if !recordExists {
-			recordID, err = client.CreateDomainRecord(domainID, subdomainName)
-		}
-
-		err = client.UpdateDomainRecord(domainID, recordID, ip)
+		err := client.UpdateDNSRecordIP(domain.DomainName, subdomainName, ip)
 		if err != nil {
 			return err
 		}

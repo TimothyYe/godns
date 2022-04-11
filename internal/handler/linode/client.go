@@ -4,22 +4,49 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/TimothyYe/godns/internal/utils"
 	"github.com/linode/linodego"
 	log "github.com/sirupsen/logrus"
 )
 
 type LinodeDNSClient struct {
-	apiClient *linodego.Client
+	linodeClient *linodego.Client
 }
 
 func CreateLinodeDNSClient(linodeClient *linodego.Client) DNSClient {
 	dnsClient := LinodeDNSClient{
-		apiClient: linodeClient,
+		linodeClient: linodeClient,
 	}
 	return &dnsClient
 }
 
-func (dnsClient *LinodeDNSClient) GetDomainID(name string) (int, error) {
+func (dnsClient *LinodeDNSClient) UpdateDNSRecordIP(domain string, subdomain string, ip string) error {
+	if subdomain == utils.RootDomain {
+		subdomain = ""
+	}
+
+	domainID, err := dnsClient.getDomainID(domain)
+	if err != nil {
+		return err
+	}
+
+	recordExists, recordID, err := dnsClient.getDomainRecordID(domainID, subdomain)
+	if err != nil {
+		return err
+	}
+	if !recordExists {
+		recordID, err = dnsClient.createDomainRecord(domainID, subdomain)
+	}
+
+	err = dnsClient.updateDomainRecord(domainID, recordID, ip)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (dnsClient *LinodeDNSClient) getDomainID(name string) (int, error) {
 	f := linodego.Filter{}
 	f.AddField(linodego.Eq, "domain", name)
 	fStr, err := f.MarshalJSON()
@@ -28,7 +55,7 @@ func (dnsClient *LinodeDNSClient) GetDomainID(name string) (int, error) {
 	}
 
 	opts := linodego.NewListOptions(0, string(fStr))
-	res, err := dnsClient.apiClient.ListDomains(context.Background(), opts)
+	res, err := dnsClient.linodeClient.ListDomains(context.Background(), opts)
 	if err != nil {
 		return 0, err
 	}
@@ -38,7 +65,7 @@ func (dnsClient *LinodeDNSClient) GetDomainID(name string) (int, error) {
 	return res[0].ID, nil
 }
 
-func (dnsClient *LinodeDNSClient) GetDomainRecordID(domainID int, name string) (bool, int, error) {
+func (dnsClient *LinodeDNSClient) getDomainRecordID(domainID int, name string) (bool, int, error) {
 	f := linodego.Filter{}
 	f.AddField(linodego.Eq, "name", name)
 	fStr, err := f.MarshalJSON()
@@ -46,7 +73,7 @@ func (dnsClient *LinodeDNSClient) GetDomainRecordID(domainID int, name string) (
 		log.Fatal(err)
 	}
 	opts := linodego.NewListOptions(0, string(fStr))
-	res, err := dnsClient.apiClient.ListDomainRecords(context.Background(), domainID, opts)
+	res, err := dnsClient.linodeClient.ListDomainRecords(context.Background(), domainID, opts)
 	if err != nil {
 		return false, 0, err
 	}
@@ -56,23 +83,23 @@ func (dnsClient *LinodeDNSClient) GetDomainRecordID(domainID int, name string) (
 	return true, res[0].ID, nil
 }
 
-func (dnsClient *LinodeDNSClient) CreateDomainRecord(domainID int, name string) (int, error) {
+func (dnsClient *LinodeDNSClient) createDomainRecord(domainID int, name string) (int, error) {
 	opts := &linodego.DomainRecordCreateOptions{
 		Type:   "A",
 		Name:   name,
 		Target: "127.0.0.1",
 		TTLSec: 30,
 	}
-	record, err := dnsClient.apiClient.CreateDomainRecord(context.Background(), domainID, *opts)
+	record, err := dnsClient.linodeClient.CreateDomainRecord(context.Background(), domainID, *opts)
 	if err != nil {
 		return 0, err
 	}
 	return record.ID, nil
 }
 
-func (dnsClient *LinodeDNSClient) UpdateDomainRecord(domainId int, id int, ip string) error {
+func (dnsClient *LinodeDNSClient) updateDomainRecord(domainId int, id int, ip string) error {
 	opts := &linodego.DomainRecordUpdateOptions{Target: ip}
-	_, err := dnsClient.apiClient.UpdateDomainRecord(context.Background(), domainId, id, *opts)
+	_, err := dnsClient.linodeClient.UpdateDomainRecord(context.Background(), domainId, id, *opts)
 	if err != nil {
 		return err
 	}
