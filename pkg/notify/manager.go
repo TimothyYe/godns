@@ -25,11 +25,15 @@ type INotify interface {
 	Send(domain, currentIP string) error
 }
 
+type INotifyManager interface {
+	Send(string, string)
+}
+
 type notifyManager struct {
 	notifications map[string]INotify
 }
 
-func GetNotifyManager(conf *settings.Settings) *notifyManager {
+func GetNotifyManager(conf *settings.Settings) INotifyManager {
 	once.Do(func() {
 		instance = &notifyManager{
 			notifications: initNotifications(conf),

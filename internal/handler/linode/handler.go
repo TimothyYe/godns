@@ -1,6 +1,7 @@
 package linode
 
 import (
+	"fmt"
 	"runtime/debug"
 	"time"
 
@@ -9,24 +10,24 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
+	"github.com/TimothyYe/godns/pkg/notify"
 )
 
 type DNSClient interface {
-	GetDomainID(string) (int, error)
-	GetDomainRecordID(int, string) (bool, int, error)
-	CreateDomainRecord(int, string) (int, error)
-	UpdateDomainRecord(int, int, string) error
+	UpdateDNSRecordIP(string, string, string) error
 }
 
 type Handler struct {
 	Configuration *settings.Settings
 	client        DNSClient
 	cachedIP      string
+	notifyManager notify.INotifyManager
 }
 
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.client = createDNSClient(conf)
+	handler.notifyManager = notify.GetNotifyManager(handler.Configuration)
 }
 
 func createDNSClient(conf *settings.Settings) DNSClient {
@@ -64,7 +65,7 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 		log.Debugf("IP (%s) matches cached IP (%s), skipping", ip, handler.cachedIP)
 		return
 	}
-	err = updateDNS(domain, ip, handler.client)
+	err = handler.updateDNS(domain, ip, handler.client)
 	if err != nil {
 		log.Error(err)
 		return
@@ -73,28 +74,14 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 	log.Debugf("Cached IP address: %s", ip)
 }
 
-func updateDNS(domain *settings.Domain, ip string, client DNSClient) error {
-	domainID, err := client.GetDomainID(domain.DomainName)
-	if err != nil {
-		return err
-	}
-
+func (handler *Handler) updateDNS(domain *settings.Domain, ip string, client DNSClient) error {
 	for _, subdomainName := range domain.SubDomains {
-		if subdomainName == utils.RootDomain {
-			subdomainName = ""
-		}
-		recordExists, recordID, err := client.GetDomainRecordID(domainID, subdomainName)
+		err := client.UpdateDNSRecordIP(domain.DomainName, subdomainName, ip)
 		if err != nil {
 			return err
 		}
-		if !recordExists {
-			recordID, err = client.CreateDomainRecord(domainID, subdomainName)
-		}
-
-		err = client.UpdateDomainRecord(domainID, recordID, ip)
-		if err != nil {
-			return err
-		}
+		successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
+		handler.notifyManager.Send(successMessage, ip)
 	}
 
 	return nil
