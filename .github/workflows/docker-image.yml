@@ -2,8 +2,8 @@ name: Docker Image CI
 
 on:
   push:
-    branches:
-      - 'auto-image-ci'
+    tags:
+      - '*'
 
 jobs:
   build:
