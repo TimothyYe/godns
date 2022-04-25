@@ -1,4 +1,4 @@
-package notify
+package notification
 
 import (
 	"github.com/TimothyYe/godns/internal/settings"
@@ -7,15 +7,15 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-type EmailNotify struct {
+type EmailNotification struct {
 	conf *settings.Settings
 }
 
-func NewEmailNotify(conf *settings.Settings) INotify {
-	return &EmailNotify{conf: conf}
+func NewEmailNotification(conf *settings.Settings) INotification {
+	return &EmailNotification{conf: conf}
 }
 
-func (n *EmailNotify) Send(domain, currentIP string) error {
+func (n *EmailNotification) Send(domain, currentIP string) error {
 	log.Debug("Sending notification to: ", n.conf.Notify.Mail.SendTo)
 	m := gomail.NewMessage()
 

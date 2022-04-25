@@ -1,21 +1,22 @@
-package notify
+package notification
 
 import (
 	"errors"
+
 	"github.com/TimothyYe/godns/internal/settings"
 
 	"github.com/bwmarrin/discordgo"
 )
 
-type DiscordNotify struct {
+type DiscordNotification struct {
 	conf *settings.Settings
 }
 
-func NewDiscordNotify(conf *settings.Settings) INotify {
-	return &DiscordNotify{conf: conf}
+func NewDiscordNotification(conf *settings.Settings) INotification {
+	return &DiscordNotification{conf: conf}
 }
 
-func (n *DiscordNotify) Send(domain, currentIP string) error {
+func (n *DiscordNotification) Send(domain, currentIP string) error {
 
 	if n.conf.Notify.Discord.BotApiToken == "" {
 		return errors.New("bot api token cannot be empty")
