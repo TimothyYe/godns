@@ -10,7 +10,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
-	"github.com/TimothyYe/godns/pkg/notify"
+	"github.com/TimothyYe/godns/pkg/notification"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -111,6 +111,6 @@ func (handler *Handler) update(client *http.Client, hostname string, currentIP s
 	}
 
 	// Send notification
-	notify.GetNotifyManager(handler.Configuration).Send(hostname, currentIP)
+	notification.GetNotificationManager(handler.Configuration).Send(hostname, currentIP)
 	return nil
 }

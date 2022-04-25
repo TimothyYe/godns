@@ -1,4 +1,4 @@
-package notify
+package notification
 
 import (
 	"encoding/json"
@@ -17,15 +17,15 @@ import (
 
 const ReqURL = "https://api.pushover.net/1/messages.json"
 
-type PushoverNotify struct {
+type PushoverNotification struct {
 	conf *settings.Settings
 }
 
-func NewPushoverNotify(conf *settings.Settings) INotify {
-	return &PushoverNotify{conf: conf}
+func NewPushoverNotification(conf *settings.Settings) INotification {
+	return &PushoverNotification{conf: conf}
 }
 
-func (n *PushoverNotify) Send(domain, currentIP string) error {
+func (n *PushoverNotification) Send(domain, currentIP string) error {
 	if n.conf.Notify.Pushover.Token == "" {
 		return errors.New("pushover api token cannot be empty")
 	}

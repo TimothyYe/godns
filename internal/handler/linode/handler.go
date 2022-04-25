@@ -10,7 +10,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
-	"github.com/TimothyYe/godns/pkg/notify"
+	"github.com/TimothyYe/godns/pkg/notification"
 )
 
 type DNSClient interface {
@@ -21,13 +21,13 @@ type Handler struct {
 	Configuration *settings.Settings
 	client        DNSClient
 	cachedIP      string
-	notifyManager notify.INotifyManager
+	notifyManager notification.INotificationManager
 }
 
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.client = createDNSClient(conf)
-	handler.notifyManager = notify.GetNotifyManager(handler.Configuration)
+	handler.notifyManager = notification.GetNotificationManager(handler.Configuration)
 }
 
 func createDNSClient(conf *settings.Settings) DNSClient {

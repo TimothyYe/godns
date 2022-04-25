@@ -13,7 +13,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
-	"github.com/TimothyYe/godns/pkg/notify"
+	"github.com/TimothyYe/godns/pkg/notification"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -115,7 +115,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 						lastIP = handler.updateRecord(rec, currentIP)
 
 						// Send notification
-						notify.GetNotifyManager(handler.Configuration).Send(rec.Name, currentIP)
+						notification.GetNotificationManager(handler.Configuration).Send(rec.Name, currentIP)
 					} else {
 						log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
 					}

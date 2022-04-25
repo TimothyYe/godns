@@ -14,7 +14,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
-	"github.com/TimothyYe/godns/pkg/notify"
+	"github.com/TimothyYe/godns/pkg/notification"
 
 	log "github.com/sirupsen/logrus"
 
@@ -98,7 +98,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 					handler.UpdateIP(domainID, subDomainID, subDomain, currentIP)
 
 					// Send notification
-					notify.GetNotifyManager(handler.Configuration).Send(fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
+					notification.GetNotificationManager(handler.Configuration).Send(fmt.Sprintf("%s.%s", subDomain, domain.DomainName), currentIP)
 				} else {
 					log.Infof("%s.%s Current IP is same as domain IP, no need to update...", subDomain, domain.DomainName)
 				}

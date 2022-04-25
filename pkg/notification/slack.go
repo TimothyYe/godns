@@ -1,47 +1,51 @@
-package notify
+package notification
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/TimothyYe/godns/internal/settings"
-	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+
+	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 )
 
-type TelegramNotify struct {
+type SlackNotification struct {
 	conf *settings.Settings
 }
 
-func NewTelegramNotify(conf *settings.Settings) INotify {
-	return &TelegramNotify{conf: conf}
+func NewSlackNotification(conf *settings.Settings) INotification {
+	return &SlackNotification{conf: conf}
 }
 
-func (n *TelegramNotify) Send(domain, currentIP string) error {
-	if n.conf.Notify.Telegram.BotApiKey == "" {
-		return errors.New("bot api key cannot be empty")
+func (n *SlackNotification) Send(domain, currentIP string) error {
+	if n.conf.Notify.Slack.BotApiToken == "" {
+		return errors.New("bot api token cannot be empty")
 	}
 
-	if n.conf.Notify.Telegram.ChatId == "" {
-		return errors.New("chat id cannot be empty")
+	if n.conf.Notify.Slack.Channel == "" {
+		return errors.New("channel cannot be empty")
 	}
-
-	client := utils.GetHttpClient(n.conf, n.conf.Notify.Telegram.UseProxy)
-	tpl := n.conf.Notify.Telegram.MsgTemplate
+	client := utils.GetHttpClient(n.conf, n.conf.Notify.Slack.UseProxy)
+	tpl := n.conf.Notify.Slack.MsgTemplate
 	if tpl == "" {
-		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
+		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* is updated"
 	}
 
 	msg := buildTemplate(currentIP, domain, tpl)
-	reqURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
-		n.conf.Notify.Telegram.BotApiKey,
-		n.conf.Notify.Telegram.ChatId,
-		msg)
+
 	var response *http.Response
 	var err error
 
-	response, err = client.Get(reqURL)
+	formData := url.Values{
+		"token":   {n.conf.Notify.Slack.BotApiToken},
+		"channel": {n.conf.Notify.Slack.Channel},
+		"text":    {msg},
+	}
+
+	response, err = client.PostForm("https://slack.com/api/chat.postMessage", formData)
 
 	if err != nil {
 		return err
