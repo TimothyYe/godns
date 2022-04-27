@@ -116,13 +116,7 @@ func GetIPFromInterface(configuration *settings.Settings) (string, error) {
 			continue
 		}
 
-		if !(ip.IsGlobalUnicast() &&
-			!(ip.IsUnspecified() ||
-				ip.IsMulticast() ||
-				ip.IsLoopback() ||
-				ip.IsLinkLocalUnicast() ||
-				ip.IsLinkLocalMulticast() ||
-				ip.IsInterfaceLocalMulticast())) {
+		if (ip.IsPrivate()) {
 			continue
 		}
 
