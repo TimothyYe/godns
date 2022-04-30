@@ -116,7 +116,7 @@ func GetIPFromInterface(configuration *settings.Settings) (string, error) {
 			continue
 		}
 
-		if (ip.IsPrivate()) {
+		if ip.IsPrivate() {
 			continue
 		}
 
@@ -170,15 +170,21 @@ func GetCurrentIP(configuration *settings.Settings) (string, error) {
 // GetIPOnline gets public IP from internet
 func GetIPOnline(configuration *settings.Settings) (string, error) {
 	client := &http.Client{}
-
-	var response *http.Response
-	var err error
+	var reqURL string
 
 	if configuration.IPType == "" || strings.ToUpper(configuration.IPType) == IPV4 {
-		response, err = client.Get(configuration.IPUrl)
+		reqURL = configuration.IPUrl
 	} else {
-		response, err = client.Get(configuration.IPV6Url)
+		reqURL = configuration.IPV6Url
 	}
+
+	req, _ := http.NewRequest("GET", reqURL, nil)
+
+	if configuration.UserAgent != "" {
+		req.Header.Set("User-Agent", configuration.UserAgent)
+	}
+
+	response, err := client.Do(req)
 
 	if err != nil {
 		log.Error("Cannot get IP:", err)
