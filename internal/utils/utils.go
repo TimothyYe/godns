@@ -179,7 +179,11 @@ func GetIPOnline(configuration *settings.Settings) (string, error) {
 	}
 
 	req, _ := http.NewRequest("GET", reqURL, nil)
-	req.Header.Set("User-Agent", configuration.UserAgent)
+
+	if configuration.UserAgent != "" {
+		req.Header.Set("User-Agent", configuration.UserAgent)
+	}
+
 	response, err := client.Do(req)
 
 	if err != nil {
