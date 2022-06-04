@@ -16,21 +16,21 @@ import (
 )
 
 var (
-	// NoIPUrl the API address for NoIP
+	// NoIPUrl the API address for NoIP.
 	NoIPUrl = "https://%s:%s@dynupdate.no-ip.com/nic/update?hostname=%s&%s"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -57,7 +57,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		}
 
 		log.Debug("currentIP is:", currentIP)
-		client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+		client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 
 		var ip string
 		if strings.ToUpper(handler.Configuration.IPType) == utils.IPV4 {

@@ -21,17 +21,17 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
-// Handler struct definition
+// Handler struct definition.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -83,8 +83,6 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 			if currentIP == lastIP {
 				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
-				lastIP = currentIP
-
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
 				if subDomainID == "" || ip == "" {
@@ -107,7 +105,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	}
 }
 
-// GenerateHeader generates the request header for DNSPod API
+// GenerateHeader generates the request header for DNSPod API.
 func (handler *Handler) GenerateHeader(content url.Values) url.Values {
 	header := url.Values{}
 	if handler.Configuration.LoginToken != "" {
@@ -118,16 +116,14 @@ func (handler *Handler) GenerateHeader(content url.Values) url.Values {
 	header.Add("lang", "en")
 	header.Add("error_on_empty", "no")
 
-	if content != nil {
-		for k := range content {
-			header.Add(k, content.Get(k))
-		}
+	for k := range content {
+		header.Add(k, content.Get(k))
 	}
 
 	return header
 }
 
-// GetDomain returns specific domain by name
+// GetDomain returns specific domain by name.
 func (handler *Handler) GetDomain(name string) int64 {
 
 	var ret int64
@@ -176,7 +172,7 @@ func (handler *Handler) GetDomain(name string) int64 {
 	return ret
 }
 
-// GetSubDomain returns subdomain by domain id
+// GetSubDomain returns subdomain by domain id.
 func (handler *Handler) GetSubDomain(domainID int64, name string) (string, string) {
 	var ret, ip string
 	value := url.Values{}
@@ -229,7 +225,7 @@ func (handler *Handler) GetSubDomain(domainID int64, name string) (string, strin
 	return ret, ip
 }
 
-// UpdateIP update subdomain with current IP
+// UpdateIP update subdomain with current IP.
 func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainName string, ip string) {
 	value := url.Values{}
 	value.Add("domain_id", strconv.FormatInt(domainID, 10))
@@ -270,9 +266,9 @@ func (handler *Handler) UpdateIP(domainID int64, subDomainID string, subDomainNa
 
 }
 
-// PostData post data and invoke DNSPod API
+// PostData post data and invoke DNSPod API.
 func (handler *Handler) PostData(url string, content url.Values) (string, error) {
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 
 	if client == nil {
 		return "", errors.New("failed to create HTTP client")

@@ -16,21 +16,21 @@ import (
 )
 
 var (
-	// Dynv6Url the API address for Duck DNS
-	Dynv6Url = "https://dynv6.com/api/update?hostname=%s&token=%s&%s"
+	// Dynv6URL the API address for Duck DNS.
+	Dynv6URL = "https://dynv6.com/api/update?hostname=%s&token=%s&%s"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -57,7 +57,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		}
 
 		log.Debug("currentIP is:", currentIP)
-		client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+		client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 
 		for _, subDomain := range domain.SubDomains {
 			hostname := subDomain + "." + domain.DomainName
@@ -93,7 +93,7 @@ func (handler *Handler) update(client *http.Client, hostname string, currentIP s
 	}
 
 	// update IP with HTTP GET request
-	url := fmt.Sprintf(Dynv6Url, hostname, handler.Configuration.LoginToken, ip)
+	url := fmt.Sprintf(Dynv6URL, hostname, handler.Configuration.LoginToken, ip)
 	log.Debug("Update url: ", url)
 	resp, err := client.Get(url)
 	if err != nil {

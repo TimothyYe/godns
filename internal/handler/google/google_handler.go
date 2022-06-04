@@ -16,21 +16,21 @@ import (
 )
 
 var (
-	// GoogleURL the API address for Google Domains
+	// GoogleURL the API address for Google Domains.
 	GoogleURL = "https://%s:%s@domains.google.com/nic/update?hostname=%s.%s&myip=%s"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -78,9 +78,9 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 }
 
-// UpdateIP update subdomain with current IP
+// UpdateIP update subdomain with current IP.
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 	resp, err := client.Get(fmt.Sprintf(GoogleURL,
 		handler.Configuration.Email,
 		handler.Configuration.Password,

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -21,7 +22,7 @@ import (
 )
 
 var (
-	// Logo for GoDNS
+	// Logo for GoDNS.
 	Logo = `
 
  ██████╗  ██████╗ ██████╗ ███╗   ██╗███████╗
@@ -38,43 +39,43 @@ https://github.com/TimothyYe/godns
 )
 
 const (
-	// PanicMax is the max allowed panic times
+	// PanicMax is the max allowed panic times.
 	PanicMax = 5
-	// DNSPOD for dnspod.cn
+	// DNSPOD for dnspod.cn.
 	DNSPOD = "DNSPod"
-	// HE for he.net
+	// HE for he.net.
 	HE = "HE"
-	// CLOUDFLARE for cloudflare.com
+	// CLOUDFLARE for cloudflare.com.
 	CLOUDFLARE = "Cloudflare"
-	// ALIDNS for AliDNS
+	// ALIDNS for AliDNS.
 	ALIDNS = "AliDNS"
-	// GOOGLE for Google Domains
+	// GOOGLE for Google Domains.
 	GOOGLE = "Google"
-	// DUCK for Duck DNS
+	// DUCK for Duck DNS.
 	DUCK = "DuckDNS"
-	// DREAMHOST for Dreamhost
+	// DREAMHOST for Dreamhost.
 	DREAMHOST = "Dreamhost"
-	// DYNV6 for Dynv6
+	// DYNV6 for Dynv6.
 	DYNV6 = "Dynv6"
-	// NOIP for NoIP
+	// NOIP for NoIP.
 	NOIP = "NoIP"
-	// SCALEWAY for Scaleway
+	// SCALEWAY for Scaleway.
 	SCALEWAY = "Scaleway"
-	// LINODE for Linode
+	// LINODE for Linode.
 	LINODE = "Linode"
-	// IPV4 for IPV4 mode
+	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
-	// IPV6 for IPV6 mode
+	// IPV6 for IPV6 mode.
 	IPV6 = "IPV6"
-	// IPTypeA
+	// IPTypeA.
 	IPTypeA = "A"
-	// IPTypeAAAA
+	// IPTypeAAAA.
 	IPTypeAAAA = "AAAA"
-	// RootDomain
+	// RootDomain.
 	RootDomain = "@"
-	// Regex pattern to match IPV4 address
+	// Regex pattern to match IPV4 address.
 	IPv4Pattern = `((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)`
-	// Regex pattern to match IPV6 address
+	// Regex pattern to match IPV6 address.
 	IPv6Pattern = `(([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|` +
 		`(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|` +
 		`(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|` +
@@ -83,14 +84,14 @@ const (
 		`(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|` +
 		`(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|` +
 		`(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))`
-	// Regex pattern to match IPV4 and IPV6 address
+	// Regex pattern to match IPV4 and IPV6 address.
 	IPPattern = "(" + IPv4Pattern + ")|(" + IPv6Pattern + ")"
 
-	// defaultTimeout is the default timeout value, in seconds
+	// defaultTimeout is the default timeout value, in seconds.
 	defaultTimeout = 10
 )
 
-//GetIPFromInterface gets IP address from the specific interface
+//GetIPFromInterface gets IP address from the specific interface.
 func GetIPFromInterface(configuration *settings.Settings) (string, error) {
 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
 	if err != nil {
@@ -141,7 +142,7 @@ func isIPv4(ip string) bool {
 	return strings.Count(ip, ":") < 2
 }
 
-//GetCurrentIP gets an IP from either internet or specific interface, depending on configuration
+//GetCurrentIP gets an IP from either internet or specific interface, depending on configuration.
 func GetCurrentIP(configuration *settings.Settings) (string, error) {
 	var err error
 	var ip string
@@ -167,7 +168,7 @@ func GetCurrentIP(configuration *settings.Settings) (string, error) {
 	return "", err
 }
 
-// GetIPOnline gets public IP from internet
+// GetIPOnline gets public IP from internet.
 func GetIPOnline(configuration *settings.Settings) (string, error) {
 	client := &http.Client{}
 	var reqURL string
@@ -207,7 +208,7 @@ func GetIPOnline(configuration *settings.Settings) (string, error) {
 	return onlineIP, nil
 }
 
-// CheckSettings check the format of settings
+// CheckSettings check the format of settings.
 func CheckSettings(config *settings.Settings) error {
 	switch config.Provider {
 	case DNSPOD:
@@ -273,8 +274,8 @@ func CheckSettings(config *settings.Settings) error {
 	return nil
 }
 
-// GetHttpClient creates the HTTP client and return it
-func GetHttpClient(conf *settings.Settings, useProxy bool) *http.Client {
+// GetHTTPClient creates the HTTP client and return it.
+func GetHTTPClient(conf *settings.Settings, useProxy bool) *http.Client {
 	client := &http.Client{
 		Timeout: time.Second * defaultTimeout,
 	}
@@ -287,9 +288,13 @@ func GetHttpClient(conf *settings.Settings, useProxy bool) *http.Client {
 			return nil
 		}
 
+		dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
+			return dialer.Dial(network, address)
+		}
+
 		httpTransport := &http.Transport{}
 		client.Transport = httpTransport
-		httpTransport.Dial = dialer.Dial
+		httpTransport.DialContext = dialContext
 	}
 
 	return client

@@ -19,21 +19,21 @@ import (
 )
 
 var (
-	// DreamhostURL the API address for dreamhost.com
+	// DreamhostURL the API address for dreamhost.com.
 	DreamhostURL = "https://api.dreamhost.com"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -82,7 +82,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 }
 
-// UpdateIP update subdomain with current IP
+// UpdateIP update subdomain with current IP.
 func (handler *Handler) UpdateIP(hostname, currentIP, lastIP string) {
 
 	handler.updateDNS(lastIP, currentIP, hostname, "remove")
@@ -119,7 +119,7 @@ func (handler *Handler) updateDNS(dns, ip, hostname, action string) {
 		log.Fatalf("Unknown action %s", action)
 	}
 
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 	req, _ := http.NewRequest("POST", DreamhostURL, strings.NewReader(values.Encode()))
 	req.SetBasicAuth(handler.Configuration.Email, handler.Configuration.Password)
 

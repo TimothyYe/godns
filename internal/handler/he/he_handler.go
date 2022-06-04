@@ -17,21 +17,21 @@ import (
 )
 
 var (
-	// HEUrl the API address for he.net
+	// HEUrl the API address for he.net.
 	HEUrl = "https://dyn.dns.he.net/nic/update"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -89,7 +89,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 }
 
-// UpdateIP update subdomain with current IP
+// UpdateIP update subdomain with current IP.
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	values := url.Values{}
 
@@ -101,7 +101,7 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
 	values.Add("password", handler.Configuration.Password)
 	values.Add("myip", currentIP)
 
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 
 	req, _ := http.NewRequest("POST", HEUrl, strings.NewReader(values.Encode()))
 	resp, err := client.Do(req)

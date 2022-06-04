@@ -15,21 +15,21 @@ import (
 )
 
 var (
-	// DuckUrl the API address for Duck DNS
-	DuckUrl = "https://www.duckdns.org/update?domains=%s&token=%s&%s"
+	// DuckURL the API address for Duck DNS.
+	DuckURL = "https://www.duckdns.org/update?domains=%s&token=%s&%s"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -56,7 +56,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		}
 
 		log.Debug("currentIP is:", currentIP)
-		client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+		client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 		var ip string
 
 		if strings.ToUpper(handler.Configuration.IPType) == utils.IPV4 {
@@ -78,7 +78,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
 				// update IP with HTTP GET request
-				resp, err := client.Get(fmt.Sprintf(DuckUrl, subDomain, handler.Configuration.LoginToken, ip))
+				resp, err := client.Get(fmt.Sprintf(DuckURL, subDomain, handler.Configuration.LoginToken, ip))
 				if err != nil {
 					// handle error
 					log.Error("Failed to update sub domain:", subDomain)

@@ -18,25 +18,25 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Handler struct definition
+// Handler struct definition.
 type Handler struct {
 	Configuration *settings.Settings
 	API           string
 }
 
-// DNSRecordResponse struct
+// DNSRecordResponse struct.
 type DNSRecordResponse struct {
 	Records []DNSRecord `json:"result"`
 	Success bool        `json:"success"`
 }
 
-// DNSRecordUpdateResponse struct
+// DNSRecordUpdateResponse struct.
 type DNSRecordUpdateResponse struct {
 	Record  DNSRecord `json:"result"`
 	Success bool      `json:"success"`
 }
 
-// DNSRecord for Cloudflare API
+// DNSRecord for Cloudflare API.
 type DNSRecord struct {
 	ID      string `json:"id"`
 	IP      string `json:"content"`
@@ -47,30 +47,30 @@ type DNSRecord struct {
 	TTL     int32  `json:"ttl"`
 }
 
-// SetIP updates DNSRecord.IP
+// SetIP updates DNSRecord.IP.
 func (r *DNSRecord) SetIP(ip string) {
 	r.IP = ip
 }
 
-// ZoneResponse is a wrapper for Zones
+// ZoneResponse is a wrapper for Zones.
 type ZoneResponse struct {
 	Zones   []Zone `json:"result"`
 	Success bool   `json:"success"`
 }
 
-// Zone object with id and name
+// Zone object with id and name.
 type Zone struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.API = "https://api.cloudflare.com/client/v4"
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -127,7 +127,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 	}
 }
 
-// Check if record is present in domain conf
+// Check if record is present in domain conf.
 func recordTracked(domain *settings.Domain, record *DNSRecord) bool {
 	for _, subDomain := range domain.SubDomains {
 		sd := fmt.Sprintf("%s.%s", subDomain, domain.DomainName)
@@ -141,9 +141,9 @@ func recordTracked(domain *settings.Domain, record *DNSRecord) bool {
 	return false
 }
 
-// Create a new request with auth in place and optional proxy
+// Create a new request with auth in place and optional proxy.
 func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 	if client == nil {
 		log.Info("cannot create HTTP client")
 	}
@@ -161,7 +161,7 @@ func (handler *Handler) newRequest(method, url string, body io.Reader) (*http.Re
 	return req, client
 }
 
-// Find the correct zone via domain name
+// Find the correct zone via domain name.
 func (handler *Handler) getZone(domain string) string {
 
 	var z ZoneResponse
@@ -180,7 +180,7 @@ func (handler *Handler) getZone(domain string) string {
 		log.Debugf("Response body: %+v", string(body))
 		return ""
 	}
-	if z.Success != true {
+	if !z.Success {
 		log.Infof("Response failed: %+v", string(body))
 		return ""
 	}
@@ -193,7 +193,7 @@ func (handler *Handler) getZone(domain string) string {
 	return ""
 }
 
-// Get all DNS A records for a zone
+// Get all DNS A records for a zone.
 func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 
 	var empty []DNSRecord
@@ -221,7 +221,7 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 		log.Debugf("Response body: %+v", string(body))
 		return empty
 	}
-	if r.Success != true {
+	if !r.Success {
 		body, _ := ioutil.ReadAll(resp.Body)
 		log.Infof("Response failed: %+v", string(body))
 		return empty
@@ -230,7 +230,7 @@ func (handler *Handler) getDNSRecords(zoneID string) []DNSRecord {
 	return r.Records
 }
 
-// Update DNS A Record with new IP
+// Update DNS A Record with new IP.
 func (handler *Handler) updateRecord(record DNSRecord, newIP string) string {
 
 	var r DNSRecordUpdateResponse
@@ -255,7 +255,7 @@ func (handler *Handler) updateRecord(record DNSRecord, newIP string) string {
 		log.Debugf("Response body: %+v", string(body))
 		return ""
 	}
-	if r.Success != true {
+	if !r.Success {
 		body, _ := ioutil.ReadAll(resp.Body)
 		log.Infof("Response failed: %+v", string(body))
 	} else {
