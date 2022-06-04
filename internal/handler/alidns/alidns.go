@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/TimothyYe/godns/internal/utils"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -17,9 +16,11 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/TimothyYe/godns/internal/utils"
 )
 
-// AliDNS token
+// AliDNS token.
 type AliDNS struct {
 	AccessKeyID     string
 	AccessKeySecret string
@@ -53,7 +54,7 @@ type domainRecords struct {
 	Record []DomainRecord
 }
 
-// DomainRecord struct
+// DomainRecord struct.
 type DomainRecord struct {
 	DomainName string
 	RecordID   string `json:"RecordId"`
@@ -79,7 +80,7 @@ func getHTTPBody(url string) ([]byte, error) {
 	return nil, fmt.Errorf("status %d, Error:%s", resp.StatusCode, body)
 }
 
-// NewAliDNS function creates instance of AliDNS and return
+// NewAliDNS function creates instance of AliDNS and return.
 func NewAliDNS(key, secret, ipType string) *AliDNS {
 	once.Do(func() {
 		instance = &AliDNS{
@@ -91,7 +92,7 @@ func NewAliDNS(key, secret, ipType string) *AliDNS {
 	return instance
 }
 
-// GetDomainRecords gets all the doamin records according to input subdomain key
+// GetDomainRecords gets all the doamin records according to input subdomain key.
 func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 	resp := &domainRecordsResp{}
 	parms := map[string]string{
@@ -119,7 +120,7 @@ func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 	return nil
 }
 
-// UpdateDomainRecord updates domain record
+// UpdateDomainRecord updates domain record.
 func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 	parms := map[string]string{
 		"Action":   "UpdateDomainRecord",

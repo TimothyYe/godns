@@ -12,17 +12,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -70,7 +70,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 				log.Infof("%s.%s - Start to update record IP...", subDomain, domain.DomainName)
 				records := aliDNS.GetDomainRecords(domain.DomainName, subDomain)
-				if records == nil || len(records) == 0 {
+				if len(records) == 0 {
 					log.Infof("Cannot get subdomain %s from AliDNS.", subDomain)
 					continue
 				}

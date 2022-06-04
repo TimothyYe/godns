@@ -57,7 +57,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		}
 
 		log.Debug("currentIP is:", currentIP)
-		client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+		client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 
 		for _, subDomain := range domain.SubDomains {
 			hostname := subDomain + "." + domain.DomainName

@@ -14,7 +14,7 @@ import (
 	"github.com/miekg/dns"
 )
 
-// DNSResolver represents a dns resolver
+// DNSResolver represents a dns resolver.
 type DNSResolver struct {
 	Servers    []string
 	RetryTimes int

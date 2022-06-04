@@ -18,7 +18,7 @@ func NewDiscordNotification(conf *settings.Settings) INotification {
 
 func (n *DiscordNotification) Send(domain, currentIP string) error {
 
-	if n.conf.Notify.Discord.BotApiToken == "" {
+	if n.conf.Notify.Discord.BotAPIToken == "" {
 		return errors.New("bot api token cannot be empty")
 	}
 
@@ -33,7 +33,7 @@ func (n *DiscordNotification) Send(domain, currentIP string) error {
 	msg := buildTemplate(currentIP, domain, tpl)
 
 	//Create discordgo client
-	d, err := discordgo.New("Bot " + n.conf.Notify.Discord.BotApiToken)
+	d, err := discordgo.New("Bot " + n.conf.Notify.Discord.BotAPIToken)
 	if err != nil {
 		return errors.New("error creating discord bot")
 	}

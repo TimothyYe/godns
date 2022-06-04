@@ -21,33 +21,33 @@ const (
 	extYML  = "yml"
 )
 
-// Domain struct
+// Domain struct.
 type Domain struct {
 	DomainName string   `json:"domain_name" yaml:"domain_name"`
 	SubDomains []string `json:"sub_domains" yaml:"sub_domains"`
 }
 
-// SlackNotify struct for Slack notification
+// SlackNotify struct for Slack notification.
 type SlackNotify struct {
 	Enabled         bool   `json:"enabled" yaml:"enabled"`
-	BotApiToken     string `json:"bot_api_token" yaml:"bot_api_token"`
-	BotApiTokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
+	BotAPIToken     string `json:"bot_api_token" yaml:"bot_api_token"`
+	BotAPITokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
 	Channel         string `json:"channel" yaml:"channel"`
 	MsgTemplate     string `json:"message_template" yaml:"message_template"`
 	UseProxy        bool   `json:"use_proxy" yaml:"use_proxy"`
 }
 
-// TelegramNotify struct for telegram notification
+// TelegramNotify struct for telegram notification.
 type TelegramNotify struct {
 	Enabled       bool   `json:"enabled" yaml:"enabled"`
-	BotApiKey     string `json:"bot_api_key" yaml:"bot_api_key"`
-	BotApiKeyFile string `json:"bot_api_key_file" yaml:"bot_api_key_file"`
-	ChatId        string `json:"chat_id" yaml:"chat_id"`
+	BotAPIKey     string `json:"bot_api_key" yaml:"bot_api_key"`
+	BotAPIKeyFile string `json:"bot_api_key_file" yaml:"bot_api_key_file"`
+	ChatID        string `json:"chat_id" yaml:"chat_id"`
 	MsgTemplate   string `json:"message_template" yaml:"message_template"`
 	UseProxy      bool   `json:"use_proxy" yaml:"use_proxy"`
 }
 
-// MailNotify struct for SMTP notification
+// MailNotify struct for SMTP notification.
 type MailNotify struct {
 	Enabled          bool   `json:"enabled" yaml:"enabled"`
 	SMTPServer       string `json:"smtp_server" yaml:"smtp_server"`
@@ -60,8 +60,8 @@ type MailNotify struct {
 
 type DiscordNotify struct {
 	Enabled         bool   `json:"enabled" yaml:"enabled"`
-	BotApiToken     string `json:"bot_api_token" yaml:"bot_api_token"`
-	BotApiTokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
+	BotAPIToken     string `json:"bot_api_token" yaml:"bot_api_token"`
+	BotAPITokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
 	Channel         string `json:"channel" yaml:"channel"`
 	MsgTemplate     string `json:"message_template" yaml:"message_template"`
 }
@@ -75,10 +75,10 @@ type PushoverNotify struct {
 	Device      string `json:"device" yaml:"device"`
 	Title       string `json:"title" yaml:"title"`
 	Priority    int    `json:"priority" yaml:"priority"`
-	Html        int    `json:"html" yaml:"html"`
+	HTML        int    `json:"html" yaml:"html"`
 }
 
-// Notify struct
+// Notify struct.
 type Notify struct {
 	Telegram TelegramNotify `json:"telegram" yaml:"telegram"`
 	Mail     MailNotify     `json:"mail" yaml:"mail"`
@@ -87,7 +87,7 @@ type Notify struct {
 	Pushover PushoverNotify `json:"pushover" yaml:"pushover"`
 }
 
-// Settings struct
+// Settings struct.
 type Settings struct {
 	Provider       string   `json:"provider" yaml:"provider"`
 	Email          string   `json:"email" yaml:"email"`
@@ -110,7 +110,7 @@ type Settings struct {
 	RunOnce        bool     `json:"run_once" yaml:"run_once"`
 }
 
-// LoadSettings -- Load settings from config file
+// LoadSettings -- Load settings from config file.
 func LoadSettings(configPath string, settings *Settings) error {
 	// get config file extension
 	fileExt := strings.ToLower(filepath.Ext(configPath))
@@ -173,16 +173,16 @@ func loadSecretsFromFile(settings *Settings) error {
 		return fmt.Errorf("failed to load login token from file: %w", err)
 	}
 
-	if settings.Notify.Slack.BotApiToken, err = readSecretFromFile(
-		settings.Notify.Slack.BotApiTokenFile,
-		settings.Notify.Slack.BotApiToken,
+	if settings.Notify.Slack.BotAPIToken, err = readSecretFromFile(
+		settings.Notify.Slack.BotAPITokenFile,
+		settings.Notify.Slack.BotAPIToken,
 	); err != nil {
 		return fmt.Errorf("failed to load slack api token from file: %w", err)
 	}
 
-	if settings.Notify.Telegram.BotApiKey, err = readSecretFromFile(
-		settings.Notify.Telegram.BotApiKeyFile,
-		settings.Notify.Telegram.BotApiKey,
+	if settings.Notify.Telegram.BotAPIKey, err = readSecretFromFile(
+		settings.Notify.Telegram.BotAPIKeyFile,
+		settings.Notify.Telegram.BotAPIKey,
 	); err != nil {
 		return fmt.Errorf("failed to load telegram bot api key from file: %w", err)
 	}
@@ -194,9 +194,9 @@ func loadSecretsFromFile(settings *Settings) error {
 		return fmt.Errorf("failed to load smtp password from file: %w", err)
 	}
 
-	if settings.Notify.Discord.BotApiToken, err = readSecretFromFile(
-		settings.Notify.Discord.BotApiTokenFile,
-		settings.Notify.Discord.BotApiToken,
+	if settings.Notify.Discord.BotAPIToken, err = readSecretFromFile(
+		settings.Notify.Discord.BotAPITokenFile,
+		settings.Notify.Discord.BotAPIToken,
 	); err != nil {
 		return fmt.Errorf("failed to load discord bot api token from file: %w", err)
 	}

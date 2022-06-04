@@ -80,7 +80,7 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 // UpdateIP update subdomain with current IP
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) {
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 	resp, err := client.Get(fmt.Sprintf(GoogleURL,
 		handler.Configuration.Email,
 		handler.Configuration.Password,

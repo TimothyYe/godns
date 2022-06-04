@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"github.com/TimothyYe/godns/internal/settings"
 	"testing"
+
+	"github.com/TimothyYe/godns/internal/settings"
 )
 
 func TestGetCurrentIP(t *testing.T) {

@@ -20,15 +20,15 @@ func NewTelegramNotification(conf *settings.Settings) INotification {
 }
 
 func (n *TelegramNotification) Send(domain, currentIP string) error {
-	if n.conf.Notify.Telegram.BotApiKey == "" {
+	if n.conf.Notify.Telegram.BotAPIKey == "" {
 		return errors.New("bot api key cannot be empty")
 	}
 
-	if n.conf.Notify.Telegram.ChatId == "" {
+	if n.conf.Notify.Telegram.ChatID == "" {
 		return errors.New("chat id cannot be empty")
 	}
 
-	client := utils.GetHttpClient(n.conf, n.conf.Notify.Telegram.UseProxy)
+	client := utils.GetHTTPClient(n.conf, n.conf.Notify.Telegram.UseProxy)
 	tpl := n.conf.Notify.Telegram.MsgTemplate
 	if tpl == "" {
 		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
@@ -36,8 +36,8 @@ func (n *TelegramNotification) Send(domain, currentIP string) error {
 
 	msg := buildTemplate(currentIP, domain, tpl)
 	reqURL := fmt.Sprintf("https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=Markdown&text=%s",
-		n.conf.Notify.Telegram.BotApiKey,
-		n.conf.Notify.Telegram.ChatId,
+		n.conf.Notify.Telegram.BotAPIKey,
+		n.conf.Notify.Telegram.ChatID,
 		msg)
 	var response *http.Response
 	var err error
