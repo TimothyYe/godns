@@ -66,8 +66,6 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 			if currentIP == lastIP {
 				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
-				lastIP = currentIP
-
 				log.Infof("%s.%s - Start to update record IP...", subDomain, domain.DomainName)
 				records := aliDNS.GetDomainRecords(domain.DomainName, subDomain)
 				if len(records) == 0 {

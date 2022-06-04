@@ -1,7 +1,9 @@
 package linode
 
 import (
+	"context"
 	"errors"
+	"net"
 	"net/http"
 	"time"
 
@@ -42,7 +44,12 @@ func applyProxy(proxyAddress string, transport *http.Transport) (*http.Transport
 		return transport, err
 	}
 	log.Infof("Connected to proxy : %s", proxyAddress)
-	transport.Dial = dialer.Dial
+
+	dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
+		return dialer.Dial(network, address)
+	}
+
+	transport.DialContext = dialContext
 	return transport, nil
 }
 

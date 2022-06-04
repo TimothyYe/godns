@@ -83,8 +83,6 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 			if currentIP == lastIP {
 				log.Infof("IP is the same as cached one (%s). Skip update.", currentIP)
 			} else {
-				lastIP = currentIP
-
 				subDomainID, ip := handler.GetSubDomain(domainID, subDomain)
 
 				if subDomainID == "" || ip == "" {

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -287,9 +288,13 @@ func GetHTTPClient(conf *settings.Settings, useProxy bool) *http.Client {
 			return nil
 		}
 
+		dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
+			return dialer.Dial(network, address)
+		}
+
 		httpTransport := &http.Transport{}
 		client.Transport = httpTransport
-		httpTransport.Dial = dialer.Dial
+		httpTransport.DialContext = dialContext
 	}
 
 	return client
