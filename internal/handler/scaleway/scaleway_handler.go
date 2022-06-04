@@ -19,50 +19,50 @@ import (
 )
 
 var (
-	ScalewayUrl = "https://api.scaleway.com/domain/v2beta1/dns-zones/%s/records"
+	ScalewayURL = "https://api.scaleway.com/domain/v2beta1/dns-zones/%s/records"
 )
 
-// Handler struct
+// Handler struct.
 type Handler struct {
 	Configuration *settings.Settings
 }
 
-// Record for Scaleway API
+// Record for Scaleway API.
 type Record struct {
 	Name    string `json:"name"`
 	Data    string `json:"data"`
-	Ttl     int    `json:"ttl"`
+	TTL     int    `json:"ttl"`
 	Comment string `json:"comment"`
 }
 
-// IdFields to filter DNS records for Scaleway API
-type IdFields struct {
+// IDFields to filter DNS records for Scaleway API.
+type IDFields struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 }
 
-// SetRecord for Scaleway API
+// SetRecord for Scaleway API.
 type SetRecord struct {
-	IdFields IdFields `json:"id_fields"`
+	IDFields IDFields `json:"id_fields"`
 	Records  []Record `json:"records"`
 }
 
-// DNSChange for Scaleway API
+// DNSChange for Scaleway API.
 type DNSChange struct {
 	Set SetRecord `json:"set"`
 }
 
-// DNSUpdateRequest for Scaleway API
+// DNSUpdateRequest for Scaleway API.
 type DNSUpdateRequest struct {
 	Changes []DNSChange `json:"changes"`
 }
 
-// SetConfiguration pass dns settings and store it to handler instance
+// SetConfiguration pass dns settings and store it to handler instance.
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 }
 
-// DomainLoop the main logic loop
+// DomainLoop the main logic loop.
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
 	defer func() {
 		if err := recover(); err != nil {
@@ -129,7 +129,7 @@ func (handler *Handler) GetRecordType() (string, error) {
 	}
 }
 
-// UpdateIP update subdomain with current IP
+// UpdateIP update subdomain with current IP.
 func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) error {
 	recordType, err := handler.GetRecordType()
 	if err != nil {
@@ -137,7 +137,7 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) error {
 	}
 
 	reqBody := DNSUpdateRequest{Changes: []DNSChange{{SetRecord{
-		IdFields: IdFields{
+		IDFields: IDFields{
 			Name: subDomain,
 			Type: recordType,
 		},
@@ -145,7 +145,7 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) error {
 			{
 				Name:    subDomain,
 				Data:    currentIP,
-				Ttl:     handler.Configuration.Interval,
+				TTL:     handler.Configuration.Interval,
 				Comment: "Set by godns",
 			},
 		},
@@ -155,14 +155,14 @@ func (handler *Handler) UpdateIP(domain, subDomain, currentIP string) error {
 		return errors.New("failed to encode request body as json")
 	}
 
-	req, _ := http.NewRequest("PATCH", fmt.Sprintf(ScalewayUrl, domain), bytes.NewReader(jsonBody))
+	req, _ := http.NewRequest("PATCH", fmt.Sprintf(ScalewayURL, domain), bytes.NewReader(jsonBody))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("X-Auth-Token", handler.Configuration.LoginToken)
 	if handler.Configuration.UserAgent != "" {
 		req.Header.Add("User-Agent", handler.Configuration.UserAgent)
 	}
 
-	client := utils.GetHttpClient(handler.Configuration, handler.Configuration.UseProxy)
+	client := utils.GetHTTPClient(handler.Configuration, handler.Configuration.UseProxy)
 	log.Debugf("Requesting update for '%s.%s': '%v'", subDomain, domain, reqBody)
 	resp, err := client.Do(req)
 	if err != nil {

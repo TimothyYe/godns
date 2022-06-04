@@ -13,13 +13,13 @@ import (
 	"github.com/TimothyYe/godns/pkg/notification"
 )
 
-type DNSClient interface {
+type IDNSClient interface {
 	UpdateDNSRecordIP(string, string, string) error
 }
 
 type Handler struct {
 	Configuration *settings.Settings
-	client        DNSClient
+	client        IDNSClient
 	cachedIP      string
 	notifyManager notification.INotificationManager
 }
@@ -30,14 +30,14 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.notifyManager = notification.GetNotificationManager(handler.Configuration)
 }
 
-func createDNSClient(conf *settings.Settings) DNSClient {
+func createDNSClient(conf *settings.Settings) IDNSClient {
 	httpClient, err := CreateHTTPClient(conf)
 	if err != nil {
 		panic(err)
 	}
-	linodeApiClient := linodego.NewClient(httpClient)
-	linodeApiClient.SetDebug(conf.DebugInfo)
-	return CreateLinodeDNSClient(&linodeApiClient)
+	linodeAPIClient := linodego.NewClient(httpClient)
+	linodeAPIClient.SetDebug(conf.DebugInfo)
+	return CreateLinodeDNSClient(&linodeAPIClient)
 }
 
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
@@ -74,7 +74,7 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 	log.Debugf("Cached IP address: %s", ip)
 }
 
-func (handler *Handler) updateDNS(domain *settings.Domain, ip string, client DNSClient) error {
+func (handler *Handler) updateDNS(domain *settings.Domain, ip string, client IDNSClient) error {
 	for _, subdomainName := range domain.SubDomains {
 		err := client.UpdateDNSRecordIP(domain.DomainName, subdomainName, ip)
 		if err != nil {

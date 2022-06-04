@@ -13,7 +13,7 @@ type LinodeDNSClient struct {
 	linodeClient *linodego.Client
 }
 
-func CreateLinodeDNSClient(linodeClient *linodego.Client) DNSClient {
+func CreateLinodeDNSClient(linodeClient *linodego.Client) IDNSClient {
 	dnsClient := LinodeDNSClient{
 		linodeClient: linodeClient,
 	}
@@ -97,9 +97,9 @@ func (dnsClient *LinodeDNSClient) createDomainRecord(domainID int, name string) 
 	return record.ID, nil
 }
 
-func (dnsClient *LinodeDNSClient) updateDomainRecord(domainId int, id int, ip string) error {
+func (dnsClient *LinodeDNSClient) updateDomainRecord(domainID int, id int, ip string) error {
 	opts := &linodego.DomainRecordUpdateOptions{Target: ip}
-	_, err := dnsClient.linodeClient.UpdateDomainRecord(context.Background(), domainId, id, *opts)
+	_, err := dnsClient.linodeClient.UpdateDomainRecord(context.Background(), domainID, id, *opts)
 	if err != nil {
 		return err
 	}

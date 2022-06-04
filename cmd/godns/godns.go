@@ -18,7 +18,7 @@ var (
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
 	optHelp       = flag.Bool("h", false, "Show help")
 
-	// Version is current version of GoDNS
+	// Version is current version of GoDNS.
 	Version = "0.1"
 )
 

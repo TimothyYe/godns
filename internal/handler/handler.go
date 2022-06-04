@@ -16,13 +16,13 @@ import (
 	"github.com/TimothyYe/godns/internal/utils"
 )
 
-// IHandler is the interface for all DNS handlers
+// IHandler is the interface for all DNS handlers.
 type IHandler interface {
 	SetConfiguration(*settings.Settings)
 	DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool)
 }
 
-// CreateHandler creates DNS handler by different providers
+// CreateHandler creates DNS handler by different providers.
 func CreateHandler(provider string) IHandler {
 	var handler IHandler
 
