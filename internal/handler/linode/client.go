@@ -66,21 +66,19 @@ func (dnsClient *DNSClient) getDomainID(name string) (int, error) {
 }
 
 func (dnsClient *DNSClient) getDomainRecordID(domainID int, name string) (bool, int, error) {
-	f := linodego.Filter{}
-	f.AddField(linodego.Eq, "name", name)
-	fStr, err := f.MarshalJSON()
-	if err != nil {
-		log.Fatal(err)
-	}
-	opts := linodego.NewListOptions(0, string(fStr))
-	res, err := dnsClient.linodeClient.ListDomainRecords(context.Background(), domainID, opts)
+	res, err := dnsClient.linodeClient.ListDomainRecords(context.Background(), domainID, nil)
 	if err != nil {
 		return false, 0, err
 	}
 	if len(res) == 0 {
 		return false, 0, nil
 	}
-	return true, res[0].ID, nil
+	for _, record := range res {
+		if record.Name == name {
+			return true, record.ID, nil
+		}
+	}
+	return false, 0, nil
 }
 
 func (dnsClient *DNSClient) createDomainRecord(domainID int, name string) (int, error) {
