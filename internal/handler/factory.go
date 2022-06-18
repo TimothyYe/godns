@@ -48,7 +48,7 @@ func CreateHandler(conf *settings.Settings) IHandler {
 	case utils.DYNV6:
 		handler = IHandler(&dynv6.Handler{})
 	case utils.LINODE:
-		linodeProvider := linode.LinodeDNSProvider{}
+		linodeProvider := linode.DNSProvider{}
 		linodeProvider.Init(conf)
 		genericHandler := Handler{}
 		genericHandler.SetProvider(&linodeProvider)
