@@ -5,7 +5,6 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/linode/linodego"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns/internal/settings"
@@ -13,31 +12,20 @@ import (
 	"github.com/TimothyYe/godns/pkg/notification"
 )
 
-type IDNSClient interface {
-	UpdateDNSRecordIP(string, string, string) error
-}
-
 type Handler struct {
-	Configuration *settings.Settings
-	client        IDNSClient
-	cachedIP      string
-	notifyManager notification.INotificationManager
+	Configuration       *settings.Settings
+	dnsProvider         DNSProvider
+	notificationManager notification.INotificationManager
+	cachedIP            string
 }
 
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
-	handler.client = createDNSClient(conf)
-	handler.notifyManager = notification.GetNotificationManager(handler.Configuration)
+	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
 }
 
-func createDNSClient(conf *settings.Settings) IDNSClient {
-	httpClient, err := CreateHTTPClient(conf)
-	if err != nil {
-		panic(err)
-	}
-	linodeAPIClient := linodego.NewClient(httpClient)
-	linodeAPIClient.SetDebug(conf.DebugInfo)
-	return CreateLinodeDNSClient(&linodeAPIClient)
+func (handler *Handler) SetProvider(provider DNSProvider) {
+	handler.dnsProvider = provider
 }
 
 func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
@@ -65,7 +53,7 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 		log.Debugf("IP (%s) matches cached IP (%s), skipping", ip, handler.cachedIP)
 		return
 	}
-	err = handler.updateDNS(domain, ip, handler.client)
+	err = handler.updateDNS(domain, ip)
 	if err != nil {
 		log.Error(err)
 		return
@@ -74,14 +62,14 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 	log.Debugf("Cached IP address: %s", ip)
 }
 
-func (handler *Handler) updateDNS(domain *settings.Domain, ip string, client IDNSClient) error {
+func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 	for _, subdomainName := range domain.SubDomains {
-		err := client.UpdateDNSRecordIP(domain.DomainName, subdomainName, ip)
+		err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip)
 		if err != nil {
 			return err
 		}
 		successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
-		handler.notifyManager.Send(successMessage, ip)
+		handler.notificationManager.Send(successMessage, ip)
 	}
 
 	return nil

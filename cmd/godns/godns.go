@@ -58,7 +58,7 @@ func dnsLoop() {
 	panicChan := make(chan settings.Domain)
 
 	log.Infof("Creating DNS handler with provider: %s", configuration.Provider)
-	h := handler.CreateHandler(configuration.Provider)
+	h := handler.CreateHandler(&configuration)
 	h.SetConfiguration(&configuration)
 	for _, domain := range configuration.Domains {
 		if configuration.RunOnce {

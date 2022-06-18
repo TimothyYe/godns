@@ -23,10 +23,10 @@ type IHandler interface {
 }
 
 // CreateHandler creates DNS handler by different providers.
-func CreateHandler(provider string) IHandler {
+func CreateHandler(conf *settings.Settings) IHandler {
 	var handler IHandler
 
-	switch provider {
+	switch conf.Provider {
 	case utils.CLOUDFLARE:
 		handler = IHandler(&cloudflare.Handler{})
 	case utils.DNSPOD:
@@ -48,7 +48,11 @@ func CreateHandler(provider string) IHandler {
 	case utils.DYNV6:
 		handler = IHandler(&dynv6.Handler{})
 	case utils.LINODE:
-		handler = IHandler(&linode.Handler{})
+		linodeProvider := linode.LinodeDNSProvider{}
+		linodeProvider.Init(conf)
+		linodeHandler := linode.Handler{}
+		linodeHandler.SetProvider(&linodeProvider)
+		handler = IHandler(&linodeHandler)
 	}
 
 	return handler
