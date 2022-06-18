@@ -10,11 +10,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type DNSProvider interface {
-	Init(conf *settings.Settings) error
-	UpdateIP(domainName string, subdomainName string, ip string) error
-}
-
 type LinodeDNSProvider struct {
 	linodeClient *linodego.Client
 }
