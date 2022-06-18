@@ -14,7 +14,7 @@ import (
 
 type Handler struct {
 	Configuration       *settings.Settings
-	dnsProvider         DNSProvider
+	dnsProvider         IDNSProvider
 	notificationManager notification.INotificationManager
 	cachedIP            string
 }
@@ -24,7 +24,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
 }
 
-func (handler *Handler) SetProvider(provider DNSProvider) {
+func (handler *Handler) SetProvider(provider IDNSProvider) {
 	handler.dnsProvider = provider
 }
 
