@@ -1,55 +1,76 @@
 package handler
 
 import (
-	"github.com/TimothyYe/godns/internal/handler/alidns"
-	"github.com/TimothyYe/godns/internal/handler/cloudflare"
-	"github.com/TimothyYe/godns/internal/handler/dnspod"
-	"github.com/TimothyYe/godns/internal/handler/dreamhost"
-	"github.com/TimothyYe/godns/internal/handler/duck"
-	"github.com/TimothyYe/godns/internal/handler/dynv6"
-	"github.com/TimothyYe/godns/internal/handler/google"
-	"github.com/TimothyYe/godns/internal/handler/he"
-	"github.com/TimothyYe/godns/internal/handler/linode"
-	"github.com/TimothyYe/godns/internal/handler/noip"
-	"github.com/TimothyYe/godns/internal/handler/scaleway"
+	"fmt"
+	"runtime/debug"
+	"time"
+
+	log "github.com/sirupsen/logrus"
+
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
+	"github.com/TimothyYe/godns/pkg/notification"
 )
 
-// IHandler is the interface for all DNS handlers.
-type IHandler interface {
-	SetConfiguration(*settings.Settings)
-	DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool)
+type Handler struct {
+	Configuration       *settings.Settings
+	dnsProvider         IDNSProvider
+	notificationManager notification.INotificationManager
+	cachedIP            string
 }
 
-// CreateHandler creates DNS handler by different providers.
-func CreateHandler(provider string) IHandler {
-	var handler IHandler
+func (handler *Handler) SetConfiguration(conf *settings.Settings) {
+	handler.Configuration = conf
+	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
+}
 
-	switch provider {
-	case utils.CLOUDFLARE:
-		handler = IHandler(&cloudflare.Handler{})
-	case utils.DNSPOD:
-		handler = IHandler(&dnspod.Handler{})
-	case utils.DREAMHOST:
-		handler = IHandler(&dreamhost.Handler{})
-	case utils.HE:
-		handler = IHandler(&he.Handler{})
-	case utils.ALIDNS:
-		handler = IHandler(&alidns.Handler{})
-	case utils.GOOGLE:
-		handler = IHandler(&google.Handler{})
-	case utils.DUCK:
-		handler = IHandler(&duck.Handler{})
-	case utils.NOIP:
-		handler = IHandler(&noip.Handler{})
-	case utils.SCALEWAY:
-		handler = IHandler(&scaleway.Handler{})
-	case utils.DYNV6:
-		handler = IHandler(&dynv6.Handler{})
-	case utils.LINODE:
-		handler = IHandler(&linode.Handler{})
+func (handler *Handler) SetProvider(provider IDNSProvider) {
+	handler.dnsProvider = provider
+}
+
+func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
+			panicChan <- *domain
+		}
+	}()
+
+	for while := true; while; while = !runOnce {
+		handler.domainLoop(domain)
+		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
+		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
+	}
+}
+
+func (handler *Handler) domainLoop(domain *settings.Domain) {
+	ip, err := utils.GetCurrentIP(handler.Configuration)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	if ip == handler.cachedIP {
+		log.Debugf("IP (%s) matches cached IP (%s), skipping", ip, handler.cachedIP)
+		return
+	}
+	err = handler.updateDNS(domain, ip)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	handler.cachedIP = ip
+	log.Debugf("Cached IP address: %s", ip)
+}
+
+func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
+	for _, subdomainName := range domain.SubDomains {
+		err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip)
+		if err != nil {
+			return err
+		}
+		successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
+		handler.notificationManager.Send(successMessage, ip)
 	}
 
-	return handler
+	return nil
 }
