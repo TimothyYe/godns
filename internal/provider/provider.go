@@ -6,5 +6,5 @@ import (
 
 type IDNSProvider interface {
 	Init(conf *settings.Settings)
-	UpdateIP(domainName string, subdomainName string, ip string) error
+	UpdateIP(domainName, subdomainName, ip string) error
 }

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/TimothyYe/godns/internal/handler/cloudflare"
-	"github.com/TimothyYe/godns/internal/handler/dreamhost"
 	"github.com/TimothyYe/godns/internal/handler/duck"
 	"github.com/TimothyYe/godns/internal/handler/dynv6"
 	"github.com/TimothyYe/godns/internal/handler/google"
@@ -10,6 +9,7 @@ import (
 	"github.com/TimothyYe/godns/internal/handler/noip"
 	"github.com/TimothyYe/godns/internal/provider/alidns"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
+	"github.com/TimothyYe/godns/internal/provider/dreamhost"
 	"github.com/TimothyYe/godns/internal/provider/linode"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
 	"github.com/TimothyYe/godns/internal/settings"
@@ -36,7 +36,11 @@ func CreateHandler(conf *settings.Settings) IHandler {
 		genericHandler.SetProvider(&dnsPodProvider)
 		handler = IHandler(&genericHandler)
 	case utils.DREAMHOST:
-		handler = IHandler(&dreamhost.Handler{})
+		dreamHostProvider := dreamhost.DNSProvider{}
+		dreamHostProvider.Init(conf)
+		genericHandler := Handler{}
+		genericHandler.SetProvider(&dreamHostProvider)
+		handler = IHandler(&genericHandler)
 	case utils.HE:
 		handler = IHandler(&he.Handler{})
 	case utils.ALIDNS:

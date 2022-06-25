@@ -24,7 +24,7 @@ func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.linodeClient = &linodeAPIClient
 }
 
-func (provider *DNSProvider) UpdateIP(domain string, subdomain string, ip string) error {
+func (provider *DNSProvider) UpdateIP(domain, subdomain, ip string) error {
 	if subdomain == utils.RootDomain {
 		subdomain = ""
 	}

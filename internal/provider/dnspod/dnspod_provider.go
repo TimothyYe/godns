@@ -31,7 +31,7 @@ func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.configuration = conf
 }
 
-func (provider *DNSProvider) UpdateIP(domainName string, subdomainName string, ip string) error {
+func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
 	domainID := provider.getDomain(domainName)
 
 	if domainID == -1 {

@@ -19,7 +19,7 @@ func (provider *DNSProvider) Init(conf *settings.Settings) {
 		conf.IPType)
 }
 
-func (provider *DNSProvider) UpdateIP(domainName string, subdomainName string, ip string) error {
+func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
 	log.Infof("%s.%s - Start to update record IP...", subdomainName, domainName)
 	records := provider.aliDNS.GetDomainRecords(domainName, subdomainName)
 	if len(records) == 0 {
