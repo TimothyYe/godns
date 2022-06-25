@@ -82,10 +82,10 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 		if ip == lastIP {
 			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
 		} else {
-			err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip)
-			if err != nil {
+			if err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
 				return err
 			}
+
 			successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
 			handler.notificationManager.Send(successMessage, ip)
 		}
