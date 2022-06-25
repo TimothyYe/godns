@@ -20,15 +20,12 @@ import (
 	"github.com/TimothyYe/godns/internal/utils"
 )
 
-// AliDNS token.
-type AliDNS struct {
-	AccessKeyID     string
-	AccessKeySecret string
-	IPType          string
-}
+const (
+	baseURL = "https://alidns.aliyuncs.com/"
+)
 
 var (
-	publicParm = map[string]string{
+	publicParam = map[string]string{
 		"AccessKeyId":      "",
 		"Format":           "JSON",
 		"Version":          "2015-01-09",
@@ -37,10 +34,16 @@ var (
 		"SignatureVersion": "1.0",
 		"SignatureNonce":   "",
 	}
-	baseURL  = "http://alidns.aliyuncs.com/"
 	instance *AliDNS
 	once     sync.Once
 )
+
+// AliDNS token.
+type AliDNS struct {
+	AccessKeyID     string
+	AccessKeySecret string
+	IPType          string
+}
 
 type domainRecordsResp struct {
 	RequestID     string `json:"RequestId"`
@@ -92,21 +95,21 @@ func NewAliDNS(key, secret, ipType string) *AliDNS {
 	return instance
 }
 
-// GetDomainRecords gets all the doamin records according to input subdomain key.
+// GetDomainRecords gets all the domain records according to input subdomain key.
 func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 	resp := &domainRecordsResp{}
-	parms := map[string]string{
+	params := map[string]string{
 		"Action":    "DescribeSubDomainRecords",
 		"SubDomain": fmt.Sprintf("%s.%s", rr, domain),
 	}
 
 	if d.IPType == "" || strings.ToUpper(d.IPType) == utils.IPV4 {
-		parms["Type"] = utils.IPTypeA
+		params["Type"] = utils.IPTypeA
 	} else if strings.ToUpper(d.IPType) == utils.IPV6 {
-		parms["Type"] = utils.IPTypeAAAA
+		params["Type"] = utils.IPTypeAAAA
 	}
 
-	urlPath := d.genRequestURL(parms)
+	urlPath := d.genRequestURL(params)
 	body, err := getHTTPBody(urlPath)
 	if err != nil {
 		fmt.Printf("GetDomainRecords error.%+v\n", err)
@@ -122,7 +125,7 @@ func (d *AliDNS) GetDomainRecords(domain, rr string) []DomainRecord {
 
 // UpdateDomainRecord updates domain record.
 func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
-	parms := map[string]string{
+	params := map[string]string{
 		"Action":   "UpdateDomainRecord",
 		"RecordId": r.RecordID,
 		"RR":       r.RR,
@@ -132,12 +135,12 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 	}
 
 	if d.IPType == "" || strings.ToUpper(d.IPType) == utils.IPV4 {
-		parms["Type"] = utils.IPTypeA
+		params["Type"] = utils.IPTypeA
 	} else if strings.ToUpper(d.IPType) == utils.IPV6 {
-		parms["Type"] = utils.IPTypeAAAA
+		params["Type"] = utils.IPTypeAAAA
 	}
 
-	urlPath := d.genRequestURL(parms)
+	urlPath := d.genRequestURL(params)
 	if urlPath == "" {
 		return errors.New("failed to generate request URL")
 	}
@@ -148,13 +151,13 @@ func (d *AliDNS) UpdateDomainRecord(r DomainRecord) error {
 	return err
 }
 
-func (d *AliDNS) genRequestURL(parms map[string]string) string {
+func (d *AliDNS) genRequestURL(params map[string]string) string {
 	var pArr []string
 	ps := map[string]string{}
-	for k, v := range publicParm {
+	for k, v := range publicParam {
 		ps[k] = v
 	}
-	for k, v := range parms {
+	for k, v := range params {
 		ps[k] = v
 	}
 	now := time.Now().UTC()
