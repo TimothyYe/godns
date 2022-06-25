@@ -8,10 +8,10 @@ import (
 	"github.com/TimothyYe/godns/internal/handler/google"
 	"github.com/TimothyYe/godns/internal/handler/he"
 	"github.com/TimothyYe/godns/internal/handler/noip"
-	"github.com/TimothyYe/godns/internal/handler/scaleway"
 	"github.com/TimothyYe/godns/internal/provider/alidns"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/linode"
+	"github.com/TimothyYe/godns/internal/provider/scaleway"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 )
@@ -52,7 +52,11 @@ func CreateHandler(conf *settings.Settings) IHandler {
 	case utils.NOIP:
 		handler = IHandler(&noip.Handler{})
 	case utils.SCALEWAY:
-		handler = IHandler(&scaleway.Handler{})
+		scaleWayProvider := scaleway.DNSProvider{}
+		scaleWayProvider.Init(conf)
+		genericHandler := Handler{}
+		genericHandler.SetProvider(&scaleWayProvider)
+		handler = IHandler(&genericHandler)
 	case utils.DYNV6:
 		handler = IHandler(&dynv6.Handler{})
 	case utils.LINODE:
