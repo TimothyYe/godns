@@ -31,9 +31,8 @@ func (provider *DNSProvider) UpdateIP(domainName string, subdomainName string, i
 	if err := provider.aliDNS.UpdateDomainRecord(records[0]); err != nil {
 		log.Errorf("Failed to update IP for subdomain: %s", subdomainName)
 		return fmt.Errorf("failed to update IP for subdomain: %s", subdomainName)
-	} else {
-		log.Infof("IP updated for subdomain:%s", subdomainName)
 	}
 
+	log.Infof("IP updated for subdomain:%s", subdomainName)
 	return nil
 }
