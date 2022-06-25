@@ -18,6 +18,10 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
+const (
+	providerURL = "https://dnsapi.cn"
+)
+
 // DNSProvider struct definition.
 type DNSProvider struct {
 	configuration *settings.Settings
@@ -216,7 +220,7 @@ func (provider *DNSProvider) postData(url string, content url.Values) (string, e
 	}
 
 	values := provider.generateHeader(content)
-	req, _ := http.NewRequest("POST", "https://dnsapi.cn"+url, strings.NewReader(values.Encode()))
+	req, _ := http.NewRequest("POST", providerURL+url, strings.NewReader(values.Encode()))
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("User-Agent", fmt.Sprintf("GoDNS/0.1 (%s)", ""))
