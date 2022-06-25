@@ -64,12 +64,31 @@ func (handler *Handler) domainLoop(domain *settings.Domain) {
 
 func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 	for _, subdomainName := range domain.SubDomains {
-		err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip)
-		if err != nil {
-			return err
+
+		var hostname string
+		if subdomainName != utils.RootDomain {
+			hostname = subdomainName + "." + domain.DomainName
+		} else {
+			hostname = domain.DomainName
 		}
-		successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
-		handler.notificationManager.Send(successMessage, ip)
+
+		lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
+		if err != nil {
+			log.Error(err)
+			continue
+		}
+
+		//check against the current known IP, if no change, skip update
+		if ip == lastIP {
+			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
+		} else {
+			err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip)
+			if err != nil {
+				return err
+			}
+			successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
+			handler.notificationManager.Send(successMessage, ip)
+		}
 	}
 
 	return nil
