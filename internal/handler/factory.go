@@ -3,13 +3,13 @@ package handler
 import (
 	"github.com/TimothyYe/godns/internal/handler/cloudflare"
 	"github.com/TimothyYe/godns/internal/handler/duck"
-	"github.com/TimothyYe/godns/internal/handler/dynv6"
 	"github.com/TimothyYe/godns/internal/handler/google"
 	"github.com/TimothyYe/godns/internal/handler/he"
 	"github.com/TimothyYe/godns/internal/handler/noip"
 	"github.com/TimothyYe/godns/internal/provider/alidns"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/dreamhost"
+	"github.com/TimothyYe/godns/internal/provider/dynv6"
 	"github.com/TimothyYe/godns/internal/provider/linode"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
 	"github.com/TimothyYe/godns/internal/settings"
@@ -23,7 +23,7 @@ type IHandler interface {
 }
 
 // CreateHandler creates DNS handler by different providers.
-func CreateHandler(conf *settings.Settings) IHandler {
+func CreateHandler(conf *settings.Settings) (IHandler, error) {
 	var handler IHandler
 
 	switch conf.Provider {
@@ -62,14 +62,20 @@ func CreateHandler(conf *settings.Settings) IHandler {
 		genericHandler.SetProvider(&scaleWayProvider)
 		handler = IHandler(&genericHandler)
 	case utils.DYNV6:
-		handler = IHandler(&dynv6.Handler{})
+		dynV6Provider := dynv6.DNSProvider{}
+		dynV6Provider.Init(conf)
+		genericHandler := Handler{}
+		genericHandler.SetProvider(&dynV6Provider)
+		handler = IHandler(&genericHandler)
 	case utils.LINODE:
 		linodeProvider := linode.DNSProvider{}
 		linodeProvider.Init(conf)
 		genericHandler := Handler{}
 		genericHandler.SetProvider(&linodeProvider)
 		handler = IHandler(&genericHandler)
+	default:
+		return nil, utils.ErrUnknownProvider
 	}
 
-	return handler
+	return handler, nil
 }

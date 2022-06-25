@@ -91,6 +91,10 @@ const (
 	defaultTimeout = 10
 )
 
+var (
+	ErrUnknownProvider = errors.New("unknown provider")
+)
+
 //GetIPFromInterface gets IP address from the specific interface.
 func GetIPFromInterface(configuration *settings.Settings) (string, error) {
 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
