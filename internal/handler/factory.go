@@ -5,12 +5,12 @@ import (
 	"github.com/TimothyYe/godns/internal/handler/duck"
 	"github.com/TimothyYe/godns/internal/handler/google"
 	"github.com/TimothyYe/godns/internal/handler/he"
-	"github.com/TimothyYe/godns/internal/handler/noip"
 	"github.com/TimothyYe/godns/internal/provider/alidns"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/dreamhost"
 	"github.com/TimothyYe/godns/internal/provider/dynv6"
 	"github.com/TimothyYe/godns/internal/provider/linode"
+	"github.com/TimothyYe/godns/internal/provider/noip"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
@@ -54,7 +54,11 @@ func CreateHandler(conf *settings.Settings) (IHandler, error) {
 	case utils.DUCK:
 		handler = IHandler(&duck.Handler{})
 	case utils.NOIP:
-		handler = IHandler(&noip.Handler{})
+		noipProvider := noip.DNSProvider{}
+		noipProvider.Init(conf)
+		genericHandler := Handler{}
+		genericHandler.SetProvider(&noipProvider)
+		handler = IHandler(&genericHandler)
 	case utils.SCALEWAY:
 		scaleWayProvider := scaleway.DNSProvider{}
 		scaleWayProvider.Init(conf)
