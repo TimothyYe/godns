@@ -5,6 +5,8 @@ import (
 	"runtime/debug"
 	"time"
 
+	"github.com/TimothyYe/godns/internal/provider"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/TimothyYe/godns/internal/settings"
@@ -14,7 +16,7 @@ import (
 
 type Handler struct {
 	Configuration       *settings.Settings
-	dnsProvider         IDNSProvider
+	dnsProvider         provider.IDNSProvider
 	notificationManager notification.INotificationManager
 	cachedIP            string
 }
@@ -24,7 +26,7 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
 }
 
-func (handler *Handler) SetProvider(provider IDNSProvider) {
+func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
 }
 

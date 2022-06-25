@@ -1,4 +1,4 @@
-package handler
+package provider
 
 import (
 	"github.com/TimothyYe/godns/internal/settings"
