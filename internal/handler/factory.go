@@ -2,11 +2,11 @@ package handler
 
 import (
 	"github.com/TimothyYe/godns/internal/handler/cloudflare"
-	"github.com/TimothyYe/godns/internal/handler/duck"
 	"github.com/TimothyYe/godns/internal/handler/google"
 	"github.com/TimothyYe/godns/internal/provider/alidns"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/dreamhost"
+	"github.com/TimothyYe/godns/internal/provider/duck"
 	"github.com/TimothyYe/godns/internal/provider/dynv6"
 	"github.com/TimothyYe/godns/internal/provider/he"
 	"github.com/TimothyYe/godns/internal/provider/linode"
@@ -56,7 +56,11 @@ func CreateHandler(conf *settings.Settings) (IHandler, error) {
 	case utils.GOOGLE:
 		handler = IHandler(&google.Handler{})
 	case utils.DUCK:
-		handler = IHandler(&duck.Handler{})
+		duckDNSProvider := duck.DNSProvider{}
+		duckDNSProvider.Init(conf)
+		genericHandler := Handler{}
+		genericHandler.SetProvider(&duckDNSProvider)
+		handler = IHandler(&genericHandler)
 	case utils.NOIP:
 		noIPProvider := noip.DNSProvider{}
 		noIPProvider.Init(conf)
