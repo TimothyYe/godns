@@ -453,7 +453,7 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
 ```json
 {
   "provider": "HE",
-  "password": "YourPassword",
+  "password": "Your DDNS Key",
   "login_token": "",
   "domains": [{
       "domain_name": "example.com",

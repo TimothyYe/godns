@@ -31,8 +31,10 @@ godns
 !godns/ # Don't ignore the godns directory, only the file
 godns.exe
 config.json
-cmd/godns/config.json
+test_configs/config.json
 cmd/godns/config.*.json
+
+test_configs/
 
 /.idea
 /godns.iml

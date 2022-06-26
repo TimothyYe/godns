@@ -46,6 +46,7 @@ func CreateHandler(conf *settings.Settings) (IHandler, error) {
 		heProvider.Init(conf)
 		genericHandler := Handler{}
 		genericHandler.SetProvider(&heProvider)
+		handler = IHandler(&genericHandler)
 	case utils.ALIDNS:
 		aliDNSProvider := alidns.DNSProvider{}
 		aliDNSProvider.Init(conf)
@@ -57,10 +58,10 @@ func CreateHandler(conf *settings.Settings) (IHandler, error) {
 	case utils.DUCK:
 		handler = IHandler(&duck.Handler{})
 	case utils.NOIP:
-		noipProvider := noip.DNSProvider{}
-		noipProvider.Init(conf)
+		noIPProvider := noip.DNSProvider{}
+		noIPProvider.Init(conf)
 		genericHandler := Handler{}
-		genericHandler.SetProvider(&noipProvider)
+		genericHandler.SetProvider(&noIPProvider)
 		handler = IHandler(&genericHandler)
 	case utils.SCALEWAY:
 		scaleWayProvider := scaleway.DNSProvider{}
