@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"github.com/TimothyYe/godns/internal/handler/cloudflare"
 	"github.com/TimothyYe/godns/internal/provider/alidns"
+	"github.com/TimothyYe/godns/internal/provider/cloudflare"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/dreamhost"
 	"github.com/TimothyYe/godns/internal/provider/duck"
@@ -29,7 +29,9 @@ func CreateHandler(conf *settings.Settings) (IHandler, error) {
 
 	switch conf.Provider {
 	case utils.CLOUDFLARE:
-		handler = IHandler(&cloudflare.Handler{})
+		cfDNSProvider := cloudflare.DNSProvider{}
+		cfDNSProvider.Init(conf)
+		genericHandler.SetProvider(&cfDNSProvider)
 	case utils.DNSPOD:
 		dnsPodProvider := dnspod.DNSProvider{}
 		dnsPodProvider.Init(conf)
