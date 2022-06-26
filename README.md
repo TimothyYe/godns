@@ -391,7 +391,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
 
 #### DuckDNS
 
-For DuckDNS, only need to provide the `token`, config 1 default domain & subdomains.
+For DuckDNS, the only thing needed is to provide the `token`, config 1 default domain & subdomains.
 
 <details>
 <summary>Example</summary>
@@ -445,7 +445,7 @@ For DuckDNS, only need to provide the `token`, config 1 default domain & subdoma
 
 #### HE.net
 
-For HE, email is not needed, just fill DDNS key to password, and config all the domains & subdomains.
+For HE, email is not needed, just fill the DDNS key as password, and config all the domains & subdomains.
 
 <details>
 <summary>Example</summary>
@@ -453,7 +453,7 @@ For HE, email is not needed, just fill DDNS key to password, and config all the 
 ```json
 {
   "provider": "HE",
-  "password": "YourPassword",
+  "password": "Your DDNS Key",
   "login_token": "",
   "domains": [{
       "domain_name": "example.com",
