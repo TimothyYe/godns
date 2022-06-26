@@ -79,7 +79,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 
 		// update records
 		for _, rec := range records {
-			if !provider.recordTracked(provider.getCurrentDomain(domainName), &rec) {
+			if !recordTracked(provider.getCurrentDomain(domainName), &rec) {
 				log.Debug("Skipping record:", rec.Name)
 				continue
 			}
@@ -109,7 +109,7 @@ func (provider *DNSProvider) getCurrentDomain(domainName string) *settings.Domai
 }
 
 // Check if record is present in domain conf.
-func (provider *DNSProvider) recordTracked(domain *settings.Domain, record *DNSRecord) bool {
+func recordTracked(domain *settings.Domain, record *DNSRecord) bool {
 	for _, subDomain := range domain.SubDomains {
 		sd := fmt.Sprintf("%s.%s", subDomain, domain.DomainName)
 		if record.Name == sd {

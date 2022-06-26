@@ -51,13 +51,13 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 	if err != nil {
 		log.Error("Request error:", err)
 		return err
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	if resp.StatusCode == http.StatusOK {
+		log.Infof("Update IP success: %s", string(body))
 	} else {
-		body, _ := ioutil.ReadAll(resp.Body)
-		if resp.StatusCode == http.StatusOK {
-			log.Infof("Update IP success: %s", string(body))
-		} else {
-			log.Infof("Update IP failed: %s", string(body))
-		}
+		log.Infof("Update IP failed: %s", string(body))
 	}
 
 	return nil
