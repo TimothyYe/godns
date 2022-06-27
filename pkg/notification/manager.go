@@ -3,6 +3,7 @@ package notification
 import (
 	"sync"
 
+	"github.com/TimothyYe/godns/internal/lib"
 	"github.com/TimothyYe/godns/internal/settings"
 
 	log "github.com/sirupsen/logrus"
@@ -71,8 +72,10 @@ func initNotifications(conf *settings.Settings) map[string]INotification {
 
 func (n *notificationManager) Send(domain, currentIP string) {
 	for _, sender := range n.notifications {
-		if err := sender.Send(domain, currentIP); err != nil {
-			log.Error("Send notification with error:", err)
-		}
+		lib.SafeGo(func() {
+			if err := sender.Send(domain, currentIP); err != nil {
+				log.Error("Send notification with error:", err)
+			}
+		})
 	}
 }
