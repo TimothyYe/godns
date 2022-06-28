@@ -37,5 +37,5 @@ jobs:
           tags: |
             timothyye/godns:latest
             timothyye/godns:${{steps.tag.outputs.tag}}
-            ghcr.io/timothyye:latest
-            ghcr.io/timothyye:${{steps.tag.outputs.tag}}
+            ghcr.io/timothyye/godns:latest
+            ghcr.io/timothyye/godns:${{steps.tag.outputs.tag}}
