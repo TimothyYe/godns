@@ -778,6 +778,10 @@ Note: when the program stops, it will not be restarted.
 
 ### As a Docker container
 
+Available docker registries:
+* https://hub.docker.com/r/timothyye/godns
+* https://github.com/TimothyYe/godns/pkgs/container/godns
+
 Visit https://hub.docker.com/r/timothyye/godns to fetch the latest docker image.  
 With `/path/to/config.json` your local configuration file, run:
 
