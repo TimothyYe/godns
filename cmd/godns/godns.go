@@ -46,7 +46,7 @@ func main() {
 	}
 
 	if err := utils.CheckSettings(&configuration); err != nil {
-		log.Fatal("Settings is invalid! ", err.Error())
+		log.Fatal("Invalid settings: ", err.Error())
 	}
 
 	// Init log settings
