@@ -65,6 +65,7 @@ func dnsLoop() {
 
 	h.SetConfiguration(&configuration)
 	for _, domain := range configuration.Domains {
+		domain := domain
 		if configuration.RunOnce {
 			h.DomainLoop(&domain, panicChan, configuration.RunOnce)
 		} else {
