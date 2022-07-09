@@ -14,12 +14,12 @@ import (
 )
 
 // GetHTTPClient creates the HTTP client and return it.
-func GetHTTPClient(conf *settings.Settings, useProxy bool) *http.Client {
+func GetHTTPClient(conf *settings.Settings) *http.Client {
 	client := &http.Client{
 		Timeout: time.Second * defaultTimeout,
 	}
 
-	if useProxy && conf.Socks5Proxy != "" {
+	if conf.UseProxy && conf.Socks5Proxy != "" {
 		log.Debug("use socks5 proxy:" + conf.Socks5Proxy)
 		dialer, err := proxy.SOCKS5("tcp", conf.Socks5Proxy, nil, proxy.Direct)
 		if err != nil {

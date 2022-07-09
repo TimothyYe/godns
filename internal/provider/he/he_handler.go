@@ -43,7 +43,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 	values.Add("password", provider.configuration.Password)
 	values.Add("myip", currentIP)
 
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 
 	req, _ := http.NewRequest("POST", URL, strings.NewReader(values.Encode()))
 	resp, err := client.Do(req)

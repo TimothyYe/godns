@@ -34,7 +34,7 @@ func (n *PushoverNotification) Send(domain, currentIP string) error {
 		return errors.New("pushover user cannot be empty")
 	}
 
-	client := utils.GetHTTPClient(n.conf, false)
+	client := utils.GetHTTPClient(n.conf)
 	tpl := n.conf.Notify.Pushover.MsgTemplate
 	if tpl == "" {
 		tpl = "Your IP address changed to <b>{{ .CurrentIP }}</b>. The DNS record for {{ .Domain }} is updated."

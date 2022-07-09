@@ -28,7 +28,7 @@ func (n *TelegramNotification) Send(domain, currentIP string) error {
 		return errors.New("chat id cannot be empty")
 	}
 
-	client := utils.GetHTTPClient(n.conf, n.conf.Notify.Telegram.UseProxy)
+	client := utils.GetHTTPClient(n.conf)
 	tpl := n.conf.Notify.Telegram.MsgTemplate
 	if tpl == "" {
 		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
