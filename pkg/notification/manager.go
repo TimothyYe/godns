@@ -3,8 +3,8 @@ package notification
 import (
 	"sync"
 
-	"github.com/TimothyYe/godns/internal/lib"
 	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/pkg/lib"
 
 	log "github.com/sirupsen/logrus"
 )
