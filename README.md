@@ -664,6 +664,7 @@ Available variables:
 
 ```json
 "webhook": {
+  "enabled": true,
   "url": "http://localhost:5000/api/v1/send?domain={{.Domain}}&ip={{.CurrentIP}}&ip_type={{.IPType}}",
   "request_body": ""
 }
@@ -678,6 +679,7 @@ http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type
 
 ```json
 "webhook": {
+  "enabled": true,
   "url": "http://localhost:5000/api/v1/send",
   "request_body": "{ \"domain\": \"{{.Domain}}\", \"ip\": \"{{.CurrentIP}}\", \"ip_type\": \"{{.IPType}}\" }"
 }

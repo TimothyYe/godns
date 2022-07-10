@@ -10,7 +10,8 @@ import (
 func TestBuildReqURL(t *testing.T) {
 	w := GetWebhook(&settings.Settings{
 		Webhook: settings.Webhook{
-			URL: "http://localhost:5000/api/v1/send?domain={{.Domain}}&ip={{.CurrentIP}}&ip_type={{.IPType}}",
+			Enabled: true,
+			URL:     "http://localhost:5000/api/v1/send?domain={{.Domain}}&ip={{.CurrentIP}}&ip_type={{.IPType}}",
 		}})
 
 	ret, err := w.buildReqURL("example.com", "192.168.1.1", utils.IPV4)
@@ -30,6 +31,7 @@ func TestBuildReqBody(t *testing.T) {
 	t.Skip()
 	w := GetWebhook(&settings.Settings{
 		Webhook: settings.Webhook{
+			Enabled:     true,
 			URL:         "http://localhost:5000/api/v1/send",
 			RequestBody: "{ \"domain\": \"{{.Domain}}\", \"ip\": \"{{.CurrentIP}}\", \"ip_type\": \"{{.IPType}}\" }",
 		}})
