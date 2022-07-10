@@ -91,7 +91,7 @@ func (w *Webhook) Execute(domain, currentIP string) error {
 }
 
 func (w *Webhook) buildReqURL(domain, currentIP, ipType string) (string, error) {
-	t := template.New("notification template")
+	t := template.New("req template")
 	if _, err := t.Parse(w.conf.Webhook.URL); err != nil {
 		log.Error("Failed to parse template:", err)
 		return "", err
@@ -117,7 +117,7 @@ func (w *Webhook) buildReqURL(domain, currentIP, ipType string) (string, error) 
 }
 
 func (w *Webhook) buildReqBody(domain, currentIP, ipType string) (string, error) {
-	t := template.New("notification template")
+	t := template.New("reqBody template")
 	if _, err := t.Parse(w.conf.Webhook.RequestBody); err != nil {
 		log.Error("Failed to parse template:", err)
 		return "", err
