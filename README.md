@@ -686,7 +686,7 @@ http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type
 For this example, a webhook will be triggered when the IP changes, the target URL `http://localhost:5000/api/v1/send` will receive an `HTTP POST` request with request body:
 
 ```json
-{ "domain": "ipv4.biturl.top", "ip": "116.86.209.2", "ip_type": "IPV4" }
+{ "domain": "ddns.example.com", "ip": "192.168.1.1", "ip_type": "IPV4" }
 ```
 
 ### Miscellaneous topics
