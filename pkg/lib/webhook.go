@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 	"sync"
 	"text/template"
@@ -43,7 +42,7 @@ func (w *Webhook) Execute(domain, currentIP string) error {
 
 	// set request method
 	method := http.MethodGet
-	if w.conf.Webhook.RequestBody == "" {
+	if w.conf.Webhook.RequestBody != "" {
 		method = http.MethodPost
 	}
 
@@ -63,14 +62,8 @@ func (w *Webhook) Execute(domain, currentIP string) error {
 		}
 	}
 
-	targetURL, err := url.Parse(reqURL)
-	if err != nil {
-		log.Error("Failed to parse URL:", err)
-		return err
-	}
-
 	var req *http.Request
-	req, err = http.NewRequest(method, targetURL.String(), strings.NewReader(reqBody))
+	req, err = http.NewRequest(method, reqURL, strings.NewReader(reqBody))
 	if err != nil {
 		log.Error("Failed to create request:", err)
 		return err
