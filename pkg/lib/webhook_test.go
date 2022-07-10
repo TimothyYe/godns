@@ -38,6 +38,8 @@ func TestBuildReqBody(t *testing.T) {
 		t.Error(err)
 	}
 
+	t.Logf("reqBody: %s", ret)
+
 	expected := `{ "domain": "example.com", "ip": "192.168.1.1", "ip_type": "IPV4" }`
 	if ret != expected {
 		t.Errorf("expected %s, got %s", expected, ret)
