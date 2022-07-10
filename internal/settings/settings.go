@@ -34,7 +34,6 @@ type SlackNotify struct {
 	BotAPITokenFile string `json:"bot_api_token_file" yaml:"bot_api_token_file"`
 	Channel         string `json:"channel" yaml:"channel"`
 	MsgTemplate     string `json:"message_template" yaml:"message_template"`
-	UseProxy        bool   `json:"use_proxy" yaml:"use_proxy"`
 }
 
 // TelegramNotify struct for telegram notification.
@@ -44,7 +43,6 @@ type TelegramNotify struct {
 	BotAPIKeyFile string `json:"bot_api_key_file" yaml:"bot_api_key_file"`
 	ChatID        string `json:"chat_id" yaml:"chat_id"`
 	MsgTemplate   string `json:"message_template" yaml:"message_template"`
-	UseProxy      bool   `json:"use_proxy" yaml:"use_proxy"`
 }
 
 // MailNotify struct for SMTP notification.

@@ -33,8 +33,7 @@
       "enabled": false,
       "bot_api_key": "",
       "chat_id": "",
-      "message_template": "",
-      "use_proxy": false
+      "message_template": ""
     },
     "mail": {
       "enabled": false,

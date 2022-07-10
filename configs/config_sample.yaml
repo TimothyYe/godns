@@ -22,7 +22,6 @@ notify:
     bot_api_key:
     chat_id:
     message_template:
-    use_proxy: false
   mail:
     enabled: false
     smtp_server:
