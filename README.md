@@ -53,6 +53,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Slack](#slack)
     - [Discord](#discord)
     - [Pushover](#pushover)
+  - [Webhook](#webhook)
   - [Miscellaneous topics](#miscellaneous-topics)
     - [IPv6 support](#ipv6-support)
     - [Network interface IP address](#network-interface-ip-address)
@@ -644,6 +645,49 @@ To receive a [Pushover](https://pushover.net/) message each time the IP changes,
 The `message_template` property supports [html](https://pushover.net/api#html) if the `html` parameter is `1`. If it is left empty a default message will be used.
 If the `device` and `title` parameters are left empty, Pushover will choose defaults [see](https://pushover.net/api#messages). More details on the priority parameter
 can be found on the Pushover [API description](https://pushover.net/api#priority).
+
+### Webhook
+
+Webhook is another feature that GoDNS provides to deliver notifications to the other applications while the IP is changed. GoDNS delivers a notification to the target URL via an HTTP GET/POST request.
+
+The configuration section `webhook` is used for customizing the webhook request. In general, there are 2 fields used for the webhook request:
+
+>* `url`: The target URL for sending webhook request.
+>* `request_body`: The content for sending `POST` request, if this field is empty, a HTTP GET request will be sent instead of the HTTP POST request.
+
+Available variables:
+>* `Domain`: The current domain.
+>* `IP`: The new IP address.
+>* `IPType`: The type of the IP: `IPV4` or `IPV6`.
+
+#### Webhook with HTTP GET reqeust
+
+```json
+"webhook": {
+  "url": "http://localhost:5000/api/v1/send?domain={{.Domain}}&ip={{.CurrentIP}}&ip_type={{.IPType}}",
+  "request_body": ""
+}
+```
+
+For this example, a webhook with query string parameters will be sent to the target URL:  
+```
+http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type=IPV4
+```
+
+#### Webhook with HTTP POST request
+
+```json
+"webhook": {
+  "url": "http://localhost:5000/api/v1/send",
+  "request_body": "{ \"domain\": \"{{.Domain}}\", \"ip\": \"{{.CurrentIP}}\", \"ip_type\": \"{{.IPType}}\" }"
+}
+```
+
+For this example, a webhook will be triggered when IP changes, the target URL `http://localhost:5000/api/v1/send` will receive a `HTTP POST` request with request body:
+
+```json
+{ "domain": "ipv4.biturl.top", "ip": "116.86.209.2", "ip_type": "IPV4" }
+```
 
 ### Miscellaneous topics
 
