@@ -648,7 +648,7 @@ can be found on the Pushover [API description](https://pushover.net/api#priority
 
 ### Webhook
 
-Webhook is another feature that GoDNS provides to deliver notifications to the other applications while the IP is changed. GoDNS delivers a notification to the target URL via an HTTP GET/POST request.
+Webhook is another feature that GoDNS provides to deliver notifications to the other applications while the IP is changed. GoDNS delivers a notification to the target URL via an HTTP `GET` or `POST` request.
 
 The configuration section `webhook` is used for customizing the webhook request. In general, there are 2 fields used for the webhook request:
 
@@ -683,7 +683,7 @@ http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type
 }
 ```
 
-For this example, a webhook will be triggered when IP changes, the target URL `http://localhost:5000/api/v1/send` will receive a `HTTP POST` request with request body:
+For this example, a webhook will be triggered when the IP changes, the target URL `http://localhost:5000/api/v1/send` will receive an `HTTP POST` request with request body:
 
 ```json
 { "domain": "ipv4.biturl.top", "ip": "116.86.209.2", "ip_type": "IPV4" }
