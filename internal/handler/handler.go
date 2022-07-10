@@ -11,6 +11,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
+	"github.com/TimothyYe/godns/pkg/lib"
 	"github.com/TimothyYe/godns/pkg/notification"
 )
 
@@ -90,6 +91,13 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 
 			successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
 			handler.notificationManager.Send(successMessage, ip)
+
+			// execute webhook when it is enabled
+			if handler.Configuration.Webhook.Enabled {
+				if err := lib.GetWebhook(handler.Configuration).Execute(hostname, ip); err != nil {
+					return err
+				}
+			}
 		}
 	}
 

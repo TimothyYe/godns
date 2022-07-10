@@ -29,7 +29,7 @@ func (provider *DNSProvider) Init(conf *settings.Settings) {
 
 func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
 	hostname := subdomainName + "." + domainName
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 	return provider.update(client, hostname, subdomainName, ip)
 }
 

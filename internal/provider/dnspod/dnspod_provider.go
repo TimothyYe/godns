@@ -213,7 +213,7 @@ func (provider *DNSProvider) updateIP(domainID int64, subDomainID string, subDom
 
 // postData post data and invoke DNSPod API.
 func (provider *DNSProvider) postData(url string, content url.Values) (string, error) {
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 
 	if client == nil {
 		return "", errors.New("failed to create HTTP client")

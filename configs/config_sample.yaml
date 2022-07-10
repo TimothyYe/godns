@@ -30,4 +30,7 @@ notify:
     smtp_password:
     smtp_port: 25
     send_to:
-
+webhook:
+  enabled: false
+  url: "http://localhost:5000/api/v1/send"
+  request_body: "{ \"domain\": \"{{.Domain}}\", \"ip\": \"{{.CurrentIP}}\", \"ip_type\": \"{{.IPType}}\" }"

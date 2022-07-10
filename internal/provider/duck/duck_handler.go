@@ -39,7 +39,7 @@ func (provider *DNSProvider) updateIP(domainName, subdomainName, currentIP strin
 		ip = fmt.Sprintf("ipv6=%s", currentIP)
 	}
 
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 
 	// update IP with HTTP GET request
 	resp, err := client.Get(fmt.Sprintf(URL, subdomainName, provider.configuration.LoginToken, ip))

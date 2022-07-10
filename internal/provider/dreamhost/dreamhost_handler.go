@@ -85,7 +85,7 @@ func (provider *DNSProvider) updateDNS(dns, ip, hostname, action string) error {
 		return fmt.Errorf("unknown action: %s", action)
 	}
 
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 	req, _ := http.NewRequest("POST", URL, strings.NewReader(values.Encode()))
 	req.SetBasicAuth(provider.configuration.Email, provider.configuration.Password)
 

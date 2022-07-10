@@ -28,7 +28,7 @@ func (n *SlackNotification) Send(domain, currentIP string) error {
 	if n.conf.Notify.Slack.Channel == "" {
 		return errors.New("channel cannot be empty")
 	}
-	client := utils.GetHTTPClient(n.conf, n.conf.Notify.Slack.UseProxy)
+	client := utils.GetHTTPClient(n.conf)
 	tpl := n.conf.Notify.Slack.MsgTemplate
 	if tpl == "" {
 		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* is updated"

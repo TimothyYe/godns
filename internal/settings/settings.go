@@ -87,6 +87,13 @@ type Notify struct {
 	Pushover PushoverNotify `json:"pushover" yaml:"pushover"`
 }
 
+// Webhook struct.
+type Webhook struct {
+	Enabled     bool   `json:"enabled" yaml:"enabled"`
+	URL         string `json:"url" yaml:"url"`
+	RequestBody string `json:"request_body" yaml:"request_body"`
+}
+
 // Settings struct.
 type Settings struct {
 	Provider       string   `json:"provider" yaml:"provider"`
@@ -102,6 +109,7 @@ type Settings struct {
 	UserAgent      string   `json:"user_agent,omitempty" yaml:"user_agent,omitempty"`
 	Socks5Proxy    string   `json:"socks5_proxy" yaml:"socks5_proxy"`
 	Notify         Notify   `json:"notify" yaml:"notify"`
+	Webhook        Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
 	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
 	IPType         string   `json:"ip_type" yaml:"ip_type"`
 	Resolver       string   `json:"resolver" yaml:"resolver"`

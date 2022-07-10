@@ -124,7 +124,7 @@ func recordTracked(domain *settings.Domain, record *DNSRecord) bool {
 
 // Create a new request with auth in place and optional proxy.
 func (provider *DNSProvider) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 	if client == nil {
 		log.Info("cannot create HTTP client")
 	}

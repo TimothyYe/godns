@@ -111,7 +111,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 		req.Header.Add("User-Agent", provider.configuration.UserAgent)
 	}
 
-	client := utils.GetHTTPClient(provider.configuration, provider.configuration.UseProxy)
+	client := utils.GetHTTPClient(provider.configuration)
 	log.Debugf("Requesting update for '%s.%s': '%v'", subDomain, domain, reqBody)
 	resp, err := client.Do(req)
 	if err != nil {
