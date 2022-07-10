@@ -2,7 +2,10 @@ package lib
 
 import (
 	"bytes"
+	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 	"sync"
 	"text/template"
 
@@ -38,6 +41,59 @@ func (w *Webhook) Execute(domain, currentIP string) error {
 		return nil
 	}
 
+	// set request method
+	method := http.MethodGet
+	if w.conf.Webhook.RequestBody == "" {
+		method = http.MethodPost
+	}
+
+	reqURL, reqBody := "", ""
+	var err error
+	// send HTTP get request
+	if method == http.MethodGet {
+		reqURL, err = w.buildReqURL(domain, currentIP, w.conf.IPType)
+		if err != nil {
+			return err
+		}
+	} else {
+		reqURL = w.conf.Webhook.URL
+		reqBody, err = w.buildReqBody(domain, currentIP, w.conf.IPType)
+		if err != nil {
+			return err
+		}
+	}
+
+	targetURL, err := url.Parse(reqURL)
+	if err != nil {
+		log.Error("Failed to parse URL:", err)
+		return err
+	}
+
+	var req *http.Request
+	req, err = http.NewRequest(method, targetURL.String(), strings.NewReader(reqBody))
+	if err != nil {
+		log.Error("Failed to create request:", err)
+		return err
+	}
+
+	if method == http.MethodPost {
+		req.Header.Add("Content-Type", "application/json")
+	}
+
+	resp, err := w.client.Do(req)
+	if err != nil {
+		log.Error("Failed to send request:", err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Error("Failed to read response body:", err)
+		return err
+	}
+
+	log.Debugf("Webhook response: %s", string(bytes))
 	return nil
 }
 
