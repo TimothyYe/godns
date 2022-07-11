@@ -54,6 +54,8 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Discord](#discord)
     - [Pushover](#pushover)
   - [Webhook](#webhook)
+    - [HTTP GET Request](#webhook-with-http-get-reqeust)
+    - [HTTP POST Request](#webhook-with-http-post-request)
   - [Miscellaneous topics](#miscellaneous-topics)
     - [IPv6 support](#ipv6-support)
     - [Network interface IP address](#network-interface-ip-address)
