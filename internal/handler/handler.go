@@ -41,6 +41,11 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 
 	for while := true; while; while = !runOnce {
 		handler.domainLoop(domain)
+
+		if runOnce {
+			break
+		}
+
 		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
