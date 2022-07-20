@@ -80,9 +80,12 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 		// update records
 		for _, rec := range records {
 			if !recordTracked(provider.getCurrentDomain(domainName), &rec) {
-				log.Debug("Skipping record:", rec.Name)
-				continue
+				log.Debugf("Record %s not found, will create it.", rec.Name)
+				if err := provider.createRecord(zoneID, domainName, subdomainName, ip); err != nil {
+					return err
+				}
 			}
+
 			if rec.IP != ip {
 				log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
 				provider.updateRecord(rec, ip)
@@ -210,6 +213,49 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 	return r.Records
 }
 
+func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) error {
+	newRecord := DNSRecord{
+		Type: utils.IPTypeA,
+		Name: fmt.Sprintf("%s.%s", subDomain, domain),
+		IP:   ip,
+		TTL:  1,
+	}
+
+	content, err := json.Marshal(newRecord)
+	if err != nil {
+		log.Errorf("Encoder error: %+v", err)
+		return err
+	}
+
+	req, client := provider.newRequest("POST", fmt.Sprintf("/zones/%s/dns_records", zoneID), bytes.NewBuffer(content))
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Error("Request error:", err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("Failed to read request body: %+v", err)
+		return err
+	}
+
+	var r DNSRecordResponse
+	err = json.Unmarshal(body, &r)
+	if err != nil {
+		log.Errorf("Decoder error: %+v", err)
+		return err
+	}
+
+	if !r.Success {
+		log.Infof("Response failed: %+v", string(body))
+		return fmt.Errorf("failed to create record: %+v", string(body))
+	}
+
+	return nil
+}
+
 // Update DNS A Record with new IP.
 func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string {
 
@@ -228,6 +274,7 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 		return ""
 	}
 
+	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
