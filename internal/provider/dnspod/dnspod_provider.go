@@ -40,7 +40,6 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 
 	subdomainID, currentIP := provider.getSubDomain(domainID, subdomainName)
 	if subdomainID == "" || currentIP == "" {
-		log.Errorf("Domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s", subdomainName, domainName, subdomainID, ip)
 		return fmt.Errorf("domain or subdomain not configured yet. domain: %s.%s subDomainID: %s ip: %s", subdomainName, domainName, subdomainID, ip)
 	}
 

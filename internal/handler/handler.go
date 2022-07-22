@@ -80,28 +80,17 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 			hostname = domain.DomainName
 		}
 
-		lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
-		if err != nil {
-			log.Error(err)
-			continue
+		if err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
+			return err
 		}
 
-		//check against the current known IP, if no change, skip update
-		if ip == lastIP {
-			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
-		} else {
-			if err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
+		successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
+		handler.notificationManager.Send(successMessage, ip)
+
+		// execute webhook when it is enabled
+		if handler.Configuration.Webhook.Enabled {
+			if err := lib.GetWebhook(handler.Configuration).Execute(hostname, ip); err != nil {
 				return err
-			}
-
-			successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
-			handler.notificationManager.Send(successMessage, ip)
-
-			// execute webhook when it is enabled
-			if handler.Configuration.Webhook.Enabled {
-				if err := lib.GetWebhook(handler.Configuration).Execute(hostname, ip); err != nil {
-					return err
-				}
 			}
 		}
 	}
