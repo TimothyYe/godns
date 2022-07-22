@@ -15,11 +15,6 @@ import (
 	"github.com/TimothyYe/godns/pkg/notification"
 )
 
-var (
-	// ErrNoDomain is returned when no domain is found.
-	ErrNoDomain = fmt.Errorf("empty result")
-)
-
 type Handler struct {
 	Configuration       *settings.Settings
 	dnsProvider         provider.IDNSProvider
