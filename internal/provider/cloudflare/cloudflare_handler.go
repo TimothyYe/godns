@@ -76,22 +76,31 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 	zoneID := provider.getZone(domainName)
 	if zoneID != "" {
 		records := provider.getDNSRecords(zoneID)
+		matched := false
 
 		// update records
 		for _, rec := range records {
+			rec := rec
 			if !recordTracked(provider.getCurrentDomain(domainName), &rec) {
-				log.Debugf("Record %s not found, will create it.", rec.Name)
-				if err := provider.createRecord(zoneID, domainName, subdomainName, ip); err != nil {
-					return err
-				}
+				log.Debug("Skipping record:", rec.Name)
+				continue
 			}
 
-			if rec.IP != ip {
+			if rec.IP != ip && strings.Contains(rec.Name, subdomainName) {
 				log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
 				provider.updateRecord(rec, ip)
+				matched = true
 			} else {
 				log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
 			}
+		}
+
+		if !matched {
+			log.Debugf("Record %s not found, will create it.", subdomainName)
+			if err := provider.createRecord(zoneID, domainName, subdomainName, ip); err != nil {
+				return err
+			}
+			log.Infof("Record [%s] created with IP address: %s", subdomainName, ip)
 		}
 	} else {
 		log.Errorf("Failed to find zone for domain: %s", domainName)
@@ -103,6 +112,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 
 func (provider *DNSProvider) getCurrentDomain(domainName string) *settings.Domain {
 	for _, domain := range provider.configuration.Domains {
+		domain := domain
 		if domain.DomainName == domainName {
 			return &domain
 		}
@@ -241,7 +251,7 @@ func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) 
 		return err
 	}
 
-	var r DNSRecordResponse
+	var r DNSRecordUpdateResponse
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		log.Errorf("Decoder error: %+v", err)

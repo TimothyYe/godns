@@ -15,6 +15,11 @@ import (
 	"github.com/TimothyYe/godns/pkg/notification"
 )
 
+var (
+	// ErrNoDomain is returned when no domain is found.
+	ErrNoDomain = fmt.Errorf("empty result")
+)
+
 type Handler struct {
 	Configuration       *settings.Settings
 	dnsProvider         provider.IDNSProvider
@@ -81,7 +86,7 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 		}
 
 		lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
-		if err != nil {
+		if err != nil && err != ErrNoDomain {
 			log.Error(err)
 			continue
 		}
