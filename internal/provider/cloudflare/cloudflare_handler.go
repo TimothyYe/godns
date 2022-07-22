@@ -86,12 +86,15 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 				continue
 			}
 
-			if rec.IP != ip && strings.Contains(rec.Name, subdomainName) {
-				log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
-				provider.updateRecord(rec, ip)
+			if strings.Contains(rec.Name, subdomainName) {
+				if rec.IP != ip {
+					log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
+					provider.updateRecord(rec, ip)
+				} else {
+					log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
+				}
+
 				matched = true
-			} else {
-				log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
 			}
 		}
 

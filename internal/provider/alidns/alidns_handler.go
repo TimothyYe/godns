@@ -23,16 +23,20 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 	log.Infof("%s.%s - Start to update record IP...", subdomainName, domainName)
 	records := provider.aliDNS.GetDomainRecords(domainName, subdomainName)
 	if len(records) == 0 {
-		log.Errorf("Cannot get subdomain %s from AliDNS.", subdomainName)
-		return fmt.Errorf("cannot get subdomain %s from AliDNS", subdomainName)
+		log.Errorf("Cannot get subdomain [%s] from AliDNS.", subdomainName)
+		return fmt.Errorf("cannot get subdomain [%s] from AliDNS", subdomainName)
 	}
 
-	records[0].Value = ip
-	if err := provider.aliDNS.UpdateDomainRecord(records[0]); err != nil {
-		log.Errorf("Failed to update IP for subdomain: %s", subdomainName)
-		return fmt.Errorf("failed to update IP for subdomain: %s", subdomainName)
+	if records[0].Value != ip {
+		records[0].Value = ip
+		if err := provider.aliDNS.UpdateDomainRecord(records[0]); err != nil {
+			return fmt.Errorf("failed to update IP for subdomain: %s", subdomainName)
+		}
+
+		log.Infof("IP updated for subdomain: %s", subdomainName)
+	} else {
+		log.Debugf("IP not changed for subdomain: %s", subdomainName)
 	}
 
-	log.Infof("IP updated for subdomain:%s", subdomainName)
 	return nil
 }
