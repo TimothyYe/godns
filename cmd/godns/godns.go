@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/TimothyYe/godns/internal/handler"
+	"github.com/TimothyYe/godns/internal/provider"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 
@@ -58,18 +59,21 @@ func dnsLoop() {
 	panicChan := make(chan settings.Domain)
 
 	log.Infof("Creating DNS handler with provider: %s", configuration.Provider)
-	h, err := handler.CreateHandler(&configuration)
+	provider, err := provider.GetProvider(&configuration)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	h.SetConfiguration(&configuration)
+	handler := handler.Handler{}
+	handler.SetConfiguration(&configuration)
+	handler.SetProvider((provider))
+
 	for _, domain := range configuration.Domains {
 		domain := domain
 		if configuration.RunOnce {
-			h.DomainLoop(&domain, panicChan, configuration.RunOnce)
+			handler.DomainLoop(&domain, panicChan, configuration.RunOnce)
 		} else {
-			go h.DomainLoop(&domain, panicChan, configuration.RunOnce)
+			go handler.DomainLoop(&domain, panicChan, configuration.RunOnce)
 		}
 	}
 
@@ -81,7 +85,7 @@ func dnsLoop() {
 	for {
 		failDomain := <-panicChan
 		log.Debug("Got panic in goroutine, will start a new one... :", panicCount)
-		go h.DomainLoop(&failDomain, panicChan, configuration.RunOnce)
+		go handler.DomainLoop(&failDomain, panicChan, configuration.RunOnce)
 
 		panicCount++
 		if panicCount >= utils.PanicMax {
