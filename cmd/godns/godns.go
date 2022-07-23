@@ -64,16 +64,16 @@ func dnsLoop() {
 		log.Fatal(err)
 	}
 
-	handler := handler.Handler{}
-	handler.SetConfiguration(&configuration)
-	handler.SetProvider((provider))
+	ddnsHandler := handler.Handler{}
+	ddnsHandler.SetConfiguration(&configuration)
+	ddnsHandler.SetProvider(provider)
 
 	for _, domain := range configuration.Domains {
 		domain := domain
 		if configuration.RunOnce {
-			handler.DomainLoop(&domain, panicChan, configuration.RunOnce)
+			ddnsHandler.DomainLoop(&domain, panicChan, configuration.RunOnce)
 		} else {
-			go handler.DomainLoop(&domain, panicChan, configuration.RunOnce)
+			go ddnsHandler.DomainLoop(&domain, panicChan, configuration.RunOnce)
 		}
 	}
 
@@ -85,7 +85,7 @@ func dnsLoop() {
 	for {
 		failDomain := <-panicChan
 		log.Debug("Got panic in goroutine, will start a new one... :", panicCount)
-		go handler.DomainLoop(&failDomain, panicChan, configuration.RunOnce)
+		go ddnsHandler.DomainLoop(&failDomain, panicChan, configuration.RunOnce)
 
 		panicCount++
 		if panicCount >= utils.PanicMax {
