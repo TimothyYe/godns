@@ -71,9 +71,9 @@ func dnsLoop() {
 	for _, domain := range configuration.Domains {
 		domain := domain
 		if configuration.RunOnce {
-			ddnsHandler.DomainLoop(&domain, panicChan, configuration.RunOnce)
+			ddnsHandler.UpdateIP(&domain)
 		} else {
-			go ddnsHandler.DomainLoop(&domain, panicChan, configuration.RunOnce)
+			go ddnsHandler.LoopUpdateIP(&domain, panicChan)
 		}
 	}
 
@@ -85,7 +85,7 @@ func dnsLoop() {
 	for {
 		failDomain := <-panicChan
 		log.Debug("Got panic in goroutine, will start a new one... :", panicCount)
-		go ddnsHandler.DomainLoop(&failDomain, panicChan, configuration.RunOnce)
+		go ddnsHandler.LoopUpdateIP(&failDomain, panicChan)
 
 		panicCount++
 		if panicCount >= utils.PanicMax {

@@ -31,7 +31,7 @@ func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
 }
 
-func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- settings.Domain, runOnce bool) {
+func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- settings.Domain) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
@@ -39,19 +39,14 @@ func (handler *Handler) DomainLoop(domain *settings.Domain, panicChan chan<- set
 		}
 	}()
 
-	for while := true; while; while = !runOnce {
-		handler.domainLoop(domain)
-
-		if runOnce {
-			break
-		}
-
+	for {
+		handler.UpdateIP(domain)
 		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
 
-func (handler *Handler) domainLoop(domain *settings.Domain) {
+func (handler *Handler) UpdateIP(domain *settings.Domain) {
 	ip, err := utils.GetCurrentIP(handler.Configuration)
 	if err != nil {
 		log.Error(err)
