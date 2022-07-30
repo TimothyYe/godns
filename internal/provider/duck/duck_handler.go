@@ -45,7 +45,7 @@ func (provider *DNSProvider) updateIP(domainName, subdomainName, currentIP strin
 	resp, err := client.Get(fmt.Sprintf(URL, subdomainName, provider.configuration.LoginToken, ip))
 	if err != nil {
 		// handle error
-		log.Errorf("Failed to update sub domain: %s.%s", domainName, subdomainName)
+		log.Errorf("Failed to update sub domain: %s.%s, error: %s", domainName, subdomainName, err)
 		return err
 	}
 
@@ -58,7 +58,7 @@ func (provider *DNSProvider) updateIP(domainName, subdomainName, currentIP strin
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil || string(body) != "OK" {
-		log.Error("Failed to update the IP:", err)
+		log.Errorf("Failed to update the IP, error: %s, body: %s", err, string(body))
 		return err
 	}
 

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"runtime/debug"
 	"time"
@@ -13,6 +14,11 @@ import (
 	"github.com/TimothyYe/godns/internal/utils"
 	"github.com/TimothyYe/godns/pkg/lib"
 	"github.com/TimothyYe/godns/pkg/notification"
+)
+
+var (
+	errEmptyResult = errors.New("empty result")
+	errEmptyDomain = errors.New("NXDOMAIN")
 )
 
 type Handler struct {
@@ -52,10 +58,12 @@ func (handler *Handler) UpdateIP(domain *settings.Domain) {
 		log.Error(err)
 		return
 	}
+
 	if ip == handler.cachedIP {
 		log.Debugf("IP (%s) matches cached IP (%s), skipping", ip, handler.cachedIP)
 		return
 	}
+
 	err = handler.updateDNS(domain, ip)
 	if err != nil {
 		log.Error(err)
@@ -75,17 +83,29 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 			hostname = domain.DomainName
 		}
 
-		if err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
-			return err
+		lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
+		if err != nil && (errors.Is(err, errEmptyResult) || errors.Is(err, errEmptyDomain)) {
+			log.Errorf("Failed to resolve DNS for domain: %s, error: %s", hostname, err)
+			continue
 		}
 
-		successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
-		handler.notificationManager.Send(successMessage, ip)
+		//check against the current known IP, if no change, skip update
+		if ip == lastIP {
+			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
+		} else {
 
-		// execute webhook when it is enabled
-		if handler.Configuration.Webhook.Enabled {
-			if err := lib.GetWebhook(handler.Configuration).Execute(hostname, ip); err != nil {
+			if err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
 				return err
+			}
+
+			successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
+			handler.notificationManager.Send(successMessage, ip)
+
+			// execute webhook when it is enabled
+			if handler.Configuration.Webhook.Enabled {
+				if err := lib.GetWebhook(handler.Configuration).Execute(hostname, ip); err != nil {
+					return err
+				}
 			}
 		}
 	}
