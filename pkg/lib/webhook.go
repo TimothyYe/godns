@@ -80,13 +80,13 @@ func (w *Webhook) Execute(domain, currentIP string) error {
 	}
 
 	defer resp.Body.Close()
-	bytes, err := ioutil.ReadAll(resp.Body)
+	content, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Error("Failed to read response body:", err)
 		return err
 	}
 
-	log.Debugf("Webhook response: %s", string(bytes))
+	log.Debugf("Webhook response: %s", string(content))
 	return nil
 }
 
