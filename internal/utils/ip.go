@@ -11,10 +11,8 @@ import (
 
 	"github.com/TimothyYe/godns/internal/settings"
 	dnsResolver "github.com/TimothyYe/godns/pkg/resolver"
-
-	log "github.com/sirupsen/logrus"
-
 	"github.com/miekg/dns"
+	log "github.com/sirupsen/logrus"
 )
 
 //GetIPFromInterface gets IP address from the specific interface.
