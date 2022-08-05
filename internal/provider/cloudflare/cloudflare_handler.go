@@ -86,7 +86,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 				continue
 			}
 
-			if strings.Contains(rec.Name, subdomainName) {
+			if strings.Contains(rec.Name, subdomainName) || rec.Name == domainName {
 				if rec.IP != ip {
 					log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
 					provider.updateRecord(rec, ip)
@@ -229,9 +229,14 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) error {
 	newRecord := DNSRecord{
 		Type: utils.IPTypeA,
-		Name: fmt.Sprintf("%s.%s", subDomain, domain),
 		IP:   ip,
 		TTL:  1,
+	}
+
+	if subDomain == utils.RootDomain {
+		newRecord.Name = utils.RootDomain
+	} else {
+		newRecord.Name = fmt.Sprintf("%s.%s", subDomain, domain)
 	}
 
 	content, err := json.Marshal(newRecord)
