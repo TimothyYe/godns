@@ -198,6 +198,8 @@ By simply putting `@` into `sub_domains`, for example:
 
 For Cloudflare, you need to provide the email & Global API Key as password (or to use the API token) and config all the domains & subdomains.
 
+By setting the option `proxied = true`, the record is receiving the performance and security benefits of Cloudflare. This option is only available for Cloudflare.
+
 <details>
 <summary>Using email & Global API Key</summary>
 
@@ -218,7 +220,8 @@ For Cloudflare, you need to provide the email & Global API Key as password (or t
   "ip_url": "https://api.ip.sb/ip",
   "ip_type": "IPv4",
   "interval": 300,
-  "socks5_proxy": ""
+  "socks5_proxy": "",
+  "proxied": false
 }
 ```
 </details>

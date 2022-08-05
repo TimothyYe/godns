@@ -233,6 +233,10 @@ func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) 
 		TTL:  1,
 	}
 
+	if provider.configuration.Proxied {
+		newRecord.Proxied = true
+	}
+
 	if subDomain == utils.RootDomain {
 		newRecord.Name = utils.RootDomain
 	} else {

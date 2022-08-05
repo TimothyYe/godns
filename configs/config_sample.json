@@ -28,6 +28,7 @@
   "socks5_proxy": "",
   "use_proxy": false,
   "debug_info": false,
+  "proxied": false,
   "notify": {
     "telegram": {
       "enabled": false,

@@ -114,6 +114,7 @@ type Settings struct {
 	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
 	DebugInfo      bool     `json:"debug_info" yaml:"debug_info"`
 	RunOnce        bool     `json:"run_once" yaml:"run_once"`
+	Proxied        bool     `json:"proxied" yaml:"proxied"`
 }
 
 // LoadSettings -- Load settings from config file.
