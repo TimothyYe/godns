@@ -109,6 +109,38 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 			}
 		}
 	}
+	for _, designated := range domain.DelegatedSubDomains {
+
+		hostname := designated.DomainName + "." + domain.DomainName
+
+		lastIP, err := utils.ResolveDNS(hostname, handler.Configuration.Resolver, handler.Configuration.IPType)
+		if err != nil && (errors.Is(err, errEmptyResult) || errors.Is(err, errEmptyDomain)) {
+			log.Errorf("Failed to resolve DNS for domain: %s, error: %s", hostname, err)
+			continue
+		}
+
+		//check against the current known IP, if no change, skip update
+		if ip == lastIP {
+			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
+		} else {
+
+			handler.Configuration.Email = designated.Email
+			handler.Configuration.Password = designated.Password
+			if err := handler.dnsProvider.UpdateIP(domain.DomainName, designated.DomainName, ip); err != nil {
+				return err
+			}
+
+			successMessage := fmt.Sprintf("%s.%s", designated.DomainName, domain.DomainName)
+			handler.notificationManager.Send(successMessage, ip)
+
+			// execute webhook when it is enabled
+			if handler.Configuration.Webhook.Enabled {
+				if err := lib.GetWebhook(handler.Configuration).Execute(hostname, ip); err != nil {
+					return err
+				}
+			}
+		}
+	}
 
 	return nil
 }

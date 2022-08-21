@@ -34,12 +34,13 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 // updateIP update subdomain with current IP.
 func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error {
 	client := utils.GetHTTPClient(provider.configuration)
-	resp, err := client.Get(fmt.Sprintf(URL,
+	request := fmt.Sprintf(URL,
 		provider.configuration.Email,
 		provider.configuration.Password,
 		subDomain,
 		domain,
-		currentIP))
+		currentIP)
+	resp, err := client.Get(request)
 
 	if err != nil {
 		// handle error
@@ -69,6 +70,9 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 		log.Infof("Update IP success: %s", string(body))
 	} else if strings.Contains(string(body), "nochg") {
 		log.Infof("IP not changed: %s", string(body))
+	} else {
+		// google api can return StatusOK even if it fails
+		log.Errorf("Update IP failed: %s", string(body))
 	}
 
 	return nil

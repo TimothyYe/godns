@@ -21,10 +21,18 @@ const (
 	extYML  = "yml"
 )
 
+// DelagatedSubDomain
+type DelegatedSubDomain struct {
+	DomainName string `json:"domain_name" yaml:"domain_name"`
+	Email      string `json:"email" yaml:"email"`
+	Password   string `json:"password" yaml:"password"`
+}
+
 // Domain struct.
 type Domain struct {
-	DomainName string   `json:"domain_name" yaml:"domain_name"`
-	SubDomains []string `json:"sub_domains" yaml:"sub_domains"`
+	DomainName          string               `json:"domain_name" yaml:"domain_name"`
+	SubDomains          []string             `json:"sub_domains" yaml:"sub_domains"`
+	DelegatedSubDomains []DelegatedSubDomain `json:"delegated_sub_domains" yaml:"delegated_sub_domains"`
 }
 
 // SlackNotify struct for Slack notification.
@@ -170,7 +178,21 @@ func loadSecretsFromFile(settings *Settings) error {
 		settings.PasswordFile,
 		settings.Password,
 	); err != nil {
-		return fmt.Errorf("failed to load password from file: %w", err)
+		any := false
+		for _, domain := range settings.Domains {
+			for _, sub_domain := range domain.DelegatedSubDomains {
+				if len(sub_domain.Password) == 0 {
+					name := fmt.Sprint("%s:%s", domain.DomainName, sub_domain.DomainName)
+					return fmt.Errorf("failed to find delegated sub domain password: %w", errors.New(name))
+				} else {
+					any = true
+				}
+
+			}
+		}
+		if !any {
+			return fmt.Errorf("failed to load password from file: %w", err)
+		}
 	}
 
 	if settings.LoginToken, err = readSecretFromFile(

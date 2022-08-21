@@ -43,7 +43,26 @@ func CheckSettings(config *settings.Settings) error {
 			return errors.New("login token cannot be empty")
 		}
 	case GOOGLE:
-		fallthrough
+		any := false
+		if config.Email == "" {
+			for _, domain := range config.Domains {
+				for _, sub_domain := range domain.DelegatedSubDomains {
+					if len(sub_domain.Email) == 0 {
+						name := fmt.Sprint("failed to find delegated sub domain email: %s:%s", domain.DomainName, sub_domain.DomainName)
+						return errors.New(name)
+					} else {
+						any = true
+					}
+
+				}
+			}
+			if !any {
+				return errors.New("email cannot be empty")
+			}
+		}
+		if config.Password == "" && any == false {
+			return errors.New("password cannot be empty")
+		}
 	case NOIP:
 		if config.Email == "" {
 			return errors.New("email cannot be empty")
