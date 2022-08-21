@@ -46,7 +46,10 @@ func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- s
 	}()
 
 	for {
-		handler.UpdateIP(domain)
+		err := handler.UpdateIP(domain)
+		if err != nil {
+			log.WithError(err).Debug("Update IP failed during the DNS Update loop")
+		}
 		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
