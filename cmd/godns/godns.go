@@ -71,7 +71,11 @@ func dnsLoop() {
 	for _, domain := range configuration.Domains {
 		domain := domain
 		if configuration.RunOnce {
-			ddnsHandler.UpdateIP(&domain)
+			err := ddnsHandler.UpdateIP(&domain)
+			if err != nil {
+				log.Error("Error during execution:", err)
+				os.Exit(1)
+			}
 		} else {
 			go ddnsHandler.LoopUpdateIP(&domain, panicChan)
 		}
