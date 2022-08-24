@@ -12,8 +12,8 @@ func TestLoadJSONSetting(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	if settings.IPUrl == "" {
-		t.Fatal("cannot load ip_url from config file")
+	if len(settings.IPUrls) < 1 {
+		t.Fatal("cannot load ip_urls from config file")
 	}
 
 	err = LoadSettings("./file/does/not/exists", &settings)
@@ -30,7 +30,7 @@ func TestLoadYAMLSetting(t *testing.T) {
 		t.Fatal(err.Error())
 	}
 
-	if settings.IPUrl == "" {
+	if len(settings.IPUrls) < 1 {
 		t.Fatal("cannot load ip_url from config file")
 	}
 
