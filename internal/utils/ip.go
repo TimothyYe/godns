@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"regexp"
@@ -15,7 +15,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//GetIPFromInterface gets IP address from the specific interface.
+// GetIPFromInterface gets IP address from the specific interface.
 func GetIPFromInterface(configuration *settings.Settings) (string, error) {
 	ifaces, err := net.InterfaceByName(configuration.IPInterface)
 	if err != nil {
@@ -66,7 +66,7 @@ func isIPv4(ip string) bool {
 	return strings.Count(ip, ":") < 2
 }
 
-//GetCurrentIP gets an IP from either internet or specific interface, depending on configuration.
+// GetCurrentIP gets an IP from either internet or specific interface, depending on configuration.
 func GetCurrentIP(configuration *settings.Settings) (string, error) {
 	var err error
 	var ip string
@@ -122,7 +122,7 @@ func GetIPOnline(configuration *settings.Settings) (string, error) {
 		return "", fmt.Errorf("failed to get online IP:%d", response.StatusCode)
 	}
 
-	body, _ := ioutil.ReadAll(response.Body)
+	body, _ := io.ReadAll(response.Body)
 	ipReg := regexp.MustCompile(IPPattern)
 	onlineIP := ipReg.FindString(string(body))
 	if onlineIP == "" {

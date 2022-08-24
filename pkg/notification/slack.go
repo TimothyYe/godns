@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -53,7 +53,7 @@ func (n *SlackNotification) Send(domain, currentIP string) error {
 
 	defer response.Body.Close()
 
-	body, _ := ioutil.ReadAll(response.Body)
+	body, _ := io.ReadAll(response.Body)
 	type ResponseParameters struct {
 		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
 		RetryAfter      int   `json:"retry_after"`        // optional

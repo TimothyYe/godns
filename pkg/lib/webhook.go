@@ -2,7 +2,7 @@ package lib
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"sync"
@@ -80,7 +80,7 @@ func (w *Webhook) Execute(domain, currentIP string) error {
 	}
 
 	defer resp.Body.Close()
-	content, err := ioutil.ReadAll(resp.Body)
+	content, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Error("Failed to read response body:", err)
 		return err

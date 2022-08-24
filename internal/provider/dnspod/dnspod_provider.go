@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -238,7 +237,7 @@ func (provider *DNSProvider) postData(url string, content url.Values) (string, e
 		}
 	}(response.Body)
 
-	resp, _ := ioutil.ReadAll(response.Body)
+	resp, _ := io.ReadAll(response.Body)
 
 	return string(resp), nil
 }

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -69,7 +69,7 @@ func (n *PushoverNotification) Send(domain, currentIP string) error {
 
 	defer response.Body.Close()
 
-	body, _ := ioutil.ReadAll(response.Body)
+	body, _ := io.ReadAll(response.Body)
 	type APIResponse struct {
 		Status  int      `json:"status"`
 		Request string   `json:"request"`

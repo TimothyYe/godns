@@ -3,7 +3,6 @@ package noip
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -67,7 +66,7 @@ func (provider *DNSProvider) update(client *http.Client, hostname, subdomain str
 		}
 	}(resp.Body)
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil || !strings.Contains(string(body), "good") {
 		log.Error("Failed to update the IP", err)
 		return err

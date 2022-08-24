@@ -3,7 +3,6 @@ package dreamhost
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
@@ -106,7 +105,7 @@ func (provider *DNSProvider) updateDNS(dns, ip, hostname, action string) error {
 		}
 	}(resp.Body)
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != http.StatusOK {
 		log.Errorf("Update IP failed: %s", string(body))
 		return fmt.Errorf("update IP failed: %s", string(body))

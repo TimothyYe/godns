@@ -2,7 +2,7 @@ package he
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -53,7 +53,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 		return err
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode == http.StatusOK {
 		log.Infof("Update IP success: %s", string(body))
 	} else {

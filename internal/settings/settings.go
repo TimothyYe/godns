@@ -3,7 +3,7 @@ package settings
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -134,7 +134,7 @@ func LoadSettings(configPath string, settings *Settings) error {
 	}
 
 	// LoadSettings from config file
-	content, err := ioutil.ReadFile(configPath)
+	content, err := os.ReadFile(configPath)
 	if err != nil {
 		fmt.Println("Error occurs while reading config file, please make sure config file exists!")
 		return err
@@ -223,7 +223,7 @@ func readSecretFromFile(source, value string) (string, error) {
 		return value, nil
 	}
 
-	content, err := ioutil.ReadFile(source)
+	content, err := os.ReadFile(source)
 
 	if err != nil {
 		return value, err

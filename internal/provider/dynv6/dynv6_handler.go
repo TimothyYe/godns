@@ -3,7 +3,6 @@ package dynv6
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -58,7 +57,7 @@ func (provider *DNSProvider) update(client *http.Client, hostname string, curren
 		}
 	}(resp.Body)
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return fmt.Errorf("failed to receive response: %w", err)
 	} else if !strings.Contains(string(body), "addresses updated") {
