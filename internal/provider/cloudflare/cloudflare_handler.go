@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -169,7 +168,7 @@ func (provider *DNSProvider) getZone(domain string) string {
 		return ""
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &z)
 	if err != nil {
 		log.Errorf("Decoder error: %+v", err)
@@ -210,7 +209,7 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 		return empty
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		log.Infof("Decoder error: %+v", err)
@@ -218,7 +217,7 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 		return empty
 	}
 	if !r.Success {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		log.Infof("Response failed: %+v", string(body))
 		return empty
 
@@ -257,7 +256,7 @@ func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) 
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Errorf("Failed to read request body: %+v", err)
 		return err
@@ -297,7 +296,7 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 	}
 
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		log.Errorf("Decoder error: %+v", err)
@@ -305,7 +304,7 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 		return ""
 	}
 	if !r.Success {
-		body, _ := ioutil.ReadAll(resp.Body)
+		body, _ := io.ReadAll(resp.Body)
 		log.Infof("Response failed: %+v", string(body))
 	} else {
 		log.Infof("Record updated: %+v - %+v", record.Name, record.IP)

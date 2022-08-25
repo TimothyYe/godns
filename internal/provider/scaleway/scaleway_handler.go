@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -119,7 +119,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 		return errors.New("failed to complete update request")
 	}
 
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != http.StatusOK {
 		log.Debugf("Update failed for '%s.%s': %s", subDomain, domain, string(body))
 		return fmt.Errorf("update IP failed with status '%d'", resp.StatusCode)

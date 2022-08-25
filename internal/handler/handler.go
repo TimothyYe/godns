@@ -37,7 +37,7 @@ func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
 }
 
-func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- settings.Domain) {
+func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- settings.Domain) error {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
@@ -46,31 +46,41 @@ func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- s
 	}()
 
 	for {
-		handler.UpdateIP(domain)
+		err := handler.UpdateIP(domain)
+		if err != nil {
+			log.WithError(err).Debug("Update IP failed during the DNS Update loop")
+		}
 		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
 		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
 
-func (handler *Handler) UpdateIP(domain *settings.Domain) {
+func (handler *Handler) UpdateIP(domain *settings.Domain) error {
 	ip, err := utils.GetCurrentIP(handler.Configuration)
 	if err != nil {
+		if handler.Configuration.RunOnce {
+			return fmt.Errorf("%v: fail to get current IP", err)
+		}
 		log.Error(err)
-		return
+		return nil
 	}
 
 	if ip == handler.cachedIP {
 		log.Debugf("IP (%s) matches cached IP (%s), skipping", ip, handler.cachedIP)
-		return
+		return nil
 	}
 
 	err = handler.updateDNS(domain, ip)
 	if err != nil {
+		if handler.Configuration.RunOnce {
+			return fmt.Errorf("%v: fail to update DNS", err)
+		}
 		log.Error(err)
-		return
+		return nil
 	}
 	handler.cachedIP = ip
 	log.Debugf("Cached IP address: %s", ip)
+	return nil
 }
 
 func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {

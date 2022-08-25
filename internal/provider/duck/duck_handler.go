@@ -3,7 +3,6 @@ package duck
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"strings"
 
 	"github.com/TimothyYe/godns/internal/settings"
@@ -56,7 +55,7 @@ func (provider *DNSProvider) updateIP(domainName, subdomainName, currentIP strin
 		}
 	}(resp.Body)
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil || string(body) != "OK" {
 		log.Errorf("Failed to update the IP, error: %s, body: %s", err, string(body))
 		return err
