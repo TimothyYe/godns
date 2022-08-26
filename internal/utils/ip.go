@@ -130,10 +130,10 @@ func GetIPOnline(configuration *settings.Settings) (string, error) {
 		ipReg := regexp.MustCompile(IPPattern)
 		onlineIP := ipReg.FindString(string(body))
 		if onlineIP == "" {
-			log.Error(fmt.Sprintf("request %v failed to get online IP", reqURL))
+			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
 			continue
 		} else {
-			log.Debug("get ip success by", reqURL)
+			log.Debug("get ip success by:", reqURL)
 			break
 		}
 	}
