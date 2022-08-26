@@ -6,8 +6,8 @@ domains:
     sub_domains:
       - www
       - test
-ip_url: https://api.ipify.org
-ipv6_url: https://ipify.org
+ip_urls: [https://api.ipify.org, https://api.ip.sb/ip]
+ipv6_urls: [https://ipify.org]
 ip_type: IPv4
 interval: 300
 resolver: 8.8.8.8

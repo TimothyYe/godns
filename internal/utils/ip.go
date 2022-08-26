@@ -71,7 +71,7 @@ func GetCurrentIP(configuration *settings.Settings) (string, error) {
 	var err error
 	var ip string
 
-	if configuration.IPUrl != "" || configuration.IPV6Url != "" {
+	if len(configuration.IPUrls) > 0 || len(configuration.IPV6Urls) > 0 {
 		ip, err = GetIPOnline(configuration)
 		if err != nil {
 			log.Error("get ip online failed. Fallback to get ip from interface if possible.")
@@ -95,38 +95,51 @@ func GetCurrentIP(configuration *settings.Settings) (string, error) {
 // GetIPOnline gets public IP from internet.
 func GetIPOnline(configuration *settings.Settings) (string, error) {
 	client := &http.Client{}
-	var reqURL string
+	var reqURLs []string
+	var onlineIP string
 
 	if configuration.IPType == "" || strings.ToUpper(configuration.IPType) == IPV4 {
-		reqURL = configuration.IPUrl
+		reqURLs = configuration.IPUrls
 	} else {
-		reqURL = configuration.IPV6Url
+		reqURLs = configuration.IPV6Urls
 	}
 
-	req, _ := http.NewRequest("GET", reqURL, nil)
+	for _, reqURL := range reqURLs {
 
-	if configuration.UserAgent != "" {
-		req.Header.Set("User-Agent", configuration.UserAgent)
+		req, _ := http.NewRequest("GET", reqURL, nil)
+
+		if configuration.UserAgent != "" {
+			req.Header.Set("User-Agent", configuration.UserAgent)
+		}
+
+		response, err := client.Do(req)
+
+		if err != nil {
+			log.Error("Cannot get IP:", err)
+			continue
+		}
+
+		defer response.Body.Close()
+
+		if response.StatusCode != http.StatusOK {
+			log.Error(fmt.Sprintf("request %v got httpCode:%v", reqURL, response.StatusCode))
+			continue
+		}
+
+		body, _ := io.ReadAll(response.Body)
+		ipReg := regexp.MustCompile(IPPattern)
+		onlineIP := ipReg.FindString(string(body))
+		if onlineIP == "" {
+			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
+			continue
+		} else {
+			log.Debug("get ip success by:", reqURL)
+			break
+		}
 	}
 
-	response, err := client.Do(req)
-
-	if err != nil {
-		log.Error("Cannot get IP:", err)
-		return "", err
-	}
-
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("failed to get online IP:%d", response.StatusCode)
-	}
-
-	body, _ := io.ReadAll(response.Body)
-	ipReg := regexp.MustCompile(IPPattern)
-	onlineIP := ipReg.FindString(string(body))
 	if onlineIP == "" {
-		return "", errors.New("failed to get online IP")
+		return "", errors.New("All IP API are failed to get online IP")
 	}
 
 	return onlineIP, nil

@@ -5,21 +5,22 @@
   "domains": [
     {
       "domain_name": "example.com",
-      "sub_domains": [
-        "www",
-        "test"
-      ]
+      "sub_domains": ["www", "test"]
     },
     {
       "domain_name": "example2.com",
-      "sub_domains": [
-        "www",
-        "test"
-      ]
+      "sub_domains": ["www", "test"]
     }
   ],
-  "ip_url": "https://api.ipify.org",
-  "ipv6_url": "https://ipify.org",
+  "ip_urls": [
+    "https://api.ipify.org",
+    "https://myip.biturl.top",
+    "https://ip4.seeip.org",
+    "https://ipecho.net/plain",
+    "https://api-ipv4.ip.sb/ip",
+    "https://api.ip.sb/ip"
+  ],
+  "ipv6_urls": ["https://ipify.org"],
   "ip_type": "IPv4",
   "interval": 300,
   "resolver": "8.8.8.8",

@@ -174,8 +174,8 @@ By default, GoDNS uses `JSON` config file. However, you can specify to use the `
 * `password` — Password of the DNS provider.
 * `login_token` — API token of the DNS provider.
 * `domains` — Domains list, with your sub domains.
-* `ip_url` — A URL for fetching one's public IPv4 address.
-* `ipv6_url` — A URL for fetching one's public IPv6 address.
+* `ip_urls` — A URL array for fetching one's public IPv4 address.
+* `ipv6_urls` — A URL array for fetching one's public IPv6 address.
 * `ip_type` — Switch deciding if IPv4 or IPv6 should be used (when [supported](#supported-dns-providers)). Available values: `IPv4` or `IPv6`.
 * `interval` — How often (in seconds) the public IP should be updated.
 * `socks5_proxy` — Socks5 proxy server.
@@ -217,7 +217,7 @@ By setting the option `proxied = true`, the record is receiving the performance 
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": "",
@@ -242,7 +242,7 @@ By setting the option `proxied = true`, the record is receiving the performance 
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -270,7 +270,7 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -298,7 +298,7 @@ For Dreamhost, you need to provide your API Token(you can create it [here](https
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "resolver": "ns1.dreamhost.com",
@@ -328,7 +328,7 @@ For Dynv6, only need to provide the `token`, config 1 default domain & subdomain
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -357,7 +357,7 @@ For Google Domains, you need to provide email & password, and config all the dom
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -387,7 +387,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -416,7 +416,7 @@ For DuckDNS, the only thing needed is to provide the `token`, config 1 default d
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -441,7 +441,7 @@ For DuckDNS, the only thing needed is to provide the `token`, config 1 default d
     }
   ],
   "ip_type": "IPv4",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "resolver": "8.8.8.8",
   "interval": 300,
   "socks5_proxy": ""
@@ -470,7 +470,7 @@ For HE, email is not needed, just fill the DDNS key as password, and config all 
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300,
   "socks5_proxy": ""
@@ -514,7 +514,7 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300
 }
@@ -545,7 +545,7 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
     }
   ],
   "resolver": "8.8.8.8",
-  "ip_url": "https://api.ip.sb/ip",
+  "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300
 }
@@ -708,7 +708,7 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
 
    For that:
 
-   - Set the `ip_type` as `IPv6`, and make sure the `ipv6_url` is configured
+   - Set the `ip_type` as `IPv6`, and make sure the `ipv6_urls` is configured
    - Create an `AAAA` record instead of an `A` record in your DNS provider
 
    <details>
@@ -725,7 +725,7 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
        }
      ],
      "resolver": "2001:4860:4860::8888",
-     "ipv6_url": "https://api-ipv6.ip.sb/ip",
+     "ipv6_urls": ["https://api-ipv6.ip.sb/ip"],
      "ip_type": "IPv6"
    }
    ```
@@ -734,7 +734,7 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
 
 2. Let GoDNS find the IPv6 of the network interface of the machine it is running on (more on that [later](#network-interface-ip-address)).
 
-   For this to happen, just leave `ip_url` and `ipv6_url` empty.
+   For this to happen, just leave `ip_urls` and `ipv6_urls` empty.
 
    Note that the network interface must be configured with an IPv6 for this to work.
 
@@ -743,13 +743,13 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
 For some reasons if you want to get the IP address associated to a network interface (instead of performing an online lookup), you can specify it in the configuration file this way:
 
 ```json
-  "ip_url": "",
+  "ip_urls": [""],
   "ip_interface": "interface-name",
 ```
 
 With `interface-name` replaced by the name of the network interface, e.g. `eth0` on Linux or `Local Area Connection` on Windows.
 
-Note: If `ip_url` is also specified, it will be used to perform an online lookup first and the network interface IP will be used as a fallback in case of failure.
+Note: If `ip_urls` is also specified, it will be used to perform an online lookup first and the network interface IP will be used as a fallback in case of failure.
 
 #### SOCKS5 proxy support
 
