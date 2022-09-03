@@ -57,7 +57,7 @@ func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- s
 
 func (handler *Handler) UpdateIP(domain *settings.Domain) error {
 	ip, err := utils.GetCurrentIP(handler.Configuration)
-	if err != nil {
+	if err != nil || len(ip) == 0 {
 		if handler.Configuration.RunOnce {
 			return fmt.Errorf("%v: fail to get current IP", err)
 		}
