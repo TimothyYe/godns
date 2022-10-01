@@ -71,7 +71,10 @@ func GetCurrentIP(configuration *settings.Settings) (string, error) {
 	var err error
 	var ip string
 
-	if len(configuration.IPUrls) > 0 || len(configuration.IPV6Urls) > 0 {
+	if len(configuration.IPUrls) > 0 ||
+		len(configuration.IPV6Urls) > 0 ||
+		configuration.IPUrl != "" ||
+		configuration.IPV6Url != "" {
 		ip, err = GetIPOnline(configuration)
 		if err != nil {
 			log.Error("get ip online failed. Fallback to get ip from interface if possible.")
@@ -104,8 +107,16 @@ func GetIPOnline(configuration *settings.Settings) (string, error) {
 		reqURLs = configuration.IPV6Urls
 	}
 
-	for _, reqURL := range reqURLs {
+	// backward compatible
+	if len(reqURLs) == 0 && (configuration.IPUrl != "" || configuration.IPV6Url != "") {
+		if configuration.IPType == "" || strings.ToUpper(configuration.IPType) == IPV4 {
+			reqURLs = append(reqURLs, configuration.IPUrl)
+		} else {
+			reqURLs = append(reqURLs, configuration.IPV6Url)
+		}
+	}
 
+	for _, reqURL := range reqURLs {
 		req, _ := http.NewRequest("GET", reqURL, nil)
 
 		if configuration.UserAgent != "" {
