@@ -101,7 +101,9 @@ type Settings struct {
 	LoginToken     string   `json:"login_token" yaml:"login_token"`
 	LoginTokenFile string   `json:"login_token_file" yaml:"login_token_file"`
 	Domains        []Domain `json:"domains" yaml:"domains"`
+	IPUrl          string   `json:"ip_url" yaml:"ip_url"`
 	IPUrls         []string `json:"ip_urls" yaml:"ip_urls"`
+	IPV6Url        string   `json:"ipv6_url" yaml:"ipv6_url"`
 	IPV6Urls       []string `json:"ipv6_urls" yaml:"ipv6_urls"`
 	Interval       int      `json:"interval" yaml:"interval"`
 	UserAgent      string   `json:"user_agent,omitempty" yaml:"user_agent,omitempty"`
