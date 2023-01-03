@@ -563,7 +563,6 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
 ```json
 {
   "provider": "strato",
-  "email": "Your_Username",
   "password": "Your_Password",
   "domains": [{
       "domain_name": "example.com",
