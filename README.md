@@ -551,7 +551,34 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
 }
 ```
 </details>
+#### Strato
+For Strato, you need to provide email & password, and config all the domains & subdomains.  
+More Info: [German]{https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/} [English]{https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/}
 
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "strato",
+  "email": "Your_Username",
+  "password": "Your_Password",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+</details>
 ### Notifications
 
 GoDNS can send a notification each time the IP changes.
