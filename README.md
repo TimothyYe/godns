@@ -551,7 +551,9 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
 }
 ```
 </details>
-#### Strato  
+
+#### Strato
+
 For Strato, you need to provide email & password, and config all the domains & subdomains.  
 More Info: [German]{https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/} [English]{https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/}
 
