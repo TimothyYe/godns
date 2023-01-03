@@ -34,7 +34,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error {
 	client := utils.GetHTTPClient(provider.configuration)
 	resp, err := client.Get(fmt.Sprintf(URL,
-		provider.configuration.Email,
+		domain,
 		provider.configuration.Password,
 		subDomain,
 		domain,
