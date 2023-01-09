@@ -43,6 +43,7 @@
       "smtp_username": "",
       "smtp_password": "",
       "smtp_port": 25,
+      "send_from": "",
       "send_to": ""
     }
   },

@@ -568,6 +568,7 @@ Emails are sent over [SMTP](https://en.wikipedia.org/wiki/Simple_Mail_Transfer_P
       "smtp_username": "user",
       "smtp_password": "password",
       "smtp_port": 25,
+      "send_from": "my_mail@example.com"
       "send_to": "my_mail@example.com"
     }
   }
