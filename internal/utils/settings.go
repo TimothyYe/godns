@@ -65,7 +65,7 @@ func CheckSettings(config *settings.Settings) error {
 		}
 	case STRATO:
 		if config.Password == "" {
-			return errors.New("login token cannot be empty")
+			return errors.New("password cannot be empty")
 		}
 	default:
 		message := fmt.Sprintf("'%s' is not a supported DNS provider", config.Provider)
