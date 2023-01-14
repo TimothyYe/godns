@@ -19,7 +19,12 @@ func (n *EmailNotification) Send(domain, currentIP string) error {
 	log.Debug("Sending notification to: ", n.conf.Notify.Mail.SendTo)
 	m := gomail.NewMessage()
 
-	m.SetHeader("From", n.conf.Notify.Mail.SMTPUsername)
+	if n.conf.Notify.Mail.SendFrom != "" {
+		m.SetHeader("From", n.conf.Notify.Mail.SendFrom)
+	} else {
+		log.Debug("'send_from' is not set, use 'smtp_username' instead")
+		m.SetHeader("From", n.conf.Notify.Mail.SMTPUsername)
+	}
 	m.SetHeader("To", n.conf.Notify.Mail.SendTo)
 	m.SetHeader("Subject", "GoDNS Notification")
 	log.Debug("currentIP:", currentIP)

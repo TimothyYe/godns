@@ -53,6 +53,7 @@ type MailNotify struct {
 	SMTPPassword     string `json:"smtp_password" yaml:"smtp_password"`
 	SMTPPasswordFile string `json:"smtp_password_file" yaml:"smtp_password_file"`
 	SMTPPort         int    `json:"smtp_port" yaml:"smtp_port"`
+	SendFrom         string `json:"send_from" yaml:"send_from"`
 	SendTo           string `json:"send_to" yaml:"send_to"`
 }
 
