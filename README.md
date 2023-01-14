@@ -580,6 +580,7 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
 }
 ```
 </details>
+
 ### Notifications
 
 GoDNS can send a notification each time the IP changes.
