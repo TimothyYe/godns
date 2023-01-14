@@ -47,6 +47,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [HE.net](#henet)
     - [Scaleway](#scaleway)
     - [Linode](#linode)
+    - [Strato](#strato)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -87,6 +88,8 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 | [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Scaleway][Scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -99,7 +102,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 [no-ip]: https://www.noip.com
 [Scaleway]: https://www.scaleway.com/
 [Linode]: https://www.linode.com
-
+[Strato]: https://strato.de
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
 ## Supported Platforms
