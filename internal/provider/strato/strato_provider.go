@@ -68,6 +68,8 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 		log.Infof("Update IP success: %s", string(body))
 	} else if strings.Contains(string(body), "nochg") {
 		log.Infof("IP not changed: %s", string(body))
+	} else {
+		return fmt.Errorf("Error response: %s", string(body))
 	}
 
 	return nil
