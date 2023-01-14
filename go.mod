@@ -36,5 +36,6 @@ require (
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
-
 go 1.17
+replace github.com/phiwatec/godns/internal/provider/strato => ./internal/provider/strato
+
