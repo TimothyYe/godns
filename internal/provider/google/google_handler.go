@@ -61,7 +61,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != http.StatusOK {
 		log.Errorf("Update IP failed: %s", string(body))
-		return fmt.Errorf("Update IP failed: %s", string(body))
+		return fmt.Errorf("update IP failed: %s", string(body))
 	}
 
 	if strings.Contains(string(body), "good") {
@@ -69,7 +69,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 	} else if strings.Contains(string(body), "nochg") {
 		log.Infof("IP not changed: %s", string(body))
 	} else {
-		return fmt.Errorf("Update IP failed: %s", string(body))
+		return fmt.Errorf("update IP failed: %s", string(body))
 	}
 
 	return nil
