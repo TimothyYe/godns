@@ -25,6 +25,8 @@ const (
 	SCALEWAY = "Scaleway"
 	// LINODE for Linode.
 	LINODE = "Linode"
+	// STRATO for Strato.
+	STRATO = "Strato"
 	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode.

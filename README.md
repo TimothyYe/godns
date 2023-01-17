@@ -47,6 +47,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [HE.net](#henet)
     - [Scaleway](#scaleway)
     - [Linode](#linode)
+    - [Strato](#strato)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -87,6 +88,8 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 | [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Scaleway][Scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -99,7 +102,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 [no-ip]: https://www.noip.com
 [Scaleway]: https://www.scaleway.com/
 [Linode]: https://www.linode.com
-
+[Strato]: https://strato.de
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
 ## Supported Platforms
@@ -548,6 +551,35 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
   "ip_urls": ["https://api.ip.sb/ip"],
   "ip_type": "IPv4",
   "interval": 300
+}
+```
+</details>
+
+#### Strato
+
+For Strato, you need to provide email & password, and config all the domains & subdomains.  
+More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/) [English](https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/)
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "strato",
+  "password": "Your_Password",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
 }
 ```
 </details>

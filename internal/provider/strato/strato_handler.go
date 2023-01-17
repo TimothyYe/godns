@@ -1,4 +1,4 @@
-package google
+package strato
 
 import (
 	"fmt"
@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	// URL the API address for Google Domains.
-	URL = "https://%s:%s@domains.google.com/nic/update?hostname=%s.%s&myip=%s"
+	// URL the API address for Strato.
+	URL = "https://%s:%s@dyndns.strato.com/nic/update?hostname=%s.%s&myip=%s"
 )
 
 // DNSProvider struct.
@@ -34,7 +34,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error {
 	client := utils.GetHTTPClient(provider.configuration)
 	resp, err := client.Get(fmt.Sprintf(URL,
-		provider.configuration.Email,
+		domain,
 		provider.configuration.Password,
 		subDomain,
 		domain,

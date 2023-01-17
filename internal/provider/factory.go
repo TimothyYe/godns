@@ -14,6 +14,7 @@ import (
 	"github.com/TimothyYe/godns/internal/provider/linode"
 	"github.com/TimothyYe/godns/internal/provider/noip"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
+	"github.com/TimothyYe/godns/internal/provider/strato"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 )
@@ -44,6 +45,8 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 		provider = &dynv6.DNSProvider{}
 	case utils.LINODE:
 		provider = &linode.DNSProvider{}
+	case utils.STRATO:
+		provider = &strato.DNSProvider{}
 	default:
 		return nil, fmt.Errorf("Unknown provider '%s'", conf.Provider)
 	}
