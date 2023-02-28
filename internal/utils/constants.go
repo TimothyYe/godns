@@ -27,6 +27,8 @@ const (
 	LINODE = "Linode"
 	// STRATO for Strato.
 	STRATO = "Strato"
+	// LOOPIASE for LoopiaSE.
+	LOOPIASE = "LoopiaSE"
 	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode.
