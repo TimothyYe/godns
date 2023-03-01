@@ -46,6 +46,7 @@
     - [Scaleway](#scaleway)
     - [Linode](#linode)
     - [Strato](#strato)
+    - [LoopiaSE](#loopiase)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -87,6 +88,7 @@
 | [Scaleway][Scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 
 [cloudflare]: https://cloudflare.com
@@ -101,6 +103,7 @@
 [Scaleway]: https://www.scaleway.com/
 [Linode]: https://www.linode.com
 [Strato]: https://strato.de
+[LoopiaSE]: https://www.loopia.se/
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
 ## Supported Platforms
@@ -564,6 +567,36 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
 ```json
 {
   "provider": "strato",
+  "password": "Your_Password",
+  "domains": [{
+      "domain_name": "example.com",
+      "sub_domains": ["www","test"]
+    },{
+      "domain_name": "example2.com",
+      "sub_domains": ["www","test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+</details>
+
+#### LoopiaSE
+
+For LoopiaSE, you need to provide username & password, and config all the domains & subdomains.
+More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "LoopiaSE",
+  "email": "Your_Username",
   "password": "Your_Password",
   "domains": [{
       "domain_name": "example.com",
