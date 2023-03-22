@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"runtime/debug"
+	"strings"
 	"time"
 
 	"github.com/TimothyYe/godns/internal/provider"
@@ -84,6 +85,7 @@ func (handler *Handler) UpdateIP(domain *settings.Domain) error {
 }
 
 func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
+	var updatedDomains []string
 	for _, subdomainName := range domain.SubDomains {
 
 		var hostname string
@@ -108,8 +110,7 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 				return err
 			}
 
-			successMessage := fmt.Sprintf("%s.%s", subdomainName, domain.DomainName)
-			handler.notificationManager.Send(successMessage, ip)
+			updatedDomains = append(updatedDomains, subdomainName)
 
 			// execute webhook when it is enabled
 			if handler.Configuration.Webhook.Enabled {
@@ -118,6 +119,11 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 				}
 			}
 		}
+	}
+
+	if len(updatedDomains) > 0 {
+		successMessage := fmt.Sprintf("[ %s ] of %s", strings.Join(updatedDomains, ", "), domain.DomainName)
+		handler.notificationManager.Send(successMessage, ip)
 	}
 
 	return nil

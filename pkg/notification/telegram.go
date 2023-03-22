@@ -31,7 +31,7 @@ func (n *TelegramNotification) Send(domain, currentIP string) error {
 	client := utils.GetHTTPClient(n.conf)
 	tpl := n.conf.Notify.Telegram.MsgTemplate
 	if tpl == "" {
-		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* is updated"
+		tpl = "_Your IP address is changed to_%0A%0A*{{ .CurrentIP }}*%0A%0ADomain *{{ .Domain }}* updated"
 	}
 
 	msg := buildTemplate(currentIP, domain, tpl)
