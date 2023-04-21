@@ -38,10 +38,7 @@ func (n *EmailNotification) Send(domain, currentIP string) error {
 		n.conf.Notify.Mail.SMTPPassword)
 
 	// Send the email config by sendlist	.
-	if err := d.DialAndSend(m); err != nil {
-		return err
-	}
-	return nil
+	return d.DialAndSend(m)
 }
 
 var mailTemplate = `

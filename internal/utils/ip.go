@@ -143,10 +143,8 @@ func GetIPOnline(configuration *settings.Settings) (string, error) {
 		if onlineIP == "" {
 			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
 			continue
-		} else {
-			log.Debugf("get ip success by: %s, online IP: %s", reqURL, onlineIP)
-			break
 		}
+		log.Debugf("get ip success by: %s, online IP: %s", reqURL, onlineIP)
 	}
 
 	if onlineIP == "" {
