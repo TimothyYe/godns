@@ -651,7 +651,7 @@ To receive a [Telegram](https://telegram.org/) message each time the IP changes,
       "enabled": true,
       "bot_api_key": "11111:aaaa-bbbb",
       "chat_id": "-123456",
-      "message_template": "Domain *{{ .Domain }}* is updated to %0A{{ .CurrentIP }}",
+      "message_template": "Domain *{{ .Domain }}* updated to %0A{{ .CurrentIP }}",
       "use_proxy": false
     },
   }
@@ -669,7 +669,7 @@ To receive a [Slack](https://slack.com) message each time the IP changes, update
       "enabled": true,
       "bot_api_token": "xoxb-xxx",
       "channel": "your_channel",
-      "message_template": "Domain *{{ .Domain }}* is updated to \n{{ .CurrentIP }}",
+      "message_template": "Domain *{{ .Domain }}* updated to \n{{ .CurrentIP }}",
       "use_proxy": false
     },
   }
@@ -687,7 +687,7 @@ To receive a [Discord](https://discord.gg) message each time the IP changes, upd
           "enabled": true,
           "bot_api_token": "discord_bot_token",
           "channel": "your_channel",
-          "message_template": "(Optional) Domain *{{ .Domain }}* is updated to \n{{ .CurrentIP }}",
+          "message_template": "(Optional) Domain *{{ .Domain }}* updated to \n{{ .CurrentIP }}",
         }
   }
 ```

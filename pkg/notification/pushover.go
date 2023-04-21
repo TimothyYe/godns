@@ -37,7 +37,7 @@ func (n *PushoverNotification) Send(domain, currentIP string) error {
 	client := utils.GetHTTPClient(n.conf)
 	tpl := n.conf.Notify.Pushover.MsgTemplate
 	if tpl == "" {
-		tpl = "Your IP address changed to <b>{{ .CurrentIP }}</b>. The DNS record for {{ .Domain }} is updated."
+		tpl = "Your IP address changed to <b>{{ .CurrentIP }}</b>. The DNS record for {{ .Domain }} updated."
 		n.conf.Notify.Pushover.HTML = 1
 	}
 
