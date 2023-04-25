@@ -5,7 +5,7 @@
 ██║   ██║██║   ██║██║  ██║██║╚██╗██║╚════██║
 ╚██████╔╝╚██████╔╝██████╔╝██║ ╚████║███████║
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
- ```
+```
 
 [![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
 
@@ -22,9 +22,8 @@
 
 [GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open source project.
 
-Currently supports updating A records for subdomains. Doesn't support updating of root domains.
-
 ---
+
 - [Supported DNS Providers](#supported-dns-providers)
 - [Supported Platforms](#supported-platforms)
 - [Pre-conditions](#pre-conditions)
@@ -48,6 +47,7 @@ Currently supports updating A records for subdomains. Doesn't support updating o
     - [Scaleway](#scaleway)
     - [Linode](#linode)
     - [Strato](#strato)
+    - [LoopiaSE](#loopiase)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -73,9 +73,10 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 - [Special Thanks](#special-thanks)
 
 ---
+
 ## Supported DNS Providers
 
-| Provider                              |   IPv4  support    |    IPv6 support    |    Root Domain     |     Subdomains     |
+| Provider                              |    IPv4 support    |    IPv6 support    |    Root Domain     |     Subdomains     |
 | ------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: |
 | [Cloudflare][cloudflare]              | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Google Domains][google.domains]      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
@@ -86,10 +87,10 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 | [DuckDNS][duckdns]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dreamhost][dreamhost]                | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [No-IP][no-ip]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
-| [Scaleway][Scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [Scaleway][scaleway]                  | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
-
+| [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -100,18 +101,20 @@ Currently supports updating A records for subdomains. Doesn't support updating o
 [duckdns]: https://www.duckdns.org
 [dreamhost]: https://www.dreamhost.com
 [no-ip]: https://www.noip.com
-[Scaleway]: https://www.scaleway.com/
-[Linode]: https://www.linode.com
-[Strato]: https://strato.de
+[scaleway]: https://www.scaleway.com/
+[linode]: https://www.linode.com
+[strato]: https://strato.de
+[loopiase]: https://www.loopia.se/
+
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
 ## Supported Platforms
 
-* Linux
-* MacOS
-* ARM Linux (Raspberry Pi, etc.)
-* Windows
-* MIPS32 platform
+- Linux
+- MacOS
+- ARM Linux (Raspberry Pi, etc.)
+- Windows
+- MIPS32 platform
 
   To compile binaries for MIPS (mips or mipsle), run:
 
@@ -124,8 +127,9 @@ Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) t
 ## Pre-conditions
 
 To use GoDNS, it is assumed:
-* You registered (now own) a domain
-* Domain was delegated to a supported [DNS provider](#supported-dns-providers) (i.e. it has nameserver `NS` records pointing at a supported provider)
+
+- You registered (now own) a domain
+- Domain was delegated to a supported [DNS provider](#supported-dns-providers) (i.e. it has nameserver `NS` records pointing at a supported provider)
 
 Alternatively, you can sign in to [DuckDNS](https://www.duckdns.org) (with a social account) and get a subdomain on the duckdns.org domain for free.
 
@@ -140,6 +144,7 @@ go build            # build
 ```
 
 You can also download a compiled binary from the [releases](https://github.com/TimothyYe/godns/releases).
+
 ## Usage
 
 Print usage/help by running:
@@ -156,33 +161,33 @@ Usage of ./godns:
 
 ### Overview
 
-* Make a copy of [config_sample.json](configs/config_sample.json) and name it as `config.json`, or make a copy of [config_sample.yaml](configs/config_sample.yaml) and name it as `config.yaml`.
-* Configure your provider, domain/subdomain info, credentials, etc.
-* Configure a notification medium (e.g. SMTP to receive emails) to get notified when your IP address changes
-* Place the file in the same directory of GoDNS or use the `-c=path/to/your/file.json` option
+- Make a copy of [config_sample.json](configs/config_sample.json) and name it as `config.json`, or make a copy of [config_sample.yaml](configs/config_sample.yaml) and name it as `config.yaml`.
+- Configure your provider, domain/subdomain info, credentials, etc.
+- Configure a notification medium (e.g. SMTP to receive emails) to get notified when your IP address changes
+- Place the file in the same directory of GoDNS or use the `-c=path/to/your/file.json` option
 
 ### Configuration file format
 
 GoDNS supports 2 different configuration file formats:
 
-* JSON
-* YAML
+- JSON
+- YAML
 
-By default, GoDNS uses `JSON` config file. However, you can specify to use the `YAML` format via: `./godns -c /path/to/config.yaml` 
+By default, GoDNS uses `JSON` config file. However, you can specify to use the `YAML` format via: `./godns -c /path/to/config.yaml`
 
 ### Configuration properties
 
-* `provider` — One of the [supported provider to use](#supported-dns-providers): `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS` or `Dreamhost`.
-* `email` — Email or account name of the DNS provider.
-* `password` — Password of the DNS provider.
-* `login_token` — API token of the DNS provider.
-* `domains` — Domains list, with your sub domains.
-* `ip_urls` — A URL array for fetching one's public IPv4 address.
-* `ipv6_urls` — A URL array for fetching one's public IPv6 address.
-* `ip_type` — Switch deciding if IPv4 or IPv6 should be used (when [supported](#supported-dns-providers)). Available values: `IPv4` or `IPv6`.
-* `interval` — How often (in seconds) the public IP should be updated.
-* `socks5_proxy` — Socks5 proxy server.
-* `resolver` — Address of a public DNS server to use. For instance to use [Google's public DNS](https://developers.google.com/speed/public-dns/docs/using), you can set `8.8.8.8` when using GoDNS in IPv4 mode or `2001:4860:4860::8888` in IPv6 mode.
+- `provider` — One of the [supported provider to use](#supported-dns-providers): `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS` or `Dreamhost`.
+- `email` — Email or account name of the DNS provider.
+- `password` — Password of the DNS provider.
+- `login_token` — API token of the DNS provider.
+- `domains` — Domains list, with your sub domains.
+- `ip_urls` — A URL array for fetching one's public IPv4 address.
+- `ipv6_urls` — A URL array for fetching one's public IPv6 address.
+- `ip_type` — Switch deciding if IPv4 or IPv6 should be used (when [supported](#supported-dns-providers)). Available values: `IPv4` or `IPv6`.
+- `interval` — How often (in seconds) the public IP should be updated.
+- `socks5_proxy` — Socks5 proxy server.
+- `resolver` — Address of a public DNS server to use. For instance to use [Google's public DNS](https://developers.google.com/speed/public-dns/docs/using), you can set `8.8.8.8` when using GoDNS in IPv4 mode or `2001:4860:4860::8888` in IPv6 mode.
 
 ### Update root domain
 
@@ -211,12 +216,14 @@ By setting the option `proxied = true`, the record is receiving the performance 
   "provider": "Cloudflare",
   "email": "you@example.com",
   "password": "Global API Key",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -227,6 +234,7 @@ By setting the option `proxied = true`, the record is receiving the performance 
   "proxied": false
 }
 ```
+
 </details>
 
 <details>
@@ -236,12 +244,14 @@ By setting the option `proxied = true`, the record is receiving the performance 
 {
   "provider": "Cloudflare",
   "login_token": "API Token",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -251,6 +261,7 @@ By setting the option `proxied = true`, the record is receiving the performance 
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### DNSPod
@@ -264,12 +275,14 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
 {
   "provider": "DNSPod",
   "login_token": "your_id,your_token",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -279,6 +292,7 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### Dreamhost
@@ -292,12 +306,14 @@ For Dreamhost, you need to provide your API Token(you can create it [here](https
 {
   "provider": "Dreamhost",
   "login_token": "your_api_key",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -308,6 +324,7 @@ For Dreamhost, you need to provide your API Token(you can create it [here](https
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### Dynv6
@@ -325,9 +342,7 @@ For Dynv6, only need to provide the `token`, config 1 default domain & subdomain
   "domains": [
     {
       "domain_name": "dynv6.net",
-      "sub_domains": [
-        "myname"
-      ]
+      "sub_domains": ["myname"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -337,6 +352,7 @@ For Dynv6, only need to provide the `token`, config 1 default domain & subdomain
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### Google Domains
@@ -351,12 +367,14 @@ For Google Domains, you need to provide email & password, and config all the dom
   "provider": "Google",
   "email": "Your_Username",
   "password": "Your_Password",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -366,11 +384,12 @@ For Google Domains, you need to provide email & password, and config all the dom
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### AliDNS
 
-For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `password`,  and config all the domains & subdomains.
+For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `password`, and config all the domains & subdomains.
 
 <details>
 <summary>Example</summary>
@@ -381,12 +400,14 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
   "email": "AccessKeyID",
   "password": "AccessKeySecret",
   "login_token": "",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -396,6 +417,7 @@ For AliDNS, you need to provide `AccessKeyID` & `AccessKeySecret` as `email` & `
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### DuckDNS
@@ -413,9 +435,7 @@ For DuckDNS, the only thing needed is to provide the `token`, config 1 default d
   "domains": [
     {
       "domain_name": "www.duckdns.org",
-      "sub_domains": [
-        "myname"
-      ]
+      "sub_domains": ["myname"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -425,6 +445,7 @@ For DuckDNS, the only thing needed is to provide the `token`, config 1 default d
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### No-IP
@@ -450,6 +471,7 @@ For DuckDNS, the only thing needed is to provide the `token`, config 1 default d
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 #### HE.net
@@ -464,12 +486,14 @@ For HE, email is not needed, just fill the DDNS key as password, and config all 
   "provider": "HE",
   "password": "Your DDNS Key",
   "login_token": "",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -479,6 +503,7 @@ For HE, email is not needed, just fill the DDNS key as password, and config all 
   "socks5_proxy": ""
 }
 ```
+
 </details>
 
 <details>
@@ -494,7 +519,8 @@ Fill in your own DDNS key or generate a random DDNS key for this new created "A 
 
 Remember the DDNS key and set it in the `password` property in the configuration file.
 
-__NOTICE__: If you have multiple domains or subdomains, make sure their DDNS key are the same.
+**NOTICE**: If you have multiple domains or subdomains, make sure their DDNS key are the same.
+
 </details>
 
 #### Scaleway
@@ -567,12 +593,14 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
 {
   "provider": "strato",
   "password": "Your_Password",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","test"]
-    },{
+      "sub_domains": ["www", "test"]
+    },
+    {
       "domain_name": "example2.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -582,7 +610,110 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
   "socks5_proxy": ""
 }
 ```
+
 </details>
+
+#### LoopiaSE
+
+For LoopiaSE, you need to provide username & password, and config all the domains & subdomains.
+More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "LoopiaSE",
+  "email": "Your_Username",
+  "password": "Your_Password",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["www", "test"]
+    },
+    {
+      "domain_name": "example2.com",
+      "sub_domains": ["www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+</details>
+
+#### Strato
+
+For Strato, you need to provide email & password, and config all the domains & subdomains.  
+More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/) [English](https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/)
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "strato",
+  "password": "Your_Password",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["www", "test"]
+    },
+    {
+      "domain_name": "example2.com",
+      "sub_domains": ["www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+</details>
+
+# <<<<<<< HEAD
+
+#### LoopiaSE
+
+For LoopiaSE, you need to provide username & password, and config all the domains & subdomains.
+More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "LoopiaSE",
+  "email": "Your_Username",
+  "password": "Your_Password",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["www", "test"]
+    },
+    {
+      "domain_name": "example2.com",
+      "sub_domains": ["www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+</details>
+
+> > > > > > > 0fbe5cb957a50f91abf0d1a5d3e88c55789996c5
 
 ### Notifications
 
@@ -690,13 +821,14 @@ Webhook is another feature that GoDNS provides to deliver notifications to the o
 
 The configuration section `webhook` is used for customizing the webhook request. In general, there are 2 fields used for the webhook request:
 
->* `url`: The target URL for sending webhook request.
->* `request_body`: The content for sending `POST` request, if this field is empty, a HTTP GET request will be sent instead of the HTTP POST request.
+> - `url`: The target URL for sending webhook request.
+> - `request_body`: The content for sending `POST` request, if this field is empty, a HTTP GET request will be sent instead of the HTTP POST request.
 
 Available variables:
->* `Domain`: The current domain.
->* `IP`: The new IP address.
->* `IPType`: The type of the IP: `IPV4` or `IPV6`.
+
+> - `Domain`: The current domain.
+> - `IP`: The new IP address.
+> - `IPType`: The type of the IP: `IPV4` or `IPV6`.
 
 #### Webhook with HTTP GET reqeust
 
@@ -708,7 +840,8 @@ Available variables:
 }
 ```
 
-For this example, a webhook with query string parameters will be sent to the target URL:  
+For this example, a webhook with query string parameters will be sent to the target URL:
+
 ```
 http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type=IPV4
 ```
@@ -752,9 +885,7 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
      "domains": [
        {
          "domain_name": "example.com",
-         "sub_domains": [
-           "ipv6"
-         ]
+         "sub_domains": ["ipv6"]
        }
      ],
      "resolver": "2001:4860:4860::8888",
@@ -762,8 +893,8 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
      "ip_type": "IPv6"
    }
    ```
-   </details>
 
+   </details>
 
 2. Let GoDNS find the IPv6 of the network interface of the machine it is running on (more on that [later](#network-interface-ip-address)).
 
@@ -793,7 +924,7 @@ You can make all remote calls go through a [SOCKS5 proxy](https://en.wikipedia.o
 "use_proxy": true
 ```
 
-#### Display debug info 
+#### Display debug info
 
 To display debug info, set `debug_info` as `true` to enable this feature. By default, the debug info is disabled.
 
@@ -803,7 +934,7 @@ To display debug info, set `debug_info` as `true` to enable this feature. By def
 
 #### Recommended APIs
 
-- https://api.ipify.org 
+- https://api.ipify.org
 - https://myip.biturl.top
 - https://ip4.seeip.org
 - https://ipecho.net/plain
@@ -825,6 +956,7 @@ Can be added to `cron` or attached to other events on your system.
   "run_once": true
 }
 ```
+
 Then run
 
 ```bash
@@ -863,8 +995,9 @@ Note: when the program stops, it will not be restarted.
 ### As a Docker container
 
 Available docker registries:
-* https://hub.docker.com/r/timothyye/godns
-* https://github.com/TimothyYe/godns/pkgs/container/godns
+
+- https://hub.docker.com/r/timothyye/godns
+- https://github.com/TimothyYe/godns/pkgs/container/godns
 
 Visit https://hub.docker.com/r/timothyye/godns to fetch the latest docker image.  
 With `/path/to/config.json` your local configuration file, run:
