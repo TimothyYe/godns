@@ -91,6 +91,7 @@
 | [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -105,6 +106,7 @@
 [linode]: https://www.linode.com
 [strato]: https://strato.de
 [loopiase]: https://www.loopia.se/
+[hetzner]: https://hetzner.com/
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -646,18 +648,18 @@ More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
 
 </details>
 
-#### Strato
+#### Hetzner
 
-For Strato, you need to provide email & password, and config all the domains & subdomains.  
-More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/) [English](https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/)
+For Hetzner, you have to create an access token. This can be done in the DNS-Console.  
+(Person Icon in the top left corner --> API Tokens)
 
 <details>
 <summary>Example</summary>
 
 ```json
 {
-  "provider": "strato",
-  "password": "Your_Password",
+  "provider": "hetzner",
+  "login_token": "<token>",
   "domains": [
     {
       "domain_name": "example.com",
@@ -670,9 +672,7 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
   ],
   "resolver": "8.8.8.8",
   "ip_urls": ["https://api.ip.sb/ip"],
-  "ip_type": "IPv4",
-  "interval": 300,
-  "socks5_proxy": ""
+  "ip_type": "IPv4"
 }
 ```
 
