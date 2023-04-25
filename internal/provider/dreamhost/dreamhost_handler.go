@@ -47,11 +47,7 @@ func (provider *DNSProvider) updateIP(hostname, currentIP, lastIP string) error 
 		return err
 	}
 
-	if err := provider.updateDNS(lastIP, currentIP, hostname, "add"); err != nil {
-		return err
-	}
-
-	return nil
+	return provider.updateDNS(lastIP, currentIP, hostname, "add")
 }
 
 // updateDNS can add or remove DNS records.

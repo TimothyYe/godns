@@ -31,7 +31,7 @@ func (n *SlackNotification) Send(domain, currentIP string) error {
 	client := utils.GetHTTPClient(n.conf)
 	tpl := n.conf.Notify.Slack.MsgTemplate
 	if tpl == "" {
-		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* is updated"
+		tpl = "_Your IP address is changed to_\n\n*{{ .CurrentIP }}*\n\nDomain *{{ .Domain }}* updated"
 	}
 
 	msg := buildTemplate(currentIP, domain, tpl)

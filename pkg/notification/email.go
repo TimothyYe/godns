@@ -38,10 +38,7 @@ func (n *EmailNotification) Send(domain, currentIP string) error {
 		n.conf.Notify.Mail.SMTPPassword)
 
 	// Send the email config by sendlist	.
-	if err := d.DialAndSend(m); err != nil {
-		return err
-	}
-	return nil
+	return d.DialAndSend(m)
 }
 
 var mailTemplate = `
@@ -93,7 +90,7 @@ var mailTemplate = `
                                 <h2 class="size-28" style="Margin-top: 20px;Margin-bottom: 16px;font-style: normal;font-weight: normal;color: #e31212;font-size: 24px;line-height: 32px;font-family: Avenir,sans-serif;text-align: center;"
                                     lang="x-size-28">
                                     <font color="#ffffff">
-                                        <strong>Domain {{ .Domain }} is updated</strong>
+                                        <strong>Domain {{ .Domain }} updated</strong>
                                     </font>
                                 </h2>
                             </div>
