@@ -680,8 +680,6 @@ Make shure there is just one record.
 
 </details>
 
-# <<<<<<< HEAD
-
 #### LoopiaSE
 
 For LoopiaSE, you need to provide username & password, and config all the domains & subdomains.
@@ -714,8 +712,6 @@ More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
 ```
 
 </details>
-
-> > > > > > > 0fbe5cb957a50f91abf0d1a5d3e88c55789996c5
 
 ### Notifications
 
