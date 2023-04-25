@@ -70,19 +70,24 @@ func (provider *DNSProvider) UpdateIP(domainName string, subdomainName string, i
 		return fmt.Errorf("no fitting record type found")
 	}
 	outrec.Value = ip
-
+	// Update IP.
 	err = client.Put(fmt.Sprintf("/domain/zone/%s/record/%s", domainName, fmt.Sprint(outrec.ID)), outrec, nil)
 	if err != nil {
 		log.Error("Error while Updating record: ", outrec.SubDomain, outrec.Zone)
 		return err
 	}
-	log.Info("OK")
+	// Refresh zone.
+	err = client.Post(fmt.Sprintf("/domain/zone/%s/refresh", domainName), nil, nil)
+	if err != nil {
+		log.Error("Applying new records failed")
+		return err
+	}
 	return nil
 }
 func (provider *DNSProvider) recordTypeToIPType(Type string) string {
 	if Type == utils.IPTypeAAAA {
 		return utils.IPV6
-	} else {
-		return utils.IPV4
 	}
+	return utils.IPV4
+
 }
