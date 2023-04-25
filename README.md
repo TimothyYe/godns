@@ -651,7 +651,9 @@ More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
 #### Hetzner
 
 For Hetzner, you have to create an access token. This can be done in the DNS-Console.  
-(Person Icon in the top left corner --> API Tokens)
+(Person Icon in the top left corner --> API Tokens)  
+Notice: If a domain has multiple Records **only the first** Record will be updated.  
+Make shure there is just one record.
 
 <details>
 <summary>Example</summary>
