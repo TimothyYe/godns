@@ -164,7 +164,7 @@ func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type s
 	if found {
 		return outRecord, nil
 	} else {
-		return outRecord, fmt.Errorf("No record matching value and type found")
+		return outRecord, fmt.Errorf("no record matching value and type found")
 	}
 
 }
