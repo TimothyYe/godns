@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
+
 	"net/http"
 
 	"github.com/TimothyYe/godns/internal/settings"
@@ -77,7 +78,7 @@ func (provider *DNSProvider) getData(endpoint string, param string, value string
 		return nil, err
 	}
 
-	respBody, _ := ioutil.ReadAll(resp.Body)
+	respBody, _ := io.ReadAll(resp.Body)
 	return respBody, nil
 }
 func (provider *DNSProvider) putData(endpoint string, location string, body []byte) error {
