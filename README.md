@@ -687,7 +687,7 @@ Make shure there is just one record.
 
 For OVH, you need to provide a Comsumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
 The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)  
-Rights should be '\*' on GET and PUT  
+Rights should be '\*' on GET, POST and PUT  
 More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
 
 <details>
