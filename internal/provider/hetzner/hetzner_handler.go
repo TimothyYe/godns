@@ -15,12 +15,12 @@ import (
 
 const (
 	// URL the API address for Hetzner.
-	BASE_URL = "https://dns.hetzner.com/api/v1/"
+	BaseURL = "https://dns.hetzner.com/api/v1/"
 )
 
 type Record struct {
 	Type   string `json:"type"`
-	Id     string `json:"id"`
+	ID     string `json:"id"`
 	Name   string `json:"name"`
 	Value  string `json:"value"`
 	TTL    int64  `json:"ttl"`
@@ -63,7 +63,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 }
 func (provider *DNSProvider) getData(endpoint string, param string, value string) ([]byte, error) {
 
-	req, _ := http.NewRequest("GET", BASE_URL+endpoint, nil)
+	req, _ := http.NewRequest("GET", BaseURL+endpoint, nil)
 
 	q := req.URL.Query()
 	q.Add(param, value)
@@ -83,7 +83,7 @@ func (provider *DNSProvider) getData(endpoint string, param string, value string
 }
 func (provider *DNSProvider) putData(endpoint string, location string, body []byte) error {
 
-	req, _ := http.NewRequest("PUT", BASE_URL+endpoint+"/"+location, bytes.NewBuffer(body))
+	req, _ := http.NewRequest("PUT", BaseURL+endpoint+"/"+location, bytes.NewBuffer(body))
 
 	req.Header.Add("Auth-API-Token", provider.configuration.LoginToken)
 	req.Header.Add("Content-Type", "application/json")
@@ -100,17 +100,17 @@ func (provider *DNSProvider) putData(endpoint string, location string, body []by
 	}
 	return nil
 }
-func (provider *DNSProvider) getZoneID(zone_name string) (string, error) {
+func (provider *DNSProvider) getZoneID(zoneName string) (string, error) {
 
 	type Zone struct {
-		Id string `json:"id"`
+		ID string `json:"id"`
 	}
 
 	type GetAllZonesResponse struct {
 		Zones []Zone `json:"zones"`
 	}
 
-	respBody, err := provider.getData("zones", "name", zone_name)
+	respBody, err := provider.getData("zones", "name", zoneName)
 	if err != nil {
 		return "", err
 	}
@@ -125,10 +125,10 @@ func (provider *DNSProvider) getZoneID(zone_name string) (string, error) {
 	if len(response.Zones) > 1 {
 		return "", err
 	}
-	return response.Zones[0].Id, nil
+	return response.Zones[0].ID, nil
 }
 
-func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type string) (Record, error) {
+func (provider *DNSProvider) getRecord(recordName string, zoneID string, Type string) (Record, error) {
 
 	type GetRecordsResult struct {
 		Records []Record `json:"records"`
@@ -156,7 +156,7 @@ func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type s
 
 	for _, record := range response.Records {
 
-		if record.Name == record_name && record.Type == Type {
+		if record.Name == recordName && record.Type == Type {
 			found = true
 			outRecord = record
 			break
@@ -164,14 +164,13 @@ func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type s
 	}
 	if found {
 		return outRecord, nil
-	} else {
-		return outRecord, fmt.Errorf("no record matching value and type found")
 	}
+	return outRecord, fmt.Errorf("no record matching value and type found")
 
 }
 func (provider *DNSProvider) updateRecord(record Record) error {
 	recordJSON, _ := json.Marshal(record)
-	err := provider.putData("records", record.Id, recordJSON)
+	err := provider.putData("records", record.ID, recordJSON)
 	return err
 
 }
