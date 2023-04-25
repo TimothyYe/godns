@@ -31,6 +31,8 @@ const (
 	LOOPIASE = "LoopiaSE"
 	// HETZNER for Hetzner.
 	HETZNER = "Hetzner"
+	// OVH for OVH.
+	OVH = "OVH"
 	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode.

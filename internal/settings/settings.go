@@ -118,6 +118,9 @@ type Settings struct {
 	DebugInfo      bool     `json:"debug_info" yaml:"debug_info"`
 	RunOnce        bool     `json:"run_once" yaml:"run_once"`
 	Proxied        bool     `json:"proxied" yaml:"proxied"`
+	AppKey         string   `json:"app_key" yaml:"app_key"`
+	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
+	ConsumerKey    string   `json:"comsumer_key" yaml:"comsumer_key"`
 }
 
 // LoadSettings -- Load settings from config file.
