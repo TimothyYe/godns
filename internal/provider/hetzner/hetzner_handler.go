@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	// URL the API address for Strato.
+	// URL the API address for Hetzner.
 	BASE_URL = "https://dns.hetzner.com/api/v1/"
 )
 
@@ -62,17 +62,14 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 }
 func (provider *DNSProvider) getData(endpoint string, param string, value string) ([]byte, error) {
 
-	// Create request
 	req, _ := http.NewRequest("GET", BASE_URL+endpoint, nil)
 
 	q := req.URL.Query()
 	q.Add(param, value)
 	req.URL.RawQuery = q.Encode()
 
-	// Headers
 	req.Header.Add("Auth-API-Token", provider.configuration.LoginToken)
 
-	// Fetch Request
 	resp, err := provider.client.Do(req)
 
 	if err != nil {
@@ -80,19 +77,16 @@ func (provider *DNSProvider) getData(endpoint string, param string, value string
 		return nil, err
 	}
 
-	// Read Response Body
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	return respBody, nil
 }
 func (provider *DNSProvider) putData(endpoint string, location string, body []byte) error {
 
-	// Create request
 	req, _ := http.NewRequest("PUT", BASE_URL+endpoint+"/"+location, bytes.NewBuffer(body))
 
-	// Headers
 	req.Header.Add("Auth-API-Token", provider.configuration.LoginToken)
 	req.Header.Add("Content-Type", "application/json")
-	// Fetch Request
+
 	resp, err := provider.client.Do(req)
 
 	if err != nil {
@@ -103,7 +97,6 @@ func (provider *DNSProvider) putData(endpoint string, location string, body []by
 		log.Error("Got non 200 status code: ", resp.Status)
 		return fmt.Errorf("got non 200 status code %s", resp.Status)
 	}
-
 	return nil
 }
 func (provider *DNSProvider) getZoneID(zone_name string) (string, error) {
@@ -116,14 +109,11 @@ func (provider *DNSProvider) getZoneID(zone_name string) (string, error) {
 		Zones []Zone `json:"zones"`
 	}
 
-	// Create client
-
-	response := GetAllZonesResponse{}
 	respBody, err := provider.getData("zones", "name", zone_name)
 	if err != nil {
 		return "", err
 	}
-
+	response := GetAllZonesResponse{}
 	err = json.Unmarshal(respBody, &response)
 	if err != nil {
 		return "", err
@@ -135,8 +125,6 @@ func (provider *DNSProvider) getZoneID(zone_name string) (string, error) {
 		return "", err
 	}
 	return response.Zones[0].Id, nil
-	// Display Results
-
 }
 
 func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type string) (Record, error) {
@@ -149,7 +137,6 @@ func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type s
 	if err != nil {
 		return Record{}, err
 	}
-
 	err = json.Unmarshal(respBody, &response)
 	if err != nil {
 		return Record{}, err
@@ -170,7 +157,6 @@ func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type s
 
 		if record.Name == record_name && record.Type == Type {
 			found = true
-
 			outRecord = record
 			break
 		}
@@ -183,13 +169,8 @@ func (provider *DNSProvider) getRecord(record_name string, zoneID string, Type s
 
 }
 func (provider *DNSProvider) updateRecord(record Record) error {
-
-	// Marshal it into JSON prior to requesting
 	recordJSON, _ := json.Marshal(record)
-
-	// Make request with marshalled JSON as the POST body
 	err := provider.putData("records", record.Id, recordJSON)
-
 	return err
 
 }
