@@ -683,11 +683,11 @@ Make shure there is just one record.
 
 </details>
 
-#### OVE
+#### OVH
 
-For LoopiaSE, you need to provide a omsumer_key, an appsecret, an Appkey and configure all the domains & subdomains.
+For OVH, you need to provide a Comsumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
 The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)  
-Rights should be \* on GET and PUT
+Rights should be '\*' on GET and PUT
 More info: https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784
 
 <details>
