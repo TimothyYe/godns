@@ -48,6 +48,7 @@
     - [Linode](#linode)
     - [Strato](#strato)
     - [LoopiaSE](#loopiase)
+    - [OVH](#ovh)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -92,6 +93,7 @@
 | [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -107,6 +109,7 @@
 [strato]: https://strato.de
 [loopiase]: https://www.loopia.se/
 [hetzner]: https://hetzner.com/
+[ovh]: https://www.ovh.com
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -680,19 +683,22 @@ Make shure there is just one record.
 
 </details>
 
-#### LoopiaSE
+#### OVH
 
-For LoopiaSE, you need to provide username & password, and config all the domains & subdomains.
-More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
+For OVH, you need to provide a Comsumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
+The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)  
+Rights should be '\*' on GET, POST and PUT  
+More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
 
 <details>
 <summary>Example</summary>
 
 ```json
 {
-  "provider": "LoopiaSE",
-  "email": "Your_Username",
-  "password": "Your_Password",
+  "provider": "OVH",
+  "comsumer_key": "e389ac80cc8da9c7451bc7b8f171bf4f",
+  "app_secret": "d1ffee354d3643d70deaab48a09131fd",
+  "app_key": "cd338839d6472064",
   "domains": [
     {
       "domain_name": "example.com",
