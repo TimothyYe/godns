@@ -1013,6 +1013,17 @@ docker run \
 timothyye/godns:latest
 ```
 
+To run it with a `YAML` config file:
+
+```bash
+docker run \
+-d --name godns \
+-e CONFIG=/config.yaml \
+--restart=always \
+-v /path/to/config.yaml:/config.yaml \
+timothyye/godns:latest
+```
+
 ### As a Windows service
 
 1. Download the latest version of [NSSM](https://nssm.cc/download)
