@@ -14,6 +14,10 @@ import (
 	"github.com/fatih/color"
 )
 
+const (
+	configEnv = "CONFIG"
+)
+
 var (
 	configuration settings.Settings
 	optConf       = flag.String("c", "./config.json", "Specify a config file")
@@ -28,6 +32,7 @@ func init() {
 }
 
 func main() {
+
 	flag.Parse()
 	if *optHelp {
 		color.Cyan(utils.Logo, Version)
@@ -35,8 +40,16 @@ func main() {
 		return
 	}
 
+	configPath := *optConf
+
+	// read config path from the environment
+	if os.Getenv(configEnv) != "" {
+		// overwrite the config path
+		configPath = os.Getenv(configEnv)
+	}
+
 	// Load settings from configurations file
-	if err := settings.LoadSettings(*optConf, &configuration); err != nil {
+	if err := settings.LoadSettings(configPath, &configuration); err != nil {
 		log.Fatal(err)
 	}
 
