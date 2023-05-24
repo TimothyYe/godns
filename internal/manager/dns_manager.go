@@ -30,9 +30,10 @@ func (manager *DNSManager) Build() error {
 		return err
 	}
 
+	manager.provider = dnsProvider
 	manager.handler = &handler.Handler{}
 	manager.handler.SetConfiguration(manager.configuration)
-	manager.handler.SetProvider(dnsProvider)
+	manager.handler.SetProvider(manager.provider)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	manager.ctx = ctx
