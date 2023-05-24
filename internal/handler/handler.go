@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"runtime/debug"
 	"strings"
 	"time"
 
@@ -38,14 +38,7 @@ func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
 }
 
-func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- settings.Domain) error {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
-			panicChan <- *domain
-		}
-	}()
-
+func (handler *Handler) LoopUpdateIP(ctx context.Context, domain *settings.Domain) error {
 	for {
 		err := handler.UpdateIP(domain)
 		if err != nil {
