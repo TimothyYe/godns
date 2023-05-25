@@ -41,6 +41,13 @@ func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 func (handler *Handler) LoopUpdateIP(ctx context.Context, domain *settings.Domain) error {
 	ticker := time.NewTicker(time.Second * time.Duration(handler.Configuration.Interval))
 
+	// run once at the beginning
+	err := handler.UpdateIP(domain)
+	if err != nil {
+		log.WithError(err).Debug("Update IP failed during the DNS Update loop")
+	}
+	log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
+
 	for {
 		select {
 		case <-ticker.C:

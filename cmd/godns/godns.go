@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/TimothyYe/godns/internal/manager"
 	"github.com/TimothyYe/godns/internal/settings"
@@ -71,4 +73,14 @@ func main() {
 	// Run DNS manager
 	log.Info("GoDNS started, starting the DNS manager...")
 	dnsManager.Run()
+
+	// handle the signals
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	// stop the DNS manager
+	<-c
+	log.Info("GoDNS is terminated, stopping the DNS manager...")
+	dnsManager.Stop()
+	log.Info("GoDNS is stopped, bye!")
 }
