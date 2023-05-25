@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"runtime/debug"
 	"strings"
 	"time"
 
@@ -38,21 +38,29 @@ func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
 }
 
-func (handler *Handler) LoopUpdateIP(domain *settings.Domain, panicChan chan<- settings.Domain) error {
-	defer func() {
-		if err := recover(); err != nil {
-			log.Errorf("Recovered in %v: %v", err, string(debug.Stack()))
-			panicChan <- *domain
-		}
-	}()
+func (handler *Handler) LoopUpdateIP(ctx context.Context, domain *settings.Domain) error {
+	ticker := time.NewTicker(time.Second * time.Duration(handler.Configuration.Interval))
+
+	// run once at the beginning
+	err := handler.UpdateIP(domain)
+	if err != nil {
+		log.WithError(err).Debug("Update IP failed during the DNS Update loop")
+	}
+	log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
 
 	for {
-		err := handler.UpdateIP(domain)
-		if err != nil {
-			log.WithError(err).Debug("Update IP failed during the DNS Update loop")
+		select {
+		case <-ticker.C:
+			err := handler.UpdateIP(domain)
+			if err != nil {
+				log.WithError(err).Debug("Update IP failed during the DNS Update loop")
+			}
+			log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
+		case <-ctx.Done():
+			log.Info("DNS update loop cancelled")
+			ticker.Stop()
+			return nil
 		}
-		log.Debugf("DNS update loop finished, will run again in %d seconds", handler.Configuration.Interval)
-		time.Sleep(time.Second * time.Duration(handler.Configuration.Interval))
 	}
 }
 
