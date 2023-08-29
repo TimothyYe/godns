@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/TimothyYe/godns/internal/settings"
 	dnsResolver "github.com/TimothyYe/godns/pkg/resolver"
@@ -97,7 +98,9 @@ func GetCurrentIP(configuration *settings.Settings) (string, error) {
 
 // GetIPOnline gets public IP from internet.
 func GetIPOnline(configuration *settings.Settings) (string, error) {
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * defaultTimeout,
+	}
 	var reqURLs []string
 	var onlineIP string
 
