@@ -978,7 +978,7 @@ Note: when the program stops, it will not be restarted.
 ### As a managed daemon (with upstart)
 
 1. Install `upstart` first (if not available already)
-2. Copy `./upstart/godns.conf` to `/etc/init` (and tweak it to your needs)
+2. Copy `./config/upstart/godns.conf` to `/etc/init` (and tweak it to your needs)
 3. Start the service:
 
    ```bash
@@ -988,7 +988,7 @@ Note: when the program stops, it will not be restarted.
 ### As a managed daemon (with systemd)
 
 1. Install `systemd` first (it not available already)
-2. Copy `./systemd/godns.service` to `/lib/systemd/system` (and tweak it to your needs)
+2. Copy `./config/systemd/godns.service` to `/lib/systemd/system` (and tweak it to your needs)
 3. Start the service:
 
    ```bash
