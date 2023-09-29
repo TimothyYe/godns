@@ -38,6 +38,10 @@ func CheckSettings(config *settings.Settings) error {
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")
 		}
+	case DYNU:
+		if config.Password == "" {
+			return errors.New("password cannot be empty")
+		}
 	case DYNV6:
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")

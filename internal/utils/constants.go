@@ -19,6 +19,8 @@ const (
 	DREAMHOST = "Dreamhost"
 	// DYNV6 for Dynv6.
 	DYNV6 = "Dynv6"
+	// DYNU for Dynu.
+	DYNU = "Dynu"
 	// NOIP for NoIP.
 	NOIP = "NoIP"
 	// SCALEWAY for Scaleway.
