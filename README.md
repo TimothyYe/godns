@@ -49,6 +49,7 @@
     - [Strato](#strato)
     - [LoopiaSE](#loopiase)
     - [OVH](#ovh)
+    - [Dynu](#dynu)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -94,6 +95,7 @@
 | [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Dynu][dunu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -110,6 +112,7 @@
 [loopiase]: https://www.loopia.se/
 [hetzner]: https://hetzner.com/
 [ovh]: https://www.ovh.com
+[dynu]: https://www.dynu.com/
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -707,6 +710,35 @@ More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-s
     {
       "domain_name": "example2.com",
       "sub_domains": ["www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+</details>
+
+#### Dynu
+
+For Dynu, you need to configure the `password`, config 1 default domain & subdomain.
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "Dynu",
+  "password": "Your_Password",
+  "domains": [
+    {
+      "domain_name": "your_domain.com",
+      "sub_domains": [
+        "your_subdomain"
+      ]
     }
   ],
   "resolver": "8.8.8.8",

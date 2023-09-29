@@ -8,6 +8,7 @@ import (
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/dreamhost"
 	"github.com/TimothyYe/godns/internal/provider/duck"
+	"github.com/TimothyYe/godns/internal/provider/dynu"
 	"github.com/TimothyYe/godns/internal/provider/dynv6"
 	"github.com/TimothyYe/godns/internal/provider/google"
 	"github.com/TimothyYe/godns/internal/provider/he"
@@ -56,6 +57,8 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 		provider = &hetzner.DNSProvider{}
 	case utils.OVH:
 		provider = &ovh.DNSProvider{}
+	case utils.DYNU:
+		provider = &dynu.DNSProvider{}
 	default:
 		return nil, fmt.Errorf("Unknown provider '%s'", conf.Provider)
 	}
