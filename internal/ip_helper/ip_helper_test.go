@@ -1,4 +1,4 @@
-package utils
+package ip_helper
 
 import (
 	"testing"
@@ -7,8 +7,9 @@ import (
 )
 
 func TestGetCurrentIP(t *testing.T) {
-	conf := &settings.Settings{IPUrls: []string{"https://aaa.bbb.ccc", "https://myip.biturl.top", "https://ip4.seeip.org"}}
-	ip, _ := GetCurrentIP(conf)
+	conf := &settings.Settings{IPUrls: []string{"https://myip.biturl.top", "https://ip4.seeip.org"}}
+	helper := NewIPHelper(conf)
+	ip := helper.GetCurrentIP()
 
 	if ip == "" {
 		t.Log("IP is empty...")
