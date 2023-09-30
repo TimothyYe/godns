@@ -95,7 +95,7 @@
 | [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
-| [Dynu][dunu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
