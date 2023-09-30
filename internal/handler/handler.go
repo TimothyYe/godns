@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/TimothyYe/godns/internal/ip_helper"
-
 	"github.com/TimothyYe/godns/internal/provider"
 
 	log "github.com/sirupsen/logrus"
@@ -28,14 +26,14 @@ type Handler struct {
 	Configuration       *settings.Settings
 	dnsProvider         provider.IDNSProvider
 	notificationManager notification.INotificationManager
-	ipManager           *ip_helper.IPHelper
+	ipManager           *lib.IPHelper
 	cachedIP            string
 }
 
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
-	handler.ipManager = ip_helper.NewIPHelper(handler.Configuration)
+	handler.ipManager = lib.NewIPHelper(handler.Configuration)
 }
 
 func (handler *Handler) SetProvider(provider provider.IDNSProvider) {

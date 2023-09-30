@@ -1,4 +1,4 @@
-package ip_helper
+package lib
 
 import (
 	"testing"

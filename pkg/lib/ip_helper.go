@@ -1,4 +1,4 @@
-package ip_helper
+package lib
 
 import (
 	"errors"
@@ -11,8 +11,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/TimothyYe/godns/pkg/lib"
 
 	log "github.com/sirupsen/logrus"
 
@@ -49,7 +47,7 @@ func NewIPHelper(conf *settings.Settings) *IPHelper {
 		}
 	}
 
-	lib.SafeGo(func() {
+	SafeGo(func() {
 		for {
 			manager.getCurrentIP()
 			time.Sleep(time.Second * time.Duration(conf.Interval))
