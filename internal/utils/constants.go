@@ -59,6 +59,6 @@ const (
 	// Regex pattern to match IPV4 and IPV6 address.
 	IPPattern = "(" + IPv4Pattern + ")|(" + IPv6Pattern + ")"
 
-	// defaultTimeout is the default timeout value, in seconds.
-	defaultTimeout = 10
+	// DefaultTimeout is the default timeout value, in seconds.
+	DefaultTimeout = 10
 )

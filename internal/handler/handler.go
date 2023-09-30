@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/TimothyYe/godns/internal/ip_helper"
+
 	"github.com/TimothyYe/godns/internal/provider"
 
 	log "github.com/sirupsen/logrus"
@@ -26,12 +28,14 @@ type Handler struct {
 	Configuration       *settings.Settings
 	dnsProvider         provider.IDNSProvider
 	notificationManager notification.INotificationManager
+	ipManager           *ip_helper.IPHelper
 	cachedIP            string
 }
 
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
+	handler.ipManager = ip_helper.NewIPHelper(handler.Configuration)
 }
 
 func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
@@ -65,12 +69,11 @@ func (handler *Handler) LoopUpdateIP(ctx context.Context, domain *settings.Domai
 }
 
 func (handler *Handler) UpdateIP(domain *settings.Domain) error {
-	ip, err := utils.GetCurrentIP(handler.Configuration)
-	if err != nil {
+	ip := handler.ipManager.GetCurrentIP()
+	if ip == "" {
 		if handler.Configuration.RunOnce {
-			return fmt.Errorf("%v: fail to get current IP", err)
+			return fmt.Errorf("fail to get current IP")
 		}
-		log.Error(err)
 		return nil
 	}
 
@@ -79,7 +82,7 @@ func (handler *Handler) UpdateIP(domain *settings.Domain) error {
 		return nil
 	}
 
-	err = handler.updateDNS(domain, ip)
+	err := handler.updateDNS(domain, ip)
 	if err != nil {
 		if handler.Configuration.RunOnce {
 			return fmt.Errorf("%v: fail to update DNS", err)

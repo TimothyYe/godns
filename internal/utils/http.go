@@ -16,7 +16,7 @@ import (
 // GetHTTPClient creates the HTTP client and return it.
 func GetHTTPClient(conf *settings.Settings) *http.Client {
 	client := &http.Client{
-		Timeout: time.Second * defaultTimeout,
+		Timeout: time.Second * DefaultTimeout,
 	}
 
 	if conf.UseProxy && conf.Socks5Proxy != "" {
