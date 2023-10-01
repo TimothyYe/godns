@@ -13,7 +13,7 @@ func TestLoadJSONSetting(t *testing.T) {
 	}
 
 	if len(settings.IPUrls) == 0 && settings.IPUrl == "" {
-		t.Fatal("cannot load ip_urls from config file")
+		t.Fatal("neither ip_urls nor ip_url contain valid entries")
 	}
 
 	err = LoadSettings("./file/does/not/exists", &settings)
