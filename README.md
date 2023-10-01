@@ -968,6 +968,18 @@ To display debug info, set `debug_info` as `true` to enable this feature. By def
   "debug_info": true,
 ```
 
+#### Multiple API URLs
+
+GoDNS supports to fetch the public IP from multiple URLs via a simple round-robin algorithm. If the first URL fails, it will try the next one until it succeeds. Here is an example of the configuration:
+
+```json
+  "ip_urls": [
+  "https://api.ipify.org",
+  "https://myip.biturl.top",
+  "https://api-ipv4.ip.sb/ip"
+  ],
+```
+
 #### Recommended APIs
 
 - https://api.ipify.org
