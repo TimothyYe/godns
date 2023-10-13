@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetCurrentIP(t *testing.T) {
-	conf := &settings.Settings{IPUrls: []string{"https://myip.biturl.top", "https://ip4.seeip.org"}}
+	conf := &settings.Settings{IPUrls: []string{"https://myip.biturl.top"}}
 	helper := NewIPHelper(conf)
 	ip := helper.GetCurrentIP()
 
