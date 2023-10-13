@@ -182,6 +182,7 @@ func (helper *IPHelper) getIPOnline() string {
 
 		if err != nil {
 			log.Error("Cannot get IP:", err)
+			time.Sleep(time.Millisecond * 300)
 			continue
 		}
 
