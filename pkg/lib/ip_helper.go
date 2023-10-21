@@ -34,13 +34,23 @@ func NewIPHelper(conf *settings.Settings) *IPHelper {
 	}
 
 	if conf.IPType == "" || strings.ToUpper(conf.IPType) == utils.IPV4 {
-		manager.reqURLs = conf.IPUrls
+		// filter empty urls
+		for _, url := range conf.IPUrls {
+			if url != "" {
+				manager.reqURLs = append(manager.reqURLs, url)
+			}
+		}
 
 		if conf.IPUrl != "" {
 			manager.reqURLs = append(manager.reqURLs, conf.IPUrl)
 		}
 	} else {
-		manager.reqURLs = conf.IPV6Urls
+		// filter empty urls
+		for _, url := range conf.IPV6Urls {
+			if url != "" {
+				manager.reqURLs = append(manager.reqURLs, url)
+			}
+		}
 
 		if conf.IPV6Url != "" {
 			manager.reqURLs = append(manager.reqURLs, conf.IPV6Url)
@@ -124,6 +134,7 @@ func (helper *IPHelper) getIPFromInterface() (string, error) {
 		}
 
 		if ip.String() != "" {
+			log.Debugf("get ip success from network intereface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
 			return ip.String(), nil
 		}
 	}
@@ -139,10 +150,7 @@ func (helper *IPHelper) getCurrentIP() {
 	var err error
 	var ip string
 
-	if len(helper.configuration.IPUrls) > 0 ||
-		len(helper.configuration.IPV6Urls) > 0 ||
-		helper.configuration.IPUrl != "" ||
-		helper.configuration.IPV6Url != "" {
+	if len(helper.reqURLs) > 0 {
 		ip = helper.getIPOnline()
 		if ip == "" {
 			log.Error("get ip online failed. Fallback to get ip from interface if possible.")
