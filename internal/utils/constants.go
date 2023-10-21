@@ -31,6 +31,8 @@ const (
 	STRATO = "Strato"
 	// LOOPIASE for LoopiaSE.
 	LOOPIASE = "LoopiaSE"
+	// INFOMANIAK for Infomaniak.
+	INFOMANIAK = "Infomaniak"
 	// HETZNER for Hetzner.
 	HETZNER = "Hetzner"
 	// OVH for OVH.
