@@ -73,9 +73,8 @@ func (provider *DNSProvider) getRecordType() (string, error) {
 		return utils.IPTypeA, nil
 	} else if strings.ToUpper(provider.configuration.IPType) == utils.IPV6 {
 		return utils.IPTypeAAAA, nil
-	} else {
-		return "", errors.New("must specify \"ip_type\" in config for Scaleway")
 	}
+	return "", errors.New("must specify \"ip_type\" in config for Scaleway")
 }
 
 // updateIP update subdomain with current IP.
