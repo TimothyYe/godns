@@ -75,6 +75,10 @@ func CheckSettings(config *settings.Settings) error {
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
+	case INFOMANIAK:
+		if config.Password == "" {
+			return errors.New("password cannot be empty")
+		}
 	case HETZNER:
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")

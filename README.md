@@ -48,6 +48,7 @@
     - [Linode](#linode)
     - [Strato](#strato)
     - [LoopiaSE](#loopiase)
+    - [Infomaniak](#infomaniak)
     - [OVH](#ovh)
     - [Dynu](#dynu)
   - [Notifications](#notifications)
@@ -93,6 +94,7 @@
 | [Linode][linode]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Strato][strato]                      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [LoopiaSE][loopiase]                  | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Infomaniak][infomaniak]              | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
@@ -110,6 +112,7 @@
 [linode]: https://www.linode.com
 [strato]: https://strato.de
 [loopiase]: https://www.loopia.se/
+[infomaniak]: https://www.infomaniak.com/
 [hetzner]: https://hetzner.com/
 [ovh]: https://www.ovh.com
 [dynu]: https://www.dynu.com/
@@ -632,6 +635,39 @@ More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
 ```json
 {
   "provider": "LoopiaSE",
+  "email": "Your_Username",
+  "password": "Your_Password",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["www", "test"]
+    },
+    {
+      "domain_name": "example2.com",
+      "sub_domains": ["www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300,
+  "socks5_proxy": ""
+}
+```
+
+</details>
+
+#### Infomaniak
+
+For Infomaniak, you need to provide username & password, and config all the domains & subdomains.
+More info: [English](https://faq.infomaniak.com/2376)
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "Infomaniak",
   "email": "Your_Username",
   "password": "Your_Password",
   "domains": [

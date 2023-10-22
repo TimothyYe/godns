@@ -15,6 +15,7 @@ import (
 	"github.com/TimothyYe/godns/internal/provider/hetzner"
 	"github.com/TimothyYe/godns/internal/provider/linode"
 	"github.com/TimothyYe/godns/internal/provider/loopiase"
+	"github.com/TimothyYe/godns/internal/provider/infomaniak"
 	"github.com/TimothyYe/godns/internal/provider/noip"
 	"github.com/TimothyYe/godns/internal/provider/ovh"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
@@ -53,6 +54,8 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 		provider = &strato.DNSProvider{}
 	case utils.LOOPIASE:
 		provider = &loopiase.DNSProvider{}
+	case utils.INFOMANIAK:
+		provider = &infomaniak.DNSProvider{}
 	case utils.HETZNER:
 		provider = &hetzner.DNSProvider{}
 	case utils.OVH:
