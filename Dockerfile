@@ -1,7 +1,6 @@
 FROM golang:alpine AS builder
-RUN mkdir /godns
-ADD . /godns/
 WORKDIR /godns
+ADD . .
 RUN CGO_ENABLED=0 go build -o godns cmd/godns/godns.go
 
 FROM gcr.io/distroless/base
