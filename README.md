@@ -49,8 +49,10 @@
     - [Strato](#strato)
     - [LoopiaSE](#loopiase)
     - [Infomaniak](#infomaniak)
+    - [Hetzner](#hetzner)
     - [OVH](#ovh)
     - [Dynu](#dynu)
+    - [IONOS](#ionos)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -58,13 +60,14 @@
     - [Discord](#discord)
     - [Pushover](#pushover)
   - [Webhook](#webhook)
-    - [HTTP GET Request](#webhook-with-http-get-reqeust)
-    - [HTTP POST Request](#webhook-with-http-post-request)
+    - [Webhook with HTTP GET reqeust](#webhook-with-http-get-reqeust)
+    - [Webhook with HTTP POST request](#webhook-with-http-post-request)
   - [Miscellaneous topics](#miscellaneous-topics)
     - [IPv6 support](#ipv6-support)
     - [Network interface IP address](#network-interface-ip-address)
     - [SOCKS5 proxy support](#socks5-proxy-support)
     - [Display debug info](#display-debug-info)
+    - [Multiple API URLs](#multiple-api-urls)
     - [Recommended APIs](#recommended-apis)
 - [Running GoDNS](#running-godns)
   - [Manually](#manually)
@@ -98,6 +101,7 @@
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [IONOS][ionos]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [google.domains]: https://domains.google
@@ -116,6 +120,7 @@
 [hetzner]: https://hetzner.com/
 [ovh]: https://www.ovh.com
 [dynu]: https://www.dynu.com/
+[ionos]: https://www.ionos.com/
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -540,7 +545,7 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
 
 <details>
 <summary>Example</summary>
- 
+
 ```json
 {
   "provider": "Scaleway",
@@ -559,6 +564,7 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
   "interval": 300
 }
 ```
+
 </details>
 
 #### Linode
@@ -571,7 +577,7 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
 
 <details>
 <summary>Example</summary>
- 
+
 ```json
 {
   "provider": "Linode",
@@ -590,6 +596,7 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
   "interval": 300
 }
 ```
+
 </details>
 
 #### Strato
@@ -783,6 +790,34 @@ For Dynu, you need to configure the `password`, config 1 default domain & subdom
   "interval": 300,
   "socks5_proxy": ""
 }
+```
+
+</details>
+
+#### IONOS
+
+This is for IONOS Hosting Services, **not** IONOS Cloud.
+You'll need to [sign up for API Access to Hosting Services](https://my.ionos.com/shop/product/ionos-api), then create an [API Key](https://developer.hosting.ionos.com/keys).
+You can find a full guide in the [IONOS API Documentation](https://developer.hosting.ionos.com/docs/getstarted).
+**Note**: The API-Key used by GoDNS must follow the form `publicprefix.secret` as described in the aforementioned documentation.
+
+<details>
+<summary>Example</summary>
+
+```yaml
+provider: IONOS
+login_token: publicprefix.secret
+domains:
+  - domain_name: example.com
+    sub_domains:
+      - somesubdomain
+      - anothersubdomain
+resolver: 1.1.1.1
+ip_urls:
+  - https://api.ipify.org
+ip_type: IPv4
+interval: 300
+socks5_proxy: ""
 ```
 
 </details>
@@ -1018,11 +1053,11 @@ GoDNS supports to fetch the public IP from multiple URLs via a simple round-robi
 
 #### Recommended APIs
 
-- https://api.ipify.org
-- https://myip.biturl.top
-- https://ip4.seeip.org
-- https://ipecho.net/plain
-- https://api-ipv4.ip.sb/ip
+- <https://api.ipify.org>
+- <https://myip.biturl.top>
+- <https://ip4.seeip.org>
+- <https://ipecho.net/plain>
+- <https://api-ipv4.ip.sb/ip>
 
 ## Running GoDNS
 
@@ -1080,10 +1115,10 @@ Note: when the program stops, it will not be restarted.
 
 Available docker registries:
 
-- https://hub.docker.com/r/timothyye/godns
-- https://github.com/TimothyYe/godns/pkgs/container/godns
+- <https://hub.docker.com/r/timothyye/godns>
+- <https://github.com/TimothyYe/godns/pkgs/container/godns>
 
-Visit https://hub.docker.com/r/timothyye/godns to fetch the latest docker image.  
+Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image.  
 With `/path/to/config.json` your local configuration file, run:
 
 ```bash
