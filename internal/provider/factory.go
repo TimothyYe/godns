@@ -14,6 +14,7 @@ import (
 	"github.com/TimothyYe/godns/internal/provider/he"
 	"github.com/TimothyYe/godns/internal/provider/hetzner"
 	"github.com/TimothyYe/godns/internal/provider/infomaniak"
+	"github.com/TimothyYe/godns/internal/provider/ionos"
 	"github.com/TimothyYe/godns/internal/provider/linode"
 	"github.com/TimothyYe/godns/internal/provider/loopiase"
 	"github.com/TimothyYe/godns/internal/provider/noip"
@@ -62,6 +63,8 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 		provider = &ovh.DNSProvider{}
 	case utils.DYNU:
 		provider = &dynu.DNSProvider{}
+	case utils.IONOS:
+		provider = &ionos.DNSProvider{}
 	default:
 		return nil, fmt.Errorf("Unknown provider '%s'", conf.Provider)
 	}

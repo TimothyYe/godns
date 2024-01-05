@@ -83,6 +83,10 @@ func CheckSettings(config *settings.Settings) error {
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")
 		}
+	case IONOS:
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
 	case OVH:
 		if config.AppKey == "" {
 			return errors.New("app key cannot be empty")

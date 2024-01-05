@@ -37,6 +37,8 @@ const (
 	HETZNER = "Hetzner"
 	// OVH for OVH.
 	OVH = "OVH"
+	// IONOS for IONOS.
+	IONOS = "IONOS"
 	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode.
