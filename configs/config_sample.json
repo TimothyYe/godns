@@ -13,14 +13,16 @@
     }
   ],
   "ip_urls": [
-    "https://api.ipify.org",
+    "https://api4.ipify.org",
     "https://myip.biturl.top",
     "https://ip4.seeip.org",
     "https://ipecho.net/plain",
-    "https://api-ipv4.ip.sb/ip",
-    "https://api.ip.sb/ip"
+    "https://api-ipv4.ip.sb/ip"
   ],
-  "ipv6_urls": ["https://ipify.org"],
+  "ipv6_urls": [
+    "https://api6.ipify.org",
+    "https://api-ipv6.ip.sb/ip"
+    ],
   "ip_type": "IPv4",
   "interval": 300,
   "resolver": "8.8.8.8",
