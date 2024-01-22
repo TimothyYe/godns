@@ -121,6 +121,7 @@ type Settings struct {
 	AppKey         string   `json:"app_key" yaml:"app_key"`
 	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
 	ConsumerKey    string   `json:"comsumer_key" yaml:"comsumer_key"`
+	SkipSSLVerify  bool     `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
 }
 
 // LoadSettings -- Load settings from config file.

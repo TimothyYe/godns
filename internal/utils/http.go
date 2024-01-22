@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"crypto/tls"
 	"net"
 	"net/http"
 	"time"
@@ -31,9 +32,16 @@ func GetHTTPClient(conf *settings.Settings) *http.Client {
 			return dialer.Dial(network, address)
 		}
 
-		httpTransport := &http.Transport{}
+		httpTransport := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: conf.SkipSSLVerify},
+		}
 		client.Transport = httpTransport
 		httpTransport.DialContext = dialContext
+	} else {
+		httpTransport := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: conf.SkipSSLVerify},
+		}
+		client.Transport = httpTransport
 	}
 
 	return client
