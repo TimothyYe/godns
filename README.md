@@ -204,6 +204,7 @@ By default, GoDNS uses `JSON` config file. However, you can specify to use the `
 - `interval` — How often (in seconds) the public IP should be updated.
 - `socks5_proxy` — Socks5 proxy server.
 - `resolver` — Address of a public DNS server to use. For instance to use [Google's public DNS](https://developers.google.com/speed/public-dns/docs/using), you can set `8.8.8.8` when using GoDNS in IPv4 mode or `2001:4860:4860::8888` in IPv6 mode.
+- `skip_ssl_verify` - Skip verification of ssl certificates for https requests.
 
 ### Update root domain
 

@@ -32,6 +32,7 @@
   "use_proxy": false,
   "debug_info": false,
   "proxied": false,
+  "skip_ssl_verify": false,
   "notify": {
     "telegram": {
       "enabled": false,
