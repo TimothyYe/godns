@@ -35,7 +35,11 @@ var (
 func (helper *IPHelper) UpdateConfiguration(conf *settings.Settings) {
 	helper.mutex.Lock()
 	defer helper.mutex.Unlock()
+
+	// clear urls
 	helper.reqURLs = helper.reqURLs[:0]
+	// reset the index
+	helper.idx = -1
 	log.Debug("update ip helper configuration")
 
 	if conf.IPType == "" || strings.ToUpper(conf.IPType) == utils.IPV4 {
