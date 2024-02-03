@@ -65,7 +65,7 @@ func main() {
 	}
 
 	// Create DNS manager
-	dnsManager := manager.GetDNSManager(&configuration)
+	dnsManager := manager.GetDNSManager(configPath, &configuration)
 
 	// Run DNS manager
 	log.Info("GoDNS started, starting the DNS manager...")

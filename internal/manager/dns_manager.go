@@ -19,6 +19,7 @@ type DNSManager struct {
 	ctx           context.Context
 	cancel        context.CancelFunc
 	watcher       *fsnotify.Watcher
+	configPath    string
 }
 
 var (
@@ -26,10 +27,11 @@ var (
 	managerOnce     sync.Once
 )
 
-func GetDNSManager(conf *settings.Settings) *DNSManager {
+func GetDNSManager(cfgPath string, conf *settings.Settings) *DNSManager {
 	managerOnce.Do(func() {
 		managerInstance = &DNSManager{}
-		managerInstance.setConfiguration(conf)
+		managerInstance.configPath = cfgPath
+		managerInstance.configuration = conf
 		if err := managerInstance.initManager(); err != nil {
 			log.Fatalf("Error during DNS manager initialization: %s", err)
 		}
@@ -73,11 +75,6 @@ func (manager *DNSManager) startMonitor() {
 	if err := manager.watcher.Add("./"); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func (manager *DNSManager) setConfiguration(conf *settings.Settings) *DNSManager {
-	manager.configuration = conf
-	return manager
 }
 
 func (manager *DNSManager) initManager() error {
