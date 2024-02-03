@@ -9,7 +9,6 @@ import (
 	"github.com/TimothyYe/godns/internal/manager"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
-	"github.com/fsnotify/fsnotify"
 
 	log "github.com/sirupsen/logrus"
 
@@ -26,8 +25,7 @@ var (
 	optHelp       = flag.Bool("h", false, "Show help")
 
 	// Version is current version of GoDNS.
-	Version    = "0.1"
-	dnsManager *manager.DNSManager
+	Version = "0.1"
 )
 
 func init() {
@@ -65,12 +63,6 @@ func main() {
 	if err := utils.CheckSettings(&configuration); err != nil {
 		log.Fatal("Invalid settings: ", err.Error())
 	}
-
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer watcher.Close()
 
 	// Create DNS manager
 	dnsManager := manager.GetDNSManager(&configuration)
