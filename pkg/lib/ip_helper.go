@@ -32,7 +32,12 @@ var (
 	helperOnce     sync.Once
 )
 
-func (helper *IPHelper) loadConfiguration(conf *settings.Settings) {
+func (helper *IPHelper) UpdateConfiguration(conf *settings.Settings) {
+	helper.mutex.Lock()
+	defer helper.mutex.Unlock()
+	helper.reqURLs = helper.reqURLs[:0]
+	log.Debug("update ip helper configuration")
+
 	if conf.IPType == "" || strings.ToUpper(conf.IPType) == utils.IPV4 {
 		// filter empty urls
 		for _, url := range conf.IPUrls {
@@ -56,6 +61,8 @@ func (helper *IPHelper) loadConfiguration(conf *settings.Settings) {
 			helper.reqURLs = append(helper.reqURLs, conf.IPV6Url)
 		}
 	}
+
+	log.Debugf("update ip helper configuration, urls: %v", helper.reqURLs)
 }
 
 func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
@@ -65,7 +72,7 @@ func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
 			idx:           -1,
 		}
 
-		helperInstance.loadConfiguration(conf)
+		helperInstance.UpdateConfiguration(conf)
 
 		SafeGo(func() {
 			for {
@@ -99,6 +106,9 @@ func (helper *IPHelper) setCurrentIP(ip string) {
 
 func (helper *IPHelper) getNext() string {
 	newIdx := atomic.AddInt64(&helper.idx, 1)
+
+	helper.mutex.RLock()
+	defer helper.mutex.RUnlock()
 	newIdx %= int64(len(helper.reqURLs))
 	next := helper.reqURLs[newIdx]
 	return next
