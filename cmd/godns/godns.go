@@ -20,9 +20,9 @@ const (
 )
 
 var (
-	configuration settings.Settings
-	optConf       = flag.String("c", "./config.json", "Specify a config file")
-	optHelp       = flag.Bool("h", false, "Show help")
+	config  settings.Settings
+	optConf = flag.String("c", "./config.json", "Specify a config file")
+	optHelp = flag.Bool("h", false, "Show help")
 
 	// Version is current version of GoDNS.
 	Version = "0.1"
@@ -49,23 +49,23 @@ func main() {
 		configPath = os.Getenv(configEnv)
 	}
 
-	// Load settings from configurations file
-	if err := settings.LoadSettings(configPath, &configuration); err != nil {
+	// Load settings from configs file
+	if err := settings.LoadSettings(configPath, &config); err != nil {
 		log.Fatal(err)
 	}
 
-	if configuration.DebugInfo {
+	if config.DebugInfo {
 		log.SetLevel(log.DebugLevel)
 	} else {
 		log.SetLevel(log.InfoLevel)
 	}
 
-	if err := utils.CheckSettings(&configuration); err != nil {
+	if err := utils.CheckSettings(&config); err != nil {
 		log.Fatal("Invalid settings: ", err.Error())
 	}
 
 	// Create DNS manager
-	dnsManager := manager.GetDNSManager(configPath, &configuration)
+	dnsManager := manager.GetDNSManager(configPath, &config)
 
 	// Run DNS manager
 	log.Info("GoDNS started, starting the DNS manager...")
