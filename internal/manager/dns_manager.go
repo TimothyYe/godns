@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"os"
+	"sync"
 
 	"github.com/TimothyYe/godns/internal/handler"
 	"github.com/TimothyYe/godns/internal/provider"
@@ -18,12 +19,29 @@ type DNSManager struct {
 	cancel        context.CancelFunc
 }
 
-func (manager *DNSManager) SetConfiguration(conf *settings.Settings) *DNSManager {
+var (
+	managerInstance *DNSManager
+	managerOnce     sync.Once
+)
+
+func GetDNSManager(conf *settings.Settings) *DNSManager {
+	managerOnce.Do(func() {
+		managerInstance = &DNSManager{}
+		managerInstance.setConfiguration(conf)
+		if err := managerInstance.initManager(); err != nil {
+			log.Fatalf("Error during DNS manager initialization: %s", err)
+		}
+	})
+
+	return managerInstance
+}
+
+func (manager *DNSManager) setConfiguration(conf *settings.Settings) *DNSManager {
 	manager.configuration = conf
 	return manager
 }
 
-func (manager *DNSManager) Build() error {
+func (manager *DNSManager) initManager() error {
 	log.Infof("Creating DNS handler with provider: %s", manager.configuration.Provider)
 	dnsProvider, err := provider.GetProvider(manager.configuration)
 	if err != nil {
