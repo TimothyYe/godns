@@ -66,7 +66,7 @@ func (helper *IPHelper) UpdateConfiguration(conf *settings.Settings) {
 }
 
 func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
-	once.Do(func() {
+	helperOnce.Do(func() {
 		helperInstance = &IPHelper{
 			configuration: conf,
 			idx:           -1,
