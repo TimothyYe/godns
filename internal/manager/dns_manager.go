@@ -35,26 +35,19 @@ func GetDNSManager(cfgPath string, conf *settings.Settings) *DNSManager {
 		if err := managerInstance.initManager(); err != nil {
 			log.Fatalf("Error during DNS manager initialization: %s", err)
 		}
-
-		// create a new file watcher
-		var err error
-		managerInstance.watcher, err = fsnotify.NewWatcher()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// monitor the configuration file changes
-		managerInstance.startMonitor()
 	})
 
 	return managerInstance
 }
 
-func (manager *DNSManager) startMonitor() {
+func (manager *DNSManager) startMonitor(ctx context.Context) {
 	// Start listening for events.
 	go func() {
 		for {
 			select {
+			case <-ctx.Done():
+				log.Debug("Shutting down file watcher...")
+				return
 			case event, ok := <-manager.watcher.Events:
 				if !ok {
 					return
@@ -94,6 +87,14 @@ func (manager *DNSManager) initManager() error {
 	manager.handler.SetConfiguration(manager.configuration)
 	manager.handler.SetProvider(manager.provider)
 
+	// create a new file watcher
+	managerInstance.watcher, err = fsnotify.NewWatcher()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// monitor the configuration file changes
+	managerInstance.startMonitor(ctx)
 	return nil
 }
 

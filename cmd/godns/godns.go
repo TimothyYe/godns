@@ -33,7 +33,6 @@ func init() {
 }
 
 func main() {
-
 	flag.Parse()
 	if *optHelp {
 		color.Cyan(utils.Logo, Version)
