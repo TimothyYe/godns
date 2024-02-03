@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/TimothyYe/godns/internal/manager"
 	"github.com/TimothyYe/godns/internal/settings"
@@ -78,5 +79,7 @@ func main() {
 	<-c
 	log.Info("GoDNS is terminated, stopping the DNS manager...")
 	dnsManager.Stop()
+	// wait for the goroutines to exit
+	time.Sleep(200 * time.Millisecond)
 	log.Info("GoDNS is stopped, bye!")
 }

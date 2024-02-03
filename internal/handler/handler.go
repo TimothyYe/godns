@@ -41,6 +41,10 @@ func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.ipManager = lib.GetIPHelperInstance(handler.Configuration)
 }
 
+func (handler *Handler) Init() {
+	handler.ipManager.UpdateConfiguration(handler.Configuration)
+}
+
 func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
 }

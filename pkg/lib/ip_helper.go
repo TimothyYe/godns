@@ -40,7 +40,6 @@ func (helper *IPHelper) UpdateConfiguration(conf *settings.Settings) {
 	helper.reqURLs = helper.reqURLs[:0]
 	// reset the index
 	helper.idx = -1
-	log.Debug("update ip helper configuration")
 
 	if conf.IPType == "" || strings.ToUpper(conf.IPType) == utils.IPV4 {
 		// filter empty urls
@@ -66,7 +65,7 @@ func (helper *IPHelper) UpdateConfiguration(conf *settings.Settings) {
 		}
 	}
 
-	log.Debugf("update ip helper configuration, urls: %v", helper.reqURLs)
+	log.Debugf("Update ip helper configuration, urls: %v", helper.reqURLs)
 }
 
 func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
@@ -75,8 +74,6 @@ func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
 			configuration: conf,
 			idx:           -1,
 		}
-
-		helperInstance.UpdateConfiguration(conf)
 
 		SafeGo(func() {
 			for {
@@ -122,13 +119,13 @@ func (helper *IPHelper) getNext() string {
 func (helper *IPHelper) getIPFromInterface() (string, error) {
 	ifaces, err := net.InterfaceByName(helper.configuration.IPInterface)
 	if err != nil {
-		log.Error("can't get network device "+helper.configuration.IPInterface+":", err)
+		log.Error("Can't get network device "+helper.configuration.IPInterface+":", err)
 		return "", err
 	}
 
 	addrs, err := ifaces.Addrs()
 	if err != nil {
-		log.Error("can't get address from "+helper.configuration.IPInterface+":", err)
+		log.Error("Can't get address from "+helper.configuration.IPInterface+":", err)
 		return "", err
 	}
 
@@ -159,7 +156,7 @@ func (helper *IPHelper) getIPFromInterface() (string, error) {
 		}
 
 		if ip.String() != "" {
-			log.Debugf("get ip success from network intereface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
+			log.Debugf("Get ip success from network intereface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
 			return ip.String(), nil
 		}
 	}
@@ -231,7 +228,7 @@ func (helper *IPHelper) getIPOnline() string {
 			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
 			continue
 		}
-		log.Debugf("get ip success by: %s, online IP: %s", reqURL, onlineIP)
+		log.Debugf("Get ip success by: %s, online IP: %s", reqURL, onlineIP)
 
 		err = response.Body.Close()
 		if err != nil {
