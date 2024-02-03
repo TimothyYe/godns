@@ -23,6 +23,7 @@ var (
 )
 
 type Handler struct {
+	ctx                 context.Context
 	Configuration       *settings.Settings
 	dnsProvider         provider.IDNSProvider
 	notificationManager notification.INotificationManager
@@ -30,10 +31,14 @@ type Handler struct {
 	cachedIP            string
 }
 
+func (handler *Handler) SetContext(ctx context.Context) {
+	handler.ctx = ctx
+}
+
 func (handler *Handler) SetConfiguration(conf *settings.Settings) {
 	handler.Configuration = conf
 	handler.notificationManager = notification.GetNotificationManager(handler.Configuration)
-	handler.ipManager = lib.NewIPHelper(handler.Configuration)
+	handler.ipManager = lib.GetIPHelperInstance(handler.Configuration)
 }
 
 func (handler *Handler) SetProvider(provider provider.IDNSProvider) {

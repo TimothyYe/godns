@@ -27,44 +27,55 @@ type IPHelper struct {
 	idx           int64
 }
 
-func NewIPHelper(conf *settings.Settings) *IPHelper {
-	manager := &IPHelper{
-		configuration: conf,
-		idx:           -1,
-	}
+var (
+	helperInstance *IPHelper
+	helperOnce     sync.Once
+)
 
+func (helper *IPHelper) loadConfiguration(conf *settings.Settings) {
 	if conf.IPType == "" || strings.ToUpper(conf.IPType) == utils.IPV4 {
 		// filter empty urls
 		for _, url := range conf.IPUrls {
 			if url != "" {
-				manager.reqURLs = append(manager.reqURLs, url)
+				helper.reqURLs = append(helper.reqURLs, url)
 			}
 		}
 
 		if conf.IPUrl != "" {
-			manager.reqURLs = append(manager.reqURLs, conf.IPUrl)
+			helper.reqURLs = append(helper.reqURLs, conf.IPUrl)
 		}
 	} else {
 		// filter empty urls
 		for _, url := range conf.IPV6Urls {
 			if url != "" {
-				manager.reqURLs = append(manager.reqURLs, url)
+				helper.reqURLs = append(helper.reqURLs, url)
 			}
 		}
 
 		if conf.IPV6Url != "" {
-			manager.reqURLs = append(manager.reqURLs, conf.IPV6Url)
+			helper.reqURLs = append(helper.reqURLs, conf.IPV6Url)
 		}
 	}
+}
 
-	SafeGo(func() {
-		for {
-			manager.getCurrentIP()
-			time.Sleep(time.Second * time.Duration(conf.Interval))
+func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
+	once.Do(func() {
+		helperInstance = &IPHelper{
+			configuration: conf,
+			idx:           -1,
 		}
+
+		helperInstance.loadConfiguration(conf)
+
+		SafeGo(func() {
+			for {
+				helperInstance.getCurrentIP()
+				time.Sleep(time.Second * time.Duration(conf.Interval))
+			}
+		})
 	})
 
-	return manager
+	return helperInstance
 }
 
 func (helper *IPHelper) GetCurrentIP() string {

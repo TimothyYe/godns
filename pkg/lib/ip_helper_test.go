@@ -4,12 +4,13 @@ import (
 	"testing"
 
 	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/pkg/lib"
 )
 
 func TestGetCurrentIP(t *testing.T) {
 	t.Skip()
 	conf := &settings.Settings{IPUrls: []string{"https://myip.biturl.top"}}
-	helper := NewIPHelper(conf)
+	helper := lib.GetIPHelperInstance(conf)
 	ip := helper.GetCurrentIP()
 
 	if ip == "" {
