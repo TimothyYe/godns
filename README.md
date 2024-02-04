@@ -191,6 +191,10 @@ GoDNS supports 2 different configuration file formats:
 
 By default, GoDNS uses `JSON` config file. However, you can specify to use the `YAML` format via: `./godns -c /path/to/config.yaml`
 
+### Dynamic loading of configuration
+
+GoDNS supports dynamic loading of configuration. If you modify the configuration file, GoDNS will automatically reload the configuration and apply the changes.
+
 ### Configuration properties
 
 - `provider` — One of the [supported provider to use](#supported-dns-providers): `Cloudflare`, `Google`, `DNSPod`, `AliDNS`, `HE`, `DuckDNS` or `Dreamhost`.
@@ -602,7 +606,7 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
 
 #### Strato
 
-For Strato, you need to provide email & password, and config all the domains & subdomains.  
+For Strato, you need to provide email & password, and config all the domains & subdomains.
 More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/) [English](https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/)
 
 <details>
@@ -700,9 +704,9 @@ More info: [English](https://faq.infomaniak.com/2376)
 
 #### Hetzner
 
-For Hetzner, you have to create an access token. This can be done in the DNS-Console.  
-(Person Icon in the top left corner --> API Tokens)  
-Notice: If a domain has multiple Records **only the first** Record will be updated.  
+For Hetzner, you have to create an access token. This can be done in the DNS-Console.
+(Person Icon in the top left corner --> API Tokens)
+Notice: If a domain has multiple Records **only the first** Record will be updated.
 Make shure there is just one record.
 
 <details>
@@ -733,8 +737,8 @@ Make shure there is just one record.
 #### OVH
 
 For OVH, you need to provide a Comsumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
-The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)  
-Rights should be '\*' on GET, POST and PUT  
+The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)
+Rights should be '\*' on GET, POST and PUT
 More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
 
 <details>
@@ -1119,7 +1123,7 @@ Available docker registries:
 - <https://hub.docker.com/r/timothyye/godns>
 - <https://github.com/TimothyYe/godns/pkgs/container/godns>
 
-Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image.  
+Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image.
 With `/path/to/config.json` your local configuration file, run:
 
 ```bash
