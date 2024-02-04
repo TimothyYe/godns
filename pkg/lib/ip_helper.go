@@ -27,44 +27,63 @@ type IPHelper struct {
 	idx           int64
 }
 
-func NewIPHelper(conf *settings.Settings) *IPHelper {
-	manager := &IPHelper{
-		configuration: conf,
-		idx:           -1,
-	}
+var (
+	helperInstance *IPHelper
+	helperOnce     sync.Once
+)
+
+func (helper *IPHelper) UpdateConfiguration(conf *settings.Settings) {
+	helper.mutex.Lock()
+	defer helper.mutex.Unlock()
+
+	// clear urls
+	helper.reqURLs = helper.reqURLs[:0]
+	// reset the index
+	helper.idx = -1
 
 	if conf.IPType == "" || strings.ToUpper(conf.IPType) == utils.IPV4 {
 		// filter empty urls
 		for _, url := range conf.IPUrls {
 			if url != "" {
-				manager.reqURLs = append(manager.reqURLs, url)
+				helper.reqURLs = append(helper.reqURLs, url)
 			}
 		}
 
 		if conf.IPUrl != "" {
-			manager.reqURLs = append(manager.reqURLs, conf.IPUrl)
+			helper.reqURLs = append(helper.reqURLs, conf.IPUrl)
 		}
 	} else {
 		// filter empty urls
 		for _, url := range conf.IPV6Urls {
 			if url != "" {
-				manager.reqURLs = append(manager.reqURLs, url)
+				helper.reqURLs = append(helper.reqURLs, url)
 			}
 		}
 
 		if conf.IPV6Url != "" {
-			manager.reqURLs = append(manager.reqURLs, conf.IPV6Url)
+			helper.reqURLs = append(helper.reqURLs, conf.IPV6Url)
 		}
 	}
 
-	SafeGo(func() {
-		for {
-			manager.getCurrentIP()
-			time.Sleep(time.Second * time.Duration(conf.Interval))
+	log.Debugf("Update ip helper configuration, urls: %v", helper.reqURLs)
+}
+
+func GetIPHelperInstance(conf *settings.Settings) *IPHelper {
+	helperOnce.Do(func() {
+		helperInstance = &IPHelper{
+			configuration: conf,
+			idx:           -1,
 		}
+
+		SafeGo(func() {
+			for {
+				helperInstance.getCurrentIP()
+				time.Sleep(time.Second * time.Duration(conf.Interval))
+			}
+		})
 	})
 
-	return manager
+	return helperInstance
 }
 
 func (helper *IPHelper) GetCurrentIP() string {
@@ -88,6 +107,9 @@ func (helper *IPHelper) setCurrentIP(ip string) {
 
 func (helper *IPHelper) getNext() string {
 	newIdx := atomic.AddInt64(&helper.idx, 1)
+
+	helper.mutex.RLock()
+	defer helper.mutex.RUnlock()
 	newIdx %= int64(len(helper.reqURLs))
 	next := helper.reqURLs[newIdx]
 	return next
@@ -97,13 +119,13 @@ func (helper *IPHelper) getNext() string {
 func (helper *IPHelper) getIPFromInterface() (string, error) {
 	ifaces, err := net.InterfaceByName(helper.configuration.IPInterface)
 	if err != nil {
-		log.Error("can't get network device "+helper.configuration.IPInterface+":", err)
+		log.Error("Can't get network device "+helper.configuration.IPInterface+":", err)
 		return "", err
 	}
 
 	addrs, err := ifaces.Addrs()
 	if err != nil {
-		log.Error("can't get address from "+helper.configuration.IPInterface+":", err)
+		log.Error("Can't get address from "+helper.configuration.IPInterface+":", err)
 		return "", err
 	}
 
@@ -134,7 +156,7 @@ func (helper *IPHelper) getIPFromInterface() (string, error) {
 		}
 
 		if ip.String() != "" {
-			log.Debugf("get ip success from network intereface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
+			log.Debugf("Get ip success from network intereface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
 			return ip.String(), nil
 		}
 	}
@@ -206,7 +228,7 @@ func (helper *IPHelper) getIPOnline() string {
 			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
 			continue
 		}
-		log.Debugf("get ip success by: %s, online IP: %s", reqURL, onlineIP)
+		log.Debugf("Get ip success by: %s, online IP: %s", reqURL, onlineIP)
 
 		err = response.Body.Close()
 		if err != nil {
