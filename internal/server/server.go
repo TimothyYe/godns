@@ -3,18 +3,27 @@ package server
 import (
 	"github.com/TimothyYe/godns/internal/server/controllers"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	log "github.com/sirupsen/logrus"
 )
 
 type Server struct {
 	addr       string
+	username   string
+	password   string
 	app        *fiber.App
 	controller *controllers.Controller
 }
 
 func (s *Server) SetAddress(addr string) *Server {
 	s.addr = addr
+	return s
+}
+
+func (s *Server) SetAuthInfo(username, password string) *Server {
+	s.username = username
+	s.password = password
 	return s
 }
 
@@ -37,6 +46,12 @@ func (s *Server) initRoutes() {
 		AllowOrigins: "*",
 		AllowMethods: "GET, POST ,PUT ,DELETE, OPTIONS",
 		AllowHeaders: "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
+	}))
+
+	s.app.Use(basicauth.New(basicauth.Config{
+		Users: map[string]string{
+			s.username: s.password,
+		},
 	}))
 
 	// Create routes group.

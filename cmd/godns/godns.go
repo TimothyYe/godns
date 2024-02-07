@@ -66,20 +66,27 @@ func main() {
 	}
 
 	// start the internal HTTP server
-	server := &server.Server{}
-	var addr string
-	if config.WebAddr != "" {
-		addr = config.WebAddr
-	} else {
-		addr = *optAddr
-	}
-	server.SetAddress(addr).Build()
-
-	go func() {
-		if err := server.Start(); err != nil {
-			log.Fatalf("Failed to start the web server, error:%v", err)
+	if (config.WebAddr != "" || *optAddr != ":9000") && config.WebPanel {
+		server := &server.Server{}
+		var addr string
+		if config.WebAddr != "" {
+			addr = config.WebAddr
+		} else {
+			addr = *optAddr
 		}
-	}()
+		server.
+			SetAddress(addr).
+			SetAuthInfo(config.WebUsername, config.WebPassword).
+			Build()
+
+		go func() {
+			if err := server.Start(); err != nil {
+				log.Fatalf("Failed to start the web server, error:%v", err)
+			}
+		}()
+	} else {
+		log.Info("Web panel is disabled")
+	}
 
 	// Create DNS manager
 	dnsManager := manager.GetDNSManager(configPath, &config)

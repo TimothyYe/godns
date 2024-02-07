@@ -112,7 +112,6 @@ type Settings struct {
 	Notify         Notify   `json:"notify" yaml:"notify"`
 	Webhook        Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
 	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
-	WebAddr        string   `json:"web_addr" yaml:"web_addr"`
 	IPType         string   `json:"ip_type" yaml:"ip_type"`
 	Resolver       string   `json:"resolver" yaml:"resolver"`
 	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
@@ -123,6 +122,10 @@ type Settings struct {
 	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
 	ConsumerKey    string   `json:"comsumer_key" yaml:"comsumer_key"`
 	SkipSSLVerify  bool     `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
+	WebPanel       bool     `json:"web_panel" yaml:"web_panel"`
+	WebAddr        string   `json:"web_addr" yaml:"web_addr"`
+	WebUsername    string   `json:"web_username" yaml:"web_username"`
+	WebPassword    string   `json:"web_password" yaml:"web_password"`
 }
 
 // LoadSettings -- Load settings from config file.
