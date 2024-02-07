@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/TimothyYe/godns/internal/manager"
+	"github.com/TimothyYe/godns/internal/server"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 
@@ -22,16 +23,13 @@ const (
 
 var (
 	config  settings.Settings
+	optAddr = flag.String("a", ":9000", "Specify the address to listen on")
 	optConf = flag.String("c", "./config.json", "Specify a config file")
 	optHelp = flag.Bool("h", false, "Show help")
 
 	// Version is current version of GoDNS.
 	Version = "0.1"
 )
-
-func init() {
-	log.SetOutput(os.Stdout)
-}
 
 func main() {
 	flag.Parse()
@@ -54,6 +52,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// set the log level
+	log.SetOutput(os.Stdout)
+
 	if config.DebugInfo {
 		log.SetLevel(log.DebugLevel)
 	} else {
@@ -63,6 +64,22 @@ func main() {
 	if err := utils.CheckSettings(&config); err != nil {
 		log.Fatal("Invalid settings: ", err.Error())
 	}
+
+	// start the internal HTTP server
+	server := &server.Server{}
+	var addr string
+	if config.WebAddr != "" {
+		addr = config.WebAddr
+	} else {
+		addr = *optAddr
+	}
+	server.SetAddress(addr).Build()
+
+	go func() {
+		if err := server.Start(); err != nil {
+			log.Fatalf("Failed to start the web server, error:%v", err)
+		}
+	}()
 
 	// Create DNS manager
 	dnsManager := manager.GetDNSManager(configPath, &config)

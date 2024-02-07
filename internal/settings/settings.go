@@ -112,6 +112,7 @@ type Settings struct {
 	Notify         Notify   `json:"notify" yaml:"notify"`
 	Webhook        Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
 	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
+	WebAddr        string   `json:"web_addr" yaml:"web_addr"`
 	IPType         string   `json:"ip_type" yaml:"ip_type"`
 	Resolver       string   `json:"resolver" yaml:"resolver"`
 	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
