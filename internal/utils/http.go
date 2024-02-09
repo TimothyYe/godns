@@ -28,7 +28,7 @@ func GetHTTPClient(conf *settings.Settings) *http.Client {
 			return nil
 		}
 
-		dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
+		dialContext := func(_ context.Context, network, address string) (net.Conn, error) {
 			return dialer.Dial(network, address)
 		}
 
