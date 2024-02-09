@@ -45,7 +45,7 @@ func applyProxy(proxyAddress string, transport *http.Transport) (*http.Transport
 	}
 	log.Infof("Connected to proxy : %s", proxyAddress)
 
-	dialContext := func(ctx context.Context, network, address string) (net.Conn, error) {
+	dialContext := func(_ context.Context, network, address string) (net.Conn, error) {
 		return dialer.Dial(network, address)
 	}
 
