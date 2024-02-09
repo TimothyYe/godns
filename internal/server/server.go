@@ -40,6 +40,10 @@ func (s *Server) Start() error {
 	return s.app.Listen(s.addr)
 }
 
+func (s *Server) Stop() error {
+	return s.app.Shutdown()
+}
+
 func (s *Server) initRoutes() {
 	// set cross domain access rules
 	s.app.Use(cors.New(cors.Config{

@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/TimothyYe/godns/internal/manager"
-	"github.com/TimothyYe/godns/internal/server"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 
@@ -67,31 +66,8 @@ func main() {
 		log.Fatal("Invalid settings: ", err.Error())
 	}
 
-	// start the internal HTTP server
-	if (config.WebPanel.Addr != "" || *optAddr != ":9000") && config.WebPanel.Enabled {
-		server := &server.Server{}
-		var addr string
-		if config.WebPanel.Addr != "" {
-			addr = config.WebPanel.Addr
-		} else {
-			addr = *optAddr
-		}
-		server.
-			SetAddress(addr).
-			SetAuthInfo(config.WebPanel.Username, config.WebPanel.Password).
-			Build()
-
-		go func() {
-			if err := server.Start(); err != nil {
-				log.Fatalf("Failed to start the web server, error:%v", err)
-			}
-		}()
-	} else {
-		log.Info("Web panel is disabled")
-	}
-
 	// Create DNS manager
-	dnsManager := manager.GetDNSManager(configPath, &config)
+	dnsManager := manager.GetDNSManager(configPath, &config, *optAddr)
 
 	// Run DNS manager
 	log.Info("GoDNS started, starting the DNS manager...")
