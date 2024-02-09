@@ -9,6 +9,6 @@ func NewController() *Controller {
 	return &Controller{}
 }
 
-func (c *Controller) Ping(ctx *fiber.Ctx) error {
-	return ctx.SendString("Pong")
+func (c *Controller) Auth(ctx *fiber.Ctx) error {
+	return ctx.SendString("OK")
 }

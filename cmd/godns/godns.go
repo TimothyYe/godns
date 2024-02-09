@@ -66,17 +66,17 @@ func main() {
 	}
 
 	// start the internal HTTP server
-	if (config.WebAddr != "" || *optAddr != ":9000") && config.WebPanel {
+	if (config.WebPanel.Addr != "" || *optAddr != ":9000") && config.WebPanel.Enabled {
 		server := &server.Server{}
 		var addr string
-		if config.WebAddr != "" {
-			addr = config.WebAddr
+		if config.WebPanel.Addr != "" {
+			addr = config.WebPanel.Addr
 		} else {
 			addr = *optAddr
 		}
 		server.
 			SetAddress(addr).
-			SetAuthInfo(config.WebUsername, config.WebPassword).
+			SetAuthInfo(config.WebPanel.Username, config.WebPanel.Password).
 			Build()
 
 		go func() {

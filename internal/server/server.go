@@ -56,18 +56,5 @@ func (s *Server) initRoutes() {
 
 	// Create routes group.
 	route := s.app.Group("/api/v1")
-
-	// authMiddleware := keyauth.New(keyauth.Config{
-	// 	Validator: func(c *fiber.Ctx, key string) (bool, error) {
-	// 		hashedAPIKey := sha256.Sum256([]byte(apiKey))
-	// 		hashedKey := sha256.Sum256([]byte(key))
-
-	// 		if subtle.ConstantTimeCompare(hashedAPIKey[:], hashedKey[:]) == 1 {
-	// 			return true, nil
-	// 		}
-	// 		return false, keyauth.ErrMissingOrMalformedAPIKey
-	// 	},
-	// })
-
-	route.Get("/ping", s.controller.Ping)
+	route.Get("/auth", s.controller.Auth)
 }

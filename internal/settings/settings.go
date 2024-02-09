@@ -93,6 +93,13 @@ type Webhook struct {
 	RequestBody string `json:"request_body" yaml:"request_body"`
 }
 
+type WebPanel struct {
+	Enabled  bool   `json:"enabled" yaml:"enabled"`
+	Addr     string `json:"addr" yaml:"addr"`
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
+}
+
 // Settings struct.
 type Settings struct {
 	Provider       string   `json:"provider" yaml:"provider"`
@@ -122,10 +129,7 @@ type Settings struct {
 	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
 	ConsumerKey    string   `json:"comsumer_key" yaml:"comsumer_key"`
 	SkipSSLVerify  bool     `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
-	WebPanel       bool     `json:"web_panel" yaml:"web_panel"`
-	WebAddr        string   `json:"web_addr" yaml:"web_addr"`
-	WebUsername    string   `json:"web_username" yaml:"web_username"`
-	WebPassword    string   `json:"web_password" yaml:"web_password"`
+	WebPanel       WebPanel `json:"web_panel" yaml:"web_panel"`
 }
 
 // LoadSettings -- Load settings from config file.
