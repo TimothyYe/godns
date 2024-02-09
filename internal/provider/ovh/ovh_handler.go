@@ -38,21 +38,21 @@ func (provider *DNSProvider) UpdateIP(domainName string, subdomainName string, i
 		log.Error("OVH Client error: ", err)
 		return err
 	}
-	var IDS []int
+	var IDs []int
 	query := fmt.Sprintf("/domain/zone/%s/record?subDomain=%s", domainName, subdomainName)
 
-	err = client.Get(query, &IDS)
+	err = client.Get(query, &IDs)
 	if err != nil {
 		log.Error("Fetch error")
 		return err
 	}
-	if len(IDS) < 1 {
+	if len(IDs) < 1 {
 		log.Error("No machting records")
 		return fmt.Errorf("no macthing records")
 	}
 	outrec := Record{}
 
-	for _, id := range IDS {
+	for _, id := range IDs {
 		record := Record{}
 		err = client.Get(fmt.Sprintf("/domain/zone/%s/record/%s", domainName, fmt.Sprint(id)), &record)
 		if err != nil {
