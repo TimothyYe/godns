@@ -32,6 +32,8 @@ var (
 )
 
 func main() {
+	utils.Version = Version
+
 	flag.Parse()
 	if *optHelp {
 		color.Cyan(utils.Logo, Version)

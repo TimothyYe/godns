@@ -1,5 +1,7 @@
 package utils
 
+import "time"
+
 const (
 	// PanicMax is the max allowed panic times.
 	PanicMax = 5
@@ -65,4 +67,33 @@ const (
 
 	// DefaultTimeout is the default timeout value, in seconds.
 	DefaultTimeout = 10
+)
+
+var (
+	// Version is current version of GoDNS.
+	Version = "0.1"
+	// StartTime is the start time of GoDNS.
+	StartTime = time.Now().Unix()
+
+	// Providers is the list of supported DNS providers.
+	Providers = []string{
+		DNSPOD,
+		HE,
+		CLOUDFLARE,
+		ALIDNS,
+		GOOGLE,
+		DUCK,
+		DREAMHOST,
+		DYNV6,
+		DYNU,
+		NOIP,
+		SCALEWAY,
+		LINODE,
+		STRATO,
+		LOOPIASE,
+		INFOMANIAK,
+		HETZNER,
+		OVH,
+		IONOS,
+	}
 )

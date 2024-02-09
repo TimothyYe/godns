@@ -57,4 +57,5 @@ func (s *Server) initRoutes() {
 	// Create routes group.
 	route := s.app.Group("/api/v1")
 	route.Get("/auth", s.controller.Auth)
+	route.Get("/info", s.controller.GetBasicInfo)
 }
