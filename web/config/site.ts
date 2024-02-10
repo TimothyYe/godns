@@ -1,17 +1,17 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-	name: "Next.js + NextUI",
-	description: "Make beautiful websites regardless of your design experience.",
+	name: "GoDNS",
+	description: "Dynamic DNS client with multiple providers support",
 	navItems: [
 		{
 			label: "Home",
 			href: "/",
 		},
-    {
-      label: "About",
-      href: "/about",
-    }
+		{
+			label: "About",
+			href: "/about",
+		}
 	],
 	navMenuItems: [
 		{
@@ -49,6 +49,6 @@ export const siteConfig = {
 	],
 	links: {
 		github: "https://github.com/TimothyYe/godns",
-    sponsor: "https://github.com/sponsors/TimothyYe"
+		sponsor: "https://github.com/sponsors/TimothyYe"
 	},
 };

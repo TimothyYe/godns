@@ -46,6 +46,7 @@ export const Login = (props: LoginProps) => {
 							label="Password"
 							variant="bordered"
 							placeholder="Enter your password"
+							color="primary"
 							endContent={
 								<button className="focus:outline-none" type="button" onClick={toggleVisibility}>
 									{isVisible ? (
@@ -57,6 +58,7 @@ export const Login = (props: LoginProps) => {
 							}
 							type={isVisible ? "text" : "password"}
 							className="max-w-xs"
+							onChange={(e) => setPassword(e.target.value)}
 						/>
 						<Spacer y={1.5} />
 						<Button type="submit" fullWidth size="lg" color="primary">Login</Button>
