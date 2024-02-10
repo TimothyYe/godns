@@ -41,7 +41,7 @@ export const Login = (props: LoginProps) => {
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}
 						/>
-						<Spacer y={1.5} />
+						<Spacer y={2} />
 						<Input
 							label="Password"
 							variant="bordered"
@@ -60,7 +60,7 @@ export const Login = (props: LoginProps) => {
 							className="max-w-xs"
 							onChange={(e) => setPassword(e.target.value)}
 						/>
-						<Spacer y={1.5} />
+						<Spacer y={2} />
 						<Button type="submit" fullWidth size="lg" color="primary">Login</Button>
 					</form>
 				</CardBody>
