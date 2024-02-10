@@ -93,6 +93,34 @@ export const HeartFilledIcon = ({
 	</svg>
 );
 
+export const UserIcon = (props: IconSvgProps) => (
+	<svg
+		aria-hidden="true"
+		fill="none"
+		focusable="false"
+		height="1em"
+		role="presentation"
+		viewBox="0 0 24 24"
+		width="1em"
+		{...props}
+	>
+		<path
+			d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12Z"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+		/>
+		<path
+			d="M2 20.5C2 18.84 7.33 17 12 17C16.67 17 22 18.84 22 20.5"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+		/>
+	</svg>
+);
+
 export const SearchIcon = (props: IconSvgProps) => (
 	<svg
 		aria-hidden="true"

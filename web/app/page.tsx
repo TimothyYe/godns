@@ -2,7 +2,7 @@ import { Code, Snippet, Link } from "@nextui-org/react";
 import { button as buttonStyles } from "@nextui-org/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
-import { GithubIcon } from "@/components/icons";
+import { GithubIcon, UserIcon } from "@/components/icons";
 import { Counter } from "@/components/counter";
 
 export default function Home() {
@@ -27,6 +27,7 @@ export default function Home() {
 					href={siteConfig.links.github}
 				>
 					<GithubIcon size={20} />
+					<UserIcon size={20} />
 					GitHub
 				</Link>
 			</div>

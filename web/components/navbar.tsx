@@ -12,6 +12,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 
 import { ThemeSwitch } from "@/components/theme-switch";
+import { LogoutButton } from "./logout-button";
 import {
 	GithubIcon,
 	HeartFilledIcon,
@@ -57,6 +58,7 @@ export const Navbar = () => {
 						<HeartFilledIcon className="text-danger" />
 					</Link>
 					<ThemeSwitch />
+					<LogoutButton />
 				</NavbarItem>
 			</NavbarContent>
 
