@@ -28,7 +28,7 @@ export default function RootLayout({
           <footer className="w-full flex items-center justify-center py-3 gap-2">
             <span className="text-default-600">Powered by</span>
             <a
-              className="link flex items-center gap-1 text-current"
+              className="link link-hover flex items-center gap-1 text-current"
               href="https://github.com/TimothyYe/godns"
               title="GoDNS project homepage"
             >
