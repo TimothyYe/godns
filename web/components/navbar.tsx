@@ -21,7 +21,7 @@ export const Navbar = () => {
 						}
 					</ul>
 				</div>
-				<a className="btn text-xl">GoDNS</a>
+				<span className="text-2xl font-bold ml-5">GoDNS</span>
 			</div>
 			<div className="navbar-center hidden lg:flex">
 				<ul className="menu menu-horizontal px-1">
