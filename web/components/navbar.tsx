@@ -1,9 +1,15 @@
+'use client';
 import { siteConfig } from "@/config/site";
 import { MenuIcon, GithubIcon, HeartFilledIcon } from "./icons";
 import { LogoutBtn } from "./logout-btn";
 import { ThemeSwitch } from "./theme-switch";
+import { useContext } from "react";
+import { UserContext } from '@/components/user';
 
 export const Navbar = () => {
+	const userStore = useContext(UserContext);
+	const { credentials } = userStore;
+
 	return (
 		<div className="navbar bg-base-100">
 			<div className="navbar-start">
@@ -42,7 +48,9 @@ export const Navbar = () => {
 				<a className="hidden sm:flex link" href={siteConfig.links.sponsor} aria-label="Sponsor">
 					<HeartFilledIcon className="text-red-500" />
 				</a>
-				<LogoutBtn />
+				{
+					credentials ? <LogoutBtn /> : null
+				}
 			</div>
 		</div>
 	);

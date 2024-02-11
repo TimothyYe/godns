@@ -1,6 +1,7 @@
 'use client';
 // components/Login.tsx
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { UserContext } from '@/components/user';
 import { login } from '@/api/login';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,12 +9,13 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const { loginUser, logoutUser } = useContext(UserContext);
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle login logic here
-    login(username, password).then((success) => {
-      if (!success) {
+    login(username, password).then((credentials) => {
+      if (!credentials) {
         toast.error('Invalid username or password!', {
           position: "top-right",
           autoClose: 3000,
@@ -24,6 +26,10 @@ export default function Login() {
           progress: undefined,
           theme: "light",
         });
+      } else {
+        loginUser(credentials);
+        // Redirect to the home page
+        window.location.href = '/';
       }
     });
   };
@@ -41,7 +47,7 @@ export default function Login() {
                 <div className="label">
                   <span className="label-text font-bold">Username</span>
                 </div>
-                <input type="text" id="username" placeholder="Type here" className="input input-primary input-bordered w-full max-w-xs"
+                <input type="text" id="username" placeholder="Input the username" className="input input-primary input-bordered w-full max-w-xs"
                   onChange={
                     (e) => setUsername(e.target.value)
                   } />
@@ -52,7 +58,7 @@ export default function Login() {
                 <div className="label">
                   <span className="label-text font-bold">Password</span>
                 </div>
-                <input type="password" id="password" placeholder="Type here" className="input input-primary input-bordered w-full max-w-xs"
+                <input type="password" id="password" placeholder="Input the password" className="input input-primary input-bordered w-full max-w-xs"
                   onChange={
                     (e) => setPassword(e.target.value)
                   } />

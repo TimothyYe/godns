@@ -1,6 +1,6 @@
 import { get_api_server } from '@/api/env';
 
-export async function login(username: string, password: string): Promise<boolean> {
+export async function login(username: string, password: string): Promise<string> {
 	// combine username and password into a single string and use Base64 encoding
 	const credentials = `${username}:${password}`;
 	const encodedCredentials = btoa(credentials);
@@ -15,13 +15,8 @@ export async function login(username: string, password: string): Promise<boolean
 
 	if (resp.status === 200) {
 		// store the credentials in local storage
-		localStorage.setItem('credentials', encodedCredentials);
-		return true;
+		return encodedCredentials;
 	}
 
-	return false;
-}
-
-export async function logout(): Promise<void> {
-	localStorage.removeItem('credentials');
+	return '';
 }
