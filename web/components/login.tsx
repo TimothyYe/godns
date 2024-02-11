@@ -23,7 +23,7 @@ export const Login = (props: LoginProps) => {
 
 	return (
 		<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
-			<Card className=''>
+			<Card>
 				<CardHeader>
 					<h2 className='text-xl font-bold text-center'>Login</h2>
 				</CardHeader>

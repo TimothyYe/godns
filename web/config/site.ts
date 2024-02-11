@@ -5,12 +5,12 @@ export const siteConfig = {
 	description: "Dynamic DNS client with multiple providers support",
 	navItems: [
 		{
-			label: "Home",
+			label: "Status",
 			href: "/",
 		},
 		{
-			label: "About",
-			href: "/about",
+			label: "Config",
+			href: "/config",
 		}
 	],
 	links: {
