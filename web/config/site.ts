@@ -5,7 +5,7 @@ export const siteConfig = {
 	description: "Dynamic DNS client with multiple providers support",
 	navItems: [
 		{
-			label: "Status",
+			label: "Home",
 			href: "/",
 		},
 		{

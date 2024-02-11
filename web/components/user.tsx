@@ -3,6 +3,8 @@ import { createContext, useState, useEffect, ReactNode } from 'react';
 
 export const UserContext = createContext({
 	credentials: '',
+	currentPage: '',
+	setCurrentPage: (_: string) => { },
 	loginUser: (_: string) => { },
 	logoutUser: () => { },
 });
@@ -14,6 +16,7 @@ interface UserProviderProps {
 // user provider
 export const UserProvider = ({ children }: UserProviderProps) => {
 	const [credentials, setCredentials] = useState<string>('');
+	const [currentPage, setCurrentPage] = useState<string>('Home');
 
 	useEffect(() => {
 		const localCredentials = localStorage.getItem('credentials');
@@ -33,7 +36,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 	};
 
 	return (
-		<UserContext.Provider value={{ credentials, loginUser, logoutUser }}>
+		<UserContext.Provider value={{ credentials, loginUser, logoutUser, currentPage, setCurrentPage }}>
 			{children}
 		</UserContext.Provider>
 	);

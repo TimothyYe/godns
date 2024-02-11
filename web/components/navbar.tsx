@@ -8,7 +8,11 @@ import { UserContext } from '@/components/user';
 
 export const Navbar = () => {
 	const userStore = useContext(UserContext);
-	const { credentials } = userStore;
+	const { credentials, currentPage, setCurrentPage } = userStore;
+
+	const setCurPage = (page: string) => {
+		setCurrentPage(page);
+	};
 
 	return (
 		<div className="navbar bg-base-100">
@@ -34,7 +38,11 @@ export const Navbar = () => {
 					{
 						siteConfig.navItems.map((item) => (
 							<li key={item.label}>
-								<a href={item.href}>{item.label}</a>
+								<a
+									onClick={(e) => {
+										setCurPage(item.label);
+									}}
+									className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
 							</li>
 						))
 					}
