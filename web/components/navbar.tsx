@@ -21,7 +21,7 @@ export const Navbar = () => {
 						{
 							siteConfig.navItems.map((item) => (
 								<li key={item.label}>
-									<a className="text-primary" href={item.href}>{item.label}</a>
+									<a href={item.href}>{item.label}</a>
 								</li>
 							))
 						}
@@ -34,7 +34,7 @@ export const Navbar = () => {
 					{
 						siteConfig.navItems.map((item) => (
 							<li key={item.label}>
-								<a className="text-primary" href={item.href}>{item.label}</a>
+								<a href={item.href}>{item.label}</a>
 							</li>
 						))
 					}

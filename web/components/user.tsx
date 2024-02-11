@@ -3,7 +3,7 @@ import { createContext, useState, useEffect, ReactNode } from 'react';
 
 export const UserContext = createContext({
 	credentials: '',
-	loginUser: (credentials: string) => { },
+	loginUser: (_: string) => { },
 	logoutUser: () => { },
 });
 
