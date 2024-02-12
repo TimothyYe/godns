@@ -1,8 +1,21 @@
 'use client';
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
-export const CommonContext = createContext({
-	credentials: '',
+type UserAction = (_: string) => void;
+type PageAction = (_: string) => void;
+
+interface ICommonContext {
+	credentials: string | null;
+	loginUser: UserAction;
+	logoutUser: UserAction;
+	currentPage: string;
+	setCurrentPage: PageAction;
+	version: string;
+	setVersion: PageAction;
+}
+
+export const CommonContext = createContext<ICommonContext>({
+	credentials: null,
 	loginUser: (_: string) => { },
 	logoutUser: () => { },
 	currentPage: '',
@@ -17,16 +30,9 @@ interface UserProviderProps {
 
 // user provider
 export const UserProvider = ({ children }: UserProviderProps) => {
-	const [credentials, setCredentials] = useState<string>('');
+	const [credentials, setCredentials] = useState<string | null>(localStorage.getItem('credentials'));
 	const [currentPage, setCurrentPage] = useState<string>('Home');
 	const [version, setVersion] = useState<string>('');
-
-	useEffect(() => {
-		const localCredentials = localStorage.getItem('credentials');
-		if (localCredentials) {
-			setCredentials(localCredentials);
-		}
-	}, []);
 
 	const loginUser = (credentials: string) => {
 		setCredentials(credentials);
@@ -34,7 +40,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 	};
 
 	const logoutUser = () => {
-		setCredentials('');
+		setCredentials(null);
 		localStorage.removeItem('credentials');
 	};
 

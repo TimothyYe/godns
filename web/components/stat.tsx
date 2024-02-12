@@ -11,6 +11,7 @@ export const Stat = () => {
 
 	useEffect(() => {
 		if (!credentials) {
+			window.location.href = '/login';
 			return;
 		}
 		get_info(credentials).then((info) => {
