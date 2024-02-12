@@ -24,6 +24,15 @@ export const Stat = () => {
 		<div className="stats shadow bg-primary-content">
 			<div className="stat">
 				<div className="stat-figure text-secondary">
+					<TagIcon />
+				</div>
+				<div className="stat-title">Version</div>
+				<div className="stat-value text-success justify-center items-center">{info.version}</div>
+				<div className="stat-desc">Current version</div>
+			</div>
+
+			<div className="stat">
+				<div className="stat-figure text-secondary">
 					<InfoIcon />
 				</div>
 				<div className="stat-title">Uptime</div>
@@ -47,15 +56,6 @@ export const Stat = () => {
 				<div className="stat-title">Subdomains</div>
 				<div className="stat-value text-error">{info.sub_domains}</div>
 				<div className="stat-desc">Subdomains configured</div>
-			</div>
-
-			<div className="stat">
-				<div className="stat-figure text-secondary">
-					<TagIcon />
-				</div>
-				<div className="stat-title">Version</div>
-				<div className="stat-value text-success justify-center items-center">{info.version}</div>
-				<div className="stat-desc">Current version</div>
 			</div>
 		</div>
 	);
