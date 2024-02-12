@@ -21,7 +21,7 @@ export const Stat = () => {
 	}, [credentials]);
 
 	return (
-		<div className="stats shadow bg-primary-content">
+		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
 			<div className="stat">
 				<div className="stat-figure text-secondary">
 					<TagIcon />
