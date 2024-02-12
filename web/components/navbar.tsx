@@ -3,11 +3,11 @@ import { siteConfig } from "@/config/site";
 import { MenuIcon, GithubIcon, HeartFilledIcon } from "./icons";
 import { LogoutBtn } from "./logout-btn";
 import { useContext } from "react";
-import { UserContext } from '@/components/user';
+import { CommonContext } from '@/components/user';
 
 export const Navbar = () => {
-	const userStore = useContext(UserContext);
-	const { credentials, currentPage, setCurrentPage } = userStore;
+	const userStore = useContext(CommonContext);
+	const { credentials, currentPage, setCurrentPage, version } = userStore;
 
 	const setCurPage = (page: string) => {
 		setCurrentPage(page);
@@ -15,7 +15,7 @@ export const Navbar = () => {
 
 	return (
 		<div className="navbar bg-base-100">
-			<div className="navbar-start">
+			<div className="navbar-start gap-2">
 				<div className="dropdown">
 					<div tabIndex={0} role="button" className="btn lg:hidden">
 						<MenuIcon />
@@ -30,7 +30,8 @@ export const Navbar = () => {
 						}
 					</ul>
 				</div>
-				<span className="text-2xl font-bold ml-5">GoDNS</span>
+				<span className="text-2xl font-bold">GoDNS</span>
+				<span className="text-sm mt-2">v{version}</span>
 			</div>
 			<div className="navbar-center hidden lg:flex">
 				<ul className="menu menu-horizontal px-1">

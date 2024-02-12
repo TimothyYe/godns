@@ -1,7 +1,7 @@
 'use client';
 // components/Login.tsx
 import React, { useState, useContext } from 'react';
-import { UserContext } from '@/components/user';
+import { CommonContext } from '@/components/user';
 import { login } from '@/api/login';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { loginUser, logoutUser } = useContext(UserContext);
+  const { loginUser, logoutUser } = useContext(CommonContext);
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

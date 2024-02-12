@@ -1,9 +1,9 @@
 'use client';
 import { useContext } from "react";
-import { UserContext } from '@/components/user';
+import { CommonContext } from '@/components/user';
 
 export const LogoutBtn = () => {
-	const { logoutUser } = useContext(UserContext);
+	const { logoutUser } = useContext(CommonContext);
 	const onClick = () => {
 		// logout user
 		logoutUser();

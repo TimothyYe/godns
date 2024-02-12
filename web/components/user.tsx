@@ -1,12 +1,14 @@
 'use client';
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
-export const UserContext = createContext({
+export const CommonContext = createContext({
 	credentials: '',
-	currentPage: '',
-	setCurrentPage: (_: string) => { },
 	loginUser: (_: string) => { },
 	logoutUser: () => { },
+	currentPage: '',
+	setCurrentPage: (_: string) => { },
+	version: '',
+	setVersion: (_: string) => { },
 });
 
 interface UserProviderProps {
@@ -17,6 +19,7 @@ interface UserProviderProps {
 export const UserProvider = ({ children }: UserProviderProps) => {
 	const [credentials, setCredentials] = useState<string>('');
 	const [currentPage, setCurrentPage] = useState<string>('Home');
+	const [version, setVersion] = useState<string>('');
 
 	useEffect(() => {
 		const localCredentials = localStorage.getItem('credentials');
@@ -36,8 +39,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 	};
 
 	return (
-		<UserContext.Provider value={{ credentials, loginUser, logoutUser, currentPage, setCurrentPage }}>
+		<CommonContext.Provider value={{
+			credentials,
+			loginUser,
+			logoutUser,
+			currentPage,
+			setCurrentPage,
+			version,
+			setVersion
+		}}>
 			{children}
-		</UserContext.Provider>
+		</CommonContext.Provider>
 	);
 };
