@@ -31,20 +31,21 @@ export const Navbar = () => {
 					</ul>
 				</div>
 				<span className="text-2xl font-bold">GoDNS</span>
-				<span className="text-sm mt-2">v{version}</span>
+				<span className="text-sm mt-2">{version ? `v${version}` : ''}</span>
 			</div>
 			<div className="navbar-center hidden lg:flex">
 				<ul className="menu menu-horizontal px-1">
 					{
-						siteConfig.navItems.map((item) => (
-							<li key={item.label}>
-								<a
-									onClick={(e) => {
-										setCurPage(item.label);
-									}}
-									className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
-							</li>
-						))
+						credentials ?
+							siteConfig.navItems.map((item) => (
+								<li key={item.label}>
+									<a
+										onClick={(e) => {
+											setCurPage(item.label);
+										}}
+										className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
+								</li>
+							)) : null
 					}
 				</ul>
 			</div>
