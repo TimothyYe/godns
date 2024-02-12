@@ -5,23 +5,22 @@ import { CommonContext } from "./user";
 import { Info, get_info, get_hours, get_date } from "@/api/info";
 
 export const Stat = () => {
+	const [info, setInfo] = useState<Info | null>(null);
 	const userStore = useContext(CommonContext);
 	const { credentials, setVersion } = userStore;
-	const [info, setInfo] = useState<Info | null>(null);
 
 	useEffect(() => {
+		if (!credentials) {
+			return;
+		}
 		get_info(credentials).then((info) => {
-			if (!info.version) {
-				window.location.href = '/login';
-				return;
-			}
 			setInfo(info);
 			setVersion(info.version);
 		});
-	}, [credentials, setVersion]);
+	}, [userStore, setVersion, credentials]);
 
 	return (
-		info ? (
+		info && info.version ? (
 			<div className="flex flex-col max-w-screen-lg">
 				<span className="text-xl font-semibold text-neutral-500 ml-1 mb-1">Basic Info</span>
 				<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
