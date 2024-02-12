@@ -81,7 +81,7 @@ export const Stat = () => {
 				{
 					info && info.domains ? info.domains.map((domain, index) => {
 						return (
-							<div key="value" className={index % 3 === 0 ? "card w-full md:w-1/3 bg-primary-content shadow-xl" : "card w-full md:flex-1 bg-primary-content shadow-xl"}>
+							<div key="value" className={(index + 1) % 3 !== 0 ? "card w-full md:w-1/3 bg-primary-content shadow-xl" : "card w-full md:flex-1 bg-primary-content shadow-xl"}>
 								<figure></figure>
 								<div className="card-body">
 									<h2 className="card-title">
