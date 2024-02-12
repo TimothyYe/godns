@@ -37,7 +37,7 @@ export default function Login() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <ToastContainer />
-      <div className="card w-96 shadow-2xl shadow-neutral-950">
+      <div className="card w-96 shadow-2xl shadow-neutral-950 bg-base-100">
         <div className="card-body">
           <form onSubmit={handleLogin} className="flex flex-col mb-4">
             <h2 className="card-title text-primary">Login</h2>

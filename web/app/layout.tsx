@@ -30,6 +30,7 @@ export default function RootLayout({
                 className="link link-hover flex items-center gap-1 text-current"
                 href="https://github.com/TimothyYe/godns"
                 title="GoDNS project homepage"
+                target="_blank"
               >
                 <p className="text-primary">GoDNS</p>
               </a>

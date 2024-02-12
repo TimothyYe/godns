@@ -5,12 +5,60 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 	size?: number;
 };
 
-export const GithubIcon: React.FC<IconSvgProps> = ({
+export const InfoIcon = (props: IconSvgProps) => {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current">
+			<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+		</svg>
+	)
+}
+
+export const TagIcon = (props: IconSvgProps) => {
+	return (
+		<svg height={32} width={32} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+			<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.6 8.4h0m-4.7 11.3-6.6-6.6a1 1 0 0 1 0-1.4l7.3-7.4a1 1 0 0 1 .7-.3H18a2 2 0 0 1 2 2v5.5a1 1 0 0 1-.3.7l-7.5 7.5a1 1 0 0 1-1.3 0Z" />
+		</svg>
+	)
+}
+
+export const DBIcon = (props: IconSvgProps) => {
+	return (
+		<svg height={32} width={32} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+			<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 6c0 1.7-3.1 3-7 3S5 7.7 5 6m14 0c0-1.7-3.1-3-7-3S5 4.3 5 6m14 0v6M5 6v6m0 0c0 1.7 3.1 3 7 3s7-1.3 7-3M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
+		</svg>
+	)
+}
+
+export const SettingsIcon = (props: IconSvgProps) => {
+	return (
+		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+	)
+}
+
+export const ComputerIcon = (props: IconSvgProps) => {
+	return (
+		<svg height={32} width={32} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+			{...props}>
+			<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v5m-3 0h6M4 11h16M5 15h14c.6 0 1-.4 1-1V5c0-.6-.4-1-1-1H5a1 1 0 0 0-1 1v9c0 .6.4 1 1 1Z" />
+		</svg>
+	)
+}
+
+export const GearIcon = (props: IconSvgProps) => {
+	return (
+		<svg height={24} width={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block w-8 h-8 stroke-current">
+			<circle cx="12" cy="12" r="3"></circle>
+			<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09a1.65 1.65 0 0 0-1-.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+		</svg>
+	)
+}
+
+export const GithubIcon = ({
 	size = 24,
 	width,
 	height,
 	...props
-}) => {
+}: IconSvgProps) => {
 	return (
 		<svg
 			height={size || height}
@@ -103,7 +151,9 @@ export const MenuIcon = (props: IconSvgProps) => (
 		className="h-5 w-5"
 		fill="none"
 		viewBox="0 0 24 24"
-		stroke="currentColor">
+		stroke="currentColor"
+		{...props}
+	>
 		<path
 			strokeLinecap="round"
 			strokeLinejoin="round"
@@ -183,7 +233,7 @@ export const SearchIcon = (props: IconSvgProps) => (
 	</svg>
 );
 
-export const NextUILogo: React.FC<IconSvgProps> = (props) => {
+export const NextUILogo = (props: IconSvgProps) => {
 	const { width, height = 40 } = props;
 
 	return (
