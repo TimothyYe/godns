@@ -1,23 +1,45 @@
 import { get_api_server } from '@/api/env';
 
+// type BasicInfo struct {
+// 	Version      string            `json:"version"`
+// 	StartTime    int64             `json:"start_time"`
+// 	DomainNum    int               `json:"domain_num"`
+// 	SubDomainNum int               `json:"sub_domain_num"`
+// 	Domains      []settings.Domain `json:"domains"`
+// 	PublicIP     string            `json:"public_ip"`
+// 	IPMode       string            `json:"ip_mode"`
+// 	Provider     string            `json:"provider"`
+// }
+
+export interface Domain {
+	domain_name: string;
+	sub_domains: string[];
+}
+
 export interface Info {
 	version: string;
 	start_time: number;
-	domains: number;
-	sub_domains: number;
+	domain_num: number;
+	sub_domain_num: number;
+	domains: Domain[];
+	public_ip: string;
+	ip_mode: string;
+	provider: string;
 }
 
 export async function get_info(credentials: string): Promise<Info> {
-	// make a GET request to the /api/auth endpoint via basic authentication
-	const resp = await fetch(get_api_server() + '/api/v1/info', {
-		method: 'GET',
-		headers: {
-			'Authorization': `Basic ${credentials}`
-		}
-	})
+	if (credentials) {
+		// make a GET request to the /api/auth endpoint via basic authentication
+		const resp = await fetch(get_api_server() + '/api/v1/info', {
+			method: 'GET',
+			headers: {
+				'Authorization': `Basic ${credentials}`
+			}
+		})
 
-	if (resp.status === 200) {
-		return resp.json();
+		if (resp.status === 200) {
+			return resp.json();
+		}
 	}
 
 	return {} as Info;
