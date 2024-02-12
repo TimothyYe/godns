@@ -24,6 +24,9 @@ export async function get_info(credentials: string): Promise<Info> {
 }
 
 export function get_hours(timestamp: number): string {
+	if (timestamp === 0) {
+		return 'N/A';
+	}
 	// compute the number of hours between the current time and the timestamp
 	const current_time = Date.now() / 1000;
 	const diff = (current_time - timestamp);
@@ -35,5 +38,5 @@ export function get_date(timestamp: number): string {
 	// convert the timestamp to a human-readable date
 	const date = new Date(timestamp * 1000);
 	// convert date to YYYY-MM-DD HH:mm:ss format with the time in local timezone
-	return date.toLocaleString();
+	return date.toLocaleString('en-US');
 }
