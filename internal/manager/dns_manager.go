@@ -66,6 +66,7 @@ func (manager *DNSManager) startServer() {
 		manager.server.
 			SetAddress(addr).
 			SetAuthInfo(manager.config.WebPanel.Username, manager.config.WebPanel.Password).
+			SetConfig(manager.config).
 			Build()
 
 		go func() {

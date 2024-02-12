@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/TimothyYe/godns/internal/server/controllers"
+	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -14,6 +15,7 @@ type Server struct {
 	password   string
 	app        *fiber.App
 	controller *controllers.Controller
+	config     *settings.Settings
 }
 
 func (s *Server) SetAddress(addr string) *Server {
@@ -27,10 +29,15 @@ func (s *Server) SetAuthInfo(username, password string) *Server {
 	return s
 }
 
+func (s *Server) SetConfig(config *settings.Settings) *Server {
+	s.config = config
+	return s
+}
+
 func (s *Server) Build() {
 	config := fiber.Config{}
 	s.app = fiber.New(config)
-	s.controller = controllers.NewController()
+	s.controller = controllers.NewController(s.config)
 }
 
 func (s *Server) Start() error {
