@@ -7,18 +7,19 @@ import { Info, get_info, get_hours, get_date } from "@/api/info";
 export const Stat = () => {
 	const [info, setInfo] = useState<Info | null>(null);
 	const userStore = useContext(CommonContext);
-	const { credentials, setVersion } = userStore;
+	const { credentials, setVersion, setCurrentPage } = userStore;
 
 	useEffect(() => {
 		if (!credentials) {
 			window.location.href = '/login';
 			return;
 		}
+		setCurrentPage('Home');
 		get_info(credentials).then((info) => {
 			setInfo(info);
 			setVersion(info.version);
 		});
-	}, [userStore, setVersion, credentials]);
+	}, [userStore, setVersion, credentials, setCurrentPage]);
 
 	return (
 		info && info.version ? (

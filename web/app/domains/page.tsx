@@ -1,6 +1,6 @@
 'use client';
 // components/Login.tsx
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { CommonContext } from '@/components/user';
 import { login } from '@/api/login';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,12 +9,17 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Domains() {
 	const [username, setUsername] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
-	const { loginUser, logoutUser } = useContext(CommonContext);
+	const userStore = useContext(CommonContext);
+	const { credentials, setCurrentPage } = userStore;
 
 	const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		console.log('Save button clicked');
 	};
+
+	useEffect(() => {
+		setCurrentPage('Domains');
+	}, [setCurrentPage]);
 
 	return (
 		<main className="flex min-h-screen max-w-screen-xl flex-col items-center justify-center">

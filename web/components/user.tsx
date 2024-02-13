@@ -32,7 +32,7 @@ interface UserProviderProps {
 // user provider
 export const UserProvider = ({ children }: UserProviderProps) => {
 	const [credentials, setCredentials] = useState<string | null>(typeof window !== "undefined" ? localStorage.getItem('credentials') : null);
-	const [currentPage, setCurrentPage] = useState<string>('Home');
+	const [currentPage, setCurrentPage] = useState<string>('');
 	const [version, setVersion] = useState<string>('');
 
 	const loginUser = (credentials: string) => {

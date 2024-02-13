@@ -8,17 +8,13 @@ import { useState, useEffect } from "react";
 
 export const Navbar = () => {
 	const userStore = useContext(CommonContext);
-	const { credentials, currentPage, setCurrentPage, version } = userStore;
+	const { credentials, currentPage, version } = userStore;
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
 		// Set isClient to true once the component has mounted
 		setIsClient(true);
 	}, []);
-
-	const setCurPage = (page: string) => {
-		setCurrentPage(page);
-	};
 
 	return (
 		<div className="navbar bg-base-100">
@@ -48,11 +44,7 @@ export const Navbar = () => {
 							{
 								siteConfig.navItems.map((item) => (
 									<li key={item.label}>
-										<a
-											onClick={(e) => {
-												setCurPage(item.label);
-											}}
-											className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
+										<a className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
 									</li>
 								))}
 						</ul> : null

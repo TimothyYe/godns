@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { loginUser, logoutUser } = useContext(CommonContext);
+  const { loginUser } = useContext(CommonContext);
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
