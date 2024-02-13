@@ -1,6 +1,8 @@
 package server
 
 import (
+	"time"
+
 	"github.com/TimothyYe/godns/internal/server/controllers"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/gofiber/fiber/v2"
@@ -48,7 +50,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) Stop() error {
-	return s.app.Shutdown()
+	return s.app.ShutdownWithTimeout(200 * time.Millisecond)
 }
 
 func (s *Server) initRoutes() {

@@ -85,7 +85,7 @@ func (manager *DNSManager) startMonitor() {
 		for {
 			select {
 			case <-manager.ctx.Done():
-				log.Debug("Shutting down the old file watcher...")
+				log.Debug("Shutting down the old file watcher and the internal HTTP server...")
 				return
 			case event, ok := <-manager.watcher.Events:
 				if !ok {
