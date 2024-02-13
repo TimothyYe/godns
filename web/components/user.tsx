@@ -2,12 +2,13 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
 type UserAction = (_: string) => void;
+type UserLogoutAction = () => void;
 type PageAction = (_: string) => void;
 
 interface ICommonContext {
 	credentials: string | null;
 	loginUser: UserAction;
-	logoutUser: UserAction;
+	logoutUser: UserLogoutAction;
 	currentPage: string;
 	setCurrentPage: PageAction;
 	version: string;

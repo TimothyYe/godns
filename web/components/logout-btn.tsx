@@ -1,9 +1,16 @@
-'use client';
+'use client'
 import { useContext } from "react";
 import { CommonContext } from '@/components/user';
+import { useState, useEffect } from "react";
 
 export const LogoutBtn = () => {
 	const { logoutUser } = useContext(CommonContext);
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		// Set isClient to true once the component has mounted
+		setIsClient(typeof window !== 'undefined');
+	}, []);
 	const onClick = () => {
 		// logout user
 		logoutUser();
@@ -12,6 +19,6 @@ export const LogoutBtn = () => {
 	}
 
 	return (
-		<button className="btn btn-outline btn-sm" onClick={onClick}>Logout</button>
+		isClient ? <button className="btn btn-outline btn-sm" onClick={onClick}>Logout</button> : null
 	);
 }

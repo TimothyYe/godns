@@ -1,13 +1,20 @@
-'use client';
+'use client'
 import { siteConfig } from "@/config/site";
 import { MenuIcon, GithubIcon, HeartFilledIcon } from "./icons";
 import { LogoutBtn } from "./logout-btn";
 import { useContext } from "react";
 import { CommonContext } from '@/components/user';
+import { useState, useEffect } from "react";
 
 export const Navbar = () => {
 	const userStore = useContext(CommonContext);
 	const { credentials, currentPage, setCurrentPage, version } = userStore;
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		// Set isClient to true once the component has mounted
+		setIsClient(true);
+	}, []);
 
 	const setCurPage = (page: string) => {
 		setCurrentPage(page);
@@ -17,37 +24,39 @@ export const Navbar = () => {
 		<div className="navbar bg-base-100">
 			<div className="navbar-start gap-2">
 				<div className="dropdown">
-					<div tabIndex={0} role="button" className="btn lg:hidden">
+					<div role="button" className="btn lg:hidden">
 						<MenuIcon />
 					</div>
-					<ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
-						{
-							siteConfig.navItems.map((item) => (
-								<li key={item.label}>
-									<a href={item.href}>{item.label}</a>
-								</li>
-							))
-						}
-					</ul>
+					{isClient && credentials && siteConfig.navItems ?
+						<ul className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
+							{
+								siteConfig.navItems.map((item) => (
+									<li key={item.label}>
+										<a href={item.href}>{item.label}</a>
+									</li>
+								))
+							}
+						</ul> : null}
 				</div>
 				<span className="text-2xl font-bold">GoDNS</span>
 				<span className="text-sm mt-2">{version ? `v${version}` : ''}</span>
 			</div>
 			<div className="navbar-center hidden lg:flex">
-				<ul className="menu menu-horizontal px-1">
-					{
-						credentials ?
-							siteConfig.navItems.map((item) => (
-								<li key={item.label}>
-									<a
-										onClick={(e) => {
-											setCurPage(item.label);
-										}}
-										className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
-								</li>
-							)) : null
-					}
-				</ul>
+				{
+					isClient && credentials ?
+						<ul className="menu menu-horizontal px-1">
+							{
+								siteConfig.navItems.map((item) => (
+									<li key={item.label}>
+										<a
+											onClick={(e) => {
+												setCurPage(item.label);
+											}}
+											className={currentPage === item.label ? "font-semibold bg-slate-100" : "font-semibold"} href={item.href}>{item.label}</a>
+									</li>
+								))}
+						</ul> : null
+				}
 			</div>
 			<div className="hidden sm:flex navbar-end gap-2">
 				<label className="flex cursor-pointer gap-2 items-center">
