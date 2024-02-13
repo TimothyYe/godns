@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import { createContext, useState, useEffect, ReactNode } from 'react';
 
 type UserAction = (_: string) => void;
@@ -30,7 +30,7 @@ interface UserProviderProps {
 
 // user provider
 export const UserProvider = ({ children }: UserProviderProps) => {
-	const [credentials, setCredentials] = useState<string | null>(localStorage.getItem('credentials'));
+	const [credentials, setCredentials] = useState<string | null>(typeof window !== "undefined" ? localStorage.getItem('credentials') : null);
 	const [currentPage, setCurrentPage] = useState<string>('Home');
 	const [version, setVersion] = useState<string>('');
 
