@@ -148,17 +148,20 @@ func (manager *DNSManager) initManager() error {
 	manager.handler.SetProvider(manager.provider)
 	manager.handler.Init()
 
-	// create a new file watcher
-	log.Debug("Creating the new file watcher...")
-	managerInstance.watcher, err = fsnotify.NewWatcher()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// if RunOnce is true, we don't need to create a file watcher and start the internal HTTP server
+	if !manager.config.RunOnce {
+		// create a new file watcher
+		log.Debug("Creating the new file watcher...")
+		managerInstance.watcher, err = fsnotify.NewWatcher()
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	// monitor the configuration file changes
-	managerInstance.startMonitor()
-	// start the internal HTTP server
-	managerInstance.startServer()
+		// monitor the configuration file changes
+		managerInstance.startMonitor()
+		// start the internal HTTP server
+		managerInstance.startServer()
+	}
 	return nil
 }
 
