@@ -24,7 +24,7 @@ export default function Domains() {
 	return (
 		<main className="flex min-h-screen max-w-screen-xl flex-col">
 			<ToastContainer />
-			<div className="card w-auto shadow-2xl bg-base-100">
+			<div className="card w-auto bg-base-100">
 				<form onSubmit={handleSave}>
 					<DomainControl />
 				</form>

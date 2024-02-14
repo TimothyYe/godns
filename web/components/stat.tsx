@@ -3,6 +3,8 @@ import { InfoIcon, DBIcon, TagIcon, ComputerIcon, SettingsIcon, GearIcon } from 
 import { useEffect, useContext, useState } from "react";
 import { CommonContext } from "./user";
 import { Info, get_info, get_hours, get_date } from "@/api/info";
+import { DomainCard } from "./domain-card";
+import { Domain } from "domain";
 
 export const Stat = () => {
 	const [info, setInfo] = useState<Info | null>(null);
@@ -87,23 +89,7 @@ export const Stat = () => {
 					{
 						info && info.domains ? info.domains.map((domain, index) => {
 							return (
-								<div key="value" className={(index + 1) % 3 !== 0 ? "card w-full md:w-1/3 bg-primary-content shadow-xl" : "card w-full md:flex-1 bg-primary-content shadow-xl"}>
-									<figure></figure>
-									<div className="card-body">
-										<h2 className="card-title">
-											{domain.domain_name}
-										</h2>
-										<div className="flex flex-wrap card-actions justify-start">
-											{
-												domain.sub_domains ? domain.sub_domains.map((sub_domain) => {
-													return (
-														<div key={sub_domain} className="badge badge-primary">{sub_domain}</div>
-													);
-												}) : null
-											}
-										</div>
-									</div>
-								</div>
+								<DomainCard key={index} domain={domain} index={index} />
 							);
 						}) : null
 					}
