@@ -5,6 +5,10 @@ import { DomainCard } from '@/components/domain-card';
 
 export const DomainControl = () => {
 	const [domains, setDomains] = useState<Domain[]>([]);
+	const onRemove = (domain: string) => {
+		const newDomains = domains.filter((d) => d.domain_name !== domain).sort((a, b) => a.domain_name.localeCompare(b.domain_name));
+		setDomains(newDomains);
+	}
 
 	const addNewTab = () => {
 		const newDomain: Domain = {
@@ -21,7 +25,7 @@ export const DomainControl = () => {
 			</div>
 			<div className="flex flex-wrap gap-2">
 				{domains.map((domain, index) => (
-					<DomainCard key={index} domain={domain} index={index} showActionBtn={true} />
+					<DomainCard key={index} domain={domain} index={index} showActionBtn={true} onRemove={onRemove} />
 				))}
 			</div>
 		</div>

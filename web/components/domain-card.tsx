@@ -6,7 +6,7 @@ interface DomainControlProps {
 	domain: Domain;
 	index: number;
 	showActionBtn?: boolean;
-	onRemove?: (domain: Domain) => void;
+	onRemove?: (domain: string) => void;
 }
 
 export const DomainCard = (props: DomainControlProps) => {
@@ -21,7 +21,7 @@ export const DomainCard = (props: DomainControlProps) => {
 	const removeDomain = () => {
 		console.log('Remove domain:', props.domain.domain_name);
 		if (props.onRemove) {
-			props.onRemove(props.domain);
+			props.onRemove(props.domain.domain_name);
 		}
 	};
 
