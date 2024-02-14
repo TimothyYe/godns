@@ -58,9 +58,9 @@ export const DomainCard = (props: DomainControlProps) => {
 					<p className="py-4">You will permanently remove this domian from the configuration.</p>
 					<div className="modal-action">
 						<form method="dialog">
-							<button className="btn">Now now</button>
+							<button className="btn mr-2">Now now</button>
+							<button className="btn btn-secondary" onClick={removeDomain} >Remove domain</button>
 						</form>
-						<button className="btn btn-secondary" onClick={removeDomain} >Remove domain</button>
 					</div>
 				</div>
 			</dialog>
