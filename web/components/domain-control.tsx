@@ -10,7 +10,7 @@ export const DomainControl = () => {
 		setDomains(newDomains);
 	}
 
-	const addNewTab = () => {
+	const addNewDomain = () => {
 		const newDomain: Domain = {
 			domain_name: `Domain ${domains.length + 1}`,
 			sub_domains: [`Subdomain ${domains.length + 1}`, `Subdomain ${domains.length + 1}`, "ipv6", "ipv4", "ddns"]
@@ -21,7 +21,7 @@ export const DomainControl = () => {
 	return (
 		<div className="flex flex-col">
 			<div className="flex flex-row justify-start">
-				<button className="btn btn-primary btn-sm mb-5" onClick={addNewTab}>Add Domain</button>
+				<button className="btn btn-primary btn-sm mb-5" onClick={addNewDomain}>Add Domain</button>
 			</div>
 			<div className="flex flex-wrap gap-2">
 				{domains.map((domain, index) => (
