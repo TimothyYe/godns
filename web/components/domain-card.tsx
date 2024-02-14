@@ -1,4 +1,5 @@
 import { Domain } from "@/api/info";
+import classNames from "classnames";
 
 interface DomainControlProps {
 	domain: Domain;
@@ -9,7 +10,11 @@ interface DomainControlProps {
 export const DomainCard = (props: DomainControlProps) => {
 
 	return (
-		<div key="value" className={(props.index + 1) % 3 !== 0 ? "card w-full md:w-1/3 bg-primary-content shadow-xl" : "card w-full md:flex-1 bg-primary-content shadow-xl"}>
+		<div key="value" className={classNames("card w-full bg-primary-content shadow-xl mb-1",
+			{
+				"md:w-1/3": (props.index + 1) % 3 !== 0,
+				"md:flex-1": (props.index + 1) % 3 === 0
+			})}>
 			<div className="card-body">
 				<h2 className="card-title">
 					{props.domain.domain_name}
@@ -31,6 +36,6 @@ export const DomainCard = (props: DomainControlProps) => {
 					) : null
 				}
 			</div>
-		</div>
+		</div >
 	);
 }
