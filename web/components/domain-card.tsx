@@ -1,13 +1,29 @@
 import { Domain } from "@/api/info";
 import classNames from "classnames";
+import { useRef } from "react";
 
 interface DomainControlProps {
 	domain: Domain;
 	index: number;
 	showActionBtn?: boolean;
+	onRemove?: (domain: Domain) => void;
 }
 
 export const DomainCard = (props: DomainControlProps) => {
+	const modalRef = useRef<HTMLDialogElement | null>(null);
+
+	const openModal = () => {
+		if (modalRef.current) {
+			modalRef.current.showModal();
+		}
+	};
+
+	const removeDomain = () => {
+		console.log('Remove domain:', props.domain.domain_name);
+		if (props.onRemove) {
+			props.onRemove(props.domain);
+		}
+	};
 
 	return (
 		<div key="value" className={classNames("card w-full bg-primary-content shadow-xl mb-1",
@@ -31,11 +47,23 @@ export const DomainCard = (props: DomainControlProps) => {
 				{
 					props.showActionBtn ? (
 						<div className="card-actions justify-end">
-							<button className="btn btn-secondary btn-sm">Remove</button>
+							<button className="btn btn-secondary btn-sm" onClick={openModal}>Remove</button>
 						</div>
 					) : null
 				}
 			</div>
+			<dialog id="my_modal_1" className="modal" ref={modalRef}>
+				<div className="modal-box">
+					<h3 className="font-bold text-lg">Remove this domain?</h3>
+					<p className="py-4">You will permanently remove this domian from the configuration.</p>
+					<div className="modal-action">
+						<form method="dialog">
+							<button className="btn">Now now</button>
+						</form>
+						<button className="btn btn-secondary" onClick={removeDomain} >Remove domain</button>
+					</div>
+				</div>
+			</dialog>
 		</div >
 	);
 }

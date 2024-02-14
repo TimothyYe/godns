@@ -9,7 +9,7 @@ export const DomainControl = () => {
 	const addNewTab = () => {
 		const newDomain: Domain = {
 			domain_name: `Domain ${domains.length + 1}`,
-			sub_domains: [`Subdomain ${domains.length + 1}`, `Subdomain ${domains.length + 1}`]
+			sub_domains: [`Subdomain ${domains.length + 1}`, `Subdomain ${domains.length + 1}`, "ipv6", "ipv4", "ddns"]
 		};
 		setDomains([...domains, newDomain]);
 	};

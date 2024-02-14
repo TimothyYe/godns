@@ -12,11 +12,6 @@ export default function Domains() {
 	const userStore = useContext(CommonContext);
 	const { credentials, setCurrentPage } = userStore;
 
-	const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		console.log('Save button clicked');
-	};
-
 	useEffect(() => {
 		setCurrentPage('Domains');
 	}, [setCurrentPage]);
@@ -25,9 +20,7 @@ export default function Domains() {
 		<main className="flex min-h-screen max-w-screen-xl flex-col">
 			<ToastContainer />
 			<div className="card w-auto bg-base-100">
-				<form onSubmit={handleSave}>
-					<DomainControl />
-				</form>
+				<DomainControl />
 			</div>
 		</main>
 	);
