@@ -20,7 +20,7 @@ export const Stat = () => {
 			setInfo(info);
 			setVersion(info.version);
 		});
-	}, [userStore, setVersion, credentials, setCurrentPage]);
+	}, [setVersion, credentials, setCurrentPage]);
 
 	return (
 		info && info.version ? (

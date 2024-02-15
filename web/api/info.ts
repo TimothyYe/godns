@@ -1,9 +1,5 @@
 import { get_api_server } from '@/api/env';
-
-export interface Domain {
-	domain_name: string;
-	sub_domains: string[];
-}
+import { Domain } from '@/api/domain';
 
 export interface Info {
 	version: string;

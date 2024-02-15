@@ -1,20 +1,27 @@
 'use client';
 // components/Login.tsx
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { CommonContext } from '@/components/user';
 import { DomainControl } from '@/components/domain-control';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { get_info } from '@/api/info';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Domains() {
-	const [username, setUsername] = useState<string>('');
-	const [password, setPassword] = useState<string>('');
 	const userStore = useContext(CommonContext);
-	const { credentials, setCurrentPage } = userStore;
+	const { credentials, setCurrentPage, setVersion } = userStore;
 
 	useEffect(() => {
+		if (!credentials) {
+			window.location.href = '/login';
+			return;
+		}
 		setCurrentPage('Domains');
-	}, [setCurrentPage]);
+		get_info(credentials).then((info) => {
+			setVersion(info.version);
+		});
+
+	}, [setCurrentPage, credentials, setVersion]);
 
 	return (
 		<main className="flex min-h-screen max-w-screen-xl flex-col">

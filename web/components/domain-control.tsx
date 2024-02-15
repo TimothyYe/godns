@@ -1,10 +1,31 @@
 // components/TabControl.tsx
-import React, { useState } from 'react';
-import { Domain } from '@/api/info';
+import React, { useState, useEffect } from 'react';
+import { Domain } from '@/api/domain';
 import { DomainCard } from '@/components/domain-card';
+import { useContext } from 'react';
+import { CommonContext } from '@/components/user';
+import { get_domains } from '@/api/domain';
+
+interface DomainControlProps {
+	domains: Domain[];
+}
 
 export const DomainControl = () => {
+	const userStore = useContext(CommonContext);
+	const { credentials } = userStore;
 	const [domains, setDomains] = useState<Domain[]>([]);
+
+	useEffect(() => {
+		if (!credentials) {
+			window.location.href = '/login';
+			return;
+		}
+
+		get_domains(credentials).then((domains) => {
+			setDomains(domains);
+		});
+	}, [credentials, setDomains]);
+
 	const onRemove = (domain: string) => {
 		const newDomains = domains.filter((d) => d.domain_name !== domain).sort((a, b) => a.domain_name.localeCompare(b.domain_name));
 		setDomains(newDomains);

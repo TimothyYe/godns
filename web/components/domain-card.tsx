@@ -1,4 +1,4 @@
-import { Domain } from "@/api/info";
+import { Domain } from "@/api/domain";
 import classNames from "classnames";
 import { useRef } from "react";
 
