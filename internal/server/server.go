@@ -18,6 +18,7 @@ type Server struct {
 	app        *fiber.App
 	controller *controllers.Controller
 	config     *settings.Settings
+	configPath string
 }
 
 func (s *Server) SetAddress(addr string) *Server {
@@ -36,10 +37,15 @@ func (s *Server) SetConfig(config *settings.Settings) *Server {
 	return s
 }
 
+func (s *Server) SetConfigPath(configPath string) *Server {
+	s.configPath = configPath
+	return s
+}
+
 func (s *Server) Build() {
 	config := fiber.Config{}
 	s.app = fiber.New(config)
-	s.controller = controllers.NewController(s.config)
+	s.controller = controllers.NewController(s.config, s.configPath)
 }
 
 func (s *Server) Start() error {
@@ -61,14 +67,21 @@ func (s *Server) initRoutes() {
 		AllowHeaders: "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
 	}))
 
-	s.app.Use(basicauth.New(basicauth.Config{
+	// Create routes group.
+	route := s.app.Group("/api/v1")
+	route.Use(basicauth.New(basicauth.Config{
 		Users: map[string]string{
 			s.username: s.password,
 		},
 	}))
 
-	// Create routes group.
-	route := s.app.Group("/api/v1")
+	// Register routes
 	route.Get("/auth", s.controller.Auth)
+
+	// Get basic info
 	route.Get("/info", s.controller.GetBasicInfo)
+
+	// Domain related routes
+	route.Get("/domains", s.controller.GetDomains)
+	route.Post("/domains/add", s.controller.AddDomain)
 }

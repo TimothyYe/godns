@@ -6,12 +6,14 @@ import (
 )
 
 type Controller struct {
-	config *settings.Settings
+	config     *settings.Settings
+	configPath string
 }
 
-func NewController(conf *settings.Settings) *Controller {
+func NewController(conf *settings.Settings, configPath string) *Controller {
 	return &Controller{
-		config: conf,
+		config:     conf,
+		configPath: configPath,
 	}
 }
 
