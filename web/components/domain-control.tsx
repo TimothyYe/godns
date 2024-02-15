@@ -4,11 +4,8 @@ import { Domain } from '@/api/domain';
 import { DomainCard } from '@/components/domain-card';
 import { useContext } from 'react';
 import { CommonContext } from '@/components/user';
-import { get_domains } from '@/api/domain';
-
-interface DomainControlProps {
-	domains: Domain[];
-}
+import { get_domains, add_domain } from '@/api/domain';
+import { toast } from 'react-toastify';
 
 export const DomainControl = () => {
 	const userStore = useContext(CommonContext);
@@ -31,12 +28,22 @@ export const DomainControl = () => {
 		setDomains(newDomains);
 	}
 
-	const addNewDomain = () => {
+	const addNewDomain = async () => {
 		const newDomain: Domain = {
-			domain_name: `Domain ${domains.length + 1}`,
-			sub_domains: [`Subdomain ${domains.length + 1}`, `Subdomain ${domains.length + 1}`, "ipv6", "ipv4", "ddns"]
+			domain_name: `sample.com`,
+			sub_domains: ["ipv6", "ipv4", "ddns"]
 		};
-		setDomains([...domains, newDomain]);
+
+		if (credentials) {
+			add_domain(credentials, newDomain).then((success) => {
+				if (success) {
+					setDomains([...domains, newDomain]);
+					toast.success('Domain added successfully');
+				} else {
+					toast.error('Failed to add domain');
+				}
+			});
+		}
 	};
 
 	return (
