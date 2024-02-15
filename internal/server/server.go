@@ -83,5 +83,6 @@ func (s *Server) initRoutes() {
 
 	// Domain related routes
 	route.Get("/domains", s.controller.GetDomains)
-	route.Post("/domains/add", s.controller.AddDomain)
+	route.Post("/domains", s.controller.AddDomain)
+	route.Delete("/domains/:name", s.controller.DeleteDomain)
 }

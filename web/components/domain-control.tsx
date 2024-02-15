@@ -4,7 +4,7 @@ import { Domain } from '@/api/domain';
 import { DomainCard } from '@/components/domain-card';
 import { useContext } from 'react';
 import { CommonContext } from '@/components/user';
-import { get_domains, add_domain } from '@/api/domain';
+import { get_domains, add_domain, remove_domain } from '@/api/domain';
 import { toast } from 'react-toastify';
 
 export const DomainControl = () => {
@@ -19,13 +19,24 @@ export const DomainControl = () => {
 		}
 
 		get_domains(credentials).then((domains) => {
-			setDomains(domains);
+			setDomains(domains.sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
 		});
 	}, [credentials, setDomains]);
 
 	const onRemove = (domain: string) => {
-		const newDomains = domains.filter((d) => d.domain_name !== domain).sort((a, b) => a.domain_name.localeCompare(b.domain_name));
-		setDomains(newDomains);
+		if (credentials) {
+			remove_domain(credentials, domain).then((success) => {
+				if (success) {
+					toast.success('Domain removed successfully');
+					const newDomains = domains.filter((d) => d.domain_name !== domain).sort((a, b) => a.domain_name.localeCompare(b.domain_name));
+					setDomains(newDomains);
+				} else {
+					toast.error('Failed to remove domain');
+				}
+			});
+		} else {
+			toast.error('Invalid credentials');
+		}
 	}
 
 	const addNewDomain = async () => {
@@ -43,6 +54,8 @@ export const DomainControl = () => {
 					toast.error('Failed to add domain');
 				}
 			});
+		} else {
+			toast.error('Invalid credentials');
 		}
 	};
 
