@@ -4,7 +4,6 @@ import { useEffect, useContext, useState } from "react";
 import { CommonContext } from "./user";
 import { Info, get_info, get_hours, get_date } from "@/api/info";
 import { DomainCard } from "./domain-card";
-import { Domain } from "domain";
 
 export const Stat = () => {
 	const [info, setInfo] = useState<Info | null>(null);
