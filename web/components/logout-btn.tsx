@@ -1,6 +1,6 @@
 'use client'
 import { useContext } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { CommonContext } from '@/components/user';
 import { useState, useEffect } from "react";
 

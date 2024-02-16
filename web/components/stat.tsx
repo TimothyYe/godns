@@ -1,7 +1,7 @@
 'use client';
 import { InfoIcon, DBIcon, TagIcon, ComputerIcon, SettingsIcon, GearIcon } from "@/components/icons";
 import { useEffect, useContext, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { CommonContext } from "./user";
 import { Info, get_info, get_hours, get_date } from "@/api/info";
 import { DomainCard } from "./domain-card";

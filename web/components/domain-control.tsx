@@ -1,18 +1,20 @@
 // components/TabControl.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Domain } from '@/api/domain';
 import { DomainCard } from '@/components/domain-card';
 import { useContext } from 'react';
 import { CommonContext } from '@/components/user';
 import { get_domains, add_domain, remove_domain } from '@/api/domain';
 import { toast } from 'react-toastify';
+import { WarningIcon } from './icons';
 
 export const DomainControl = () => {
 	const router = useRouter();
 	const userStore = useContext(CommonContext);
 	const { credentials } = userStore;
 	const [domains, setDomains] = useState<Domain[]>([]);
+	const [showAlert, setShowAlert] = useState(false);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
 
 	const openModal = () => {
@@ -28,7 +30,12 @@ export const DomainControl = () => {
 		}
 
 		get_domains(credentials).then((domains) => {
-			setDomains(domains.sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
+			if (!domains) {
+				setShowAlert(true);
+			} else {
+				setShowAlert(false);
+				setDomains(domains.sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
+			}
 		});
 	}, [credentials, setDomains, router]);
 
@@ -73,11 +80,21 @@ export const DomainControl = () => {
 			<div className="flex flex-row justify-start">
 				<button className="btn btn-primary btn-sm mb-5" onClick={openModal}>Add Domain</button>
 			</div>
-			<div className="flex flex-wrap gap-2">
-				{domains.map((domain, index) => (
-					<DomainCard key={index} domain={domain} index={index} showActionBtn={true} onRemove={onRemove} />
-				))}
-			</div>
+			{
+				showAlert ? (
+					<div role="alert" className="alert alert-warning">
+						<WarningIcon />
+						<span>Warning: No domains configured, please add a domain first!</span>
+					</div>
+				) : (
+
+					<div className="flex flex-wrap gap-2">
+						{domains.map((domain, index) => (
+							<DomainCard key={index} domain={domain} index={index} showActionBtn={true} onRemove={onRemove} />
+						))}
+					</div>
+				)
+			}
 			<dialog id="modal_add" className="modal" ref={modalRef}>
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Add domain</h3>

@@ -1,7 +1,7 @@
 'use client';
 // components/Login.tsx
 import React, { useState, useContext } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
 import { login } from '@/api/login';
 import { ToastContainer, toast } from 'react-toastify';

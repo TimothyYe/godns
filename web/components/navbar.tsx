@@ -35,7 +35,7 @@ export const Navbar = () => {
 						</ul> : null}
 				</div>
 				<span className="text-2xl font-bold">GoDNS</span>
-				<span className="text-sm mt-2">{version ? `v${version}` : ''}</span>
+				<span className="text-sm mt-2">{isClient && version ? `v${version}` : ''}</span>
 			</div>
 			<div className="navbar-center hidden lg:flex">
 				{

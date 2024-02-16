@@ -1,7 +1,7 @@
 'use client';
-// components/Login.tsx
+
 import React, { useContext, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
 import { DomainControl } from '@/components/domain-control';
 import { ToastContainer } from 'react-toastify';

@@ -167,6 +167,11 @@ func (manager *DNSManager) initManager() error {
 }
 
 func (manager *DNSManager) Run() {
+	if len(manager.config.Domains) == 0 {
+		log.Info("No domain is configured, please check your configuration file")
+		return
+	}
+
 	for _, domain := range manager.config.Domains {
 		domain := domain
 
