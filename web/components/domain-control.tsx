@@ -71,7 +71,7 @@ export const DomainControl = () => {
 		if (credentials) {
 			add_domain(credentials, newDomain).then((success) => {
 				if (success) {
-					setDomains([...domains, newDomain]);
+					setDomains([...domains, newDomain].sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
 					// reset the form fields
 					setDomainName('');
 					setSubDomains([]);
@@ -86,7 +86,7 @@ export const DomainControl = () => {
 	};
 
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col w-full p-10">
 			<div className="flex flex-row justify-start">
 				<button className="btn btn-primary btn-sm mb-5" onClick={openModal}>Add Domain</button>
 			</div>

@@ -26,9 +26,9 @@ export default function Domains() {
 	}, [setCurrentPage, credentials, saveVersion, router]);
 
 	return (
-		<main className="flex min-h-screen max-w-screen-xl flex-col">
+		<main className="flex min-h-screen flex-col items-center justify-start pt-10 max-w-screen-xl">
 			<ToastContainer />
-			<div className="card w-auto bg-base-100">
+			<div className="flex w-full bg-base-100">
 				<DomainControl />
 			</div>
 		</main>
