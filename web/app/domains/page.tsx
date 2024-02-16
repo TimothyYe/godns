@@ -28,7 +28,7 @@ export default function Domains() {
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-start pt-10 max-w-screen-xl">
 			<ToastContainer />
-			<div className="flex w-full bg-base-100">
+			<div className="flex w-full bg-base-100 p-10">
 				<DomainControl />
 			</div>
 		</main>

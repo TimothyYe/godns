@@ -86,7 +86,7 @@ export const DomainControl = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full p-10">
+		<div className="flex flex-col w-full">
 			<div className="flex flex-row justify-start">
 				<button className="btn btn-primary btn-sm mb-5" onClick={openModal}>Add Domain</button>
 			</div>
