@@ -16,6 +16,8 @@ export const DomainControl = () => {
 	const [domains, setDomains] = useState<Domain[]>([]);
 	const [showAlert, setShowAlert] = useState(false);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const [domainName, setDomainName] = useState<string>('');
+	const [subDomains, setSubDomains] = useState<string[]>([]);
 
 	const openModal = () => {
 		if (modalRef.current) {
@@ -56,15 +58,23 @@ export const DomainControl = () => {
 	}
 
 	const addNewDomain = async () => {
+		if (!domainName || !subDomains.length) {
+			toast.error('Invalid domain or subdomain');
+			return;
+		}
+
 		const newDomain: Domain = {
-			domain_name: `sample.com`,
-			sub_domains: ["ipv6", "ipv4", "ddns"]
+			domain_name: domainName,
+			sub_domains: subDomains
 		};
 
 		if (credentials) {
 			add_domain(credentials, newDomain).then((success) => {
 				if (success) {
 					setDomains([...domains, newDomain]);
+					// reset the form fields
+					setDomainName('');
+					setSubDomains([]);
 					toast.success('Domain added successfully');
 				} else {
 					toast.error('Failed to add domain');
@@ -99,12 +109,36 @@ export const DomainControl = () => {
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Add domain</h3>
 					<p className="py-4">Add a new domain to the configuration.</p>
-					<div className="modal-action">
-						<form method="dialog">
+					<form method="dialog">
+						<label className="form-control w-full">
+							<div className="label">
+								<span className="label-text font-bold">Domain</span>
+							</div>
+							<input
+								type="input"
+								id="domain"
+								placeholder="Input the domain name"
+								className="input input-primary input-bordered w-full"
+								value={domainName}
+								onChange={(e) => setDomainName(e.target.value)}
+							/>
+						</label>
+						<label className="form-control w-full">
+							<div className="label">
+								<span className="label-text font-bold">Subdomain</span>
+							</div>
+							<textarea
+								className="textarea textarea-primary"
+								placeholder={`subdomain1\nsubdomain2`}
+								value={subDomains.join('\n')}
+								onChange={(e) => setSubDomains(e.target.value.split('\n'))}
+							/>
+						</label>
+						<div className="modal-action">
 							<button className="btn mr-2">Close</button>
-							<button className="btn btn-primary" onClick={addNewDomain} >Save</button>
-						</form>
-					</div>
+							<button className="btn btn-primary" onClick={addNewDomain} >Add</button>
+						</div>
+					</form>
 				</div>
 			</dialog>
 		</div>
