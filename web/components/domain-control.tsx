@@ -1,5 +1,6 @@
 // components/TabControl.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { Domain } from '@/api/domain';
 import { DomainCard } from '@/components/domain-card';
 import { useContext } from 'react';
@@ -8,20 +9,28 @@ import { get_domains, add_domain, remove_domain } from '@/api/domain';
 import { toast } from 'react-toastify';
 
 export const DomainControl = () => {
+	const router = useRouter();
 	const userStore = useContext(CommonContext);
 	const { credentials } = userStore;
 	const [domains, setDomains] = useState<Domain[]>([]);
+	const modalRef = useRef<HTMLDialogElement | null>(null);
+
+	const openModal = () => {
+		if (modalRef.current) {
+			modalRef.current.showModal();
+		}
+	};
 
 	useEffect(() => {
 		if (!credentials) {
-			window.location.href = '/login';
+			router.push('/login');
 			return;
 		}
 
 		get_domains(credentials).then((domains) => {
 			setDomains(domains.sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
 		});
-	}, [credentials, setDomains]);
+	}, [credentials, setDomains, router]);
 
 	const onRemove = (domain: string) => {
 		if (credentials) {
@@ -62,13 +71,25 @@ export const DomainControl = () => {
 	return (
 		<div className="flex flex-col">
 			<div className="flex flex-row justify-start">
-				<button className="btn btn-primary btn-sm mb-5" onClick={addNewDomain}>Add Domain</button>
+				<button className="btn btn-primary btn-sm mb-5" onClick={openModal}>Add Domain</button>
 			</div>
 			<div className="flex flex-wrap gap-2">
 				{domains.map((domain, index) => (
 					<DomainCard key={index} domain={domain} index={index} showActionBtn={true} onRemove={onRemove} />
 				))}
 			</div>
+			<dialog id="modal_add" className="modal" ref={modalRef}>
+				<div className="modal-box">
+					<h3 className="font-bold text-lg">Add domain</h3>
+					<p className="py-4">Add a new domain to the configuration.</p>
+					<div className="modal-action">
+						<form method="dialog">
+							<button className="btn mr-2">Close</button>
+							<button className="btn btn-primary" onClick={addNewDomain} >Save</button>
+						</form>
+					</div>
+				</div>
+			</dialog>
 		</div>
 	);
 };

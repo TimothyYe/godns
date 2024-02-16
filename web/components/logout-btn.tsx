@@ -1,9 +1,11 @@
 'use client'
 import { useContext } from "react";
+import { useRouter } from "next/router";
 import { CommonContext } from '@/components/user';
 import { useState, useEffect } from "react";
 
 export const LogoutBtn = () => {
+	const router = useRouter();
 	const { logoutUser } = useContext(CommonContext);
 	const [isClient, setIsClient] = useState(false);
 
@@ -15,7 +17,7 @@ export const LogoutBtn = () => {
 		// logout user
 		logoutUser();
 		// Redirect to the login page
-		window.location.href = '/login';
+		router.push('/login');
 	}
 
 	return (

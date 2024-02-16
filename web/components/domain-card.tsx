@@ -19,7 +19,6 @@ export const DomainCard = (props: DomainControlProps) => {
 	};
 
 	const removeDomain = () => {
-		console.log('Remove domain:', props.domain.domain_name);
 		if (props.onRemove) {
 			props.onRemove(props.domain.domain_name);
 		}
@@ -52,7 +51,7 @@ export const DomainCard = (props: DomainControlProps) => {
 					) : null
 				}
 			</div>
-			<dialog id="my_modal_1" className="modal" ref={modalRef}>
+			<dialog id="modal_remove" className="modal" ref={modalRef}>
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Remove this domain?</h3>
 					<p className="py-4">You will permanently remove this domian from the configuration.</p>

@@ -1,18 +1,20 @@
 'use client';
 import { InfoIcon, DBIcon, TagIcon, ComputerIcon, SettingsIcon, GearIcon } from "@/components/icons";
 import { useEffect, useContext, useState } from "react";
+import { useRouter } from "next/router";
 import { CommonContext } from "./user";
 import { Info, get_info, get_hours, get_date } from "@/api/info";
 import { DomainCard } from "./domain-card";
 
 export const Stat = () => {
+	const router = useRouter();
 	const [info, setInfo] = useState<Info | null>(null);
 	const userStore = useContext(CommonContext);
 	const { credentials, saveVersion, setCurrentPage } = userStore;
 
 	useEffect(() => {
 		if (!credentials) {
-			window.location.href = '/login';
+			router.push('/login');
 			return;
 		}
 		setCurrentPage('Home');
@@ -20,7 +22,7 @@ export const Stat = () => {
 			setInfo(info);
 			saveVersion(info.version);
 		});
-	}, [saveVersion, credentials, setCurrentPage]);
+	}, [saveVersion, credentials, setCurrentPage, router]);
 
 	return (
 		info && info.version ? (

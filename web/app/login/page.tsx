@@ -1,12 +1,14 @@
 'use client';
 // components/Login.tsx
 import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { CommonContext } from '@/components/user';
 import { login } from '@/api/login';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login() {
+  const router = useRouter();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { loginUser } = useContext(CommonContext);
@@ -29,7 +31,7 @@ export default function Login() {
       } else {
         loginUser(credentials);
         // Redirect to the home page
-        window.location.href = '/';
+        router.push('/');
       }
     });
   };
