@@ -69,6 +69,17 @@ const (
 	DefaultTimeout = 10
 )
 
+type ProviderSetting struct {
+	Name        string `json:"name" yaml:"name"`
+	Username    bool   `json:"username" yaml:"username"`
+	Email       bool   `json:"email" yaml:"email"`
+	Password    bool   `json:"password" yaml:"password"`
+	LoginToken  bool   `json:"login_token" yaml:"login_token"`
+	AppKey      bool   `json:"app_key" yaml:"app_key"`
+	AppSecret   bool   `json:"app_secret" yaml:"app_secret"`
+	ConsumerKey bool   `json:"comsumer_key" yaml:"comsumer_key"`
+}
+
 var (
 	// Version is current version of GoDNS.
 	Version = "0.1"
@@ -76,24 +87,84 @@ var (
 	StartTime = time.Now().Unix()
 
 	// Providers is the list of supported DNS providers.
-	Providers = []string{
-		DNSPOD,
-		HE,
-		CLOUDFLARE,
-		ALIDNS,
-		GOOGLE,
-		DUCK,
-		DREAMHOST,
-		DYNV6,
-		DYNU,
-		NOIP,
-		SCALEWAY,
-		LINODE,
-		STRATO,
-		LOOPIASE,
-		INFOMANIAK,
-		HETZNER,
-		OVH,
-		IONOS,
+	Providers = []ProviderSetting{
+		{
+			Name:       DNSPOD,
+			LoginToken: true,
+		}, {
+			Name:     HE,
+			Password: true,
+		},
+		{
+			Name:       CLOUDFLARE,
+			LoginToken: true,
+		},
+		{
+			Name:     ALIDNS,
+			Email:    true,
+			Password: true,
+		},
+		{
+			Name:     GOOGLE,
+			Email:    true,
+			Password: true,
+		},
+		{
+			Name:       DUCK,
+			LoginToken: true,
+		},
+		{
+			Name:       DREAMHOST,
+			LoginToken: true,
+		},
+		{
+			Name:       DYNV6,
+			LoginToken: true,
+		},
+		{
+			Name:     DYNU,
+			Password: true,
+		},
+		{
+			Name:     NOIP,
+			Email:    true,
+			Password: true,
+		},
+		{
+			Name:       SCALEWAY,
+			LoginToken: true,
+		},
+		{
+			Name:       LINODE,
+			LoginToken: true,
+		},
+		{
+			Name:     STRATO,
+			Password: true,
+		},
+		{
+			Name:     LOOPIASE,
+			Email:    true,
+			Password: true,
+		},
+		{
+			Name:     INFOMANIAK,
+			Email:    true,
+			Password: true,
+		},
+		{
+			Name:       HETZNER,
+			LoginToken: true,
+		},
+		{
+			Name:        OVH,
+			AppKey:      true,
+			AppSecret:   true,
+			ConsumerKey: true,
+		},
+		{
+			Name:       IONOS,
+			LoginToken: true,
+		},
 	}
 )

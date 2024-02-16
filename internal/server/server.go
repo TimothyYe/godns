@@ -85,4 +85,9 @@ func (s *Server) initRoutes() {
 	route.Get("/domains", s.controller.GetDomains)
 	route.Post("/domains", s.controller.AddDomain)
 	route.Delete("/domains/:name", s.controller.DeleteDomain)
+
+	// Provider related routes
+	route.Get("/provider", s.controller.GetProvider)
+	route.Get("/provider/settings", s.controller.GetProviderSettings)
+	route.Put("/provider", s.controller.UpdateProvider)
 }
