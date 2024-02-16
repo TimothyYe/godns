@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Domains() {
 	const userStore = useContext(CommonContext);
-	const { credentials, setCurrentPage, setVersion } = userStore;
+	const { credentials, setCurrentPage, saveVersion } = userStore;
 
 	useEffect(() => {
 		if (!credentials) {
@@ -18,10 +18,10 @@ export default function Domains() {
 		}
 		setCurrentPage('Domains');
 		get_info(credentials).then((info) => {
-			setVersion(info.version);
+			saveVersion(info.version);
 		});
 
-	}, [setCurrentPage, credentials, setVersion]);
+	}, [setCurrentPage, credentials, saveVersion]);
 
 	return (
 		<main className="flex min-h-screen max-w-screen-xl flex-col">

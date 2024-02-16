@@ -8,7 +8,7 @@ import { DomainCard } from "./domain-card";
 export const Stat = () => {
 	const [info, setInfo] = useState<Info | null>(null);
 	const userStore = useContext(CommonContext);
-	const { credentials, setVersion, setCurrentPage } = userStore;
+	const { credentials, saveVersion, setCurrentPage } = userStore;
 
 	useEffect(() => {
 		if (!credentials) {
@@ -18,9 +18,9 @@ export const Stat = () => {
 		setCurrentPage('Home');
 		get_info(credentials).then((info) => {
 			setInfo(info);
-			setVersion(info.version);
+			saveVersion(info.version);
 		});
-	}, [setVersion, credentials, setCurrentPage]);
+	}, [saveVersion, credentials, setCurrentPage]);
 
 	return (
 		info && info.version ? (
