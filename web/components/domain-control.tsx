@@ -128,7 +128,7 @@ export const DomainControl = () => {
 								<span className="label-text font-bold">Subdomain</span>
 							</div>
 							<textarea
-								className="textarea textarea-primary"
+								className="textarea textarea-primary h-36"
 								placeholder={`subdomain1\nsubdomain2`}
 								value={subDomains.join('\n')}
 								onChange={(e) => setSubDomains(e.target.value.split('\n'))}
