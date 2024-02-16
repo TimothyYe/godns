@@ -39,7 +39,7 @@ export const DomainControl = () => {
 				setDomains(domains.sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
 			}
 		});
-	}, [credentials, setDomains, router]);
+	}, [credentials, router]);
 
 	const onRemove = (domain: string) => {
 		if (credentials) {
