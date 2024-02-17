@@ -54,7 +54,6 @@
     - [OVH](#ovh)
     - [Dynu](#dynu)
     - [IONOS](#ionos)
-  - [Web UI](#web-ui)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -71,6 +70,7 @@
     - [Display debug info](#display-debug-info)
     - [Multiple API URLs](#multiple-api-urls)
     - [Recommended APIs](#recommended-apis)
+- [Web Panel](#web-panel)
 - [Running GoDNS](#running-godns)
   - [Manually](#manually)
   - [As a manual daemon](#as-a-manual-daemon)
@@ -829,23 +829,6 @@ socks5_proxy: ""
 
 </details>
 
-### Web Panel
-
-<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
-
-Starting from version 3.1.0, GoDNS provides a web panel to manage the configuration and monitor the status of the domains. The web UI is disabled by default. To enable it, just enable the `web_panel` in the configuration file.
-
-```json
-"web_panel": {
-  "enabled": true,
-  "addr": "0.0.0.0:9000",
-  "username": "admin",
-  "password": "123456"
-}
-```
-
-After enabling the web panel, you can visit `http://localhost:9000` to manage the configuration and monitor the status of the domains.
-
 ### Notifications
 
 GoDNS can send a notification each time the IP changes.
@@ -1083,6 +1066,22 @@ GoDNS supports to fetch the public IP from multiple URLs via a simple round-robi
 - <https://ipecho.net/plain>
 - <https://api-ipv4.ip.sb/ip>
 
+## Web Panel
+
+<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
+
+Starting from version 3.1.0, GoDNS provides a web panel to manage the configuration and monitor the status of the domains. The web UI is disabled by default. To enable it, just enable the `web_panel` in the configuration file.
+
+```json
+"web_panel": {
+  "enabled": true,
+  "addr": "0.0.0.0:9000",
+  "username": "admin",
+  "password": "123456"
+}
+```
+
+After enabling the web panel, you can visit `http://localhost:9000` to manage the configuration and monitor the status of the domains.
 ## Running GoDNS
 
 There are a few ways to run GoDNS.
