@@ -27,7 +27,7 @@ var (
 	optHelp = flag.Bool("h", false, "Show help")
 
 	// Version is current version of GoDNS.
-	Version = "0.1"
+	Version = "v0.1"
 )
 
 func main() {

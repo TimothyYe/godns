@@ -82,7 +82,7 @@ type ProviderSetting struct {
 
 var (
 	// Version is current version of GoDNS.
-	Version = "0.1"
+	Version = "v0.1"
 	// StartTime is the start time of GoDNS.
 	StartTime = time.Now().Unix()
 

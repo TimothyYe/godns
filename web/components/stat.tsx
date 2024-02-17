@@ -25,7 +25,7 @@ export const Stat = () => {
 	}, [saveVersion, credentials, setCurrentPage, router]);
 
 	return (
-		info && info.version ? (
+		info ? (
 			<div className="flex flex-col max-w-screen-lg">
 				<span className="text-xl font-semibold text-neutral-500 ml-1 mb-1">Basic Info</span>
 				<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
