@@ -4,7 +4,7 @@ require (
 	github.com/bitly/go-simplejson v0.5.0
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/fatih/color v1.15.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.5.0
 	github.com/json-iterator/go v1.1.12
 	github.com/linode/linodego v1.16.1
 	github.com/miekg/dns v1.1.53
@@ -15,7 +15,20 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-require github.com/fsnotify/fsnotify v1.7.0
+require (
+	github.com/fsnotify/fsnotify v1.7.0
+	github.com/gofiber/fiber/v2 v2.52.0
+)
+
+require (
+	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/klauspost/compress v1.17.0 // indirect
+	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasthttp v1.51.0 // indirect
+	github.com/valyala/tcplisten v1.0.0 // indirect
+)
 
 require (
 	github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 // indirect
@@ -24,7 +37,7 @@ require (
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.18 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/ovh/go-ovh v1.4.1

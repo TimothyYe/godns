@@ -22,6 +22,7 @@ const (
 
 var (
 	config  settings.Settings
+	optAddr = flag.String("a", ":9000", "Specify the address to listen on")
 	optConf = flag.String("c", "./config.json", "Specify a config file")
 	optHelp = flag.Bool("h", false, "Show help")
 
@@ -29,11 +30,9 @@ var (
 	Version = "0.1"
 )
 
-func init() {
-	log.SetOutput(os.Stdout)
-}
-
 func main() {
+	utils.Version = Version
+
 	flag.Parse()
 	if *optHelp {
 		color.Cyan(utils.Logo, Version)
@@ -54,6 +53,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// set the log level
+	log.SetOutput(os.Stdout)
+
 	if config.DebugInfo {
 		log.SetLevel(log.DebugLevel)
 	} else {
@@ -65,7 +67,7 @@ func main() {
 	}
 
 	// Create DNS manager
-	dnsManager := manager.GetDNSManager(configPath, &config)
+	dnsManager := manager.GetDNSManager(configPath, &config, *optAddr)
 
 	// Run DNS manager
 	log.Info("GoDNS started, starting the DNS manager...")

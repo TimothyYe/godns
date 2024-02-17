@@ -93,6 +93,13 @@ type Webhook struct {
 	RequestBody string `json:"request_body" yaml:"request_body"`
 }
 
+type WebPanel struct {
+	Enabled  bool   `json:"enabled" yaml:"enabled"`
+	Addr     string `json:"addr" yaml:"addr"`
+	Username string `json:"username" yaml:"username"`
+	Password string `json:"password" yaml:"password"`
+}
+
 // Settings struct.
 type Settings struct {
 	Provider       string   `json:"provider" yaml:"provider"`
@@ -120,8 +127,9 @@ type Settings struct {
 	Proxied        bool     `json:"proxied" yaml:"proxied"`
 	AppKey         string   `json:"app_key" yaml:"app_key"`
 	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
-	ConsumerKey    string   `json:"comsumer_key" yaml:"comsumer_key"`
+	ConsumerKey    string   `json:"consumer_key" yaml:"consumer_key"`
 	SkipSSLVerify  bool     `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
+	WebPanel       WebPanel `json:"web_panel" yaml:"web_panel"`
 }
 
 // LoadSettings -- Load settings from config file.
@@ -168,6 +176,45 @@ func LoadSettings(configPath string, settings *Settings) error {
 	}
 
 	return loadSecretsFromFile(settings)
+}
+
+func (s *Settings) SaveSettings(configPath string) error {
+	// get config file extension
+	fileExt := strings.ToLower(filepath.Ext(configPath))
+	if fileExt == "" {
+		return errors.New("invalid file extension")
+	}
+
+	// get file name without extension
+	fileName := strings.TrimSuffix(filepath.Base(configPath), fileExt)
+	fileExt = fileExt[1:]
+
+	if fileName == "" {
+		return errors.New("invalid config file name")
+	}
+
+	// LoadSettings from config file
+	var content []byte
+	var err error
+
+	switch fileExt {
+	case extJSON:
+		content, err = json.MarshalIndent(s, "", "  ")
+		if err != nil {
+			return err
+		}
+	case extYML:
+		fallthrough
+	case extYAML:
+		content, err = yaml.Marshal(s)
+		if err != nil {
+			return err
+		}
+	default:
+		return errors.New("invalid extension for config file:" + fileExt)
+	}
+
+	return os.WriteFile(configPath, content, 0644)
 }
 
 func loadSecretsFromFile(settings *Settings) error {

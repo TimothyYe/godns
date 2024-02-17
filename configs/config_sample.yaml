@@ -13,6 +13,11 @@ interval: 300
 resolver: 8.8.8.8
 user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36"
 ip_interface: eth0
+web_panel:
+  enabled: true
+  addr: "0.0.0.0:9000"
+  username": "admin"
+  password": "123456"
 socks5_proxy:
 use_proxy: false
 debug_info: false

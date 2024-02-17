@@ -9,6 +9,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/handler"
 	"github.com/TimothyYe/godns/internal/provider"
+	"github.com/TimothyYe/godns/internal/server"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 	"github.com/fsnotify/fsnotify"
@@ -16,13 +17,15 @@ import (
 )
 
 type DNSManager struct {
-	configuration *settings.Settings
-	handler       *handler.Handler
-	provider      provider.IDNSProvider
-	ctx           context.Context
-	cancel        context.CancelFunc
-	watcher       *fsnotify.Watcher
-	configPath    string
+	config      *settings.Settings
+	handler     *handler.Handler
+	provider    provider.IDNSProvider
+	ctx         context.Context
+	cancel      context.CancelFunc
+	watcher     *fsnotify.Watcher
+	server      *server.Server
+	configPath  string
+	defaultAddr string
 }
 
 var (
@@ -36,15 +39,12 @@ func getFileName(configPath string) string {
 	return filepath.Base(configPath)
 }
 
-func (manager *DNSManager) setConfig(conf *settings.Settings) {
-	manager.configuration = conf
-}
-
-func GetDNSManager(cfgPath string, conf *settings.Settings) *DNSManager {
+func GetDNSManager(cfgPath string, conf *settings.Settings, defaultAddr string) *DNSManager {
 	managerOnce.Do(func() {
 		managerInstance = &DNSManager{}
 		managerInstance.configPath = cfgPath
-		managerInstance.configuration = conf
+		managerInstance.config = conf
+		managerInstance.defaultAddr = defaultAddr
 		if err := managerInstance.initManager(); err != nil {
 			log.Fatalf("Error during DNS manager initialization: %s", err)
 		}
@@ -53,13 +53,40 @@ func GetDNSManager(cfgPath string, conf *settings.Settings) *DNSManager {
 	return managerInstance
 }
 
-func (manager *DNSManager) startMonitor(ctx context.Context) {
+func (manager *DNSManager) startServer() {
+	// start the internal HTTP server
+	if (manager.config.WebPanel.Addr != "" || manager.defaultAddr != ":9000") && manager.config.WebPanel.Enabled {
+		manager.server = &server.Server{}
+		var addr string
+		if manager.config.WebPanel.Addr != "" {
+			addr = manager.config.WebPanel.Addr
+		} else {
+			addr = manager.defaultAddr
+		}
+		manager.server.
+			SetAddress(addr).
+			SetAuthInfo(manager.config.WebPanel.Username, manager.config.WebPanel.Password).
+			SetConfig(manager.config).
+			SetConfigPath(manager.configPath).
+			Build()
+
+		go func() {
+			if err := manager.server.Start(); err != nil {
+				log.Fatalf("Failed to start the web server, error:%v", err)
+			}
+		}()
+	} else {
+		log.Info("Web panel is disabled")
+	}
+}
+
+func (manager *DNSManager) startMonitor() {
 	// Start listening for events.
 	go func() {
 		for {
 			select {
-			case <-ctx.Done():
-				log.Debug("Shutting down the old file watcher...")
+			case <-manager.ctx.Done():
+				log.Debug("Shutting down the old file watcher and the internal HTTP server...")
 				return
 			case event, ok := <-manager.watcher.Events:
 				if !ok {
@@ -85,7 +112,7 @@ func (manager *DNSManager) startMonitor(ctx context.Context) {
 							continue
 						}
 
-						manager.setConfig(newConfig)
+						manager.config = newConfig
 						manager.Restart()
 					}
 				}
@@ -105,8 +132,8 @@ func (manager *DNSManager) startMonitor(ctx context.Context) {
 }
 
 func (manager *DNSManager) initManager() error {
-	log.Infof("Creating DNS handler with provider: %s", manager.configuration.Provider)
-	dnsProvider, err := provider.GetProvider(manager.configuration)
+	log.Infof("Creating DNS handler with provider: %s", manager.config.Provider)
+	dnsProvider, err := provider.GetProvider(manager.config)
 	if err != nil {
 		return err
 	}
@@ -118,12 +145,12 @@ func (manager *DNSManager) initManager() error {
 	manager.provider = dnsProvider
 	manager.handler = &handler.Handler{}
 	manager.handler.SetContext(manager.ctx)
-	manager.handler.SetConfiguration(manager.configuration)
+	manager.handler.SetConfiguration(manager.config)
 	manager.handler.SetProvider(manager.provider)
 	manager.handler.Init()
 
-	// if RunOnce is true, we don't need to create a file watcher
-	if !manager.configuration.RunOnce {
+	// if RunOnce is true, we don't need to create a file watcher and start the internal HTTP server
+	if !manager.config.RunOnce {
 		// create a new file watcher
 		log.Debug("Creating the new file watcher...")
 		managerInstance.watcher, err = fsnotify.NewWatcher()
@@ -132,16 +159,23 @@ func (manager *DNSManager) initManager() error {
 		}
 
 		// monitor the configuration file changes
-		managerInstance.startMonitor(ctx)
+		managerInstance.startMonitor()
+		// start the internal HTTP server
+		managerInstance.startServer()
 	}
 	return nil
 }
 
 func (manager *DNSManager) Run() {
-	for _, domain := range manager.configuration.Domains {
+	if len(manager.config.Domains) == 0 {
+		log.Info("No domain is configured, please check your configuration file")
+		return
+	}
+
+	for _, domain := range manager.config.Domains {
 		domain := domain
 
-		if manager.configuration.RunOnce {
+		if manager.config.RunOnce {
 			err := manager.handler.UpdateIP(&domain)
 			if err != nil {
 				log.Error("Error during execution:", err)
@@ -153,14 +187,22 @@ func (manager *DNSManager) Run() {
 		}
 	}
 
-	if manager.configuration.RunOnce {
+	if manager.config.RunOnce {
 		os.Exit(0)
 	}
 }
 
 func (manager *DNSManager) Stop() {
 	manager.cancel()
-	manager.watcher.Close()
+	// close the file watcher
+	if manager.watcher != nil {
+		manager.watcher.Close()
+	}
+
+	// stop the internal HTTP server
+	if manager.server != nil {
+		manager.server.Stop()
+	}
 }
 
 func (manager *DNSManager) Restart() {

@@ -70,6 +70,7 @@
     - [Display debug info](#display-debug-info)
     - [Multiple API URLs](#multiple-api-urls)
     - [Recommended APIs](#recommended-apis)
+- [Web Panel](#web-panel)
 - [Running GoDNS](#running-godns)
   - [Manually](#manually)
   - [As a manual daemon](#as-a-manual-daemon)
@@ -77,6 +78,10 @@
   - [As a managed daemon (with systemd)](#as-a-managed-daemon-with-systemd)
   - [As a Docker container](#as-a-docker-container)
   - [As a Windows service](#as-a-windows-service)
+- [Contributing](#contributing)
+  - [Setup the frontend development environment](#setup-the-frontend-development-environment)
+  - [Build the frontend](#build-the-frontend)
+  - [Run the frontend](#run-the-frontend)
 - [Special Thanks](#special-thanks)
 
 ---
@@ -737,7 +742,7 @@ Make shure there is just one record.
 
 #### OVH
 
-For OVH, you need to provide a Comsumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
+For OVH, you need to provide a Consumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
 The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)
 Rights should be '\*' on GET, POST and PUT
 More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
@@ -748,7 +753,7 @@ More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-s
 ```json
 {
   "provider": "OVH",
-  "comsumer_key": "e389ac80cc8da9c7451bc7b8f171bf4f",
+  "consumer_key": "e389ac80cc8da9c7451bc7b8f171bf4f",
   "app_secret": "d1ffee354d3643d70deaab48a09131fd",
   "app_key": "cd338839d6472064",
   "domains": [
@@ -1065,6 +1070,22 @@ GoDNS supports to fetch the public IP from multiple URLs via a simple round-robi
 - <https://ipecho.net/plain>
 - <https://api-ipv4.ip.sb/ip>
 
+## Web Panel
+
+<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
+
+Starting from version 3.1.0, GoDNS provides a web panel to manage the configuration and monitor the status of the domains. The web UI is disabled by default. To enable it, just enable the `web_panel` in the configuration file.
+
+```json
+"web_panel": {
+  "enabled": true,
+  "addr": "0.0.0.0:9000",
+  "username": "admin",
+  "password": "123456"
+}
+```
+
+After enabling the web panel, you can visit `http://localhost:9000` to manage the configuration and monitor the status of the domains.
 ## Running GoDNS
 
 There are a few ways to run GoDNS.
@@ -1124,13 +1145,15 @@ Available docker registries:
 - <https://hub.docker.com/r/timothyye/godns>
 - <https://github.com/TimothyYe/godns/pkgs/container/godns>
 
-Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image.
-With `/path/to/config.json` your local configuration file, run:
+Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image. The `-p 9000:9000` option is used to expose the web panel.
+
+With `/path/to/config.json` as your local configuration file, run:
 
 ```bash
 docker run \
 -d --name godns --restart=always \
 -v /path/to/config.json:/config.json \
+-p 9000:9000 \
 timothyye/godns:latest
 ```
 
@@ -1142,6 +1165,7 @@ docker run \
 -e CONFIG=/config.yaml \
 --restart=always \
 -v /path/to/config.yaml:/config.yaml \
+-p 9000:9000 \
 timothyye/godns:latest
 ```
 
@@ -1163,6 +1187,37 @@ Note: you can uninstall the service by running:
 
 ```
 nssm remove YOURSERVICENAME
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Setup the frontend development environment
+
+The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](https://daisyui.com/). To start the development environment, run:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+### Build the frontend
+
+To build the frontend, run:
+
+```bash
+cd web
+npm run build
+```
+
+### Run the frontend
+
+To run the frontend, run:
+
+```bash
+cd web
+npm run start
 ```
 
 ## Special Thanks
