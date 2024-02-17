@@ -3,7 +3,7 @@
 before:
   hooks:
     # build the frontend project
-    - npm install --prefix ./web
+    - npm ci --prefix ./web
     - npm run build --prefix ./web
     # You may remove this if you don't use go modules.
     - go mod tidy
