@@ -13,6 +13,7 @@ export interface ProviderSetting {
 
 export interface Provider {
 	provider: string;
+	username: string;
 	email: string;
 	password: string;
 	login_token: string;

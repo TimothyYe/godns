@@ -1,19 +1,24 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface SearchableSelectProps {
 	options: { label: string; value: string }[];
 	placeholder: string;
-	defaultValue: string;
+	defaultValue: string | undefined;
+	onSelected?: (value: string) => void;
 }
 
-const SearchableSelect = ({ options, placeholder, defaultValue }: SearchableSelectProps) => {
+const SearchableSelect = ({ options, placeholder, defaultValue, onSelected }: SearchableSelectProps) => {
 	const [searchTerm, setSearchTerm] = useState(defaultValue || '');
 	const [showDropdown, setShowDropdown] = useState(false);
 
 	const filteredOptions = options.filter(option =>
 		option.label.toLowerCase().includes(searchTerm.toLowerCase())
 	);
+
+	useEffect(() => {
+		setSearchTerm(defaultValue || '');
+	}, [defaultValue]);
 
 	return (
 		<div className="relative">
@@ -27,7 +32,6 @@ const SearchableSelect = ({ options, placeholder, defaultValue }: SearchableSele
 				onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
 				onChange={(e) => {
 					setSearchTerm(e.target.value);
-					console.log(e.target.value);
 				}}
 				value={searchTerm}
 			/>
@@ -36,6 +40,9 @@ const SearchableSelect = ({ options, placeholder, defaultValue }: SearchableSele
 					{filteredOptions.map((option) => (
 						<li key={option.value} onClick={() => {
 							setSearchTerm(option.value);
+							if (onSelected) {
+								onSelected(option.value);
+							}
 						}}>
 							<a>{option.label}</a>
 						</li>
