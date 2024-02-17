@@ -127,7 +127,7 @@ type Settings struct {
 	Proxied        bool     `json:"proxied" yaml:"proxied"`
 	AppKey         string   `json:"app_key" yaml:"app_key"`
 	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
-	ConsumerKey    string   `json:"comsumer_key" yaml:"comsumer_key"`
+	ConsumerKey    string   `json:"consumer_key" yaml:"consumer_key"`
 	SkipSSLVerify  bool     `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
 	WebPanel       WebPanel `json:"web_panel" yaml:"web_panel"`
 }

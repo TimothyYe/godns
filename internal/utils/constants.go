@@ -77,7 +77,7 @@ type ProviderSetting struct {
 	LoginToken  bool   `json:"login_token" yaml:"login_token"`
 	AppKey      bool   `json:"app_key" yaml:"app_key"`
 	AppSecret   bool   `json:"app_secret" yaml:"app_secret"`
-	ConsumerKey bool   `json:"comsumer_key" yaml:"comsumer_key"`
+	ConsumerKey bool   `json:"consumer_key" yaml:"consumer_key"`
 }
 
 var (

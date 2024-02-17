@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Provider, ProviderSetting } from "@/api/provider";
-import { get_provider_settings, get_provider } from "@/api/provider";
+import { get_provider_settings, get_provider, update_provider } from "@/api/provider";
 import { useContext } from "react";
 import { CommonContext } from "@/components/user";
 import { useRouter } from "next/navigation";
@@ -73,6 +73,7 @@ export const ProviderControl = () => {
 					newProvider.username = username;
 				} else {
 					toast.error('Username is required');
+					return;
 				}
 			}
 			if (currentProviderSettings?.email) {
@@ -80,6 +81,7 @@ export const ProviderControl = () => {
 					newProvider.email = email;
 				} else {
 					toast.error('Email is required');
+					return;
 				}
 			}
 			if (currentProviderSettings?.password) {
@@ -87,6 +89,7 @@ export const ProviderControl = () => {
 					newProvider.password = password;
 				} else {
 					toast.error('Password is required');
+					return;
 				}
 			}
 			if (currentProviderSettings?.login_token) {
@@ -94,6 +97,7 @@ export const ProviderControl = () => {
 					newProvider.login_token = loginToken;
 				} else {
 					toast.error('Login Token is required');
+					return;
 				}
 			}
 			if (currentProviderSettings?.app_key) {
@@ -101,6 +105,7 @@ export const ProviderControl = () => {
 					newProvider.app_key = appKey;
 				} else {
 					toast.error('App Key is required');
+					return;
 				}
 			}
 			if (currentProviderSettings?.app_secret) {
@@ -108,6 +113,7 @@ export const ProviderControl = () => {
 					newProvider.app_secret = appSecret;
 				} else {
 					toast.error('App Secret is required');
+					return;
 				}
 			}
 			if (currentProviderSettings?.consumer_key) {
@@ -115,11 +121,24 @@ export const ProviderControl = () => {
 					newProvider.consumer_key = consumerKey;
 				} else {
 					toast.error('Consumer Key is required');
+					return;
 				}
 			}
 
 			// save provider
-			console.log(newProvider);
+			if (credentials) {
+				update_provider(credentials, newProvider).then((success) => {
+					if (success) {
+						toast.success('Provider settings saved successfully');
+						// update the current provider
+						setCurrentProvider(newProvider);
+					} else {
+						toast.error('Failed to save provider settings');
+					}
+				});
+			} else {
+				toast.error('Invalid credentials');
+			}
 		}
 	}
 

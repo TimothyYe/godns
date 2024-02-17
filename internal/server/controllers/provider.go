@@ -13,7 +13,7 @@ type Provider struct {
 	LoginToken  string `json:"login_token" yaml:"login_token"`
 	AppKey      string `json:"app_key" yaml:"app_key"`
 	AppSecret   string `json:"app_secret" yaml:"app_secret"`
-	ConsumerKey string `json:"comsumer_key" yaml:"comsumer_key"`
+	ConsumerKey string `json:"consumer_key" yaml:"consumer_key"`
 }
 
 func (c *Controller) GetProvider(ctx *fiber.Ctx) error {
