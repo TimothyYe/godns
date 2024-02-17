@@ -1203,7 +1203,7 @@ The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](
 
 ```bash
 cd web
-npm install
+npm ci
 npm run dev
 ```
 ### Build the frontend
