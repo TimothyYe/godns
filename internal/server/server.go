@@ -1,6 +1,10 @@
+//go:generate bash -c "cp -r ../../web/out ."
 package server
 
 import (
+	"embed"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/TimothyYe/godns/internal/server/controllers"
@@ -8,8 +12,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	log "github.com/sirupsen/logrus"
 )
+
+//go:embed out/*
+var embeddedFiles embed.FS
 
 type Server struct {
 	addr       string
@@ -67,6 +75,24 @@ func (s *Server) initRoutes() {
 		AllowHeaders: "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization",
 	}))
 
+	// Middleware to rewrite paths for HTML files
+	s.app.Use(func(c *fiber.Ctx) error {
+		// Check if the request is for the API
+		if strings.Contains(c.Path(), "/api/v1") {
+			return c.Next()
+		} else if c.Path() == "/" {
+			c.Path("index.html")
+			return c.Next()
+		} else if strings.Contains(c.Path(), ".") {
+			// Check if the request is for the other resources
+			return c.Next()
+		}
+
+		// Rewrite request to append `.html`
+		c.Path(c.Path() + ".html")
+		return c.Next()
+	})
+
 	// Create routes group.
 	route := s.app.Group("/api/v1")
 	route.Use(basicauth.New(basicauth.Config{
@@ -90,4 +116,10 @@ func (s *Server) initRoutes() {
 	route.Get("/provider", s.controller.GetProvider)
 	route.Get("/provider/settings", s.controller.GetProviderSettings)
 	route.Put("/provider", s.controller.UpdateProvider)
+
+	// Serve embedded files
+	s.app.Use("/", filesystem.New(filesystem.Config{
+		Root:       http.FS(embeddedFiles),
+		PathPrefix: "out",
+	}))
 }
