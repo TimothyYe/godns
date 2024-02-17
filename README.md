@@ -1195,6 +1195,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ### Setup the frontend development environment
 
+Requirements:
+* Node.js `18.19.0` or higher
+* Go `1.17` or higher
+
 The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](https://daisyui.com/). To start the development environment, run:
 
 ```bash
