@@ -23,7 +23,7 @@ jobs:
       name: Build the frontend project
       run: |
         cd web
-        npm install
+        npm ci
         npm run build
         cd ..
         go generate ./...
