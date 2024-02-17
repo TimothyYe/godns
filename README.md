@@ -54,6 +54,7 @@
     - [OVH](#ovh)
     - [Dynu](#dynu)
     - [IONOS](#ionos)
+  - [Web UI](#web-ui)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -828,6 +829,23 @@ socks5_proxy: ""
 
 </details>
 
+### Web Panel
+
+<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
+
+Starting from version 3.1.0, GoDNS provides a web panel to manage the configuration and monitor the status of the domains. The web UI is disabled by default. To enable it, just enable the `web_panel` in the configuration file.
+
+```json
+"web_panel": {
+  "enabled": true,
+  "addr": "0.0.0.0:9000",
+  "username": "admin",
+  "password": "123456"
+}
+```
+
+After enabling the web panel, you can visit `http://localhost:9000` to manage the configuration and monitor the status of the domains.
+
 ### Notifications
 
 GoDNS can send a notification each time the IP changes.
@@ -1124,13 +1142,15 @@ Available docker registries:
 - <https://hub.docker.com/r/timothyye/godns>
 - <https://github.com/TimothyYe/godns/pkgs/container/godns>
 
-Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image.
-With `/path/to/config.json` your local configuration file, run:
+Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image. The `-p 9000:9000` option is used to expose the web panel.
+
+With `/path/to/config.json` as your local configuration file, run:
 
 ```bash
 docker run \
 -d --name godns --restart=always \
 -v /path/to/config.json:/config.json \
+-p 9000:9000 \
 timothyye/godns:latest
 ```
 
@@ -1142,6 +1162,7 @@ docker run \
 -e CONFIG=/config.yaml \
 --restart=always \
 -v /path/to/config.yaml:/config.yaml \
+-p 9000:9000 \
 timothyye/godns:latest
 ```
 
