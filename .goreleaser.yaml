@@ -2,6 +2,9 @@
 # Make sure to check the documentation at https://goreleaser.com
 before:
   hooks:
+    # build the frontend project
+    - npm install --prefix ./web
+    - npm run build --prefix ./web
     # You may remove this if you don't use go modules.
     - go mod tidy
     # you may remove this if you don't need go generate
