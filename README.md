@@ -78,6 +78,10 @@
   - [As a managed daemon (with systemd)](#as-a-managed-daemon-with-systemd)
   - [As a Docker container](#as-a-docker-container)
   - [As a Windows service](#as-a-windows-service)
+- [Contributing](#contributing)
+  - [Setup the frontend development environment](#setup-the-frontend-development-environment)
+  - [Build the frontend](#build-the-frontend)
+  - [Run the frontend](#run-the-frontend)
 - [Special Thanks](#special-thanks)
 
 ---
@@ -1183,6 +1187,37 @@ Note: you can uninstall the service by running:
 
 ```
 nssm remove YOURSERVICENAME
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Setup the frontend development environment
+
+The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](https://daisyui.com/). To start the development environment, run:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+### Build the frontend
+
+To build the frontend, run:
+
+```bash
+cd web
+npm run build
+```
+
+### Run the frontend
+
+To run the frontend, run:
+
+```bash
+cd web
+npm run start
 ```
 
 ## Special Thanks
