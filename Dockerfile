@@ -19,6 +19,7 @@ COPY --from=web-builder /web/out ./web/out
 RUN go generate ./...
 RUN CGO_ENABLED=0 go build -o godns cmd/godns/godns.go
 
+# Final stage: Copy the Go binary into a distroless image
 FROM gcr.io/distroless/base
 COPY --from=builder /godns/godns /godns
 ENTRYPOINT ["/godns"]
