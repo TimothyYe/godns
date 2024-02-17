@@ -1,4 +1,4 @@
-//go:generate bash -c "cp -r ../../web/out ."
+//go:generate sh -c "cp -r ../../web/out ."
 package server
 
 import (
