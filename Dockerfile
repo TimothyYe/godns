@@ -3,9 +3,8 @@ FROM node:18-alpine AS web-builder
 WORKDIR /web
 # Copy the Next.js project files into the image
 COPY ./web/package.json ./web/package-lock.json ./
-ENV NEXT_USE_SWC_FALLBACK=true
 # Install dependencies
-RUN npm install
+RUN npm install --build-from-source swc-project/node-swc
 # Copy the rest of the Next.js project files
 COPY ./web .
 # Build the Next.js project
