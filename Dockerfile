@@ -12,12 +12,13 @@ RUN npm run build
 
 # Stage 2: Build the Go backend
 FROM golang:alpine AS builder
+ARG VERSION
 WORKDIR /godns
 ADD . .
 # Copy the Next.js build from the previous stage
 COPY --from=web-builder /web/out ./web/out
 RUN go generate ./...
-RUN CGO_ENABLED=0 go build -o godns cmd/godns/godns.go
+RUN CGO_ENABLED=0 go build -ldflags "-X main.Version=${VERSION}" -o godns cmd/godns/godns.go
 
 # Final stage: Copy the Go binary into a distroless image
 FROM gcr.io/distroless/base

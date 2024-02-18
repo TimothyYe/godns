@@ -39,3 +39,5 @@ jobs:
             timothyye/godns:${{steps.tag.outputs.tag}}
             ghcr.io/timothyye/godns:latest
             ghcr.io/timothyye/godns:${{steps.tag.outputs.tag}}
+          build-args: |
+            VERSION=v${{ steps.tag.outputs.tag }}
