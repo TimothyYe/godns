@@ -12,7 +12,7 @@ export const WebHook = () => {
 							<GearIcon />
 						</div>
 					</div>
-					<textarea className="textarea textarea-primary w-full h-28" placeholder="Input IP urls"></textarea>
+					<textarea className="textarea textarea-primary w-full h-28" placeholder="Input request body"></textarea>
 					<div className="flex justify-end">
 						<button className="flex justify-end btn btn-sm btn-primary">Save</button>
 					</div>
