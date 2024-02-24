@@ -28,7 +28,6 @@ export default function Network() {
 		});
 
 		get_network_settings(credentials).then((settings) => {
-			console.log('settings', settings);
 			setSettings(settings);
 		});
 	}, [credentials, router, setCurrentPage, saveVersion]);
@@ -38,7 +37,19 @@ export default function Network() {
 		<main className="flex min-h-screen flex-col items-center justify-between pt-10 max-w-screen-xl">
 			<div className="p-5">
 				<div className="flex flex-col max-w-screen-lg gap-5">
-					<IpMode IPMode={settings.ip_mode} IPUrls={settings.ip_urls} IPV6Urls={settings.ipv6_urls} />
+					<IpMode
+						IPMode={settings.ip_mode}
+						IPUrls={settings.ip_urls}
+						IPV6Urls={settings.ipv6_urls}
+						onIpModeChagne={(data) => {
+							setSettings({
+								...settings,
+								ip_mode: data.IPMode,
+								ip_urls: data.IPUrls,
+								ipv6_urls: data.IPV6Urls
+							});
+						}}
+					/>
 					<Proxy />
 					<WebHook />
 					<Resolver />

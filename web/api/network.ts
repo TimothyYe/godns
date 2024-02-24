@@ -8,8 +8,8 @@ export interface WebHook {
 
 export interface NetworkSettings {
 	ip_mode: string;
-	ip_urls: string[];
-	ipv6_urls: string[];
+	ip_urls?: string[];
+	ipv6_urls?: string[];
 	use_proxy: boolean;
 	skip_ssl_verify: boolean;
 	socks5_proxy: string;

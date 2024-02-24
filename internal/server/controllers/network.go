@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/TimothyYe/godns/internal/settings"
+	"github.com/TimothyYe/godns/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	log "github.com/sirupsen/logrus"
 )
@@ -41,9 +42,21 @@ func (c *Controller) UpdateNetworkSettings(ctx *fiber.Ctx) error {
 		return ctx.Status(400).SendString(err.Error())
 	}
 
+	if settings.IPMode == utils.IPV4 && len(settings.IPUrls) == 0 {
+		return ctx.Status(400).SendString("IP URLs cannot be empty")
+	}
+
+	if settings.IPMode == utils.IPV6 && len(settings.IPV6Urls) == 0 {
+		return ctx.Status(400).SendString("IPv6 URLs cannot be empty")
+	}
+
 	c.config.IPType = settings.IPMode
-	c.config.IPUrls = settings.IPUrls
-	c.config.IPV6Urls = settings.IPV6Urls
+	if settings.IPMode == utils.IPV6 {
+		c.config.IPV6Urls = settings.IPV6Urls
+	} else {
+		c.config.IPUrls = settings.IPUrls
+	}
+
 	c.config.UseProxy = settings.UseProxy
 	c.config.SkipSSLVerify = settings.SkipSSLVerify
 	c.config.Socks5Proxy = settings.Socks5Proxy
