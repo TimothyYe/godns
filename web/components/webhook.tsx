@@ -34,6 +34,7 @@ export const WebHook = (props: WebHookProps) => {
 									});
 								}
 							}}
+							onChange={() => { }}
 						/>
 						<div className="flex flex-grow justify-end text-secondary">
 							<GearIcon />

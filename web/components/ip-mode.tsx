@@ -36,6 +36,7 @@ export const IpMode = (props: IpModeProps) => {
 								});
 							}
 						}}
+						onChange={() => { }}
 					/>
 				</div>
 			</div>
