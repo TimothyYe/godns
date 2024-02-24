@@ -20,11 +20,11 @@ export const Navbar = () => {
 		<div className="navbar bg-base-100">
 			<div className="navbar-start gap-2">
 				<div className="dropdown">
-					<div role="button" className="btn lg:hidden">
+					<div tabIndex={0} role="button" className="btn lg:hidden">
 						<MenuIcon />
 					</div>
-					{isClient && credentials && siteConfig.navItems ?
-						<ul className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
+					{isClient && credentials ?
+						<ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52 bg-white">
 							{
 								siteConfig.navItems.map((item) => (
 									<li key={item.label}>
