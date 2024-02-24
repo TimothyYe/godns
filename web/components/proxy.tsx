@@ -11,7 +11,7 @@ export const Proxy = () => {
 						<span className="label-text text-slate-500 ">Skip SSL Verify</span>
 						<input type="checkbox" className="toggle toggle-primary" checked={false} />
 						<div className="flex w-1/2 justify-end text-secondary">
-							<ComputerIcon className="justify-end" />
+							<ComputerIcon />
 						</div>
 					</div>
 
