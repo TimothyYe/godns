@@ -1,6 +1,11 @@
 import { InterfaceIcon } from "./icons";
 
-export const IPInterface = () => {
+interface IPInterfaceProps {
+	IPInterface: string;
+	onIPInterfaceChange?: (data: IPInterfaceProps) => void;
+}
+
+export const IPInterface = (props: IPInterfaceProps) => {
 	return (
 		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
 			<div className="stat gap-2">
@@ -12,7 +17,19 @@ export const IPInterface = () => {
 							<InterfaceIcon />
 						</div>
 					</div>
-					<input type="text" className="input input-primary w-full input-disabled" placeholder="Input DNS resolver: e.g. 8.8.8.8" />
+					<input
+						type="text"
+						className="input input-primary w-full"
+						placeholder="Input the network interface name: e.g. eth0"
+						value={props.IPInterface}
+						onChange={(e) => {
+							if (props.onIPInterfaceChange) {
+								props.onIPInterfaceChange({
+									IPInterface: e.target.value
+								});
+							}
+						}}
+					/>
 				</div>
 			</div>
 		</div>

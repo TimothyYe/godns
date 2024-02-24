@@ -1,5 +1,5 @@
 import { GearIcon } from "./icons"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface WebHookProps {
 	Enabled: boolean;
@@ -8,10 +8,10 @@ interface WebHookProps {
 	onWebHookChange?: (data: WebHookProps) => void;
 }
 
-export const WebHook = ({ Enabled, Url, RequestBody, onWebHookChange }: WebHookProps) => {
-	const [webhookEnabled, setWebhookEnabled] = useState(Enabled);
-	const [webhookUrl, setWebhookUrl] = useState(Url);
-	const [webhookRequestBody, setWebhookRequestBody] = useState(RequestBody);
+export const WebHook = (props: WebHookProps) => {
+	const [webhookEnabled, setWebhookEnabled] = useState(props.Enabled);
+	const [webhookUrl, setWebhookUrl] = useState(props.Url);
+	const [webhookRequestBody, setWebhookRequestBody] = useState(props.RequestBody);
 
 	return (
 		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
@@ -26,8 +26,8 @@ export const WebHook = ({ Enabled, Url, RequestBody, onWebHookChange }: WebHookP
 							checked={webhookEnabled}
 							onClick={() => {
 								setWebhookEnabled(!webhookEnabled);
-								if (onWebHookChange) {
-									onWebHookChange({
+								if (props.onWebHookChange) {
+									props.onWebHookChange({
 										Enabled: !webhookEnabled,
 										Url: webhookUrl,
 										RequestBody: webhookRequestBody
@@ -42,12 +42,12 @@ export const WebHook = ({ Enabled, Url, RequestBody, onWebHookChange }: WebHookP
 					<input type="text"
 						className="input input-primary w-full"
 						placeholder="Input the webhhook URL"
-						value={Url}
+						value={webhookUrl}
 						disabled={!webhookEnabled}
 						onChange={(e) => {
 							setWebhookUrl(e.target.value);
-							if (onWebHookChange) {
-								onWebHookChange({
+							if (props.onWebHookChange) {
+								props.onWebHookChange({
 									Enabled: webhookEnabled,
 									Url: e.target.value,
 									RequestBody: webhookRequestBody
@@ -58,12 +58,12 @@ export const WebHook = ({ Enabled, Url, RequestBody, onWebHookChange }: WebHookP
 					<textarea
 						className="textarea textarea-primary w-full h-28"
 						placeholder="Input request body"
-						value={RequestBody}
+						value={props.RequestBody}
 						disabled={!webhookEnabled}
 						onChange={(e) => {
 							setWebhookRequestBody(e.target.value);
-							if (onWebHookChange) {
-								onWebHookChange({
+							if (props.onWebHookChange) {
+								props.onWebHookChange({
 									Enabled: webhookEnabled,
 									Url: webhookUrl,
 									RequestBody: e.target.value

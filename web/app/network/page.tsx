@@ -63,26 +63,48 @@ export default function Network() {
 							});
 						}}
 					/>
-					<WebHook
-						Enabled={settings?.webhook?.enabled}
-						Url={settings?.webhook?.url}
-						RequestBody={settings?.webhook?.request_body}
-						onWebHookChange={(data) => {
-							console.log('webhook', data)
+					{
+						settings.webhook ?
+							<WebHook
+								Enabled={settings.webhook.enabled}
+								Url={settings.webhook.url}
+								RequestBody={settings.webhook.request_body}
+								onWebHookChange={(data) => {
+									setSettings({
+										...settings,
+										webhook: {
+											enabled: data.Enabled,
+											url: data.Url,
+											request_body: data.RequestBody
+										}
+									});
+								}}
+							/> : null
+					}
+					<Resolver
+						Resolver={settings.resolver}
+						onResolverChange={(data) => {
 							setSettings({
 								...settings,
-								webhook: {
-									enabled: data.Enabled,
-									url: data.Url,
-									request_body: data.RequestBody
-								}
+								resolver: data.Resolver
 							});
 						}}
 					/>
-					<Resolver />
-					<IPInterface />
+					<IPInterface
+						IPInterface={settings.ip_interface}
+						onIPInterfaceChange={(data) => {
+							setSettings({
+								...settings,
+								ip_interface: data.IPInterface
+							});
+						}}
+					/>
 					<div className="flex justify-center">
-						<button className="flex btn btn-primary">Save</button>
+						<button className="flex btn btn-primary"
+							onClick={() => {
+								console.log('settings', settings);
+							}}
+						>Save</button>
 					</div>
 				</div>
 			</div>

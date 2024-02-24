@@ -1,6 +1,11 @@
 import { DBIcon } from "./icons";
 
-export const Resolver = () => {
+interface ResolverProps {
+	Resolver: string;
+	onResolverChange?: (data: ResolverProps) => void;
+}
+
+export const Resolver = (props: ResolverProps) => {
 	return (
 		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
 			<div className="stat gap-2">
@@ -12,7 +17,19 @@ export const Resolver = () => {
 							<DBIcon />
 						</div>
 					</div>
-					<input type="text" className="input input-primary w-full input-disabled" placeholder="Input DNS resolver: e.g. 8.8.8.8" />
+					<input
+						type="text"
+						className="input input-primary w-full"
+						placeholder="Input DNS resolver: e.g. 8.8.8.8"
+						value={props.Resolver}
+						onChange={(e) => {
+							if (props.onResolverChange) {
+								props.onResolverChange({
+									Resolver: e.target.value
+								});
+							}
+						}}
+					/>
 				</div>
 			</div>
 		</div>

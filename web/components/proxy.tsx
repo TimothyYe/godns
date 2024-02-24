@@ -1,4 +1,5 @@
 import { ComputerIcon } from "./icons"
+import classNames from "classnames";
 
 interface ProxyProps {
 	EnableProxy: boolean;
@@ -56,7 +57,9 @@ export const Proxy = (props: ProxyProps) => {
 
 					<input
 						type="text"
-						className="input input-primary w-full"
+						className={classNames("input input-primary w-full", {
+							'input-error': proxyEnabled && !props.Socks5Proxy
+						})}
 						disabled={!props.EnableProxy}
 						placeholder="Input Proxy: e.g. 127.0.0.1:8080"
 						value={props.Socks5Proxy}
