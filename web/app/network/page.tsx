@@ -50,7 +50,19 @@ export default function Network() {
 							});
 						}}
 					/>
-					<Proxy />
+					<Proxy
+						EnableProxy={settings.use_proxy}
+						SkipSSLVerify={settings.skip_ssl_verify}
+						Socks5Proxy={settings.socks5_proxy}
+						onProxyChange={(data) => {
+							setSettings({
+								...settings,
+								use_proxy: data.EnableProxy,
+								skip_ssl_verify: data.SkipSSLVerify,
+								socks5_proxy: data.Socks5Proxy
+							});
+						}}
+					/>
 					<WebHook />
 					<Resolver />
 					<IPInterface />
