@@ -117,6 +117,10 @@ func (s *Server) initRoutes() {
 	route.Get("/provider/settings", s.controller.GetProviderSettings)
 	route.Put("/provider", s.controller.UpdateProvider)
 
+	// Network related routes
+	route.Get("/network", s.controller.GetNetworkSettings)
+	route.Put("/network", s.controller.UpdateNetworkSettings)
+
 	// Serve embedded files
 	s.app.Use("/", filesystem.New(filesystem.Config{
 		Root:       http.FS(embeddedFiles),

@@ -73,7 +73,7 @@ export const Stat = () => {
 						</div>
 						<div className="stat-title">IP Mode</div>
 						<div className="stat-value text-info">{info ? info.ip_mode : 'N/A'}</div>
-						<div className="stat-desc"></div>
+						<div className="stat-desc">The IP mode</div>
 					</div>
 
 					<div className="stat">
