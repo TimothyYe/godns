@@ -6,11 +6,11 @@ export const Proxy = () => {
 				<div className="stat-title">Proxy Settings</div>
 				<div className="flex flex-col gap-3">
 					<div className="flex flex-row items-center justify-start gap-2">
-						<span className="label-text text-slate-500 ">Enable IPv6</span>
+						<span className="label-text text-slate-500 ">Enable Proxy</span>
 						<input type="checkbox" className="toggle toggle-primary" checked={false} />
 						<span className="label-text text-slate-500 ">Skip SSL Verify</span>
 						<input type="checkbox" className="toggle toggle-primary" checked={false} />
-						<div className="flex w-1/2 justify-end text-secondary">
+						<div className="flex flex-grow justify-end text-secondary">
 							<ComputerIcon />
 						</div>
 					</div>
