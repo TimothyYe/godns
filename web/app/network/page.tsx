@@ -10,6 +10,8 @@ import { CommonContext } from "@/components/user";
 import { useEffect, useState, useContext } from "react";
 import { get_network_settings, NetworkSettings, update_network_settings } from "@/api/network";
 import { get_info } from "@/api/info";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Network() {
 	const router = useRouter();
@@ -35,6 +37,7 @@ export default function Network() {
 
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between pt-10 max-w-screen-xl">
+			<ToastContainer />
 			<div className="p-5">
 				<div className="flex flex-col max-w-screen-lg gap-5">
 					<IpMode
@@ -102,9 +105,22 @@ export default function Network() {
 					<div className="flex justify-center">
 						<button className="flex btn btn-primary"
 							onClick={() => {
-								console.log('settings', settings);
+								if (!credentials) {
+									toast.error('Invalid credentials');
+									return;
+								}
+
+								update_network_settings(credentials, settings).then((success) => {
+									if (success) {
+										toast.success('Network settings updated successfully');
+									} else {
+										toast.error('Failed to update network settings');
+									}
+								});
 							}}
-						>Save</button>
+						>
+							Save
+						</button>
 					</div>
 				</div>
 			</div>
