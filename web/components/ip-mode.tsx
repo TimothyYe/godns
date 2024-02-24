@@ -20,9 +20,6 @@ export const IpMode = () => {
 				<div className="stat-title">URLs</div>
 				<div className="flex flex-col gap-2">
 					<textarea className="textarea textarea-primary w-96 h-28 " placeholder="Input urls for fetching the online IP"></textarea>
-					<div className="flex justify-end">
-						<button className="flex justify-end btn btn-sm btn-primary">Save</button>
-					</div>
 				</div>
 			</div>
 		</div>

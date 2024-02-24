@@ -16,9 +16,6 @@ export const Proxy = () => {
 					</div>
 
 					<input type="text" className="input input-primary w-full input-disabled" placeholder="Input Proxy: e.g. 127.0.0.1:8080"></input>
-					<div className="flex justify-end">
-						<button className="flex justify-end btn btn-sm btn-primary">Save</button>
-					</div>
 				</div>
 			</div>
 		</div>
