@@ -8,7 +8,7 @@ import { IPInterface } from "@/components/ip-interface";
 import { useRouter } from "next/navigation";
 import { CommonContext } from "@/components/user";
 import { useEffect, useState, useContext } from "react";
-import { get_network_settings, NetworkSettings, WebHook as WebHookSetting, update_network_settings } from "@/api/network";
+import { get_network_settings, NetworkSettings, update_network_settings } from "@/api/network";
 import { get_info } from "@/api/info";
 
 export default function Network() {
@@ -63,7 +63,22 @@ export default function Network() {
 							});
 						}}
 					/>
-					<WebHook />
+					<WebHook
+						Enabled={settings?.webhook?.enabled}
+						Url={settings?.webhook?.url}
+						RequestBody={settings?.webhook?.request_body}
+						onWebHookChange={(data) => {
+							console.log('webhook', data)
+							setSettings({
+								...settings,
+								webhook: {
+									enabled: data.Enabled,
+									url: data.Url,
+									request_body: data.RequestBody
+								}
+							});
+						}}
+					/>
 					<Resolver />
 					<IPInterface />
 					<div className="flex justify-center">
