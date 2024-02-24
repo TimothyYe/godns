@@ -4,7 +4,7 @@ export const IpMode = () => {
 	return (
 		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
 			<div className="stat">
-				<div className="stat-figure text-secondary mt-3">
+				<div className="stat-figure text-secondary">
 					<SettingsIcon />
 				</div>
 				<div className="stat-title">IP Mode</div>

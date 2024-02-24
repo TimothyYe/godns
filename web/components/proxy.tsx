@@ -10,6 +10,9 @@ export const Proxy = () => {
 						<input type="checkbox" className="toggle toggle-primary" checked={false} />
 						<span className="label-text text-slate-500 ">Skip SSL Verify</span>
 						<input type="checkbox" className="toggle toggle-primary" checked={false} />
+						<div className="flex w-1/2 justify-end text-secondary">
+							<ComputerIcon className="justify-end" />
+						</div>
 					</div>
 
 					<input type="text" className="input input-primary w-full input-disabled" placeholder="Input Proxy: e.g. 127.0.0.1:8080"></input>
