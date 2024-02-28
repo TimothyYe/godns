@@ -228,6 +228,19 @@ func (helper *IPHelper) getIPOnline() string {
 			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
 			continue
 		}
+
+		if isIPv4(onlineIP) {
+			if strings.ToUpper(helper.configuration.IPType) != utils.IPV4 {
+				log.Warnf("The online IP (%s) from %s is not IPV6, will skip it.", onlineIP, reqURL)
+				continue
+			}
+		} else {
+			if strings.ToUpper(helper.configuration.IPType) != utils.IPV6 {
+				log.Warnf("The online IP (%s) from %s is not IPV4, will skip it.", onlineIP, reqURL)
+				continue
+			}
+		}
+
 		log.Debugf("Get ip success by: %s, online IP: %s", reqURL, onlineIP)
 
 		err = response.Body.Close()
