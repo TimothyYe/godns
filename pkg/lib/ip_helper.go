@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -195,9 +196,27 @@ func (helper *IPHelper) getCurrentIP() {
 
 // getIPOnline gets public IP from internet.
 func (helper *IPHelper) getIPOnline() string {
-	client := &http.Client{
-		Timeout: time.Second * utils.DefaultTimeout,
+	transport := &http.Transport{
+		DialContext: func(ctx context.Context, _, addr string) (net.Conn, error) {
+			proto := "tcp"
+
+			if strings.ToUpper(helper.configuration.IPType) == utils.IPV4 {
+				// Force the network to "tcp4" to use only IPv4
+				proto = "tcp4"
+			}
+
+			return (&net.Dialer{
+				Timeout:   time.Second * utils.DefaultTimeout,
+				KeepAlive: 30 * time.Second,
+			}).DialContext(ctx, proto, addr)
+		},
 	}
+
+	client := &http.Client{
+		Timeout:   time.Second * utils.DefaultTimeout,
+		Transport: transport,
+	}
+
 	var onlineIP string
 
 	for {
