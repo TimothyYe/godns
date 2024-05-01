@@ -15,6 +15,8 @@ const (
 	ALIDNS = "AliDNS"
 	// GOOGLE for Google Domains.
 	GOOGLE = "Google"
+	// DIGITALOCEAN for DigitalOcean.
+	DIGITALOCEAN = "DigitalOcean"
 	// DUCK for Duck DNS.
 	DUCK = "DuckDNS"
 	// DREAMHOST for Dreamhost.

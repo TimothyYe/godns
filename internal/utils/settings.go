@@ -34,6 +34,10 @@ func CheckSettings(config *settings.Settings) error {
 		if config.Password == "" {
 			return errors.New("password cannot be empty")
 		}
+	case DIGITALOCEAN:
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
 	case DUCK:
 		if config.LoginToken == "" {
 			return errors.New("login token cannot be empty")
