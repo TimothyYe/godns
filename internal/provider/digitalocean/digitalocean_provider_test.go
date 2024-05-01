@@ -123,7 +123,7 @@ func TestRecordTracked(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	var matchedDomains int = 0
+	var matchedDomains int
 	domain := &settings.Domain{
 		DomainName: "example.com",
 		SubDomains: []string{"www", "@"},
@@ -132,7 +132,7 @@ func TestRecordTracked(t *testing.T) {
 	for _, rec := range resp.Records {
 		if recordTracked(domain, &rec) {
 			t.Logf("Record founded: %+v", rec.Name)
-			matchedDomains += 1
+			matchedDomains++
 		}
 	}
 	if matchedDomains != 2 {
