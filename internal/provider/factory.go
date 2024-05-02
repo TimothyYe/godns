@@ -5,6 +5,7 @@ import (
 
 	"github.com/TimothyYe/godns/internal/provider/alidns"
 	"github.com/TimothyYe/godns/internal/provider/cloudflare"
+	"github.com/TimothyYe/godns/internal/provider/digitalocean"
 	"github.com/TimothyYe/godns/internal/provider/dnspod"
 	"github.com/TimothyYe/godns/internal/provider/dreamhost"
 	"github.com/TimothyYe/godns/internal/provider/duck"
@@ -31,6 +32,8 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 	switch conf.Provider {
 	case utils.CLOUDFLARE:
 		provider = &cloudflare.DNSProvider{}
+	case utils.DIGITALOCEAN:
+		provider = &digitalocean.DNSProvider{}
 	case utils.DNSPOD:
 		provider = &dnspod.DNSProvider{}
 	case utils.DREAMHOST:

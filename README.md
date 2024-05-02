@@ -37,6 +37,7 @@
   - [Update root domain](#update-root-domain)
   - [Configuration examples](#configuration-examples)
     - [Cloudflare](#cloudflare)
+    - [DigitalOcean](#digitalocean)
     - [DNSPod](#dnspod)
     - [Dreamhost](#dreamhost)
     - [Dynv6](#dynv6)
@@ -91,6 +92,7 @@
 | Provider                              |    IPv4 support    |    IPv6 support    |    Root Domain     |     Subdomains     |
 | ------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: |
 | [Cloudflare][cloudflare]              | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+| [DigitalOcean][digitalocean]          | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Google Domains][google.domains]      | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [DNSPod][dnspod]                      | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Dynv6][dynv6]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
@@ -110,6 +112,7 @@
 | [IONOS][ionos]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
+[digitalocean]: https://digitalocean.com
 [google.domains]: https://domains.google
 [dnspod]: https://www.dnspod.cn
 [dynv6]: https://dynv6.com
@@ -318,6 +321,33 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
   "interval": 300,
   "socks5_proxy": ""
 }
+```
+
+</details>
+
+#### DigitalOcean
+
+For DigitalOcean, you need to provide a API Token with the `domain` scopes (you can create it [here](https://cloud.digitalocean.com/account/api/tokens/new)), and config all the domains & subdomains.
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "DigitalOcean",
+  "login_token": "dop_v1_00112233445566778899aabbccddeeff",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["@", "www"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ip.sb/ip"],
+  "ip_type": "IPv4",
+  "interval": 300
+}
+
 ```
 
 </details>
