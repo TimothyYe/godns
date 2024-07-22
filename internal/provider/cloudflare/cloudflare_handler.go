@@ -226,8 +226,16 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 }
 
 func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) error {
+	var recordType string
+
+	if provider.configuration.IPType == "" || strings.ToUpper(provider.configuration.IPType) == utils.IPV4 {
+		recordType = utils.IPTypeA
+	} else if strings.ToUpper(provider.configuration.IPType) == utils.IPV6 {
+		recordType = utils.IPTypeAAAA
+	}
+
 	newRecord := DNSRecord{
-		Type: utils.IPTypeA,
+		Type: recordType,
 		IP:   ip,
 		TTL:  1,
 	}
