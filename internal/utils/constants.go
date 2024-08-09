@@ -112,7 +112,7 @@ var (
 			Password: true,
 		},
 		{
-			Name: DIGITALOCEAN,
+			Name:       DIGITALOCEAN,
 			LoginToken: true,
 		},
 		{
