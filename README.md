@@ -1096,7 +1096,6 @@ GoDNS supports to fetch the public IP from multiple URLs via a simple round-robi
 
 - <https://api.ipify.org>
 - <https://myip.biturl.top>
-- <https://ip4.seeip.org>
 - <https://ipecho.net/plain>
 - <https://api-ipv4.ip.sb/ip>
 
