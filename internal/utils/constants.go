@@ -112,6 +112,10 @@ var (
 			Password: true,
 		},
 		{
+			Name: DIGITALOCEAN,
+			LoginToken: true,
+		},
+		{
 			Name:       DUCK,
 			LoginToken: true,
 		},
