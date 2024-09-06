@@ -6,8 +6,8 @@ domains:
     sub_domains:
       - www
       - test
-ip_urls: [https://api4.ipify.org, https://api-ipv4.ip.sb/ip, https://ip2location.io/ip]
-ipv6_urls: [https://api6.ipify.org, https://api-ipv6.ip.sb/ip, https://ip2location.io/ip]
+ip_urls: [https://api4.ipify.org, https://api-ipv4.ip.sb/ip, https://ip2location.io/ip, "https://ipinfo.io/ip"]
+ipv6_urls: [https://api6.ipify.org, https://api-ipv6.ip.sb/ip, https://ip2location.io/ip, "https://v6.ipinfo.io/ip"]
 ip_type: IPv4
 interval: 300
 resolver: 8.8.8.8
