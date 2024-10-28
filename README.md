@@ -7,7 +7,7 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
 ```
 
-[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![Cover.Run][15]][16] [![GoDoc][13]][14]
+[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14]
 
 [3]: https://img.shields.io/docker/image-size/timothyye/godns/latest
 [4]: https://hub.docker.com/r/timothyye/godns
@@ -17,8 +17,6 @@
 [12]: https://goreportcard.com/report/github.com/timothyye/godns
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
-[15]: https://img.shields.io/badge/cover.run-88.2%25-green.svg
-[16]: https://cover.run/go/github.com/timothyye/godns
 
 [GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open source project.
 
