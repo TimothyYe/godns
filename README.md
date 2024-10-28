@@ -75,6 +75,7 @@
   - [As a manual daemon](#as-a-manual-daemon)
   - [As a managed daemon (with upstart)](#as-a-managed-daemon-with-upstart)
   - [As a managed daemon (with systemd)](#as-a-managed-daemon-with-systemd)
+  - [As a managed daemon (with procd)](#as-a-managed-daemon-with-procd)
   - [As a Docker container](#as-a-docker-container)
   - [As a Windows service](#as-a-windows-service)
 - [Contributing](#contributing)
@@ -1163,6 +1164,17 @@ Note: when the program stops, it will not be restarted.
    ```bash
    sudo systemctl enable godns
    sudo systemctl start godns
+   ```
+
+### As a managed daemon (with procd)
+
+`procd` is the init system on OpenWRT. If you want to use godns as a service with OpenWRT and procd:
+1. Copy `./config/procd/godns` to `/etc/init.d` (and tweak it to your needs)
+2. Start the service (with root privilege):
+
+   ```bash
+   service godns enable
+   service godns start
    ```
 
 ### As a Docker container
