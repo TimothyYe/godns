@@ -2,11 +2,16 @@ package lib
 
 import (
 	"context"
+	"crypto/tls"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"net/url"
+	"path"
 	"regexp"
 	"strings"
 	"sync"
@@ -116,6 +121,64 @@ func (helper *IPHelper) getNext() string {
 	return next
 }
 
+func (helper *IPHelper) getIPFromMikrotik() string {
+	u, err := url.Parse(helper.configuration.Mikrotik.Addr)
+	if err != nil {
+		log.Error("fail to parse mikrotik address: ", err)
+		return ""
+	}
+	u.Path = path.Join(u.Path, "/rest/ip/address")
+	q := u.Query()
+	q.Add("interface", helper.configuration.Mikrotik.Interface)
+	q.Add(".proplist", "address")
+	u.RawQuery = q.Encode()
+
+	req, _ := http.NewRequest("GET", u.String(), nil)
+
+	auth := fmt.Sprintf("%s:%s", helper.configuration.Mikrotik.Username, helper.configuration.Mikrotik.Password)
+	req.Header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(auth)))
+	req.Header.Add("Content-Type", "application/json")
+
+	for {
+		client := &http.Client{
+			Timeout:   time.Second * utils.DefaultTimeout,
+			Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}},
+		}
+
+		response, err := client.Do(req)
+		if err != nil {
+			log.Error("Cannot get IP:", err)
+			time.Sleep(time.Millisecond * 300)
+			continue
+		}
+		defer response.Body.Close()
+
+		if response.StatusCode != http.StatusOK {
+			log.Error("requst code failed: ", response.StatusCode)
+			return ""
+		}
+
+		body, err := io.ReadAll(response.Body)
+		if err != nil {
+			log.Error("read body failed: ", err)
+			return ""
+		}
+
+		m := []map[string]string{}
+		if err := json.Unmarshal(body, &m); err != nil {
+			log.Error("unmarshal body failed: ", err)
+			return ""
+		}
+		if len(m) < 1 {
+			log.Error("could not get ip from: ", m)
+			return ""
+		}
+
+		res := strings.Split(m[0]["address"], "/")
+		return res[0]
+	}
+}
+
 // getIPFromInterface gets IP address from the specific interface.
 func (helper *IPHelper) getIPFromInterface() (string, error) {
 	ifaces, err := net.InterfaceByName(helper.configuration.IPInterface)
@@ -172,6 +235,16 @@ func isIPv4(ip string) bool {
 func (helper *IPHelper) getCurrentIP() {
 	var err error
 	var ip string
+
+	if helper.configuration.Mikrotik.Enabled {
+		ip = helper.getIPFromMikrotik()
+		if ip == "" {
+			log.Error("get ip from mikrotik failed. Fallback to get ip from onlinke if possible.")
+		} else {
+			helper.setCurrentIP(ip)
+			return
+		}
+	}
 
 	if len(helper.reqURLs) > 0 {
 		ip = helper.getIPOnline()
