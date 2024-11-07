@@ -22,7 +22,15 @@ func TestGetCurrentIP(t *testing.T) {
 func TestGetMikrotikIP(t *testing.T) {
 	t.Skip()
 
-	conf := &settings.Settings{Mikrotik: settings.Mikrotik{true, "http://192.168.20.1:81", "admin", "", "pppoe-out"}}
+	conf := &settings.Settings{
+		Mikrotik: settings.Mikrotik{
+			Enabled:   true,
+			Addr:      "http://192.168.20.1:81",
+			Username:  "admin",
+			Password:  "",
+			Interface: "pppoe-out",
+		},
+	}
 	helper := GetIPHelperInstance(conf)
 	ip := helper.GetCurrentIP()
 
