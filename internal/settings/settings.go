@@ -128,7 +128,7 @@ type Settings struct {
 	Webhook        Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
 	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
 	IPType         string   `json:"ip_type" yaml:"ip_type"`
-	Mikrotik       Mikrotik `json:"mikrotik,omitempty" yaml:"mikrotik,omitempty"`
+	Mikrotik       Mikrotik `json:"mikrotik" yaml:"mikrotik"`
 	Resolver       string   `json:"resolver" yaml:"resolver"`
 	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
 	DebugInfo      bool     `json:"debug_info" yaml:"debug_info"`
