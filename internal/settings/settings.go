@@ -100,6 +100,14 @@ type WebPanel struct {
 	Password string `json:"password" yaml:"password"`
 }
 
+type Mikrotik struct {
+	Enabled   bool   `json:"enabled" yaml:"enabled"`
+	Addr      string `json:"addr" yaml:"addr"`
+	Username  string `json:"username" yaml:"username"`
+	Password  string `json:"password" yaml:"password"`
+	Interface string `json:"interface" yaml:"interface"`
+}
+
 // Settings struct.
 type Settings struct {
 	Provider       string   `json:"provider" yaml:"provider"`
@@ -120,6 +128,7 @@ type Settings struct {
 	Webhook        Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
 	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
 	IPType         string   `json:"ip_type" yaml:"ip_type"`
+	Mikrotik       Mikrotik `json:"mikrotik" yaml:"mikrotik"`
 	Resolver       string   `json:"resolver" yaml:"resolver"`
 	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
 	DebugInfo      bool     `json:"debug_info" yaml:"debug_info"`
