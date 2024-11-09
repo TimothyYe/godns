@@ -1,4 +1,4 @@
-# This is an example .goreleaser.yml file with some sensible defaults.
+version: 2
 # Make sure to check the documentation at https://goreleaser.com
 before:
   hooks:
@@ -35,7 +35,7 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 changelog:
   sort: asc
   filters:
