@@ -24,9 +24,9 @@ jobs:
           node-version: 18
       -
         name: Set up Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.20.3
+          go-version: 1.23.3
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
