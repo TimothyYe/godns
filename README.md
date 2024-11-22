@@ -67,6 +67,7 @@
     - [Network interface IP address](#network-interface-ip-address)
     - [SOCKS5 proxy support](#socks5-proxy-support)
     - [Display debug info](#display-debug-info)
+    - [Obtain IP from RouterOS](#obtain-ip-from-router-os)
     - [Multiple API URLs](#multiple-api-urls)
     - [Recommended APIs](#recommended-apis)
 - [Web Panel](#web-panel)
@@ -1069,6 +1070,20 @@ You can make all remote calls go through a [SOCKS5 proxy](https://en.wikipedia.o
 ```json
 "socks5_proxy": "127.0.0.1:7070"
 "use_proxy": true
+```
+
+#### Obtain IP from Router OS
+
+If you want to get the public IP from a Mikrotik RouterOS device, you can use the following configuration:
+
+```json
+"mikrotik": {
+  "enabled": false,
+  "server": "http://192.168.88.1",
+  "username": "admin",
+  "password": "password",
+  "interface": "pppoe-out"
+}
 ```
 
 #### Display debug info
