@@ -134,49 +134,44 @@ func (helper *IPHelper) getIPFromMikrotik() string {
 	u.RawQuery = q.Encode()
 
 	req, _ := http.NewRequest("GET", u.String(), nil)
-
 	auth := fmt.Sprintf("%s:%s", helper.configuration.Mikrotik.Username, helper.configuration.Mikrotik.Password)
 	req.Header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(auth)))
 	req.Header.Add("Content-Type", "application/json")
 
-	for {
-		client := &http.Client{
-			Timeout:   time.Second * utils.DefaultTimeout,
-			Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}},
-		}
-
-		response, err := client.Do(req)
-		if err != nil {
-			log.Error("Cannot get IP:", err)
-			time.Sleep(time.Millisecond * 300)
-			continue
-		}
-		defer response.Body.Close()
-
-		if response.StatusCode != http.StatusOK {
-			log.Error("requst code failed: ", response.StatusCode)
-			return ""
-		}
-
-		body, err := io.ReadAll(response.Body)
-		if err != nil {
-			log.Error("read body failed: ", err)
-			return ""
-		}
-
-		m := []map[string]string{}
-		if err := json.Unmarshal(body, &m); err != nil {
-			log.Error("unmarshal body failed: ", err)
-			return ""
-		}
-		if len(m) < 1 {
-			log.Error("could not get ip from: ", m)
-			return ""
-		}
-
-		res := strings.Split(m[0]["address"], "/")
-		return res[0]
+	client := &http.Client{
+		Timeout:   time.Second * utils.DefaultTimeout,
+		Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}},
 	}
+
+	response, err := client.Do(req)
+	if err != nil {
+		log.Error("request mikrotik address failed:", err)
+		return ""
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		log.Error("requst code failed: ", response.StatusCode)
+		return ""
+	}
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Error("read body failed: ", err)
+		return ""
+	}
+
+	m := []map[string]string{}
+	if err := json.Unmarshal(body, &m); err != nil {
+		log.Error("unmarshal body failed: ", err)
+		return ""
+	}
+	if len(m) < 1 {
+		log.Error("could not get ip from response: ", m)
+		return ""
+	}
+
+	res := strings.Split(m[0]["address"], "/")
+	return res[0]
 }
 
 // getIPFromInterface gets IP address from the specific interface.

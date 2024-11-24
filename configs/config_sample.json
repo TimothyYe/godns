@@ -39,7 +39,7 @@
   "ip_interface": "eth0",
   "mikrotik": {
     "enabled": false,
-    "server": "http://192.168.88.1:81",
+    "addr": "http://192.168.88.1:81",
     "username": "admin",
     "password": "",
     "interface": "pppoe-out"
