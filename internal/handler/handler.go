@@ -104,9 +104,10 @@ func (handler *Handler) UpdateIP(domain *settings.Domain) error {
 
 func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 	var updatedDomains []string
-	for _, subdomainName := range domain.SubDomains {
 
+	for _, subdomainName := range domain.SubDomains {
 		var hostname string
+
 		if subdomainName != utils.RootDomain {
 			hostname = subdomainName + "." + domain.DomainName
 		} else {
@@ -119,7 +120,7 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 			continue
 		}
 
-		//check against the current known IP, if no change, skip update
+		// check against the current known IP, if no change, skip update
 		if ip == lastIP {
 			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
 		} else {
