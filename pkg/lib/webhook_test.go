@@ -28,7 +28,6 @@ func TestBuildReqURL(t *testing.T) {
 }
 
 func TestBuildReqBody(t *testing.T) {
-	t.Skip()
 	w := GetWebhook(&settings.Settings{
 		Webhook: settings.Webhook{
 			Enabled:     true,
