@@ -5,7 +5,7 @@ interface IpModeProps {
 	IPMode: string;
 	IPUrls?: string[];
 	IPV6Urls?: string[];
-	onIpModeChagne?: (data: IpModeProps) => void;
+	onIpModeChange?: (data: IpModeProps) => void;
 }
 
 export const IpMode = (props: IpModeProps) => {
@@ -28,8 +28,8 @@ export const IpMode = (props: IpModeProps) => {
 						checked={isIPV6}
 						onClick={() => {
 							isIPV6 = !isIPV6;
-							if (props.onIpModeChagne) {
-								props.onIpModeChagne({
+							if (props.onIpModeChange) {
+								props.onIpModeChange({
 									IPMode: isIPV6 ? 'IPV6' : 'IPV4',
 									IPUrls: props.IPUrls,
 									IPV6Urls: props.IPV6Urls,
@@ -50,8 +50,8 @@ export const IpMode = (props: IpModeProps) => {
 						value={isIPV6 && props.IPV6Urls ? props.IPV6Urls.join('\n') :
 							!isIPV6 && props.IPUrls ? props.IPUrls.join('\n') : ''}
 						onChange={(e) => {
-							if (props.onIpModeChagne) {
-								props.onIpModeChagne({
+							if (props.onIpModeChange) {
+								props.onIpModeChange({
 									IPMode: isIPV6 ? 'IPV6' : 'IPV4',
 									IPUrls: isIPV6 ? props.IPUrls : e.target.value.split('\n'),
 									IPV6Urls: isIPV6 ? e.target.value.split('\n') : props.IPV6Urls

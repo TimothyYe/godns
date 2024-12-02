@@ -9,7 +9,7 @@ export const IPInterface = (props: IPInterfaceProps) => {
 	return (
 		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
 			<div className="stat gap-2">
-				<div className="stat-title">IP Inerface</div>
+				<div className="stat-title">IP Interface</div>
 				<div className="flex flex-col gap-3">
 					<div className="flex flex-row items-center justify-start gap-2">
 						<span className="label-text text-slate-500 ">Set the network interface</span>
