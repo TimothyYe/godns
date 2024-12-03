@@ -54,7 +54,7 @@ export const DomainCard = (props: DomainControlProps) => {
 			<dialog id="modal_remove" className="modal" ref={modalRef}>
 				<div className="modal-box">
 					<h3 className="font-bold text-lg">Remove this domain?</h3>
-					<p className="py-4">You will permanently remove this domian from the configuration.</p>
+					<p className="py-4">You will permanently remove this domain from the configuration.</p>
 					<div className="modal-action">
 						<form method="dialog">
 							<button className="btn mr-2">Now now</button>

@@ -44,7 +44,7 @@ export default function Network() {
 						IPMode={settings.ip_mode}
 						IPUrls={settings.ip_urls}
 						IPV6Urls={settings.ipv6_urls}
-						onIpModeChagne={(data) => {
+						onIpModeChange={(data) => {
 							setSettings({
 								...settings,
 								ip_mode: data.IPMode,

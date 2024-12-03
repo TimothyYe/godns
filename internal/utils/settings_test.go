@@ -28,6 +28,6 @@ func TestCheckSettings(t *testing.T) {
 	if err := CheckSettings(settingHE); err != nil {
 		t.Log("HE setting without password, passed")
 	} else {
-		t.Error("HE setting without password, should be faild")
+		t.Error("HE setting without password, should be failed")
 	}
 }

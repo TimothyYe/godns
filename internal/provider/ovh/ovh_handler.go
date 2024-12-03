@@ -47,8 +47,8 @@ func (provider *DNSProvider) UpdateIP(domainName string, subdomainName string, i
 		return err
 	}
 	if len(IDs) < 1 {
-		log.Error("No machting records")
-		return fmt.Errorf("no macthing records")
+		log.Error("No matching records")
+		return fmt.Errorf("no matching records")
 	}
 	outrec := Record{}
 

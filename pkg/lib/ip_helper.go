@@ -151,7 +151,7 @@ func (helper *IPHelper) getIPFromMikrotik() string {
 	defer response.Body.Close()
 
 	if response.StatusCode != http.StatusOK {
-		log.Error("requst code failed: ", response.StatusCode)
+		log.Error("request code failed: ", response.StatusCode)
 		return ""
 	}
 	body, err := io.ReadAll(response.Body)
@@ -215,7 +215,7 @@ func (helper *IPHelper) getIPFromInterface() (string, error) {
 		}
 
 		if ip.String() != "" {
-			log.Debugf("Get ip success from network intereface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
+			log.Debugf("Get ip success from network interface by: %s, IP: %s", helper.configuration.IPInterface, ip.String())
 			return ip.String(), nil
 		}
 	}

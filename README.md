@@ -60,7 +60,7 @@
     - [Discord](#discord)
     - [Pushover](#pushover)
   - [Webhook](#webhook)
-    - [Webhook with HTTP GET reqeust](#webhook-with-http-get-reqeust)
+    - [Webhook with HTTP GET request](#webhook-with-http-get-request)
     - [Webhook with HTTP POST request](#webhook-with-http-post-request)
   - [Miscellaneous topics](#miscellaneous-topics)
     - [IPv6 support](#ipv6-support)
@@ -743,7 +743,7 @@ More info: [English](https://faq.infomaniak.com/2376)
 For Hetzner, you have to create an access token. This can be done in the DNS-Console.
 (Person Icon in the top left corner --> API Tokens)
 Notice: If a domain has multiple Records **only the first** Record will be updated.
-Make shure there is just one record.
+Make sure there is just one record.
 
 <details>
 <summary>Example</summary>
@@ -773,7 +773,7 @@ Make shure there is just one record.
 #### OVH
 
 For OVH, you need to provide a Consumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
-The neeeded values can be obtaines by visting [this site](https://www.ovh.com/auth/api/createToken)
+The needed values can be obtained by visiting [this site](https://www.ovh.com/auth/api/createToken)
 Rights should be '\*' on GET, POST and PUT
 More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
 
@@ -978,7 +978,7 @@ Available variables:
 > - `IP`: The new IP address.
 > - `IPType`: The type of the IP: `IPV4` or `IPV6`.
 
-#### Webhook with HTTP GET reqeust
+#### Webhook with HTTP GET request
 
 ```json
 "webhook": {
