@@ -71,7 +71,7 @@ func (provider *DNSProvider) Init(conf *settings.Settings) {
 }
 
 func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
-	log.Infof("Checking IP for domain %s", domainName)
+	log.Infof("Checking IP for domain %s.%s", subdomainName, domainName)
 	zoneID := provider.getZone(domainName)
 	if zoneID != "" {
 		records := provider.getDNSRecords(zoneID)
@@ -88,6 +88,9 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 			if strings.Contains(rec.Name, subdomainName) || rec.Name == domainName {
 				if rec.IP != ip {
 					log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
+					if rec.ZoneID == "" {
+						rec.ZoneID = zoneID
+					}
 					provider.updateRecord(rec, ip)
 				} else {
 					log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
