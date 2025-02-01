@@ -9,7 +9,7 @@ require (
 	github.com/linode/linodego v1.16.1
 	github.com/miekg/dns v1.1.62
 	github.com/sirupsen/logrus v1.9.3
-	golang.org/x/net v0.31.0
+	golang.org/x/net v0.33.0
 	golang.org/x/oauth2 v0.24.0
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/yaml.v3 v3.0.1
