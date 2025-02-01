@@ -18,8 +18,9 @@
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
 
-[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open source project.
+[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
 
+<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
 ---
 
 - [Supported DNS Providers](#supported-dns-providers)
@@ -210,14 +211,14 @@ GoDNS supports dynamic loading of configuration. If you modify the configuration
 - `email` — Email or account name of the DNS provider.
 - `password` — Password of the DNS provider.
 - `login_token` — API token of the DNS provider.
-- `domains` — Domains list, with your sub domains.
+- `domains` — Domains list, with your subdomains.
 - `ip_urls` — A URL array for fetching one's public IPv4 address.
 - `ipv6_urls` — A URL array for fetching one's public IPv6 address.
 - `ip_type` — Switch deciding if IPv4 or IPv6 should be used (when [supported](#supported-dns-providers)). Available values: `IPv4` or `IPv6`.
 - `interval` — How often (in seconds) the public IP should be updated.
 - `socks5_proxy` — Socks5 proxy server.
 - `resolver` — Address of a public DNS server to use. For instance to use [Google's public DNS](https://developers.google.com/speed/public-dns/docs/using), you can set `8.8.8.8` when using GoDNS in IPv4 mode or `2001:4860:4860::8888` in IPv6 mode.
-- `skip_ssl_verify` - Skip verification of ssl certificates for https requests.
+- `skip_ssl_verify` - Skip verification of SSL certificates for https requests.
 
 ### Update root domain
 
@@ -234,9 +235,9 @@ By simply putting `@` into `sub_domains`, for example:
 
 #### Cloudflare
 
-For Cloudflare, you need to provide the email & Global API Key as password (or to use the API token) and config all the domains & subdomains.
+For Cloudflare, you need to provide the email & Global API Key as a password (or to use the API token) and configure all the domains & subdomains.
 
-By setting the option `proxied = true`, the record is receiving the performance and security benefits of Cloudflare. This option is only available for Cloudflare.
+By setting the option `proxied = true`, the record receives the performance and security benefits of Cloudflare. This option is only available for Cloudflare.
 
 <details>
 <summary>Using email & Global API Key</summary>
@@ -327,7 +328,7 @@ For DNSPod, you need to provide your API Token(you can create it [here](https://
 
 #### DigitalOcean
 
-For DigitalOcean, you need to provide a API Token with the `domain` scopes (you can create it [here](https://cloud.digitalocean.com/account/api/tokens/new)), and config all the domains & subdomains.
+For DigitalOcean, you need to provide an API Token with the `domain` scopes (you can create it [here](https://cloud.digitalocean.com/account/api/tokens/new)), and config all the domains & subdomains.
 
 <details>
 <summary>Example</summary>
@@ -533,7 +534,7 @@ For DuckDNS, the only thing needed is to provide the `token`, config 1 default d
 
 #### HE.net
 
-For HE, email is not needed, just fill the DDNS key as password, and config all the domains & subdomains.
+For HE, email is not needed, just fill in the DDNS key as a password, and configure all the domains & subdomains.
 
 <details>
 <summary>Example</summary>
@@ -570,7 +571,7 @@ Add a new "A record" and make sure that "Enable entry for dynamic dns" is checke
 
 <img src="assets/snapshots/he1.png" width="640" />
 
-Fill in your own DDNS key or generate a random DDNS key for this new created "A record":
+Fill in your own DDNS key or generate a random DDNS key for this newly created "A record":
 
 <img src="assets/snapshots/he2.png" width="640" />
 
@@ -612,7 +613,7 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
 
 To authenticate with the Linode API you will need to provide a Personal Access Token with "Read/Write" access on the "Domain" scope. Linode has [a help page about creating access tokens](https://www.linode.com/docs/guides/getting-started-with-the-linode-api/). Pass this token into the `login_token` field of the config file.
 
-The `domain_name` field of the config file must be the name of an existing Domain managed by Linode. Linode has [a help page about adding domains](https://www.linode.com/docs/guides/dns-manager/). The GoDNS Linode handler will not create domains automatically, but will create subdomains automatically.
+The `domain_name` field of the config file must be the name of an existing Domain managed by Linode. Linode has [a help page about adding domains](https://www.linode.com/docs/guides/dns-manager/). The GoDNS Linode handler will not create domains automatically but will create subdomains automatically.
 
 The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS records.
 
@@ -642,7 +643,7 @@ The GoDNS Linode handler currently uses a fixed TTL of 30 seconds for Linode DNS
 
 #### Strato
 
-For Strato, you need to provide email & password, and config all the domains & subdomains.
+For Strato, you need to provide email & password and configure all the domains & subdomains.
 More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyndns-fuer-ihre-domains-ein/) [English](https://www.strato-hosting.co.uk/faq/hosting/this-is-how-easy-it-is-to-set-up-dyndns-for-your-domains/)
 
 <details>
@@ -674,7 +675,7 @@ More Info: [German](https://www.strato.de/faq/hosting/so-einfach-richten-sie-dyn
 
 #### LoopiaSE
 
-For LoopiaSE, you need to provide username & password, and config all the domains & subdomains.
+For LoopiaSE, you need to provide a username & password and configure all the domains & subdomains.
 More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
 
 <details>
@@ -707,7 +708,7 @@ More info: [Swedish](https://support.loopia.se/wiki/om-dyndns-stodet/)
 
 #### Infomaniak
 
-For Infomaniak, you need to provide username & password, and config all the domains & subdomains.
+For Infomaniak, you need to provide a username & password and configure all the domains & subdomains.
 More info: [English](https://faq.infomaniak.com/2376)
 
 <details>
@@ -772,7 +773,7 @@ Make sure there is just one record.
 
 #### OVH
 
-For OVH, you need to provide a Consumerkey, an Appsecret, an Appkey and configure all the domains & subdomains.
+For OVH, you need to provide a Consumerkey, an Appsecret, and an Appkey and configure all the domains & subdomains.
 The needed values can be obtained by visiting [this site](https://www.ovh.com/auth/api/createToken)
 Rights should be '\*' on GET, POST and PUT
 More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
@@ -885,7 +886,7 @@ Emails are sent over [SMTP](https://en.wikipedia.org/wiki/Simple_Mail_Transfer_P
   }
 ```
 
-Each time the IP changes, you will receive an email like that:
+Each time the IP changes, you will receive an email like this:
 
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/mail.png?raw=true" />
 
@@ -905,7 +906,7 @@ To receive a [Telegram](https://telegram.org/) message each time the IP changes,
   }
 ```
 
-The `message_template` property supports [markdown](https://www.markdownguide.org). New lines needs to be escaped with `%0A`.
+The `message_template` property supports [markdown](https://www.markdownguide.org). New lines need to be escaped with `%0A`.
 
 #### Slack
 
@@ -965,12 +966,12 @@ can be found on the Pushover [API description](https://pushover.net/api#priority
 
 ### Webhook
 
-Webhook is another feature that GoDNS provides to deliver notifications to the other applications while the IP is changed. GoDNS delivers a notification to the target URL via an HTTP `GET` or `POST` request.
+Webhook is another feature that GoDNS provides to deliver notifications to other applications while the IP is changed. GoDNS delivers a notification to the target URL via an HTTP `GET` or `POST` request.
 
 The configuration section `webhook` is used for customizing the webhook request. In general, there are 2 fields used for the webhook request:
 
-> - `url`: The target URL for sending webhook request.
-> - `request_body`: The content for sending `POST` request, if this field is empty, a HTTP GET request will be sent instead of the HTTP POST request.
+> - `url`: The target URL for sending webhook requests.
+> - `request_body`: The content for sending a `POST` request, if this field is empty, an HTTP GET request will be sent instead of the HTTP POST request.
 
 Available variables:
 
@@ -1004,7 +1005,7 @@ http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type
 }
 ```
 
-For this example, a webhook will be triggered when the IP changes, the target URL `http://localhost:5000/api/v1/send` will receive an `HTTP POST` request with request body:
+For this example, a webhook will be triggered when the IP changes, and the target URL `http://localhost:5000/api/v1/send` will receive an `HTTP POST` request with the request body:
 
 ```json
 { "domain": "ddns.example.com", "ip": "192.168.1.1", "ip_type": "IPV4" }
@@ -1052,7 +1053,7 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
 
 #### Network interface IP address
 
-For some reasons if you want to get the IP address associated to a network interface (instead of performing an online lookup), you can specify it in the configuration file this way:
+For some reasons, if you want to get the IP address associated with a network interface (instead of performing an online lookup), you can specify it in the configuration file this way:
 
 ```json
   "ip_urls": [""],
@@ -1096,7 +1097,7 @@ To display debug info, set `debug_info` as `true` to enable this feature. By def
 
 #### Multiple API URLs
 
-GoDNS supports to fetch the public IP from multiple URLs via a simple round-robin algorithm. If the first URL fails, it will try the next one until it succeeds. Here is an example of the configuration:
+GoDNS supports fetching the public IP from multiple URLs via a simple round-robin algorithm. If the first URL fails, it will try the next one until it succeeds. Here is an example of the configuration:
 
 ```json
   "ip_urls": [
@@ -1137,7 +1138,7 @@ There are a few ways to run GoDNS.
 
 Note: make sure to set the `run_once` parameter in your config file so the program will quit after the first run (the default is `false`).
 
-Can be added to `cron` or attached to other events on your system.
+It can be added to `cron` or attached to other events on your system.
 
 ```json
 {
@@ -1199,7 +1200,7 @@ Available docker registries:
 - <https://hub.docker.com/r/timothyye/godns>
 - <https://github.com/TimothyYe/godns/pkgs/container/godns>
 
-Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image. The `-p 9000:9000` option is used to expose the web panel.
+Visit <https://hub.docker.com/r/timothyye/godns> to fetch the latest docker image. The `-p 9000:9000` option exposes the web panel.
 
 With `/path/to/config.json` as your local configuration file, run:
 
