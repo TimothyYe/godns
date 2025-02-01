@@ -21,7 +21,6 @@
 [GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
 
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
----
 
 - [Supported DNS Providers](#supported-dns-providers)
 - [Supported Platforms](#supported-platforms)
