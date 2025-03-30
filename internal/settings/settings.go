@@ -286,7 +286,7 @@ func readSecretFromFile(source, value string) (string, error) {
 		return value, nil
 	}
 
-	content, err := os.ReadFile(source)
+	content, err := os.ReadFile(os.ExpandEnv(source))
 
 	if err != nil {
 		return value, err
