@@ -22,6 +22,7 @@ import (
 	"github.com/TimothyYe/godns/internal/provider/ovh"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
 	"github.com/TimothyYe/godns/internal/provider/strato"
+	"github.com/TimothyYe/godns/internal/provider/transip"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 )
@@ -68,6 +69,8 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 		provider = &dynu.DNSProvider{}
 	case utils.IONOS:
 		provider = &ionos.DNSProvider{}
+	case utils.TRANSIP:
+		provider = &transip.DNSProvider{}
 	default:
 		return nil, fmt.Errorf("Unknown provider '%s'", conf.Provider)
 	}

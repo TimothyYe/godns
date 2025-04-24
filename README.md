@@ -53,6 +53,7 @@
     - [OVH](#ovh)
     - [Dynu](#dynu)
     - [IONOS](#ionos)
+    - [TransIP](#transip)
   - [Notifications](#notifications)
     - [Email](#email)
     - [Telegram](#telegram)
@@ -110,6 +111,7 @@
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [IONOS][ionos]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [TransIP][transip]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [digitalocean]: https://digitalocean.com
@@ -130,6 +132,7 @@
 [ovh]: https://www.ovh.com
 [dynu]: https://www.dynu.com/
 [ionos]: https://www.ionos.com/
+[transip]: https://www.transip.net/
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -862,6 +865,33 @@ socks5_proxy: ""
 ```
 
 </details>
+
+#### TransIP
+
+For TransIP, you need to provide your api private key as `login_token` and username as `email`, and configure all the domains & subdomains.
+
+<details>
+<summary>Example</summary>
+
+```yaml
+provider: TransIP
+email: account_name
+login_token: api_key
+domains:
+  - domain_name: example.com
+    sub_domains:
+      - "@"
+      - somesubdomain
+      - anothersubdomain
+resolver: 1.1.1.1
+ip_urls:
+  - https://api.ipify.org
+ip_type: IPv4
+interval: 300
+socks5_proxy: ""
+```
+
+<details>
 
 ### Notifications
 
