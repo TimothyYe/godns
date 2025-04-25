@@ -50,7 +50,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subDomainName, ip string) erro
 			Content: ip,
 			Expire:  ttl})
 		if err != nil {
-			log.Error("Failed to update sub domain:", subDomainName)
+			log.Error("failed to update domain:", subDomainName)
 			return err
 		}
 	} else { // Create.
@@ -60,7 +60,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subDomainName, ip string) erro
 			Content: ip,
 			Expire:  defaultTTL})
 		if err != nil {
-			log.Error("Failed to add sub domain:", subDomainName)
+			log.Error("failed to add domain:", subDomainName)
 			return err
 		}
 	}
@@ -76,7 +76,7 @@ func checkExistence(repo domain.Repository, subdomain, domainName string) (bool,
 			}
 		}
 	}
-	log.Error("Failed to get domain:", domainName)
+	log.Error("failed to get domain:", domainName)
 	return false, defaultTTL, err
 }
 
