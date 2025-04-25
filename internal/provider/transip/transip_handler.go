@@ -10,7 +10,7 @@ import (
 	"github.com/transip/gotransip/v6/domain"
 )
 
-const defaultTTL int = 60 // 60 seconds
+const defaultTTL int = 60 // 60 seconds.
 
 // DNSProvider struct.
 type DNSProvider struct {
@@ -23,13 +23,14 @@ func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.configuration = conf
 	provider.clientConfig = gotransip.ClientConfiguration{
 		AccountName: conf.Email}
-	if strings.HasPrefix(conf.LoginToken, "-----BEGIN PRIVATE KEY-----") { // Private Key
+	if strings.HasPrefix(conf.LoginToken, "-----BEGIN PRIVATE KEY-----") { // Private Key.
 		provider.clientConfig.PrivateKeyReader = strings.NewReader(conf.LoginToken)
-	} else { // JWT
+	} else { // JWT.
 		provider.clientConfig.Token = conf.LoginToken
 	}
 }
 
+// UpdateIP updates the IP address of the given subdomain.
 func (provider *DNSProvider) UpdateIP(domainName, subDomainName, ip string) error {
 	client, err := gotransip.NewClient(provider.clientConfig)
 	if err != nil {
@@ -42,7 +43,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subDomainName, ip string) erro
 		return err
 	}
 
-	if exists { // Update
+	if exists { // Update.
 		err = domainRepo.UpdateDNSEntry(domainName, domain.DNSEntry{
 			Name:    subDomainName,
 			Type:    provider.setType(),
@@ -52,7 +53,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subDomainName, ip string) erro
 			log.Error("Failed to update sub domain:", subDomainName)
 			return err
 		}
-	} else { // Create
+	} else { // Create.
 		err = domainRepo.AddDNSEntry(domainName, domain.DNSEntry{
 			Name:    subDomainName,
 			Type:    provider.setType(),
@@ -79,7 +80,7 @@ func checkExistence(repo domain.Repository, subdomain, domainName string) (bool,
 	return false, defaultTTL, err
 }
 
-// defaults to A record (ipv4)
+// defaults to A record (ipv4).
 func (provider *DNSProvider) setType() string {
 	if strings.ToUpper(provider.configuration.IPType) == utils.IPV6 {
 		return utils.IPTypeAAAA
