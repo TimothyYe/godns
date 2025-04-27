@@ -18,6 +18,7 @@ require (
 require (
 	github.com/fsnotify/fsnotify v1.8.0
 	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/transip/gotransip/v6 v6.26.0
 )
 
 require (

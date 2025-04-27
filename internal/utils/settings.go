@@ -101,6 +101,14 @@ func CheckSettings(config *settings.Settings) error {
 		if config.ConsumerKey == "" {
 			return errors.New("consumer key cannot be empty")
 		}
+	case TRANSIP:
+		if config.Email == "" {
+			return errors.New("email cannot be empty")
+		}
+		if config.LoginToken == "" {
+			return errors.New("login token cannot be empty")
+		}
+
 	default:
 		message := fmt.Sprintf("'%s' is not a supported DNS provider", config.Provider)
 		return errors.New(message)
