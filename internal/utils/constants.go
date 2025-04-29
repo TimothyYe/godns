@@ -174,5 +174,9 @@ var (
 			Name:       IONOS,
 			LoginToken: true,
 		},
+		{
+			Name:       TRANSIP,
+			LoginToken: true,
+		},
 	}
 )
