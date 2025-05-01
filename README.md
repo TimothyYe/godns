@@ -18,7 +18,9 @@
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
 
-[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
+[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project. 
+
+[查看中文帮助文档](README_CN.md)
 
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
 
