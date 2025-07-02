@@ -18,7 +18,7 @@
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
 
-[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project. 
+[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
 
 [查看中文帮助文档](README_CN.md)
 
@@ -62,6 +62,7 @@
     - [Slack](#slack)
     - [Discord](#discord)
     - [Pushover](#pushover)
+    - [Bark](#bark)
   - [Webhook](#webhook)
     - [Webhook with HTTP GET request](#webhook-with-http-get-request)
     - [Webhook with HTTP POST request](#webhook-with-http-post-request)
@@ -112,7 +113,7 @@
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
-| [IONOS][ionos]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [IONOS][ionos]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [TransIP][transip]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
@@ -352,7 +353,6 @@ For DigitalOcean, you need to provide an API Token with the `domain` scopes (you
   "ip_type": "IPv4",
   "interval": 300
 }
-
 ```
 
 </details>
@@ -596,12 +596,14 @@ For Scaleway, you need to provide an API Secret Key as the `login_token` ([How t
 {
   "provider": "Scaleway",
   "login_token": "API Secret Key",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","@"]
-    },{
+      "sub_domains": ["www", "@"]
+    },
+    {
       "domain_name": "samplednszone.example.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -825,9 +827,7 @@ For Dynu, you need to configure the `password`, config 1 default domain & subdom
   "domains": [
     {
       "domain_name": "your_domain.com",
-      "sub_domains": [
-        "your_subdomain"
-      ]
+      "sub_domains": ["your_subdomain"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -995,6 +995,28 @@ The `message_template` property supports [html](https://pushover.net/api#html) i
 If the `device` and `title` parameters are left empty, Pushover will choose defaults [see](https://pushover.net/api#messages). More details on the priority parameter
 can be found on the Pushover [API description](https://pushover.net/api#priority).
 
+#### Bark
+
+To receive a [Bark](https://bark.day.app/) message each time the IP changes, update your configuration with the following snippet:
+
+```json
+  "notify": {
+    "bark": {
+      "enabled": true,
+      "server": "https://api.day.app",
+      "device_keys": "",
+      "params": "{ \"isArchive\": 1, \"action\": \"none\" }"
+    }
+  }
+```
+
+`server` Bark server address. You can use the default official server `https://api.day.app` or set it to a self-hosted server address.  
+`device_keys` device key, supports multiple keys (comma-separated) for batch push.  
+`params` Bark request parameters, please refer to [Bark API](https://bark.day.app/#/en-us/tutorial?id=request-parameters)
+`user` Basic auth username of the self-hosted server, same with server side environment variable `BARK_SERVER_BASIC_AUTH_USER`.  
+`password` Basic auth password of the self-hosted server, same with server side environment variable `BARK_SERVER_BASIC_AUTH_PASSWORD`.  
+For more information, please refer to the [Bark official documentation](https://bark.day.app/)
+
 ### Webhook
 
 Webhook is another feature that GoDNS provides to deliver notifications to other applications while the IP is changed. GoDNS delivers a notification to the target URL via an HTTP `GET` or `POST` request.
@@ -1161,6 +1183,7 @@ Starting from version 3.1.0, GoDNS provides a web panel to manage the configurat
 ```
 
 After enabling the web panel, you can visit `http://localhost:9000` to manage the configuration and monitor the status of the domains.
+
 ## Running GoDNS
 
 There are a few ways to run GoDNS.
@@ -1216,6 +1239,7 @@ Note: when the program stops, it will not be restarted.
 ### As a managed daemon (with procd)
 
 `procd` is the init system on OpenWRT. If you want to use godns as a service with OpenWRT and procd:
+
 1. Copy `./config/procd/godns` to `/etc/init.d` (and tweak it to your needs)
 2. Start the service (with root privilege):
 
@@ -1282,8 +1306,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Setup the frontend development environment
 
 Requirements:
-* Node.js `18.19.0` or higher
-* Go `1.17` or higher
+
+- Node.js `18.19.0` or higher
+- Go `1.17` or higher
 
 The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](https://daisyui.com/). To start the development environment, run:
 
@@ -1292,6 +1317,7 @@ cd web
 npm ci
 npm run dev
 ```
+
 ### Build the frontend
 
 To build the frontend, run:

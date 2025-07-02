@@ -14,6 +14,7 @@ const (
 	Telegram = "telegram"
 	Discord  = "discord"
 	Pushover = "pushover"
+	Bark     = "bark"
 )
 
 var (
@@ -64,6 +65,10 @@ func initNotifications(conf *settings.Settings) map[string]INotification {
 
 	if conf.Notify.Discord.Enabled {
 		notificationMap[Discord] = NewDiscordNotification(conf)
+	}
+
+	if conf.Notify.Bark.Enabled {
+		notificationMap[Bark] = NewBarkNotification(conf)
 	}
 
 	return notificationMap

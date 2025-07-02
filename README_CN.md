@@ -6,7 +6,7 @@
 ╚██████╔╝╚██████╔╝██████╔╝██║ ╚████║███████║
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
 ```
- 
+
 [![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14]
 
 [3]: https://img.shields.io/docker/image-size/timothyye/godns/latest
@@ -60,6 +60,7 @@
     - [Slack](#slack)
     - [Discord](#discord)
     - [Pushover](#pushover)
+    - [Bark](#bark)
   - [Webhook](#webhook)
     - [使用 HTTP GET 请求的 Webhook](#使用-http-get-请求的-webhook)
     - [使用 HTTP POST 请求的 Webhook](#使用-http-post-请求的-webhook)
@@ -90,7 +91,7 @@
 
 ## 支持的 DNS 提供商
 
-| 提供商                              |    IPv4 支持    |    IPv6 支持    |    根域名     |     子域名     |
+| 提供商                                |     IPv4 支持      |     IPv6 支持      |       根域名       |       子域名       |
 | ------------------------------------- | :----------------: | :----------------: | :----------------: | :----------------: |
 | [Cloudflare][cloudflare]              | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [DigitalOcean][digitalocean]          | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
@@ -110,7 +111,7 @@
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
-| [IONOS][ionos]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [IONOS][ionos]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [TransIP][transip]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
@@ -350,7 +351,6 @@ GoDNS 支持动态加载配置。如果您修改了配置文件，GoDNS 将自�
   "ip_type": "IPv4",
   "interval": 300
 }
-
 ```
 
 </details>
@@ -594,12 +594,14 @@ GoDNS 支持动态加载配置。如果您修改了配置文件，GoDNS 将自�
 {
   "provider": "Scaleway",
   "login_token": "API Secret Key",
-  "domains": [{
+  "domains": [
+    {
       "domain_name": "example.com",
-      "sub_domains": ["www","@"]
-    },{
+      "sub_domains": ["www", "@"]
+    },
+    {
       "domain_name": "samplednszone.example.com",
-      "sub_domains": ["www","test"]
+      "sub_domains": ["www", "test"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -777,7 +779,7 @@ GoDNS Linode 处理程序目前对 Linode DNS 记录使用固定的 30 秒 TTL�
 
 对于 OVH，您需要提供 Consumerkey、Appsecret 和 Appkey，并配置所有域名和子域名。
 所需的值可以通过访问[此网站](https://www.ovh.com/auth/api/createToken)获取
-权限应在 GET、POST 和 PUT 上设置为 '*'
+权限应在 GET、POST 和 PUT 上设置为 '\*'
 更多信息：[help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-started-ovhcloud-api?id=kb_article_view&sysparm_article=KB0042784)
 
 <details>
@@ -823,9 +825,7 @@ GoDNS Linode 处理程序目前对 Linode DNS 记录使用固定的 30 秒 TTL�
   "domains": [
     {
       "domain_name": "your_domain.com",
-      "sub_domains": [
-        "your_subdomain"
-      ]
+      "sub_domains": ["your_subdomain"]
     }
   ],
   "resolver": "8.8.8.8",
@@ -992,6 +992,28 @@ GoDNS 可以在 IP 更改时发送通知。
 如果 `html` 参数为 `1`，`message_template` 属性支持 [html](https://pushover.net/api#html)。如果留空，将使用默认消息。
 如果 `device` 和 `title` 参数留空，Pushover 将选择默认值[参见](https://pushover.net/api#messages)。有关优先级参数的更多详细信息
 可以在 Pushover [API 描述](https://pushover.net/api#priority) 中找到。
+
+#### Bark
+
+要在 IP 更改时接收 [Bark](https://bark.day.app/) 消息，使用以下片段更新您的配置：
+
+```json
+  "notify": {
+    "bark": {
+      "enabled": true,
+      "server": "https://api.day.app",
+      "device_keys": "",
+      "params": "{ \"isArchive\": 1, \"action\": \"none\" }"
+    }
+  }
+```
+
+`server` Bark 服务器地址，可使用官方默认服务器 `https://api.day.app`，也可设置为自建服务器地址。  
+`device_keys` 设备 key，支持多个（英文逗号分隔），多个时，用于批量推送。  
+`params` Bark 请求参数，可参考 [Bark API](https://bark.day.app/#/tutorial?id=%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0)  
+`user` 自建服务器 Basic auth 用户名，与服务端环境变量 `BARK_SERVER_BASIC_AUTH_USER` 一致。  
+`password` 自建服务器 Basic auth 密码，与服务端环境变量 `BARK_SERVER_BASIC_AUTH_PASSWORD` 一致。  
+更多内容请参阅 [Bark 官方文档](https://bark.day.app/)
 
 ### Webhook
 
