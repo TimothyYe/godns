@@ -59,6 +59,8 @@ notify:
     server: "https://api.day.app"
     device_keys: ""
     params: '{ "isArchive": 1, "action": "none" }'
+    user: ""
+    password: ""
 webhook:
   enabled: false
   url: "http://localhost:5000/api/v1/send"

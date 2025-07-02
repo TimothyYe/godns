@@ -2,6 +2,7 @@ package notification
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -43,20 +44,19 @@ func NewBarkNotification(conf *settings.Settings) INotification {
 }
 
 func (n *BarkNotification) Send(domain, currentIP string) error {
-	if n.conf.Notify.Bark.DeviceKeys == "" {
+	config := n.conf.Notify.Bark
+	if config.DeviceKeys == "" {
 		return errors.New("bark device keys cannot be empty")
 	}
-
-	if n.conf.Notify.Bark.Server == "" {
-		n.conf.Notify.Bark.Server = "https://api.day.app"
+	if config.Server == "" {
+		config.Server = "https://api.day.app"
 	}
-
 	params := &BarkParams{
 		IsArchive: 1,
 		Action:    "none",
 	}
-	if n.conf.Notify.Bark.Params != "" {
-		if err := json.Unmarshal([]byte(n.conf.Notify.Bark.Params), params); err != nil {
+	if config.Params != "" {
+		if err := json.Unmarshal([]byte(config.Params), params); err != nil {
 			return err
 		}
 	}
@@ -65,17 +65,17 @@ func (n *BarkNotification) Send(domain, currentIP string) error {
 	params.Title = "GoDNS Notification"
 	params.Subtitle = "{{ .Domain }}"
 	params.Body = "[{{ .CurrentIP }}]"
-	params.DeviceKeys = strings.Split(n.conf.Notify.Bark.DeviceKeys, ",")
+	params.DeviceKeys = strings.Split(config.DeviceKeys, ",")
 	// override title
-	if title := n.conf.Notify.Bark.Title; title != "" {
+	if title := config.Title; title != "" {
 		params.Title = title
 	}
 	// override subtitle
-	if subtitle := n.conf.Notify.Bark.Subtitle; subtitle != "" {
+	if subtitle := config.Subtitle; subtitle != "" {
 		params.Subtitle = subtitle
 	}
 	// override body
-	if body := n.conf.Notify.Bark.Body; body != "" {
+	if body := config.Body; body != "" {
 		params.Body = body
 	}
 
@@ -84,7 +84,7 @@ func (n *BarkNotification) Send(domain, currentIP string) error {
 		return err
 	}
 
-	url := fmt.Sprintf("%s/push", n.conf.Notify.Bark.Server)
+	url := fmt.Sprintf("%s/push", config.Server)
 
 	re := regexp.MustCompile(`\[(.*?)\]\s+of\s+(.*?)$`)
 	matches := re.FindStringSubmatch(domain)
@@ -99,19 +99,24 @@ func (n *BarkNotification) Send(domain, currentIP string) error {
 		domainName := fmt.Sprintf("%s.%s", strings.TrimSpace(subDomains[i]), rootDomain)
 		data := buildTemplate(currentIP, domainName, string(tpl))
 		body := bytes.NewBuffer([]byte(data))
-		_ = n.sendJSON(url, body)
+		_ = n.sendJSON(url, body, config.User, config.Password)
 	}
 
 	return nil
 }
 
-func (n *BarkNotification) sendJSON(url string, body io.Reader) error {
+func (n *BarkNotification) sendJSON(url string, body io.Reader, user, password string) error {
 	// Create client
 	client := &http.Client{}
 	// Create request
 	req, _ := http.NewRequest("POST", url, body)
 	// Headers
 	req.Header.Add("Content-Type", "application/json; charset=utf-8")
+	// Basic auth
+	if user != "" && password != "" {
+		basicAuth := base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", user, password)))
+		req.Header.Add("Authorization", fmt.Sprintf("Basic %s", basicAuth))
+	}
 	// Fetch Request
 	resp, err := client.Do(req)
 	if err != nil {

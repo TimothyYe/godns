@@ -69,7 +69,9 @@
       "enabled": false,
       "server": "https://api.day.app",
       "device_keys": "",
-      "params": "{ \"isArchive\": 1, \"action\": \"none\" }"
+      "params": "{ \"isArchive\": 1, \"action\": \"none\" }",
+      "user": "",
+      "password": ""
     }
   },
   "webhook": {

@@ -85,6 +85,8 @@ type BarkNotify struct {
 	Body       string `json:"body" yaml:"body"`
 	DeviceKeys string `json:"device_keys" yaml:"device_keys"`
 	Params     string `json:"params" yaml:"params"`
+	User       string `json:"user" yaml:"user"`
+	Password   string `json:"password" yaml:"password"`
 }
 
 // Notify struct.
