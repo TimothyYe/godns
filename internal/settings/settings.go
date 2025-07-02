@@ -77,6 +77,16 @@ type PushoverNotify struct {
 	HTML        int    `json:"html" yaml:"html"`
 }
 
+type BarkNotify struct {
+	Enabled    bool   `json:"enabled" yaml:"enabled"`
+	Server     string `json:"server" yaml:"server"`
+	Title      string `json:"title" yaml:"title"`
+	Subtitle   string `json:"subtitle" yaml:"subtitle"`
+	Body       string `json:"body" yaml:"body"`
+	DeviceKeys string `json:"device_keys" yaml:"device_keys"`
+	Params     string `json:"params" yaml:"params"`
+}
+
 // Notify struct.
 type Notify struct {
 	Telegram TelegramNotify `json:"telegram" yaml:"telegram"`
@@ -84,6 +94,7 @@ type Notify struct {
 	Slack    SlackNotify    `json:"slack" yaml:"slack"`
 	Discord  DiscordNotify  `json:"discord" yaml:"discord"`
 	Pushover PushoverNotify `json:"pushover" yaml:"pushover"`
+	Bark     BarkNotify     `json:"bark" yaml:"bark"`
 }
 
 // Webhook struct.

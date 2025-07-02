@@ -6,8 +6,20 @@ domains:
     sub_domains:
       - www
       - test
-ip_urls: [https://api4.ipify.org, https://api-ipv4.ip.sb/ip, https://ip2location.io/ip, "https://ipinfo.io/ip"]
-ipv6_urls: [https://api6.ipify.org, https://api-ipv6.ip.sb/ip, https://ip2location.io/ip, "https://v6.ipinfo.io/ip"]
+ip_urls:
+  [
+    https://api4.ipify.org,
+    https://api-ipv4.ip.sb/ip,
+    https://ip2location.io/ip,
+    "https://ipinfo.io/ip",
+  ]
+ipv6_urls:
+  [
+    https://api6.ipify.org,
+    https://api-ipv6.ip.sb/ip,
+    https://ip2location.io/ip,
+    "https://v6.ipinfo.io/ip",
+  ]
 ip_type: IPv4
 interval: 300
 resolver: 8.8.8.8
@@ -42,7 +54,12 @@ notify:
     smtp_port: 25
     send_from:
     send_to:
+  bark:
+    enabled: false
+    server: "https://api.day.app"
+    device_keys: ""
+    params: '{ "isArchive": 1, "action": "none" }'
 webhook:
   enabled: false
   url: "http://localhost:5000/api/v1/send"
-  request_body: "{ \"domain\": \"{{.Domain}}\", \"ip\": \"{{.CurrentIP}}\", \"ip_type\": \"{{.IPType}}\" }"
+  request_body: '{ "domain": "{{.Domain}}", "ip": "{{.CurrentIP}}", "ip_type": "{{.IPType}}" }'
