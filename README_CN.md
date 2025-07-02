@@ -1008,9 +1008,9 @@ GoDNS 可以在 IP 更改时发送通知。
   }
 ```
 
-`server` Bark 服务器地址，可使用官方默认服务器 `https://api.day.app`，也可设置为自建服务器地址。
-`device_keys` 设备 key，支持多个（英文逗号分隔），多个时，用于批量推送
-`params` Bark 请求参数，可参考 [Bark API](https://bark.day.app/#/tutorial?id=%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0)
+`server` Bark 服务器地址，可使用官方默认服务器 `https://api.day.app`，也可设置为自建服务器地址。  
+`device_keys` 设备 key，支持多个（英文逗号分隔），多个时，用于批量推送。  
+`params` Bark 请求参数，可参考 [Bark API](https://bark.day.app/#/tutorial?id=%e8%af%b7%e6%b1%82%e5%8f%82%e6%95%b0)  
 更多内容请参阅 [Bark 官方文档](https://bark.day.app/)
 
 ### Webhook

@@ -1010,9 +1010,9 @@ To receive a [Bark](https://bark.day.app/) message each time the IP changes, upd
   }
 ```
 
-`server` Bark server address. You can use the default official server `https://api.day.app` or set it to a self-hosted server address.
-`device_keys` device key, supports multiple keys (comma-separated) for batch push
-`params` Bark request parameters, please refer to [Bark API](https://bark.day.app/#/en-us/tutorial?id=request-parameters)
+`server` Bark server address. You can use the default official server `https://api.day.app` or set it to a self-hosted server address.  
+`device_keys` device key, supports multiple keys (comma-separated) for batch push.  
+`params` Bark request parameters, please refer to [Bark API](https://bark.day.app/#/en-us/tutorial?id=request-parameters)  
 For more information, please refer to the [Bark official documentation](https://bark.day.app/)
 
 ### Webhook
