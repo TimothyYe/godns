@@ -20,7 +20,7 @@ import (
 type DNSManager struct {
 	config      *settings.Settings
 	handler     *handler.Handler
-	provider    provider.IDNSProvider  // Legacy single provider (for backward compatibility)
+	provider    provider.IDNSProvider            // Legacy single provider (for backward compatibility)
 	providers   map[string]provider.IDNSProvider // Multi-provider support
 	ctx         context.Context
 	cancel      context.CancelFunc
@@ -146,7 +146,7 @@ func (manager *DNSManager) initManager() error {
 			return fmt.Errorf("failed to initialize providers: %w", err)
 		}
 		manager.providers = providers
-		
+
 		// Log configured providers
 		for providerName := range providers {
 			log.Infof("Initialized provider: %s", providerName)
@@ -163,14 +163,14 @@ func (manager *DNSManager) initManager() error {
 	manager.handler = &handler.Handler{}
 	manager.handler.SetContext(manager.ctx)
 	manager.handler.SetConfiguration(manager.config)
-	
+
 	// Set provider(s) on handler
 	if manager.config.IsMultiProvider() {
 		manager.handler.SetProviders(manager.providers)
 	} else {
 		manager.handler.SetProvider(manager.provider)
 	}
-	
+
 	manager.handler.Init()
 
 	// if RunOnce is true, we don't need to create a file watcher and start the internal HTTP server

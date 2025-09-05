@@ -31,10 +31,10 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 	return createProvider(conf.Provider, conf)
 }
 
-// GetProviders returns a map of all configured providers for multi-provider support
+// GetProviders returns a map of all configured providers for multi-provider support.
 func GetProviders(conf *settings.Settings) (map[string]IDNSProvider, error) {
 	providers := make(map[string]IDNSProvider)
-	
+
 	// Handle legacy single provider mode
 	if !conf.IsMultiProvider() {
 		if conf.Provider == "" {
@@ -47,7 +47,7 @@ func GetProviders(conf *settings.Settings) (map[string]IDNSProvider, error) {
 		providers[conf.Provider] = provider
 		return providers, nil
 	}
-	
+
 	// Handle multi-provider mode
 	for providerName, providerConfig := range conf.Providers {
 		// Create a temporary settings object with provider-specific config
@@ -61,27 +61,27 @@ func GetProviders(conf *settings.Settings) (map[string]IDNSProvider, error) {
 		tempSettings.AppKey = providerConfig.AppKey
 		tempSettings.AppSecret = providerConfig.AppSecret
 		tempSettings.ConsumerKey = providerConfig.ConsumerKey
-		
+
 		provider, err := createProvider(providerName, &tempSettings)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create provider %s: %w", providerName, err)
 		}
-		
+
 		providers[providerName] = provider
 	}
-	
+
 	return providers, nil
 }
 
-// GetProviderForDomain returns the appropriate provider for a given domain
+// GetProviderForDomain returns the appropriate provider for a given domain.
 func GetProviderForDomain(domain *settings.Domain, providers map[string]IDNSProvider, conf *settings.Settings) (IDNSProvider, error) {
 	providerName := conf.GetDomainProvider(domain)
-	
+
 	provider, exists := providers[providerName]
 	if !exists {
 		return nil, fmt.Errorf("provider '%s' not found for domain %s", providerName, domain.DomainName)
 	}
-	
+
 	return provider, nil
 }
 

@@ -25,8 +25,8 @@ var (
 type Handler struct {
 	ctx                 context.Context
 	Configuration       *settings.Settings
-	dnsProvider         provider.IDNSProvider                 // Legacy single provider
-	dnsProviders        map[string]provider.IDNSProvider     // Multi-provider support
+	dnsProvider         provider.IDNSProvider            // Legacy single provider
+	dnsProviders        map[string]provider.IDNSProvider // Multi-provider support
 	notificationManager notification.INotificationManager
 	ipManager           *lib.IPHelper
 	cachedIP            string
@@ -160,7 +160,7 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 	return nil
 }
 
-// getProviderForDomain returns the appropriate provider for a given domain
+// getProviderForDomain returns the appropriate provider for a given domain.
 func (handler *Handler) getProviderForDomain(domain *settings.Domain) (provider.IDNSProvider, error) {
 	// Multi-provider mode
 	if handler.Configuration.IsMultiProvider() {
@@ -171,7 +171,7 @@ func (handler *Handler) getProviderForDomain(domain *settings.Domain) (provider.
 		}
 		return domainProvider, nil
 	}
-	
+
 	// Legacy single provider mode
 	if handler.dnsProvider == nil {
 		return nil, fmt.Errorf("no DNS provider configured")
