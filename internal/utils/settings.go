@@ -43,105 +43,139 @@ func checkMultiProviderSettings(config *settings.Settings) error {
 	return checkDomainsWithProviders(config)
 }
 
-// checkSingleProviderCredentials validates credentials for legacy single provider mode.
-func checkSingleProviderCredentials(providerName string, config *settings.Settings) error {
+// credentialAccessor defines an interface for accessing provider credentials.
+type credentialAccessor interface {
+	GetEmail() string
+	GetPassword() string
+	GetLoginToken() string
+	GetAppKey() string
+	GetAppSecret() string
+	GetConsumerKey() string
+}
+
+// settingsAccessor adapts Settings to credentialAccessor interface.
+type settingsAccessor struct {
+	config *settings.Settings
+}
+
+func (s *settingsAccessor) GetEmail() string       { return s.config.Email }
+func (s *settingsAccessor) GetPassword() string    { return s.config.Password }
+func (s *settingsAccessor) GetLoginToken() string  { return s.config.LoginToken }
+func (s *settingsAccessor) GetAppKey() string      { return s.config.AppKey }
+func (s *settingsAccessor) GetAppSecret() string   { return s.config.AppSecret }
+func (s *settingsAccessor) GetConsumerKey() string { return s.config.ConsumerKey }
+
+// providerConfigAccessor adapts ProviderConfig to credentialAccessor interface.
+type providerConfigAccessor struct {
+	config *settings.ProviderConfig
+}
+
+func (p *providerConfigAccessor) GetEmail() string       { return p.config.Email }
+func (p *providerConfigAccessor) GetPassword() string    { return p.config.Password }
+func (p *providerConfigAccessor) GetLoginToken() string  { return p.config.LoginToken }
+func (p *providerConfigAccessor) GetAppKey() string      { return p.config.AppKey }
+func (p *providerConfigAccessor) GetAppSecret() string   { return p.config.AppSecret }
+func (p *providerConfigAccessor) GetConsumerKey() string { return p.config.ConsumerKey }
+
+// validateProviderCredentials validates provider credentials using the common interface.
+func validateProviderCredentials(providerName string, accessor credentialAccessor) error {
 	switch providerName {
 	case DNSPOD:
-		if config.Password == "" && config.LoginToken == "" {
+		if accessor.GetPassword() == "" && accessor.GetLoginToken() == "" {
 			return errors.New("password or login token cannot be empty")
 		}
 	case HE:
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case CLOUDFLARE:
-		if config.LoginToken == "" {
-			if config.Email == "" {
+		if accessor.GetLoginToken() == "" {
+			if accessor.GetEmail() == "" {
 				return errors.New("email cannot be empty")
 			}
-			if config.Password == "" {
+			if accessor.GetPassword() == "" {
 				return errors.New("password cannot be empty")
 			}
 		}
 	case ALIDNS:
-		if config.Email == "" {
+		if accessor.GetEmail() == "" {
 			return errors.New("email cannot be empty")
 		}
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case DIGITALOCEAN:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case DUCK:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case DYNU:
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case DYNV6:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case GOOGLE:
 		fallthrough
 	case NOIP:
-		if config.Email == "" {
+		if accessor.GetEmail() == "" {
 			return errors.New("email cannot be empty")
 		}
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case DREAMHOST:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case SCALEWAY:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case LINODE:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case STRATO:
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case LOOPIASE:
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case INFOMANIAK:
-		if config.Password == "" {
+		if accessor.GetPassword() == "" {
 			return errors.New("password cannot be empty")
 		}
 	case HETZNER:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case IONOS:
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	case OVH:
-		if config.AppKey == "" {
+		if accessor.GetAppKey() == "" {
 			return errors.New("app key cannot be empty")
 		}
-		if config.AppSecret == "" {
+		if accessor.GetAppSecret() == "" {
 			return errors.New("app secret cannot be empty")
 		}
-		if config.ConsumerKey == "" {
+		if accessor.GetConsumerKey() == "" {
 			return errors.New("consumer key cannot be empty")
 		}
 	case TRANSIP:
-		if config.Email == "" {
+		if accessor.GetEmail() == "" {
 			return errors.New("email cannot be empty")
 		}
-		if config.LoginToken == "" {
+		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
 	default:
@@ -151,112 +185,14 @@ func checkSingleProviderCredentials(providerName string, config *settings.Settin
 	return nil
 }
 
+// checkSingleProviderCredentials validates credentials for legacy single provider mode.
+func checkSingleProviderCredentials(providerName string, config *settings.Settings) error {
+	return validateProviderCredentials(providerName, &settingsAccessor{config})
+}
+
 // checkProviderCredentials validates credentials for a provider configuration.
 func checkProviderCredentials(providerName string, providerConfig *settings.ProviderConfig) error {
-	switch providerName {
-	case DNSPOD:
-		if providerConfig.Password == "" && providerConfig.LoginToken == "" {
-			return errors.New("password or login token cannot be empty")
-		}
-	case HE:
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case CLOUDFLARE:
-		if providerConfig.LoginToken == "" {
-			if providerConfig.Email == "" {
-				return errors.New("email cannot be empty")
-			}
-			if providerConfig.Password == "" {
-				return errors.New("password cannot be empty")
-			}
-		}
-	case ALIDNS:
-		if providerConfig.Email == "" {
-			return errors.New("email cannot be empty")
-		}
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case DIGITALOCEAN:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case DUCK:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case DYNU:
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case DYNV6:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case GOOGLE:
-		fallthrough
-	case NOIP:
-		if providerConfig.Email == "" {
-			return errors.New("email cannot be empty")
-		}
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case DREAMHOST:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case SCALEWAY:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case LINODE:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case STRATO:
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case LOOPIASE:
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case INFOMANIAK:
-		if providerConfig.Password == "" {
-			return errors.New("password cannot be empty")
-		}
-	case HETZNER:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case IONOS:
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	case OVH:
-		if providerConfig.AppKey == "" {
-			return errors.New("app key cannot be empty")
-		}
-		if providerConfig.AppSecret == "" {
-			return errors.New("app secret cannot be empty")
-		}
-		if providerConfig.ConsumerKey == "" {
-			return errors.New("consumer key cannot be empty")
-		}
-	case TRANSIP:
-		if providerConfig.Email == "" {
-			return errors.New("email cannot be empty")
-		}
-		if providerConfig.LoginToken == "" {
-			return errors.New("login token cannot be empty")
-		}
-	default:
-		return fmt.Errorf("'%s' is not a supported DNS provider", providerName)
-	}
-
-	return nil
+	return validateProviderCredentials(providerName, &providerConfigAccessor{providerConfig})
 }
 
 // checkDomainsWithProviders validates domains in multi-provider mode.
