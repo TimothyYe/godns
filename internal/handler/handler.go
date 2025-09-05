@@ -25,7 +25,8 @@ var (
 type Handler struct {
 	ctx                 context.Context
 	Configuration       *settings.Settings
-	dnsProvider         provider.IDNSProvider
+	dnsProvider         provider.IDNSProvider                 // Legacy single provider
+	dnsProviders        map[string]provider.IDNSProvider     // Multi-provider support
 	notificationManager notification.INotificationManager
 	ipManager           *lib.IPHelper
 	cachedIP            string
@@ -47,6 +48,10 @@ func (handler *Handler) Init() {
 
 func (handler *Handler) SetProvider(provider provider.IDNSProvider) {
 	handler.dnsProvider = provider
+}
+
+func (handler *Handler) SetProviders(providers map[string]provider.IDNSProvider) {
+	handler.dnsProviders = providers
 }
 
 func (handler *Handler) LoopUpdateIP(ctx context.Context, domain *settings.Domain) error {
@@ -105,6 +110,12 @@ func (handler *Handler) UpdateIP(domain *settings.Domain) error {
 func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 	var updatedDomains []string
 
+	// Get the appropriate provider for this domain
+	domainProvider, err := handler.getProviderForDomain(domain)
+	if err != nil {
+		return fmt.Errorf("failed to get provider for domain %s: %w", domain.DomainName, err)
+	}
+
 	for _, subdomainName := range domain.SubDomains {
 		var hostname string
 
@@ -125,7 +136,7 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 			log.Infof("IP is the same as cached one (%s). Skip update.", ip)
 		} else {
 
-			if err := handler.dnsProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
+			if err := domainProvider.UpdateIP(domain.DomainName, subdomainName, ip); err != nil {
 				return err
 			}
 
@@ -141,9 +152,29 @@ func (handler *Handler) updateDNS(domain *settings.Domain, ip string) error {
 	}
 
 	if len(updatedDomains) > 0 {
-		successMessage := fmt.Sprintf("[ %s ] of %s", strings.Join(updatedDomains, ", "), domain.DomainName)
+		providerName := handler.Configuration.GetDomainProvider(domain)
+		successMessage := fmt.Sprintf("[ %s ] of %s (via %s)", strings.Join(updatedDomains, ", "), domain.DomainName, providerName)
 		handler.notificationManager.Send(successMessage, ip)
 	}
 
 	return nil
+}
+
+// getProviderForDomain returns the appropriate provider for a given domain
+func (handler *Handler) getProviderForDomain(domain *settings.Domain) (provider.IDNSProvider, error) {
+	// Multi-provider mode
+	if handler.Configuration.IsMultiProvider() {
+		providerName := handler.Configuration.GetDomainProvider(domain)
+		domainProvider, exists := handler.dnsProviders[providerName]
+		if !exists {
+			return nil, fmt.Errorf("provider '%s' not found for domain %s", providerName, domain.DomainName)
+		}
+		return domainProvider, nil
+	}
+	
+	// Legacy single provider mode
+	if handler.dnsProvider == nil {
+		return nil, fmt.Errorf("no DNS provider configured")
+	}
+	return handler.dnsProvider, nil
 }

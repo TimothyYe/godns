@@ -1,0 +1,57 @@
+{
+  "comment": "Mixed configuration example - demonstrates transition from single to multi-provider",
+  "comment2": "Some domains use specific providers while others fall back to the global provider",
+  
+  "provider": "DNSPod",
+  "login_token": "your-dnspod-token",
+  
+  "providers": {
+    "cloudflare": {
+      "email": "user@example.com", 
+      "password": "your-cloudflare-api-token"
+    }
+  },
+  
+  "domains": [
+    {
+      "domain_name": "oldsite.com",
+      "sub_domains": ["www", "mail"]
+    },
+    {
+      "domain_name": "newsite.com",
+      "sub_domains": ["www", "api", "@"],
+      "provider": "cloudflare"
+    },
+    {
+      "domain_name": "another-old.net",
+      "sub_domains": ["ftp", "@"]
+    }
+  ],
+  
+  "ip_urls": [
+    "https://api4.ipify.org",
+    "https://myip.biturl.top",
+    "https://ipecho.net/plain"
+  ],
+  
+  "ip_type": "IPv4",
+  "interval": 300,
+  "resolver": "8.8.8.8",
+  
+  "web_panel": {
+    "enabled": true,
+    "addr": "0.0.0.0:9000",
+    "username": "admin",
+    "password": "123456"
+  },
+  
+  "use_proxy": false,
+  "debug_info": true,
+  "skip_ssl_verify": false,
+  
+  "notify": {
+    "telegram": {
+      "enabled": false
+    }
+  }
+}
