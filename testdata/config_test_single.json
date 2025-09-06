@@ -1,0 +1,19 @@
+{
+  "provider": "DNSPod",
+  "login_token": "test-dnspod-token",
+  "domains": [
+    {
+      "domain_name": "single-test.com",
+      "sub_domains": ["www", "api", "test"]
+    },
+    {
+      "domain_name": "another-single.net",
+      "sub_domains": ["mail", "ftp", "@"]
+    }
+  ],
+  "ip_urls": [
+    "https://api4.ipify.org"
+  ],
+  "interval": 300,
+  "debug_info": true
+}

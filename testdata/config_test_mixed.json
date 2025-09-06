@@ -1,0 +1,37 @@
+{
+  "provider": "DNSPod",
+  "login_token": "global-dnspod-token",
+  "providers": {
+    "Cloudflare": {
+      "login_token": "test-cloudflare-token"
+    },
+    "DigitalOcean": {
+      "login_token": "test-digitalocean-token"
+    }
+  },
+  "domains": [
+    {
+      "domain_name": "legacy-domain.com",
+      "sub_domains": ["www", "mail"]
+    },
+    {
+      "domain_name": "cloudflare-mixed.com",
+      "sub_domains": ["www", "api"],
+      "provider": "Cloudflare"
+    },
+    {
+      "domain_name": "digitalocean-mixed.com",
+      "sub_domains": ["www", "blog"],
+      "provider": "DigitalOcean"
+    },
+    {
+      "domain_name": "another-legacy.net",
+      "sub_domains": ["ftp", "@"]
+    }
+  ],
+  "ip_urls": [
+    "https://api4.ipify.org"
+  ],
+  "interval": 300,
+  "debug_info": true
+}
