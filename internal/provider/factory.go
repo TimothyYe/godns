@@ -49,7 +49,22 @@ func GetProviders(conf *settings.Settings) (map[string]IDNSProvider, error) {
 	}
 
 	// Handle multi-provider mode
+	// First, include the global provider if specified (for mixed configuration)
+	if conf.Provider != "" {
+		provider, err := createProvider(conf.Provider, conf)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create global provider %s: %w", conf.Provider, err)
+		}
+		providers[conf.Provider] = provider
+	}
+
+	// Then add providers from the providers section
 	for providerName, providerConfig := range conf.Providers {
+		// Skip if this provider already exists (global provider takes precedence)
+		if _, exists := providers[providerName]; exists {
+			continue
+		}
+
 		// Create a temporary settings object with provider-specific config
 		tempSettings := *conf
 		tempSettings.Provider = providerName

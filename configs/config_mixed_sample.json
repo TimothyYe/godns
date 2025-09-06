@@ -6,7 +6,7 @@
   "login_token": "your-dnspod-token",
   
   "providers": {
-    "cloudflare": {
+    "Cloudflare": {
       "email": "user@example.com", 
       "password": "your-cloudflare-api-token"
     }
@@ -20,7 +20,7 @@
     {
       "domain_name": "newsite.com",
       "sub_domains": ["www", "api", "@"],
-      "provider": "cloudflare"
+      "provider": "Cloudflare"
     },
     {
       "domain_name": "another-old.net",

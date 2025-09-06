@@ -19,27 +19,27 @@ Configure multiple providers with per-domain assignment:
 ```json
 {
   "providers": {
-    "cloudflare": {
+    "Cloudflare": {
       "email": "user@example.com",
       "password": "your-cloudflare-api-token"
     },
-    "dnspod": {
+    "DNSPod": {
       "login_token": "your-dnspod-token"
     },
-    "digitalocean": {
-      "password": "your-digitalocean-api-token"
+    "DigitalOcean": {
+      "login_token": "your-digitalocean-api-token"
     }
   },
   "domains": [
     {
       "domain_name": "example.com",
       "sub_domains": ["www", "api"],
-      "provider": "cloudflare"
+      "provider": "Cloudflare"
     },
     {
       "domain_name": "mysite.net",
       "sub_domains": ["mail", "ftp"], 
-      "provider": "dnspod"
+      "provider": "DNSPod"
     }
   ]
 }
@@ -71,7 +71,7 @@ Combine global provider with specific per-domain providers:
   "provider": "DNSPod", 
   "login_token": "your-dnspod-token",
   "providers": {
-    "cloudflare": {
+    "Cloudflare": {
       "email": "user@example.com",
       "password": "your-cloudflare-api-token"
     }
@@ -84,7 +84,7 @@ Combine global provider with specific per-domain providers:
     {
       "domain_name": "newsite.com", 
       "sub_domains": ["www", "api"],
-      "provider": "cloudflare"
+      "provider": "Cloudflare"
     }
   ]
 }
@@ -111,7 +111,7 @@ Domains support an optional `provider` field:
 {
   "domain_name": "example.com",
   "sub_domains": ["www", "api", "@"],
-  "provider": "cloudflare"
+  "provider": "Cloudflare"
 }
 ```
 
@@ -119,28 +119,32 @@ If `provider` is omitted, the domain uses the global `provider` setting.
 
 ## Supported Providers
 
-All existing providers are supported in multi-provider mode:
+All existing providers are supported in multi-provider mode. Use these **exact** provider names in your configuration:
 
-- Cloudflare
-- DNSPod  
-- DigitalOcean
-- Alidns
-- Google
-- HE (Hurricane Electric)
-- Dreamhost
-- Duck DNS
-- NoIP
-- Scaleway
-- DynV6
-- Linode
-- Strato
-- Loopiase
-- Infomaniak
-- Hetzner
-- OVH
-- Dynu
-- IONOS
-- TransIP
+| Provider Name | Configuration Value | Authentication Methods |
+|---------------|-------------------|----------------------|
+| Cloudflare | `"Cloudflare"` | `email` + `password` OR `login_token` |
+| DNSPod | `"DNSPod"` | `password` OR `login_token` |
+| DigitalOcean | `"DigitalOcean"` | `login_token` |
+| AliDNS | `"AliDNS"` | `email` + `password` |
+| Google Domains | `"Google"` | `email` + `password` |
+| Hurricane Electric | `"HE"` | `password` |
+| Dreamhost | `"Dreamhost"` | `login_token` |
+| Duck DNS | `"DuckDNS"` | `login_token` |
+| NoIP | `"NoIP"` | `email` + `password` |
+| Scaleway | `"Scaleway"` | `login_token` |
+| DynV6 | `"Dynv6"` | `login_token` |
+| Linode | `"Linode"` | `login_token` |
+| Strato | `"Strato"` | `password` |
+| LoopiaSE | `"LoopiaSE"` | `password` |
+| Infomaniak | `"Infomaniak"` | `password` |
+| Hetzner | `"Hetzner"` | `login_token` |
+| OVH | `"OVH"` | `app_key` + `app_secret` + `consumer_key` |
+| Dynu | `"Dynu"` | `password` |
+| IONOS | `"IONOS"` | `login_token` |
+| TransIP | `"TransIP"` | `email` + `login_token` |
+
+**Important**: Provider names are case-sensitive. Use the exact values from the "Configuration Value" column.
 
 ## Migration Guide
 
@@ -153,7 +157,7 @@ All existing providers are supported in multi-provider mode:
      "provider": "DNSPod",        // Keep existing
      "login_token": "old-token",
      "providers": {               // Add new providers
-       "cloudflare": {
+       "Cloudflare": {
          "email": "user@example.com",
          "password": "cf-token"
        }
@@ -166,7 +170,7 @@ All existing providers are supported in multi-provider mode:
        {
          "domain_name": "new-domain.com", 
          "sub_domains": ["www"],
-         "provider": "cloudflare"  // Uses Cloudflare
+         "provider": "Cloudflare"  // Uses Cloudflare
        }
      ]
    }
@@ -208,13 +212,15 @@ INFO [2024-01-01T12:00:00Z] [ www, api ] of example.com (via cloudflare)
 ```
 ERROR provider 'cloudflare' not found for domain example.com
 ```
-**Solution**: Ensure the provider is configured in the `providers` section.
+**Solution**: 
+1. Ensure the provider is configured in the `providers` section
+2. Check that you're using the correct case-sensitive provider name (e.g., `"Cloudflare"` not `"cloudflare"`)
 
 ### Authentication Failures
 ```  
-ERROR failed to create provider cloudflare: authentication failed
+ERROR failed to create provider Cloudflare: authentication failed
 ```
-**Solution**: Verify credentials in the provider configuration section.
+**Solution**: Verify credentials in the provider configuration section and ensure you're using the correct authentication method for the provider.
 
 ### Mixed Configuration Issues
 If a domain doesn't specify a `provider` field, it will use the global `provider`. Ensure:

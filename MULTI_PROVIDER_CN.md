@@ -19,27 +19,27 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
 ```json
 {
   "providers": {
-    "cloudflare": {
+    "Cloudflare": {
       "email": "user@example.com",
       "password": "your-cloudflare-api-token"
     },
-    "dnspod": {
+    "DNSPod": {
       "login_token": "your-dnspod-token"
     },
-    "digitalocean": {
-      "password": "your-digitalocean-api-token"
+    "DigitalOcean": {
+      "login_token": "your-digitalocean-api-token"
     }
   },
   "domains": [
     {
       "domain_name": "example.com",
       "sub_domains": ["www", "api"],
-      "provider": "cloudflare"
+      "provider": "Cloudflare"
     },
     {
       "domain_name": "mysite.net",
       "sub_domains": ["mail", "ftp"], 
-      "provider": "dnspod"
+      "provider": "DNSPod"
     }
   ]
 }
@@ -71,7 +71,7 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
   "provider": "DNSPod", 
   "login_token": "your-dnspod-token",
   "providers": {
-    "cloudflare": {
+    "Cloudflare": {
       "email": "user@example.com",
       "password": "your-cloudflare-api-token"
     }
@@ -84,7 +84,7 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
     {
       "domain_name": "newsite.com", 
       "sub_domains": ["www", "api"],
-      "provider": "cloudflare"
+      "provider": "Cloudflare"
     }
   ]
 }
@@ -111,7 +111,7 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
 {
   "domain_name": "example.com",
   "sub_domains": ["www", "api", "@"],
-  "provider": "cloudflare"
+  "provider": "Cloudflare"
 }
 ```
 
@@ -119,28 +119,32 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
 
 ## 支持的提供商
 
-多提供商模式支持所有现有提供商：
+多提供商模式支持所有现有提供商。请在配置中使用这些**精确**的提供商名称：
 
-- Cloudflare
-- DNSPod  
-- DigitalOcean
-- Alidns
-- Google
-- HE (Hurricane Electric)
-- Dreamhost
-- Duck DNS
-- NoIP
-- Scaleway
-- DynV6
-- Linode
-- Strato
-- Loopiase
-- Infomaniak
-- Hetzner
-- OVH
-- Dynu
-- IONOS
-- TransIP
+| 提供商名称 | 配置值 | 身份验证方法 |
+|-----------|-------|-------------|
+| Cloudflare | `"Cloudflare"` | `email` + `password` 或 `login_token` |
+| DNSPod | `"DNSPod"` | `password` 或 `login_token` |
+| DigitalOcean | `"DigitalOcean"` | `login_token` |
+| AliDNS | `"AliDNS"` | `email` + `password` |
+| Google Domains | `"Google"` | `email` + `password` |
+| Hurricane Electric | `"HE"` | `password` |
+| Dreamhost | `"Dreamhost"` | `login_token` |
+| Duck DNS | `"DuckDNS"` | `login_token` |
+| NoIP | `"NoIP"` | `email` + `password` |
+| Scaleway | `"Scaleway"` | `login_token` |
+| DynV6 | `"Dynv6"` | `login_token` |
+| Linode | `"Linode"` | `login_token` |
+| Strato | `"Strato"` | `password` |
+| LoopiaSE | `"LoopiaSE"` | `password` |
+| Infomaniak | `"Infomaniak"` | `password` |
+| Hetzner | `"Hetzner"` | `login_token` |
+| OVH | `"OVH"` | `app_key` + `app_secret` + `consumer_key` |
+| Dynu | `"Dynu"` | `password` |
+| IONOS | `"IONOS"` | `login_token` |
+| TransIP | `"TransIP"` | `email` + `login_token` |
+
+**重要提示**：提供商名称区分大小写。请使用"配置值"列中的确切值。
 
 ## 迁移指南
 
@@ -153,7 +157,7 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
      "provider": "DNSPod",        // 保持现有设置
      "login_token": "old-token",
      "providers": {               // 添加新提供商
-       "cloudflare": {
+       "Cloudflare": {
          "email": "user@example.com",
          "password": "cf-token"
        }
@@ -166,7 +170,7 @@ GoDNS 现已支持同时配置多个 DNS 提供商，允许您从单个 GoDNS �
        {
          "domain_name": "new-domain.com", 
          "sub_domains": ["www"],
-         "provider": "cloudflare"  // 使用 Cloudflare
+         "provider": "Cloudflare"  // 使用 Cloudflare
        }
      ]
    }
@@ -208,13 +212,15 @@ INFO [2024-01-01T12:00:00Z] [ www, api ] of example.com (通过 cloudflare)
 ```
 ERROR provider 'cloudflare' not found for domain example.com
 ```
-**解决方案**：确保提供商已在 `providers` 部分中配置。
+**解决方案**：
+1. 确保提供商已在 `providers` 部分中配置
+2. 检查您是否使用了正确的区分大小写的提供商名称（例如，`"Cloudflare"` 而不是 `"cloudflare"`）
 
 ### 身份验证失败
 ```  
-ERROR failed to create provider cloudflare: authentication failed
+ERROR failed to create provider Cloudflare: authentication failed
 ```
-**解决方案**：验证提供商配置部分中的凭据。
+**解决方案**：验证提供商配置部分中的凭据，并确保您使用的是该提供商的正确身份验证方法。
 
 ### 混合配置问题
 如果域名没有指定 `provider` 字段，它将使用全局 `provider`。确保：

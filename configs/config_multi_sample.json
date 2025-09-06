@@ -2,15 +2,15 @@
   "comment": "Multi-provider configuration example - supports domains from different DNS providers",
   
   "providers": {
-    "cloudflare": {
+    "Cloudflare": {
       "email": "user@example.com",
       "password": "your-cloudflare-api-token"
     },
-    "dnspod": {
+    "DNSPod": {
       "login_token": "your-dnspod-token"
     },
-    "digitalocean": {
-      "password": "your-digitalocean-api-token"
+    "DigitalOcean": {
+      "login_token": "your-digitalocean-api-token"
     }
   },
   
@@ -18,17 +18,17 @@
     {
       "domain_name": "example.com",
       "sub_domains": ["www", "api", "@"],
-      "provider": "cloudflare"
+      "provider": "Cloudflare"
     },
     {
       "domain_name": "mycompany.net", 
       "sub_domains": ["mail", "ftp"],
-      "provider": "dnspod"
+      "provider": "DNSPod"
     },
     {
       "domain_name": "mydomain.org",
       "sub_domains": ["blog", "shop"],
-      "provider": "digitalocean"
+      "provider": "DigitalOcean"
     }
   ],
   
