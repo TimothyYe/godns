@@ -3,22 +3,33 @@ import { useEffect, useState } from "react";
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
 export const ThemeSwitch = () => {
-	const [theme, setTheme] = useState<string>("dark");
+	const [theme, setTheme] = useState<string | null>(null);
+	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const localTheme = localStorage.getItem("theme");
-			setTheme(localTheme ? localTheme : "dark");
-		}
+		setMounted(true);
+		const localTheme = localStorage.getItem("theme");
+		setTheme(localTheme ? localTheme : "dark");
 	}, []);
 
 	useEffect(() => {
-		// set theme attribute to the <html> tag
-		document.documentElement.setAttribute(
-			"data-theme",
-			theme
-		);
+		if (theme) {
+			// set theme attribute to the <html> tag
+			document.documentElement.setAttribute(
+				"data-theme",
+				theme
+			);
+		}
 	}, [theme]);
+
+	// Prevent hydration mismatch by not rendering until mounted
+	if (!mounted || !theme) {
+		return (
+			<div className="w-auto h-auto bg-transparent rounded-lg flex items-center justify-center group-data-[selected=true]:bg-transparent !text-default-500 pt-px px-0 mx-0">
+				<div className="w-[22px] h-[22px]" /> {/* Placeholder to prevent layout shift */}
+			</div>
+		);
+	}
 
 	return (
 		<div className="w-auto h-auto bg-transparent rounded-lg flex items-center justify-center group-data-[selected=true]:bg-transparent !text-default-500 pt-px px-0 mx-0">

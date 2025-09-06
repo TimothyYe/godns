@@ -41,7 +41,7 @@ export const DomainControl = () => {
 
 		// Load domains
 		get_domains(credentials).then((domains) => {
-			if (!domains) {
+			if (!domains || !Array.isArray(domains) || domains.length === 0) {
 				setShowAlert(true);
 			} else {
 				setShowAlert(false);

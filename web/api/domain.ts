@@ -21,7 +21,7 @@ export async function get_domains(credentials: string): Promise<Domain[]> {
 		}
 	}
 
-	return {} as Domain[];
+	return [];
 }
 
 export async function add_domain(credentials: string, domain: Domain): Promise<boolean> {

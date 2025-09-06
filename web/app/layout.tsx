@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body>
+      <body suppressHydrationWarning={true}>
         <UserProvider>
           <div className="relative flex flex-col h-screen">
             <Navbar />
