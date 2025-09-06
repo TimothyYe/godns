@@ -6,8 +6,9 @@ import { DomainCard } from '@/components/domain-card';
 import { useContext } from 'react';
 import { CommonContext } from '@/components/user';
 import { get_domains, add_domain, remove_domain } from '@/api/domain';
+import { get_multi_providers } from '@/api/provider';
 import { toast } from 'react-toastify';
-import { WarningIcon } from './icons';
+import { WarningIcon, PlusIcon } from './icons';
 
 export const DomainControl = () => {
 	const router = useRouter();
@@ -18,8 +19,15 @@ export const DomainControl = () => {
 	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const [domainName, setDomainName] = useState<string>('');
 	const [subDomains, setSubDomains] = useState<string[]>([]);
+	const [selectedProvider, setSelectedProvider] = useState<string>('');
+	const [availableProviders, setAvailableProviders] = useState<string[]>([]);
 
 	const openModal = () => {
+		// Reset form fields
+		setDomainName('');
+		setSubDomains([]);
+		setSelectedProvider('');
+		
 		if (modalRef.current) {
 			modalRef.current.showModal();
 		}
@@ -31,6 +39,7 @@ export const DomainControl = () => {
 			return;
 		}
 
+		// Load domains
 		get_domains(credentials).then((domains) => {
 			if (!domains) {
 				setShowAlert(true);
@@ -38,6 +47,12 @@ export const DomainControl = () => {
 				setShowAlert(false);
 				setDomains(domains.sort((a, b) => a.domain_name.localeCompare(b.domain_name)));
 			}
+		});
+
+		// Load available providers
+		get_multi_providers(credentials).then((providers) => {
+			const providerNames = Object.keys(providers);
+			setAvailableProviders(providerNames);
 		});
 	}, [credentials, router]);
 
@@ -63,9 +78,15 @@ export const DomainControl = () => {
 			return;
 		}
 
+		if (!selectedProvider) {
+			toast.error('Please select a provider');
+			return;
+		}
+
 		const newDomain: Domain = {
 			domain_name: domainName,
-			sub_domains: subDomains
+			sub_domains: subDomains,
+			provider: selectedProvider
 		};
 
 		if (credentials) {
@@ -75,6 +96,9 @@ export const DomainControl = () => {
 					// reset the form fields
 					setDomainName('');
 					setSubDomains([]);
+					setSelectedProvider('');
+					// close the modal
+					modalRef.current?.close();
 					toast.success('Domain added successfully');
 				} else {
 					toast.error('Failed to add domain');
@@ -86,9 +110,13 @@ export const DomainControl = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full">
-			<div className="flex flex-row justify-start">
-				<button className="btn btn-primary btn-sm mb-5" onClick={openModal}>Add Domain</button>
+		<div className="w-full">
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="text-xl font-semibold text-neutral-500">Domain Settings</h2>
+				<button className="btn btn-primary btn-sm" onClick={openModal}>
+					<PlusIcon />
+					Add Domain
+				</button>
 			</div>
 			{
 				showAlert ? (
@@ -106,16 +134,33 @@ export const DomainControl = () => {
 				)
 			}
 			<dialog id="modal_add" className="modal" ref={modalRef}>
-				<div className="modal-box">
-					<h3 className="font-bold text-lg">Add domain</h3>
+				<div className="modal-box max-w-lg">
+					<h3 className="font-bold text-lg">Add Domain</h3>
 					<p className="py-4">Add a new domain to the configuration.</p>
 					<form method="dialog">
-						<label className="form-control w-full">
+						<label className="form-control w-full mb-4">
+							<div className="label">
+								<span className="label-text font-bold">Provider</span>
+							</div>
+							<select
+								className="select select-primary select-bordered w-full"
+								value={selectedProvider}
+								onChange={(e) => setSelectedProvider(e.target.value)}
+							>
+								<option value="">Select a provider</option>
+								{availableProviders.map((provider) => (
+									<option key={provider} value={provider}>
+										{provider}
+									</option>
+								))}
+							</select>
+						</label>
+						<label className="form-control w-full mb-4">
 							<div className="label">
 								<span className="label-text font-bold">Domain</span>
 							</div>
 							<input
-								type="input"
+								type="text"
 								id="domain"
 								placeholder="Input the domain name"
 								className="input input-primary input-bordered w-full"
@@ -123,20 +168,36 @@ export const DomainControl = () => {
 								onChange={(e) => setDomainName(e.target.value)}
 							/>
 						</label>
-						<label className="form-control w-full">
+						<label className="form-control w-full mb-4">
 							<div className="label">
-								<span className="label-text font-bold">Subdomain</span>
+								<span className="label-text font-bold">Subdomains</span>
 							</div>
 							<textarea
 								className="textarea textarea-primary h-36"
-								placeholder={`subdomain1\nsubdomain2`}
+								placeholder={`subdomain1\nsubdomain2\nsubdomain3`}
 								value={subDomains.join('\n')}
-								onChange={(e) => setSubDomains(e.target.value.split('\n'))}
+								onChange={(e) => setSubDomains(e.target.value.split('\n').filter(s => s.trim()))}
 							/>
+							<div className="label">
+								<span className="label-text-alt">Enter each subdomain on a new line</span>
+							</div>
 						</label>
 						<div className="modal-action">
-							<button className="btn mr-2">Close</button>
-							<button className="btn btn-primary" onClick={addNewDomain} >Add</button>
+							<button 
+								className="btn mr-2" 
+								type="button"
+								onClick={() => modalRef.current?.close()}
+							>
+								Close
+							</button>
+							<button 
+								className="btn btn-primary" 
+								type="button"
+								onClick={addNewDomain}
+								disabled={!domainName || !subDomains.length || !selectedProvider}
+							>
+								Add Domain
+							</button>
 						</div>
 					</form>
 				</div>
