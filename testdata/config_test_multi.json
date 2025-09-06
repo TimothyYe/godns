@@ -1,0 +1,45 @@
+{
+  "providers": {
+    "Cloudflare": {
+      "email": "test@example.com",
+      "password": "test-cloudflare-token"
+    },
+    "DNSPod": {
+      "login_token": "test-dnspod-token"
+    },
+    "DigitalOcean": {
+      "login_token": "test-digitalocean-token"
+    },
+    "DuckDNS": {
+      "login_token": "test-duckdns-token"
+    }
+  },
+  "domains": [
+    {
+      "domain_name": "cloudflare-test.com",
+      "sub_domains": ["www", "api"],
+      "provider": "Cloudflare"
+    },
+    {
+      "domain_name": "dnspod-test.com",
+      "sub_domains": ["www", "mail"],
+      "provider": "DNSPod"
+    },
+    {
+      "domain_name": "digitalocean-test.com",
+      "sub_domains": ["www", "blog"],
+      "provider": "DigitalOcean"
+    },
+    {
+      "domain_name": "duckdns-test.org",
+      "sub_domains": ["home"],
+      "provider": "DuckDNS"
+    }
+  ],
+  "ip_urls": [
+    "https://api4.ipify.org",
+    "https://myip.biturl.top"
+  ],
+  "interval": 300,
+  "debug_info": true
+}

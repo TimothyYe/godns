@@ -1,0 +1,94 @@
+# Multi-provider configuration example - supports domains from different DNS providers
+
+providers:
+  Cloudflare:
+    email: user@example.com
+    password: your-cloudflare-api-token
+  DNSPod:
+    login_token: your-dnspod-token
+  DigitalOcean:
+    login_token: your-digitalocean-api-token
+
+domains:
+  - domain_name: example.com
+    sub_domains:
+      - www
+      - api
+      - "@"
+    provider: Cloudflare
+  - domain_name: mycompany.net
+    sub_domains:
+      - mail
+      - ftp
+    provider: DNSPod
+  - domain_name: mydomain.org
+    sub_domains:
+      - blog
+      - shop
+    provider: DigitalOcean
+
+ip_urls:
+  - https://api4.ipify.org
+  - https://myip.biturl.top
+  - https://ipecho.net/plain
+  - https://api-ipv4.ip.sb/ip
+  - https://ip2location.io/ip
+  - https://ipinfo.io/ip
+
+ipv6_urls:
+  - https://api6.ipify.org
+  - https://api-ipv6.ip.sb/ip
+  - https://ip2location.io/ip
+  - https://v6.ipinfo.io/ip
+
+ip_type: IPv4
+interval: 300
+resolver: 8.8.8.8
+user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36"
+ip_interface: eth0
+
+mikrotik:
+  enabled: false
+  addr: "http://192.168.88.1:81"
+  username: "admin"
+  password: ""
+  interface: "pppoe-out"
+
+web_panel:
+  enabled: true
+  addr: "0.0.0.0:9000"
+  username: "admin"
+  password: "123456"
+
+socks5_proxy:
+use_proxy: false
+debug_info: false
+proxied: false
+skip_ssl_verify: false
+
+notify:
+  telegram:
+    enabled: false
+    bot_api_key:
+    chat_id:
+    message_template:
+  mail:
+    enabled: false
+    smtp_server:
+    smtp_username:
+    smtp_password:
+    smtp_port: 25
+    send_from:
+    send_to:
+  bark:
+    enabled: false
+    server: "https://api.day.app"
+    device_keys: ""
+    params: '{ "isArchive": 1, "action": "none" }'
+    user: ""
+    password: ""
+
+webhook:
+  enabled: false
+  url: "http://localhost:5000/api/v1/send"
+  request_body: '{ "domain": "{{.Domain}}", "ip": "{{.CurrentIP}}", "ip_type": "{{.IPType}}" }'

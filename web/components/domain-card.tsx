@@ -33,6 +33,9 @@ export const DomainCard = (props: DomainControlProps) => {
 			<div className="card-body">
 				<h2 className="card-title">
 					{props.domain.domain_name}
+					{props.domain.provider && (
+						<div className="badge badge-secondary">{props.domain.provider}</div>
+					)}
 				</h2>
 				<div className="flex flex-wrap justify-start gap-2">
 					{

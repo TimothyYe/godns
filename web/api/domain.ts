@@ -3,6 +3,7 @@ import { get_api_server } from '@/api/env';
 export interface Domain {
 	domain_name: string;
 	sub_domains: string[];
+	provider?: string;
 }
 
 export async function get_domains(credentials: string): Promise<Domain[]> {

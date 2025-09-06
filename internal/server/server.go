@@ -117,6 +117,12 @@ func (s *Server) initRoutes() {
 	route.Get("/provider/settings", s.controller.GetProviderSettings)
 	route.Put("/provider", s.controller.UpdateProvider)
 
+	// Multi-provider routes
+	route.Get("/providers", s.controller.GetMultiProviders)
+	route.Put("/providers", s.controller.UpdateMultiProviders)
+	route.Put("/providers/:provider", s.controller.AddProviderConfig)
+	route.Delete("/providers/:provider", s.controller.DeleteProviderConfig)
+
 	// Network related routes
 	route.Get("/network", s.controller.GetNetworkSettings)
 	route.Put("/network", s.controller.UpdateNetworkSettings)

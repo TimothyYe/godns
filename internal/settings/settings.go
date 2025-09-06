@@ -25,6 +25,7 @@ const (
 type Domain struct {
 	DomainName string   `json:"domain_name" yaml:"domain_name"`
 	SubDomains []string `json:"sub_domains" yaml:"sub_domains"`
+	Provider   string   `json:"provider,omitempty" yaml:"provider,omitempty"`
 }
 
 // SlackNotify struct for Slack notification.
@@ -89,6 +90,21 @@ type BarkNotify struct {
 	Password   string `json:"password" yaml:"password"`
 }
 
+// ProviderConfig holds provider-specific configuration.
+type ProviderConfig struct {
+	// Common fields across providers
+	Email          string `json:"email,omitempty" yaml:"email,omitempty"`
+	Password       string `json:"password,omitempty" yaml:"password,omitempty"`
+	PasswordFile   string `json:"password_file,omitempty" yaml:"password_file,omitempty"`
+	LoginToken     string `json:"login_token,omitempty" yaml:"login_token,omitempty"`
+	LoginTokenFile string `json:"login_token_file,omitempty" yaml:"login_token_file,omitempty"`
+
+	// Provider-specific fields
+	AppKey      string `json:"app_key,omitempty" yaml:"app_key,omitempty"`
+	AppSecret   string `json:"app_secret,omitempty" yaml:"app_secret,omitempty"`
+	ConsumerKey string `json:"consumer_key,omitempty" yaml:"consumer_key,omitempty"`
+}
+
 // Notify struct.
 type Notify struct {
 	Telegram TelegramNotify `json:"telegram" yaml:"telegram"`
@@ -123,35 +139,47 @@ type Mikrotik struct {
 
 // Settings struct.
 type Settings struct {
-	Provider       string   `json:"provider" yaml:"provider"`
-	Email          string   `json:"email" yaml:"email"`
-	Password       string   `json:"password" yaml:"password"`
-	PasswordFile   string   `json:"password_file" yaml:"password_file"`
-	LoginToken     string   `json:"login_token" yaml:"login_token"`
-	LoginTokenFile string   `json:"login_token_file" yaml:"login_token_file"`
-	Domains        []Domain `json:"domains" yaml:"domains"`
-	IPUrl          string   `json:"ip_url" yaml:"ip_url"`
-	IPUrls         []string `json:"ip_urls" yaml:"ip_urls"`
-	IPV6Url        string   `json:"ipv6_url" yaml:"ipv6_url"`
-	IPV6Urls       []string `json:"ipv6_urls" yaml:"ipv6_urls"`
-	Interval       int      `json:"interval" yaml:"interval"`
-	UserAgent      string   `json:"user_agent,omitempty" yaml:"user_agent,omitempty"`
-	Socks5Proxy    string   `json:"socks5_proxy" yaml:"socks5_proxy"`
-	Notify         Notify   `json:"notify" yaml:"notify"`
-	Webhook        Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
-	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
-	IPType         string   `json:"ip_type" yaml:"ip_type"`
-	Mikrotik       Mikrotik `json:"mikrotik" yaml:"mikrotik"`
-	Resolver       string   `json:"resolver" yaml:"resolver"`
-	UseProxy       bool     `json:"use_proxy" yaml:"use_proxy"`
-	DebugInfo      bool     `json:"debug_info" yaml:"debug_info"`
-	RunOnce        bool     `json:"run_once" yaml:"run_once"`
-	Proxied        bool     `json:"proxied" yaml:"proxied"`
-	AppKey         string   `json:"app_key" yaml:"app_key"`
-	AppSecret      string   `json:"app_secret" yaml:"app_secret"`
-	ConsumerKey    string   `json:"consumer_key" yaml:"consumer_key"`
-	SkipSSLVerify  bool     `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
-	WebPanel       WebPanel `json:"web_panel" yaml:"web_panel"`
+	// Legacy single provider fields (for backward compatibility)
+	Provider       string `json:"provider" yaml:"provider"`
+	Email          string `json:"email" yaml:"email"`
+	Password       string `json:"password" yaml:"password"`
+	PasswordFile   string `json:"password_file" yaml:"password_file"`
+	LoginToken     string `json:"login_token" yaml:"login_token"`
+	LoginTokenFile string `json:"login_token_file" yaml:"login_token_file"`
+	AppKey         string `json:"app_key" yaml:"app_key"`
+	AppSecret      string `json:"app_secret" yaml:"app_secret"`
+	ConsumerKey    string `json:"consumer_key" yaml:"consumer_key"`
+
+	// New multi-provider configuration
+	Providers map[string]*ProviderConfig `json:"providers,omitempty" yaml:"providers,omitempty"`
+
+	// Domain configuration
+	Domains []Domain `json:"domains" yaml:"domains"`
+
+	// Network and IP configuration
+	IPUrl       string   `json:"ip_url" yaml:"ip_url"`
+	IPUrls      []string `json:"ip_urls" yaml:"ip_urls"`
+	IPV6Url     string   `json:"ipv6_url" yaml:"ipv6_url"`
+	IPV6Urls    []string `json:"ipv6_urls" yaml:"ipv6_urls"`
+	IPInterface string   `json:"ip_interface" yaml:"ip_interface"`
+	IPType      string   `json:"ip_type" yaml:"ip_type"`
+	Resolver    string   `json:"resolver" yaml:"resolver"`
+
+	// Application configuration
+	Interval      int    `json:"interval" yaml:"interval"`
+	UserAgent     string `json:"user_agent,omitempty" yaml:"user_agent,omitempty"`
+	Socks5Proxy   string `json:"socks5_proxy" yaml:"socks5_proxy"`
+	UseProxy      bool   `json:"use_proxy" yaml:"use_proxy"`
+	DebugInfo     bool   `json:"debug_info" yaml:"debug_info"`
+	RunOnce       bool   `json:"run_once" yaml:"run_once"`
+	Proxied       bool   `json:"proxied" yaml:"proxied"`
+	SkipSSLVerify bool   `json:"skip_ssl_verify" yaml:"skip_ssl_verify"`
+
+	// Feature configuration
+	Notify   Notify   `json:"notify" yaml:"notify"`
+	Webhook  Webhook  `json:"webhook,omitempty" yaml:"webhook,omitempty"`
+	Mikrotik Mikrotik `json:"mikrotik" yaml:"mikrotik"`
+	WebPanel WebPanel `json:"web_panel" yaml:"web_panel"`
 }
 
 // LoadSettings -- Load settings from config file.
@@ -197,7 +225,12 @@ func LoadSettings(configPath string, settings *Settings) error {
 		settings.Interval = 5 * 60
 	}
 
-	return loadSecretsFromFile(settings)
+	if err := loadSecretsFromFile(settings); err != nil {
+		return err
+	}
+
+	// Load provider-specific secrets
+	return loadProviderSecretsFromFile(settings)
 }
 
 func (s *Settings) SaveSettings(configPath string) error {
@@ -306,4 +339,68 @@ func readSecretFromFile(source, value string) (string, error) {
 	}
 
 	return strings.TrimSpace(string(content)), nil
+}
+
+// GetProviderConfig returns the configuration for a specific provider.
+// Falls back to legacy global configuration if provider-specific config is not found.
+func (s *Settings) GetProviderConfig(providerName string) *ProviderConfig {
+	// If providers map exists and has the specific provider
+	if s.Providers != nil {
+		if providerConfig, exists := s.Providers[providerName]; exists {
+			return providerConfig
+		}
+	}
+
+	// Fall back to legacy global configuration
+	return &ProviderConfig{
+		Email:          s.Email,
+		Password:       s.Password,
+		PasswordFile:   s.PasswordFile,
+		LoginToken:     s.LoginToken,
+		LoginTokenFile: s.LoginTokenFile,
+		AppKey:         s.AppKey,
+		AppSecret:      s.AppSecret,
+		ConsumerKey:    s.ConsumerKey,
+	}
+}
+
+// GetDomainProvider returns the provider for a specific domain.
+// Falls back to the global provider if domain doesn't specify one.
+func (s *Settings) GetDomainProvider(domain *Domain) string {
+	if domain.Provider != "" {
+		return domain.Provider
+	}
+	return s.Provider
+}
+
+// IsMultiProvider returns true if the configuration uses multiple providers.
+func (s *Settings) IsMultiProvider() bool {
+	return len(s.Providers) > 0
+}
+
+// loadProviderSecretsFromFile loads secrets from files for provider-specific configurations.
+func loadProviderSecretsFromFile(settings *Settings) error {
+	if settings.Providers == nil {
+		return nil
+	}
+
+	for providerName, config := range settings.Providers {
+		var err error
+
+		if config.Password, err = readSecretFromFile(
+			config.PasswordFile,
+			config.Password,
+		); err != nil {
+			return fmt.Errorf("failed to load password from file for provider %s: %w", providerName, err)
+		}
+
+		if config.LoginToken, err = readSecretFromFile(
+			config.LoginTokenFile,
+			config.LoginToken,
+		); err != nil {
+			return fmt.Errorf("failed to load login token from file for provider %s: %w", providerName, err)
+		}
+	}
+
+	return nil
 }

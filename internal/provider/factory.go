@@ -28,9 +28,82 @@ import (
 )
 
 func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
+	return createProvider(conf.Provider, conf)
+}
+
+// GetProviders returns a map of all configured providers for multi-provider support.
+func GetProviders(conf *settings.Settings) (map[string]IDNSProvider, error) {
+	providers := make(map[string]IDNSProvider)
+
+	// Handle legacy single provider mode
+	if !conf.IsMultiProvider() {
+		if conf.Provider == "" {
+			return nil, fmt.Errorf("no provider configured")
+		}
+		provider, err := createProvider(conf.Provider, conf)
+		if err != nil {
+			return nil, err
+		}
+		providers[conf.Provider] = provider
+		return providers, nil
+	}
+
+	// Handle multi-provider mode
+	// First, include the global provider if specified (for mixed configuration)
+	if conf.Provider != "" {
+		provider, err := createProvider(conf.Provider, conf)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create global provider %s: %w", conf.Provider, err)
+		}
+		providers[conf.Provider] = provider
+	}
+
+	// Then add providers from the providers section
+	for providerName, providerConfig := range conf.Providers {
+		// Skip if this provider already exists (global provider takes precedence)
+		if _, exists := providers[providerName]; exists {
+			continue
+		}
+
+		// Create a temporary settings object with provider-specific config
+		tempSettings := *conf
+		tempSettings.Provider = providerName
+		tempSettings.Email = providerConfig.Email
+		tempSettings.Password = providerConfig.Password
+		tempSettings.PasswordFile = providerConfig.PasswordFile
+		tempSettings.LoginToken = providerConfig.LoginToken
+		tempSettings.LoginTokenFile = providerConfig.LoginTokenFile
+		tempSettings.AppKey = providerConfig.AppKey
+		tempSettings.AppSecret = providerConfig.AppSecret
+		tempSettings.ConsumerKey = providerConfig.ConsumerKey
+
+		provider, err := createProvider(providerName, &tempSettings)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create provider %s: %w", providerName, err)
+		}
+
+		providers[providerName] = provider
+	}
+
+	return providers, nil
+}
+
+// GetProviderForDomain returns the appropriate provider for a given domain.
+func GetProviderForDomain(domain *settings.Domain, providers map[string]IDNSProvider, conf *settings.Settings) (IDNSProvider, error) {
+	providerName := conf.GetDomainProvider(domain)
+
+	provider, exists := providers[providerName]
+	if !exists {
+		return nil, fmt.Errorf("provider '%s' not found for domain %s", providerName, domain.DomainName)
+	}
+
+	return provider, nil
+}
+
+func createProvider(providerName string, conf *settings.Settings) (IDNSProvider, error) {
 	var provider IDNSProvider
 
-	switch conf.Provider {
+	switch providerName {
 	case utils.CLOUDFLARE:
 		provider = &cloudflare.DNSProvider{}
 	case utils.DIGITALOCEAN:
@@ -72,10 +145,9 @@ func GetProvider(conf *settings.Settings) (IDNSProvider, error) {
 	case utils.TRANSIP:
 		provider = &transip.DNSProvider{}
 	default:
-		return nil, fmt.Errorf("Unknown provider '%s'", conf.Provider)
+		return nil, fmt.Errorf("unknown provider '%s'", providerName)
 	}
 
 	provider.Init(conf)
-
 	return provider, nil
 }

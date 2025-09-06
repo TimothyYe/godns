@@ -10,6 +10,8 @@ export interface Info {
 	public_ip: string;
 	ip_mode: string;
 	provider: string;
+	is_multi_provider: boolean;
+	providers: string[];
 }
 
 export async function get_info(credentials: string): Promise<Info> {

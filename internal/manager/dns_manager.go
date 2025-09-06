@@ -2,6 +2,7 @@ package manager
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
@@ -19,7 +20,8 @@ import (
 type DNSManager struct {
 	config      *settings.Settings
 	handler     *handler.Handler
-	provider    provider.IDNSProvider
+	provider    provider.IDNSProvider            // Legacy single provider (for backward compatibility)
+	providers   map[string]provider.IDNSProvider // Multi-provider support
 	ctx         context.Context
 	cancel      context.CancelFunc
 	watcher     *fsnotify.Watcher
@@ -132,36 +134,59 @@ func (manager *DNSManager) startMonitor() {
 }
 
 func (manager *DNSManager) initManager() error {
-	log.Infof("Creating DNS handler with provider: %s", manager.config.Provider)
-	dnsProvider, err := provider.GetProvider(manager.config)
-	if err != nil {
-		return err
-	}
-
 	ctx, cancel := context.WithCancel(context.Background())
 	manager.ctx = ctx
 	manager.cancel = cancel
 
-	manager.provider = dnsProvider
+	// Initialize providers based on configuration
+	if manager.config.IsMultiProvider() {
+		log.Info("Creating DNS handlers with multiple providers")
+		providers, err := provider.GetProviders(manager.config)
+		if err != nil {
+			return fmt.Errorf("failed to initialize providers: %w", err)
+		}
+		manager.providers = providers
+
+		// Log configured providers
+		for providerName := range providers {
+			log.Infof("Initialized provider: %s", providerName)
+		}
+	} else {
+		log.Infof("Creating DNS handler with provider: %s", manager.config.Provider)
+		dnsProvider, err := provider.GetProvider(manager.config)
+		if err != nil {
+			return err
+		}
+		manager.provider = dnsProvider
+	}
+
 	manager.handler = &handler.Handler{}
 	manager.handler.SetContext(manager.ctx)
 	manager.handler.SetConfiguration(manager.config)
-	manager.handler.SetProvider(manager.provider)
+
+	// Set provider(s) on handler
+	if manager.config.IsMultiProvider() {
+		manager.handler.SetProviders(manager.providers)
+	} else {
+		manager.handler.SetProvider(manager.provider)
+	}
+
 	manager.handler.Init()
 
 	// if RunOnce is true, we don't need to create a file watcher and start the internal HTTP server
 	if !manager.config.RunOnce {
 		// create a new file watcher
 		log.Debug("Creating the new file watcher...")
-		managerInstance.watcher, err = fsnotify.NewWatcher()
+		var err error
+		manager.watcher, err = fsnotify.NewWatcher()
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// monitor the configuration file changes
-		managerInstance.startMonitor()
+		manager.startMonitor()
 		// start the internal HTTP server
-		managerInstance.startServer()
+		manager.startServer()
 	}
 	return nil
 }
