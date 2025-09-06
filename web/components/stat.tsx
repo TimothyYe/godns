@@ -40,6 +40,15 @@ export const Stat = () => {
 
 					<div className="stat">
 						<div className="stat-figure text-secondary">
+							<GearIcon />
+						</div>
+						<div className="stat-title">Providers</div>
+						<div className="stat-value text-warning">{info && info.providers ? info.providers.length : 0}</div>
+						<div className="stat-desc">Providers configured</div>
+					</div>
+
+					<div className="stat">
+						<div className="stat-figure text-secondary">
 							<DBIcon />
 						</div>
 						<div className="stat-title">Domains</div>
