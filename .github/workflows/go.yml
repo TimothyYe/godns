@@ -6,19 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     -
+      name: Check out code into the Go module directory
+      uses: actions/checkout@v4
+    -
       name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: 'web/package-lock.json'
     - 
-      name: Set up Go 1.23
+      name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: 1.23.3
-      id: go
-    - 
-      name: Check out code into the Go module directory
-      uses: actions/checkout@v4
+        go-version: '1.23'
+        cache: true
     -
       name: Build the frontend project
       run: |
@@ -29,9 +31,9 @@ jobs:
         go generate ./...
     - 
       name: golangci-lint
-      uses: golangci/golangci-lint-action@v3
+      uses: golangci/golangci-lint-action@v6
       with:
         version: latest
     - 
       name: Run unit tests
-      run: go test ./...
+      run: go test -race -coverprofile=coverage.out -covermode=atomic ./...
