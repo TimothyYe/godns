@@ -81,8 +81,14 @@ export const Stat = () => {
 							<GearIcon />
 						</div>
 						<div className="stat-title">Provider</div>
-						<div className="stat-value text-error">{info ? info.provider : 'N/A'}</div>
-						<div className="stat-desc">Provider configured</div>
+						<div className="stat-value text-error">
+							{info ? (
+								info.provider && (!info.providers || info.providers.length === 0) ? info.provider : 'Multiple'
+							) : 'N/A'}
+						</div>
+						<div className="stat-desc">
+							{info && info.provider && (!info.providers || info.providers.length === 0) ? 'Provider configured' : 'Multiple providers configured'}
+						</div>
 					</div>
 				</div>
 				<span className="text-xl font-semibold text-neutral-500 ml-1 mb-1 mt-5">Domain Info</span>
