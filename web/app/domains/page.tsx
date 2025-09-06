@@ -7,7 +7,7 @@ import { DomainControl } from '@/components/domain-control';
 import { ToastContainer } from 'react-toastify';
 import { get_info } from '@/api/info';
 import 'react-toastify/dist/ReactToastify.css';
-import { ProviderControl } from '@/components/provider';
+import { MultiProviderControl } from '@/components/multi-provider-control';
 
 export default function Domains() {
 	const router = useRouter();
@@ -30,7 +30,7 @@ export default function Domains() {
 		<main className="flex min-h-screen flex-col items-center justify-start pt-10 max-w-screen-xl">
 			<ToastContainer />
 			<div className="flex flex-col items-center w-full bg-base-100 p-10">
-				<ProviderControl />
+				<MultiProviderControl />
 				<div className="divider"></div>
 				<DomainControl />
 			</div>

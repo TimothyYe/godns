@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
 	"github.com/gofiber/fiber/v2"
 	log "github.com/sirupsen/logrus"
@@ -50,6 +51,69 @@ func (c *Controller) UpdateProvider(ctx *fiber.Ctx) error {
 	if err := c.config.SaveSettings(c.configPath); err != nil {
 		log.Errorf("Failed to save settings: %s", err.Error())
 		return ctx.Status(500).SendString("Failed to save settings")
+	}
+
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func (c *Controller) GetMultiProviders(ctx *fiber.Ctx) error {
+	return ctx.JSON(c.config.Providers)
+}
+
+func (c *Controller) UpdateMultiProviders(ctx *fiber.Ctx) error {
+	var providers map[string]*settings.ProviderConfig
+	if err := ctx.BodyParser(&providers); err != nil {
+		return err
+	}
+
+	c.config.Providers = providers
+
+	if err := c.config.SaveSettings(c.configPath); err != nil {
+		log.Errorf("Failed to save settings: %s", err.Error())
+		return ctx.Status(500).SendString("Failed to save settings")
+	}
+
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func (c *Controller) AddProviderConfig(ctx *fiber.Ctx) error {
+	providerName := ctx.Params("provider")
+	if providerName == "" {
+		return ctx.Status(400).SendString("Provider name is required")
+	}
+
+	var config settings.ProviderConfig
+	if err := ctx.BodyParser(&config); err != nil {
+		return err
+	}
+
+	if c.config.Providers == nil {
+		c.config.Providers = make(map[string]*settings.ProviderConfig)
+	}
+
+	c.config.Providers[providerName] = &config
+
+	if err := c.config.SaveSettings(c.configPath); err != nil {
+		log.Errorf("Failed to save settings: %s", err.Error())
+		return ctx.Status(500).SendString("Failed to save settings")
+	}
+
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
+func (c *Controller) DeleteProviderConfig(ctx *fiber.Ctx) error {
+	providerName := ctx.Params("provider")
+	if providerName == "" {
+		return ctx.Status(400).SendString("Provider name is required")
+	}
+
+	if c.config.Providers != nil {
+		delete(c.config.Providers, providerName)
+
+		if err := c.config.SaveSettings(c.configPath); err != nil {
+			log.Errorf("Failed to save settings: %s", err.Error())
+			return ctx.Status(500).SendString("Failed to save settings")
+		}
 	}
 
 	return ctx.SendStatus(fiber.StatusOK)
