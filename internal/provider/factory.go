@@ -20,6 +20,7 @@ import (
 	"github.com/TimothyYe/godns/internal/provider/loopiase"
 	"github.com/TimothyYe/godns/internal/provider/noip"
 	"github.com/TimothyYe/godns/internal/provider/ovh"
+	"github.com/TimothyYe/godns/internal/provider/porkbun"
 	"github.com/TimothyYe/godns/internal/provider/scaleway"
 	"github.com/TimothyYe/godns/internal/provider/strato"
 	"github.com/TimothyYe/godns/internal/provider/transip"
@@ -144,6 +145,8 @@ func createProvider(providerName string, conf *settings.Settings) (IDNSProvider,
 		provider = &ionos.DNSProvider{}
 	case utils.TRANSIP:
 		provider = &transip.DNSProvider{}
+	case utils.PORKBUN:
+		provider = &porkbun.DNSProvider{}
 	default:
 		return nil, fmt.Errorf("unknown provider '%s'", providerName)
 	}

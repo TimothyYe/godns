@@ -52,6 +52,7 @@
     - [Infomaniak](#infomaniak)
     - [Hetzner](#hetzner)
     - [OVH](#ovh)
+    - [Porkbun](#porkbun)
     - [Dynu](#dynu)
     - [IONOS](#ionos)
     - [TransIP](#transip)
@@ -111,6 +112,7 @@
 | [Infomaniak][infomaniak]              | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [Hetzner][hetzner]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [OVH][ovh]                            | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [Porkbun][porkbun]                    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [IONOS][ionos]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [TransIP][transip]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
@@ -132,6 +134,7 @@
 [infomaniak]: https://www.infomaniak.com/
 [hetzner]: https://hetzner.com/
 [ovh]: https://www.ovh.com
+[porkbun]: https://porkbun.com/
 [dynu]: https://www.dynu.com/
 [ionos]: https://www.ionos.com/
 [transip]: https://www.transip.net/
@@ -821,6 +824,32 @@ GoDNS Linode 处理程序目前对 Linode DNS 记录使用固定的 30 秒 TTL�
 }
 ```
 
+</details>
+
+#### Porkbun
+对于 Porkbun，您需要提供 API 密钥作为 `login_token` 和秘密密钥作为 `password`。
+从 [Porkbun API 管理](https://porkbun.com/account/api) 获取您的 API 凭据。
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "provider": "Porkbun",
+  "login_token": "pk1_your_api_key",
+  "password": "sk1_your_secret_key",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["@", "www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ipify.org"],
+  "ip_type": "IPv4",
+  "interval": 300
+}
+```
 </details>
 
 #### Dynu
