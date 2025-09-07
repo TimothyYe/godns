@@ -198,8 +198,6 @@ func (manager *DNSManager) Run() {
 	}
 
 	for _, domain := range manager.config.Domains {
-		domain := domain
-
 		if manager.config.RunOnce {
 			err := manager.handler.UpdateIP(&domain)
 			if err != nil {
