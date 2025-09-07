@@ -1,26 +1,40 @@
 # Stage 1: Build the Next.js frontend
-FROM node:18-alpine AS web-builder
-WORKDIR /web
-# Copy the Next.js project files into the image
-COPY ./web/package.json ./web/package-lock.json ./
-# Install dependencies
-RUN npm ci 
-# Copy the rest of the Next.js project files
-COPY ./web .
-# Build the Next.js project
+FROM node:20-alpine AS web-builder
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY web/package.json web/package-lock.json ./web/
+WORKDIR /app/web
+RUN npm ci && npm cache clean --force
+COPY web/ .
 RUN npm run build
 
 # Stage 2: Build the Go backend
-FROM golang:alpine AS builder
+FROM golang:1.23-alpine AS go-builder
+RUN apk add --no-cache ca-certificates tzdata
 ARG VERSION
-WORKDIR /godns
-ADD . .
-# Copy the Next.js build from the previous stage
-COPY --from=web-builder /web/out ./web/out
+ARG TARGETOS
+ARG TARGETARCH
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+COPY cmd/ ./cmd/
+COPY internal/ ./internal/
+COPY pkg/ ./pkg/
+COPY --from=web-builder /app/web/out ./web/out
 RUN go generate ./...
-RUN CGO_ENABLED=0 go build -ldflags "-X main.Version=${VERSION}" -o godns cmd/godns/godns.go
+RUN CGO_ENABLED=0 \
+    GOOS=${TARGETOS} \
+    GOARCH=${TARGETARCH} \
+    go build \
+    -ldflags="-w -s -X main.Version=${VERSION}" \
+    -a -installsuffix cgo \
+    -o godns \
+    ./cmd/godns
 
-# Final stage: Copy the Go binary into a distroless image
-FROM gcr.io/distroless/base
-COPY --from=builder /godns/godns /godns
-ENTRYPOINT ["/godns"]
+# Final stage: Minimal runtime image
+FROM --platform=$TARGETOS/$TARGETARCH gcr.io/distroless/static-debian12:nonroot
+COPY --from=go-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=go-builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=go-builder /app/godns /usr/local/bin/godns
+USER nonroot:nonroot
+ENTRYPOINT ["/usr/local/bin/godns"]
