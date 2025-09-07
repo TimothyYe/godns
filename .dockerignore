@@ -1,0 +1,52 @@
+# Git files
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Development files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+godns
+web/out
+web/.next
+web/node_modules
+web/dist
+
+# Go build cache
+.cache
+
+# Test files
+*_test.go
+testdata/
+
+# CI/CD files (except Dockerfile)
+.travis.yml
+.circleci/
+.gitlab-ci.yml
+
+# Local development
+.env
+.env.local
+config.json
+config.yaml
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+# Temporary config files
+config.json
