@@ -16,6 +16,10 @@ export const siteConfig = {
 			label: "Network",
 			href: "/network",
 		},
+		{
+			label: "Logs",
+			href: "/logs",
+		},
 	],
 	links: {
 		github: "https://github.com/TimothyYe/godns",

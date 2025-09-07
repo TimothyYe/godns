@@ -10,6 +10,7 @@ import (
 	"github.com/TimothyYe/godns/internal/manager"
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
+	"github.com/TimothyYe/godns/pkg/lib"
 
 	log "github.com/sirupsen/logrus"
 
@@ -52,6 +53,12 @@ func main() {
 	if err := settings.LoadSettings(configPath, &config); err != nil {
 		log.Fatal(err)
 	}
+
+	// Initialize log buffer for web interface
+	lib.InitLogBuffer(1000) // Store last 1000 log entries
+	logBuffer := lib.GetLogBuffer()
+	logHook := lib.NewLogHook(logBuffer)
+	log.AddHook(logHook)
 
 	// set the log level
 	log.SetOutput(os.Stdout)
