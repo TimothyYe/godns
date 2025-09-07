@@ -178,6 +178,13 @@ func validateProviderCredentials(providerName string, accessor credentialAccesso
 		if accessor.GetLoginToken() == "" {
 			return errors.New("login token cannot be empty")
 		}
+	case PORKBUN:
+		if accessor.GetLoginToken() == "" {
+			return errors.New("API key cannot be empty")
+		}
+		if accessor.GetPassword() == "" {
+			return errors.New("secret key cannot be empty")
+		}
 	default:
 		return fmt.Errorf("'%s' is not a supported DNS provider", providerName)
 	}

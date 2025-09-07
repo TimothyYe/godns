@@ -45,6 +45,8 @@ const (
 	IONOS = "IONOS"
 	// TransIP for TransIP.
 	TRANSIP = "TransIP"
+	// PORKBUN for Porkbun.
+	PORKBUN = "Porkbun"
 	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode.
@@ -177,6 +179,11 @@ var (
 		{
 			Name:       TRANSIP,
 			LoginToken: true,
+		},
+		{
+			Name:       PORKBUN,
+			LoginToken: true,
+			Password:   true,
 		},
 	}
 )
