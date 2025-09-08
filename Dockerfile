@@ -35,6 +35,7 @@ RUN CGO_ENABLED=0 \
 FROM --platform=$TARGETOS/$TARGETARCH gcr.io/distroless/static-debian12:nonroot
 COPY --from=go-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=go-builder /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=go-builder /app/godns /usr/local/bin/godns
+COPY --from=go-builder /app/godns /godns
 USER nonroot:nonroot
-ENTRYPOINT ["/usr/local/bin/godns"]
+WORKDIR /
+ENTRYPOINT ["/godns"]
