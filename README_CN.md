@@ -1068,4 +1068,317 @@ Webhook 是 GoDNS 提供的另一个功能，用于在 IP 更改时向其他应�
 可用变量：
 
 > - `Domain`：当前域名。
-> - `IP`：新 IP
+> - `IP`：新 IP 地址。
+> - `IPType`：IP 类型：`IPV4` 或 `IPV6`。
+
+#### 使用 HTTP GET 请求的 Webhook
+
+```json
+"webhook": {
+  "enabled": true,
+  "url": "http://localhost:5000/api/v1/send?domain={{.Domain}}&ip={{.CurrentIP}}&ip_type={{.IPType}}",
+  "request_body": ""
+}
+```
+
+对于此示例，将向目标 URL 发送带有查询字符串参数的 webhook：
+
+```
+http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type=IPV4
+```
+
+#### 使用 HTTP POST 请求的 Webhook
+
+```json
+"webhook": {
+  "enabled": true,
+  "url": "http://localhost:5000/api/v1/send",
+  "request_body": "{ \"domain\": \"{{.Domain}}\", \"ip\": \"{{.CurrentIP}}\", \"ip_type\": \"{{.IPType}}\" }"
+}
+```
+
+对于此示例，当 IP 更改时将触发 webhook，目标 URL `http://localhost:5000/api/v1/send` 将收到带有请求体的 `HTTP POST` 请求：
+
+```json
+{ "domain": "ddns.example.com", "ip": "192.168.1.1", "ip_type": "IPV4" }
+```
+
+### 杂项主题
+
+#### IPv6 支持
+
+大多数 [提供商](#支持的-dns-提供商) 都支持 IPv6。
+
+要启用 GoDNS 的 `IPv6` 支持，有两种解决方案可供选择：
+
+1. 使用在线服务查找外部 IPv6
+
+   为此：
+
+   - 将 `ip_type` 设置为 `IPv6`，并确保配置了 `ipv6_urls`
+   - 在您的 DNS 提供商中创建 `AAAA` 记录而不是 `A` 记录
+
+   <details>
+   <summary>配置示例</summary>
+
+   ```json
+   {
+     "domains": [
+       {
+         "domain_name": "example.com",
+         "sub_domains": ["ipv6"]
+       }
+     ],
+     "resolver": "2001:4860:4860::8888",
+     "ipv6_urls": ["https://api-ipv6.ip.sb/ip"],
+     "ip_type": "IPv6"
+   }
+   ```
+
+   </details>
+
+2. 让 GoDNS 查找其运行机器的网络接口的 IPv6（稍后详细说明[网络接口 IP 地址](#网络接口-ip-地址)）。
+
+   为此，只需将 `ip_urls` 和 `ipv6_urls` 留空。
+
+   请注意，网络接口必须配置 IPv6 才能正常工作。
+
+#### 网络接口 IP 地址
+
+由于某些原因，如果您想获取与网络接口关联的 IP 地址（而不是执行在线查找），您可以在配置文件中这样指定：
+
+```json
+  "ip_urls": [""],
+  "ip_interface": "interface-name",
+```
+
+将 `interface-name` 替换为网络接口的名称，例如 Linux 上的 `eth0` 或 Windows 上的 `Local Area Connection`。
+
+注意：如果也指定了 `ip_urls`，它将首先用于执行在线查找，网络接口 IP 将在失败情况下用作后备。
+
+#### SOCKS5 代理支持
+
+您可以通过在配置文件中指定 [SOCKS5 代理](https://en.wikipedia.org/wiki/SOCKS#SOCKS5) 来使所有远程调用通过该代理：
+
+```json
+"socks5_proxy": "127.0.0.1:7070"
+"use_proxy": true
+```
+
+#### 从 RouterOS 获取 IP
+
+如果您想从 Mikrotik RouterOS 设备获取公共 IP，您可以使用以下配置：
+
+```json
+"mikrotik": {
+  "enabled": false,
+  "server": "http://192.168.88.1",
+  "username": "admin",
+  "password": "password",
+  "interface": "pppoe-out"
+}
+```
+
+#### 显示调试信息
+
+要显示调试信息，将 `debug_info` 设置为 `true` 以启用此功能。默认情况下，调试信息被禁用。
+
+```json
+  "debug_info": true,
+```
+
+#### 多个 API URL
+
+GoDNS 支持通过简单的轮询算法从多个 URL 获取公共 IP。如果第一个 URL 失败，它将尝试下一个，直到成功。以下是配置示例：
+
+```json
+  "ip_urls": [
+  "https://api.ipify.org",
+  "https://myip.biturl.top",
+  "https://api-ipv4.ip.sb/ip"
+  ],
+```
+
+#### 推荐的 API
+
+- <https://api.ipify.org>
+- <https://myip.biturl.top>
+- <https://ipecho.net/plain>
+- <https://api-ipv4.ip.sb/ip>
+
+## Web 面板
+
+<img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
+
+从版本 3.1.0 开始，GoDNS 提供了一个 Web 面板来管理配置和监控域名状态。Web UI 默认是禁用的。要启用它，只需在配置文件中启用 `web_panel`。
+
+```json
+"web_panel": {
+  "enabled": true,
+  "addr": "0.0.0.0:9000",
+  "username": "admin",
+  "password": "123456"
+}
+```
+
+启用 Web 面板后，您可以访问 `http://localhost:9000` 来管理配置和监控域名状态。
+
+## 运行 GoDNS
+
+有几种运行 GoDNS 的方式。
+
+### 手动运行
+
+注意：确保在配置文件中设置 `run_once` 参数，这样程序将在首次运行后退出（默认值为 `false`）。
+
+它可以添加到 `cron` 或附加到系统上的其他事件。
+
+```json
+{
+  "...": "...",
+  "run_once": true
+}
+```
+
+然后运行
+
+```bash
+./godns
+```
+
+### 作为手动守护进程
+
+```bash
+nohup ./godns &
+```
+
+注意：当程序停止时，它不会重新启动。
+
+### 作为托管守护进程（使用 upstart）
+
+1. 首先安装 `upstart`（如果尚未可用）
+2. 将 `./config/upstart/godns.conf` 复制到 `/etc/init`（并根据需要调整）
+3. 启动服务：
+
+   ```bash
+   sudo start godns
+   ```
+
+### 作为托管守护进程（使用 systemd）
+
+1. 首先安装 `systemd`（如果尚未可用）
+2. 将 `./config/systemd/godns.service` 复制到 `/lib/systemd/system`（并根据需要调整）
+3. 启动服务：
+
+   ```bash
+   sudo systemctl enable godns
+   sudo systemctl start godns
+   ```
+
+### 作为托管守护进程（使用 procd）
+
+`procd` 是 OpenWRT 上的 init 系统。如果您想在 OpenWRT 和 procd 上将 godns 用作服务：
+
+1. 将 `./config/procd/godns` 复制到 `/etc/init.d`（并根据需要调整）
+2. 启动服务（需要 root 权限）：
+
+   ```bash
+   service godns enable
+   service godns start
+   ```
+
+### 作为 Docker 容器
+
+可用的 docker 注册表：
+
+- <https://hub.docker.com/r/timothyye/godns>
+- <https://github.com/TimothyYe/godns/pkgs/container/godns>
+
+访问 <https://hub.docker.com/r/timothyye/godns> 获取最新的 docker 镜像。`-p 9000:9000` 选项暴露 Web 面板。
+
+使用 `/path/to/config.json` 作为您的本地配置文件，运行：
+
+```bash
+docker run \
+-d --name godns --restart=always \
+-v /path/to/config.json:/config.json \
+-p 9000:9000 \
+timothyye/godns:latest
+```
+
+要使用 `YAML` 配置文件运行：
+
+```bash
+docker run \
+-d --name godns \
+-e CONFIG=/config.yaml \
+--restart=always \
+-v /path/to/config.yaml:/config.yaml \
+-p 9000:9000 \
+timothyye/godns:latest
+```
+
+### 作为 Windows 服务
+
+1. 下载最新版本的 [NSSM](https://nssm.cc/download)
+
+2. 在管理员提示符中，从下载 NSSM 的文件夹（例如 `C:\Downloads\nssm\` **win64**）运行：
+
+   ```
+   nssm install YOURSERVICENAME
+   ```
+
+3. 按照界面配置服务。在"Application"选项卡中只需指明 `godns.exe` 文件的位置。您还可以选择在"Details"选项卡上定义描述，并在"I/O"选项卡上定义日志文件。点击"Install service"按钮完成。
+
+4. 该服务现在将与 Windows 一起启动。
+
+注意：您可以通过运行以下命令卸载服务：
+
+```
+nssm remove YOURSERVICENAME
+```
+
+## 贡献
+
+欢迎贡献！请随时提交 Pull Request。
+
+### 设置前端开发环境
+
+要求：
+
+- Node.js `18.19.0` 或更高版本
+- Go `1.17` 或更高版本
+
+前端项目使用 [Next.js](https://nextjs.org/) 和 [daisyUI](https://daisyui.com/) 构建。要启动开发环境，运行：
+
+```bash
+cd web
+npm ci
+npm run dev
+```
+
+### 构建前端
+
+要构建前端，运行：
+
+```bash
+cd web
+npm run build
+```
+
+### 运行前端
+
+要运行前端，运行：
+
+```bash
+cd web
+npm run start
+```
+
+## 特别感谢
+
+<img src="https://i.imgur.com/xhe5RLZ.jpg" width="80px" align="right" />
+
+感谢 JetBrains 使用[免费开源许可证](https://www.jetbrains.com/community/opensource/)赞助此项目。
+
+> 我喜欢 GoLand，它是一个令人惊叹且高效的工具。
