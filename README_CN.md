@@ -932,7 +932,7 @@ interval: 300
 socks5_proxy: ""
 ```
 
-<details>
+</details>
 
 ### 通知
 
