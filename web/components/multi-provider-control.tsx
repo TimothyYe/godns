@@ -180,7 +180,20 @@ export const MultiProviderControl = () => {
 		if (currentProviderSettings?.consumer_key) config.consumer_key = formData.consumerKey;
 
 		if (credentials) {
-			const success = await add_provider_config(credentials, providerName, config);
+			let success = false;
+
+			if (editingProvider) {
+				// For editing, update the entire providers map
+				const updatedProviders = {
+					...providers,
+					[providerName]: config
+				};
+				success = await update_multi_providers(credentials, updatedProviders);
+			} else {
+				// For adding, use add_provider_config
+				success = await add_provider_config(credentials, providerName, config);
+			}
+
 			if (success) {
 				setProviders(prev => ({
 					...prev,
