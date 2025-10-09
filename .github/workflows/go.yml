@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: Auto triggered CI job
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     -
       name: Check out code into the Go module directory
