@@ -87,7 +87,6 @@
   - [设置前端开发环境](#设置前端开发环境)
   - [构建前端](#构建前端)
   - [运行前端](#运行前端)
-- [特别感谢](#特别感谢)
 
 ---
 
@@ -1374,11 +1373,3 @@ npm run build
 cd web
 npm run start
 ```
-
-## 特别感谢
-
-<img src="https://i.imgur.com/xhe5RLZ.jpg" width="80px" align="right" />
-
-感谢 JetBrains 使用[免费开源许可证](https://www.jetbrains.com/community/opensource/)赞助此项目。
-
-> 我喜欢 GoLand，它是一个令人惊叹且高效的工具。
