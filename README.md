@@ -89,7 +89,6 @@
   - [Setup the frontend development environment](#setup-the-frontend-development-environment)
   - [Build the frontend](#build-the-frontend)
   - [Run the frontend](#run-the-frontend)
-- [Special Thanks](#special-thanks)
 
 ---
 
@@ -1376,11 +1375,3 @@ To run the frontend, run:
 cd web
 npm run start
 ```
-
-## Special Thanks
-
-<img src="https://i.imgur.com/xhe5RLZ.jpg" width="80px" align="right" />
-
-Thanks JetBrains for sponsoring this project with [free open source license](https://www.jetbrains.com/community/opensource/).
-
-> I like GoLand, it is an amazing and productive tool.
