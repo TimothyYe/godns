@@ -1375,3 +1375,7 @@ To run the frontend, run:
 cd web
 npm run start
 ```
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=timothyye/godns&type=date&legend=top-left)](https://www.star-history.com/#timothyye/godns&type=date&legend=top-left)
