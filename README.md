@@ -65,6 +65,7 @@
     - [Discord](#discord)
     - [Pushover](#pushover)
     - [Bark](#bark)
+    - [Ntfy](#ntfy)
   - [Webhook](#webhook)
     - [Webhook with HTTP GET request](#webhook-with-http-get-request)
     - [Webhook with HTTP POST request](#webhook-with-http-post-request)
@@ -1056,6 +1057,38 @@ To receive a [Bark](https://bark.day.app/) message each time the IP changes, upd
 `user` Basic auth username of the self-hosted server, same with server side environment variable `BARK_SERVER_BASIC_AUTH_USER`.  
 `password` Basic auth password of the self-hosted server, same with server side environment variable `BARK_SERVER_BASIC_AUTH_PASSWORD`.  
 For more information, please refer to the [Bark official documentation](https://bark.day.app/)
+
+#### Ntfy
+
+To receive an [ntfy](https://ntfy.sh/) notification each time the IP changes, update your configuration with the following snippet:
+
+```json
+  "notify": {
+    "ntfy": {
+      "enabled": true,
+      "topic": "godns",
+      "server": "https://ntfy.sh",
+      "token": "",
+      "user": "",
+      "password": "",
+      "priority": "default",
+      "tags": "rotating_light",
+      "icon": "",
+      "message_template": ""
+    }
+  }
+```
+
+`topic` The ntfy topic to publish to (required). The topic is essentially a channel name — pick something not easily guessable.  
+`server` The ntfy server URL. Defaults to `https://ntfy.sh`. Set to your self-hosted server address if applicable.  
+`token` Access token for authentication (optional). Only needed for self-hosted servers with access control.  
+`user` Username for basic authentication (optional). Used with `password` for self-hosted servers.  
+`password` Password for basic authentication (optional). Used with `user` for self-hosted servers.  
+`priority` Message priority: `min`, `low`, `default`, `high`, or `max` (optional).  
+`tags` Comma-separated list of tags or [emoji short codes](https://docs.ntfy.sh/emojis/) (optional).  
+`icon` URL to an icon to display in the notification (optional).  
+`message_template` Custom message template (optional). If empty, defaults to `IP address of {{ .Domain }} updated to {{ .CurrentIP }}`.  
+For more information, please refer to the [ntfy documentation](https://docs.ntfy.sh/publish/)
 
 ### Webhook
 

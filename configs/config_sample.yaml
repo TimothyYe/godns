@@ -61,6 +61,17 @@ notify:
     params: '{ "isArchive": 1, "action": "none" }'
     user: ""
     password: ""
+  ntfy:
+    enabled: false
+    topic: ""
+    server: "https://ntfy.sh"
+    token: ""
+    user: ""
+    password: ""
+    priority: ""
+    tags: ""
+    icon: ""
+    message_template: ""
 webhook:
   enabled: false
   url: "http://localhost:5000/api/v1/send"

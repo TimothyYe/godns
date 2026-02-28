@@ -90,6 +90,20 @@ type BarkNotify struct {
 	Password   string `json:"password" yaml:"password"`
 }
 
+// NtfyNotify struct for ntfy notification.
+type NtfyNotify struct {
+	Enabled     bool   `json:"enabled" yaml:"enabled"`
+	Topic       string `json:"topic" yaml:"topic"`
+	Server      string `json:"server" yaml:"server"`
+	Token       string `json:"token" yaml:"token"`
+	User        string `json:"user" yaml:"user"`
+	Password    string `json:"password" yaml:"password"`
+	Priority    string `json:"priority" yaml:"priority"`
+	Tags        string `json:"tags" yaml:"tags"`
+	Icon        string `json:"icon" yaml:"icon"`
+	MsgTemplate string `json:"message_template" yaml:"message_template"`
+}
+
 // ProviderConfig holds provider-specific configuration.
 type ProviderConfig struct {
 	// Common fields across providers
@@ -113,6 +127,7 @@ type Notify struct {
 	Discord  DiscordNotify  `json:"discord" yaml:"discord"`
 	Pushover PushoverNotify `json:"pushover" yaml:"pushover"`
 	Bark     BarkNotify     `json:"bark" yaml:"bark"`
+	Ntfy     NtfyNotify     `json:"ntfy" yaml:"ntfy"`
 }
 
 // Webhook struct.

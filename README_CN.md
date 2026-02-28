@@ -63,6 +63,7 @@
     - [Discord](#discord)
     - [Pushover](#pushover)
     - [Bark](#bark)
+    - [Ntfy](#ntfy)
   - [Webhook](#webhook)
     - [使用 HTTP GET 请求的 Webhook](#使用-http-get-请求的-webhook)
     - [使用 HTTP POST 请求的 Webhook](#使用-http-post-请求的-webhook)
@@ -1054,6 +1055,38 @@ GoDNS 可以在 IP 更改时发送通知。
 `user` 自建服务器 Basic auth 用户名，与服务端环境变量 `BARK_SERVER_BASIC_AUTH_USER` 一致。  
 `password` 自建服务器 Basic auth 密码，与服务端环境变量 `BARK_SERVER_BASIC_AUTH_PASSWORD` 一致。  
 更多内容请参阅 [Bark 官方文档](https://bark.day.app/)
+
+#### Ntfy
+
+要在 IP 更改时接收 [ntfy](https://ntfy.sh/) 通知，使用以下片段更新您的配置：
+
+```json
+  "notify": {
+    "ntfy": {
+      "enabled": true,
+      "topic": "godns",
+      "server": "https://ntfy.sh",
+      "token": "",
+      "user": "",
+      "password": "",
+      "priority": "default",
+      "tags": "rotating_light",
+      "icon": "",
+      "message_template": ""
+    }
+  }
+```
+
+`topic` 要发布到的 ntfy 主题（必填）。主题本质上是一个频道名称，请选择不容易被猜到的名称。  
+`server` ntfy 服务器 URL。默认为 `https://ntfy.sh`。如果使用自建服务器，请设置为自建服务器地址。  
+`token` 用于身份验证的访问令牌（可选）。仅在启用了访问控制的自建服务器上需要。  
+`user` 基本身份验证的用户名（可选）。与 `password` 一起用于自建服务器。  
+`password` 基本身份验证的密码（可选）。与 `user` 一起用于自建服务器。  
+`priority` 消息优先级：`min`、`low`、`default`、`high` 或 `max`（可选）。  
+`tags` 以逗号分隔的标签或 [emoji 短代码](https://docs.ntfy.sh/emojis/) 列表（可选）。  
+`icon` 通知中显示的图标 URL（可选）。  
+`message_template` 自定义消息模板（可选）。如果为空，默认为 `IP address of {{ .Domain }} updated to {{ .CurrentIP }}`。  
+更多信息请参阅 [ntfy 官方文档](https://docs.ntfy.sh/publish/)
 
 ### Webhook
 
