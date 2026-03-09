@@ -72,6 +72,7 @@
   - [Miscellaneous topics](#miscellaneous-topics)
     - [IPv6 support](#ipv6-support)
     - [Network interface IP address](#network-interface-ip-address)
+    - [Query IP through specific network interface](#query-ip-through-specific-network-interface)
     - [SOCKS5 proxy support](#socks5-proxy-support)
     - [Display debug info](#display-debug-info)
     - [Obtain IP from RouterOS](#obtain-ip-from-router-os)
@@ -1189,6 +1190,32 @@ For some reasons, if you want to get the IP address associated with a network in
 With `interface-name` replaced by the name of the network interface, e.g. `eth0` on Linux or `Local Area Connection` on Windows.
 
 Note: If `ip_urls` is also specified, it will be used to perform an online lookup first and the network interface IP will be used as a fallback in case of failure.
+
+#### Query IP through specific network interface
+
+If you have multiple network interfaces and want to query your public IP address through a specific interface (useful when you have multiple uplinks, some behind CGNAT and others with public IPs), you can use the `query_interface` configuration option:
+
+```json
+  "query_interface": "wan0",
+```
+
+With `wan0` replaced by the name of the network interface you want to use for querying the IP address. When this option is set, GoDNS will bind the HTTP request to the specified network interface, ensuring the IP query goes through that interface rather than the default route.
+
+This is particularly useful in scenarios where:
+- You have multiple WAN connections with different routing priorities
+- One interface is behind CGNAT while another has a public IP
+- You want to ensure the IP query reflects the actual public IP of a specific interface
+
+Example configuration for dual-WAN setup:
+```json
+{
+  "ip_urls": ["https://api.ipify.org/"],
+  "query_interface": "wan0",
+  "ip_type": "IPv4"
+}
+```
+
+Note: The `query_interface` option is different from `ip_interface`. The `query_interface` specifies which interface to use when making the HTTP request to query your public IP, while `ip_interface` reads the IP address directly from the local interface without making any external requests.
 
 #### SOCKS5 proxy support
 

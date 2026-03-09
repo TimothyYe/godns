@@ -70,6 +70,7 @@
   - [杂项主题](#杂项主题)
     - [IPv6 支持](#ipv6-支持)
     - [网络接口 IP 地址](#网络接口-ip-地址)
+    - [通过特定网络接口查询 IP](#通过特定网络接口查询-ip)
     - [SOCKS5 代理支持](#socks5-代理支持)
     - [显示调试信息](#显示调试信息)
     - [从 RouterOS 获取 IP](#从-routeros-获取-ip)
@@ -1187,6 +1188,32 @@ http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type
 将 `interface-name` 替换为网络接口的名称，例如 Linux 上的 `eth0` 或 Windows 上的 `Local Area Connection`。
 
 注意：如果也指定了 `ip_urls`，它将首先用于执行在线查找，网络接口 IP 将在失败情况下用作后备。
+
+#### 通过特定网络接口查询 IP
+
+如果您有多个网络接口，并希望通过特定接口查询公共 IP 地址（在有多个上行链路时很有用，其中一些在 CGNAT 后面，而其他的有公共 IP），您可以使用 `query_interface` 配置选项：
+
+```json
+  "query_interface": "wan0",
+```
+
+将 `wan0` 替换为要用于查询 IP 地址的网络接口名称。设置此选项后，GoDNS 将 HTTP 请求绑定到指定的网络接口，确保 IP 查询通过该接口而不是默认路由。
+
+这在以下场景中特别有用：
+- 您有多个具有不同路由优先级的 WAN 连接
+- 一个接口在 CGNAT 后面，而另一个有公共 IP
+- 您想确保 IP 查询反映特定接口的实际公共 IP
+
+双 WAN 设置的示例配置：
+```json
+{
+  "ip_urls": ["https://api.ipify.org/"],
+  "query_interface": "wan0",
+  "ip_type": "IPv4"
+}
+```
+
+注意：`query_interface` 选项与 `ip_interface` 不同。`query_interface` 指定进行 HTTP 请求查询公共 IP 时使用哪个接口，而 `ip_interface` 直接从本地接口读取 IP 地址，不进行任何外部请求。
 
 #### SOCKS5 代理支持
 
