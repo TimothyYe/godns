@@ -81,3 +81,27 @@ func TestLoadWithEnvPath(t *testing.T) {
 
 	t.Log(settings)
 }
+
+func TestQueryInterfaceField(t *testing.T) {
+	// Test JSON config
+	var jsonSettings Settings
+	err := LoadSettings("../../configs/config_sample.json", &jsonSettings)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	// Query interface field should exist (even if empty)
+	_ = jsonSettings.QueryInterface
+
+	// Test YAML config
+	var yamlSettings Settings
+	err = LoadSettings("../../configs/config_sample.yaml", &yamlSettings)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+
+	// Query interface field should exist (even if empty)
+	_ = yamlSettings.QueryInterface
+
+	t.Log("query_interface field loaded successfully")
+}

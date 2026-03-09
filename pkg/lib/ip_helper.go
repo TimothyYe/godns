@@ -273,10 +273,69 @@ func (helper *IPHelper) getIPOnline() string {
 				proto = "tcp4"
 			}
 
-			return (&net.Dialer{
+			dialer := &net.Dialer{
 				Timeout:   time.Second * utils.DefaultTimeout,
 				KeepAlive: 30 * time.Second,
-			}).DialContext(ctx, proto, addr)
+			}
+
+			// Bind to specific network interface if configured
+			if helper.configuration.QueryInterface != "" {
+				iface, err := net.InterfaceByName(helper.configuration.QueryInterface)
+				if err != nil {
+					log.Errorf("Failed to find query interface %s: %v", helper.configuration.QueryInterface, err)
+					return nil, err
+				}
+
+				addrs, err := iface.Addrs()
+				if err != nil {
+					log.Errorf("Failed to get addresses for query interface %s: %v", helper.configuration.QueryInterface, err)
+					return nil, err
+				}
+
+				// Find a suitable local address from the interface
+				var localAddr net.IP
+				for _, addr := range addrs {
+					var ip net.IP
+					switch v := addr.(type) {
+					case *net.IPNet:
+						ip = v.IP
+					case *net.IPAddr:
+						ip = v.IP
+					}
+
+					if ip == nil {
+						continue
+					}
+
+					// Match IP version with protocol
+					if proto == "tcp4" && ip.To4() != nil {
+						localAddr = ip
+						break
+					} else if proto == "tcp6" && ip.To4() == nil {
+						localAddr = ip
+						break
+					} else if proto == "tcp" {
+						// For generic tcp, prefer IPv4
+						if ip.To4() != nil {
+							localAddr = ip
+							break
+						}
+						if localAddr == nil {
+							localAddr = ip
+						}
+					}
+				}
+
+				if localAddr == nil {
+					log.Errorf("No suitable address found on query interface %s for protocol %s", helper.configuration.QueryInterface, proto)
+					return nil, errors.New("no suitable address on interface")
+				}
+
+				dialer.LocalAddr = &net.TCPAddr{IP: localAddr}
+				log.Debugf("Binding query to interface %s with local address %s", helper.configuration.QueryInterface, localAddr)
+			}
+
+			return dialer.DialContext(ctx, proto, addr)
 		},
 	}
 
