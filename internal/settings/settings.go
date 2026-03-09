@@ -172,14 +172,15 @@ type Settings struct {
 	Domains []Domain `json:"domains" yaml:"domains"`
 
 	// Network and IP configuration
-	IPUrl        string   `json:"ip_url" yaml:"ip_url"`
-	IPUrls       []string `json:"ip_urls" yaml:"ip_urls"`
-	IPV6Url      string   `json:"ipv6_url" yaml:"ipv6_url"`
-	IPV6Urls     []string `json:"ipv6_urls" yaml:"ipv6_urls"`
-	IPInterface  string   `json:"ip_interface" yaml:"ip_interface"`
-	AllowPrivate bool     `json:"allow_private" yaml:"allow_private"`
-	IPType       string   `json:"ip_type" yaml:"ip_type"`
-	Resolver     string   `json:"resolver" yaml:"resolver"`
+	IPUrl          string   `json:"ip_url" yaml:"ip_url"`
+	IPUrls         []string `json:"ip_urls" yaml:"ip_urls"`
+	IPV6Url        string   `json:"ipv6_url" yaml:"ipv6_url"`
+	IPV6Urls       []string `json:"ipv6_urls" yaml:"ipv6_urls"`
+	IPInterface    string   `json:"ip_interface" yaml:"ip_interface"`
+	QueryInterface string   `json:"query_interface" yaml:"query_interface"`
+	AllowPrivate   bool     `json:"allow_private" yaml:"allow_private"`
+	IPType         string   `json:"ip_type" yaml:"ip_type"`
+	Resolver       string   `json:"resolver" yaml:"resolver"`
 
 	// Application configuration
 	Interval      int    `json:"interval" yaml:"interval"`
