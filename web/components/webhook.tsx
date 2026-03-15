@@ -1,6 +1,3 @@
-import { GearIcon } from "./icons"
-import { useState } from "react";
-
 interface WebHookProps {
 	Enabled: boolean;
 	Url: string;
@@ -9,71 +6,68 @@ interface WebHookProps {
 }
 
 export const WebHook = (props: WebHookProps) => {
-	const [webhookEnabled, setWebhookEnabled] = useState(props.Enabled);
-	const [webhookUrl, setWebhookUrl] = useState(props.Url);
-	const [webhookRequestBody, setWebhookRequestBody] = useState(props.RequestBody);
-
 	return (
-		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
-			<div className="stat gap-2">
-				<div className="stat-title">Webhook</div>
-				<div className="flex flex-col gap-3">
-					<div className="flex flex-row items-center justify-start gap-2">
-						<span className="label-text text-slate-500 ">Enable Webhook</span>
-						<input
-							type="checkbox"
-							className="toggle toggle-primary"
-							checked={webhookEnabled}
-							onClick={() => {
-								setWebhookEnabled(!webhookEnabled);
-								if (props.onWebHookChange) {
-									props.onWebHookChange({
-										Enabled: !webhookEnabled,
-										Url: webhookUrl,
-										RequestBody: webhookRequestBody
-									});
-								}
-							}}
-							onChange={() => { }}
-						/>
-						<div className="flex flex-grow justify-end text-secondary">
-							<GearIcon />
-						</div>
-					</div>
-					<input type="text"
-						className="input input-primary w-full"
-						placeholder="Input the webhhook URL"
-						value={webhookUrl}
-						disabled={!webhookEnabled}
-						onChange={(e) => {
-							setWebhookUrl(e.target.value);
-							if (props.onWebHookChange) {
-								props.onWebHookChange({
-									Enabled: webhookEnabled,
-									Url: e.target.value,
-									RequestBody: webhookRequestBody
-								});
-							}
-						}}
-					/>
-					<textarea
-						className="textarea textarea-primary w-full h-28"
-						placeholder="Input request body"
-						value={props.RequestBody}
-						disabled={!webhookEnabled}
-						onChange={(e) => {
-							setWebhookRequestBody(e.target.value);
-							if (props.onWebHookChange) {
-								props.onWebHookChange({
-									Enabled: webhookEnabled,
-									Url: webhookUrl,
-									RequestBody: e.target.value
-								});
-							}
-						}}
-					/>
+		<div className="grid gap-5">
+			<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+				<div className="space-y-1">
+					<h3 className="text-lg font-semibold tracking-tight">Webhook notifications</h3>
+					<p className="text-sm text-base-content/60">
+						Send a webhook when GoDNS completes updates or needs to signal external automation.
+					</p>
 				</div>
+				<label className="flex items-center gap-3 rounded-full border border-base-300 px-4 py-2">
+					<span className="text-sm font-medium">Enable webhook</span>
+					<input
+						type="checkbox"
+						className="toggle toggle-primary"
+						checked={props.Enabled}
+						onChange={(e) => {
+							props.onWebHookChange?.({
+								Enabled: e.target.checked,
+								Url: props.Url,
+								RequestBody: props.RequestBody
+							});
+						}}
+					/>
+				</label>
 			</div>
+
+			<label className="field-stack">
+				<span className="field-label">Webhook URL</span>
+				<input
+					type="text"
+					className="input input-bordered h-12 w-full rounded-2xl"
+					placeholder="https://example.com/hooks/godns"
+					value={props.Url}
+					disabled={!props.Enabled}
+					onChange={(e) => {
+						props.onWebHookChange?.({
+							Enabled: props.Enabled,
+							Url: e.target.value,
+							RequestBody: props.RequestBody
+						});
+					}}
+				/>
+				<span className="field-hint">The destination that should receive GoDNS webhook calls.</span>
+			</label>
+
+			<label className="field-stack">
+				<span className="field-label">Request body</span>
+				<textarea
+					className="textarea textarea-bordered min-h-32 w-full rounded-[1.25rem]"
+					placeholder='{"event":"godns.update"}'
+					value={props.RequestBody}
+					disabled={!props.Enabled}
+					onChange={(e) => {
+						props.onWebHookChange?.({
+							Enabled: props.Enabled,
+							Url: props.Url,
+							RequestBody: e.target.value
+						});
+					}}
+				/>
+				<span className="field-hint">Optional payload template sent to the webhook endpoint.</span>
+			</label>
 		</div>
 	)
 }

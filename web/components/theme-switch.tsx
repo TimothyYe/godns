@@ -25,23 +25,24 @@ export const ThemeSwitch = () => {
 	// Prevent hydration mismatch by not rendering until mounted
 	if (!mounted || !theme) {
 		return (
-			<div className="w-auto h-auto bg-transparent rounded-lg flex items-center justify-center group-data-[selected=true]:bg-transparent !text-default-500 pt-px px-0 mx-0">
+			<div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-base-300">
 				<div className="w-[22px] h-[22px]" /> {/* Placeholder to prevent layout shift */}
 			</div>
 		);
 	}
 
 	return (
-		<div className="w-auto h-auto bg-transparent rounded-lg flex items-center justify-center group-data-[selected=true]:bg-transparent !text-default-500 pt-px px-0 mx-0">
-			<div onClick={
-				() => {
-					const newTheme = theme === "light" ? "dark" : "light";
-					localStorage.setItem("theme", newTheme);
-					setTheme(newTheme);
-				}
-			}>
-				{theme === "dark" ? <SunFilledIcon className="hover:text-gray-700" size={22} /> : <MoonFilledIcon size={22} className="hover:text-gray-700" />}
-			</div>
-		</div>
+		<button
+			type="button"
+			className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-base-300 text-base-content/70 transition-colors hover:border-base-content/20 hover:text-base-content"
+			aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+			onClick={() => {
+				const newTheme = theme === "light" ? "dark" : "light";
+				localStorage.setItem("theme", newTheme);
+				setTheme(newTheme);
+			}}
+		>
+			{theme === "dark" ? <SunFilledIcon className="h-[22px] w-[22px]" size={22} /> : <MoonFilledIcon size={22} className="h-[22px] w-[22px]" />}
+		</button>
 	);
 };

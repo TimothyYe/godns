@@ -21,6 +21,6 @@ export const LogoutBtn = () => {
 	}
 
 	return (
-		isClient ? <button className="btn btn-outline btn-sm" onClick={onClick}>Logout</button> : null
+		isClient ? <button className="btn btn-primary btn-sm rounded-full px-5" onClick={onClick}>Logout</button> : null
 	);
 }

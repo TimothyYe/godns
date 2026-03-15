@@ -1,3 +1,163 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --app-bg: 248 250 252;
+    --app-panel: 255 255 255;
+    --app-border: 226 232 240;
+    --app-ink: 15 23 42;
+    --app-muted: 71 85 105;
+    --app-primary: 15 118 110;
+    --app-secondary: 245 158 11;
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --app-bg: 15 23 42;
+    --app-panel: 30 41 59;
+    --app-border: 71 85 105;
+    --app-ink: 241 245 249;
+    --app-muted: 148 163 184;
+    --app-primary: 45 212 191;
+    --app-secondary: 251 191 36;
+  }
+
+  html {
+    min-height: 100%;
+    background: rgb(var(--app-bg));
+  }
+
+  body {
+    min-height: 100vh;
+    color: rgb(var(--app-ink));
+    font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(var(--app-primary), 0.12), transparent 30%),
+      radial-gradient(circle at top right, rgba(var(--app-secondary), 0.12), transparent 26%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.64), transparent 24rem),
+      rgb(var(--app-bg));
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--app-primary), 0.35) transparent;
+  }
+
+  ::selection {
+    background: rgba(var(--app-primary), 0.24);
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply relative overflow-x-hidden;
+  }
+
+  .app-background {
+    @apply pointer-events-none fixed inset-0 overflow-hidden;
+  }
+
+  .app-orb {
+    @apply absolute rounded-full blur-3xl;
+    opacity: 0.22;
+  }
+
+  .app-orb-left {
+    top: 5rem;
+    left: -8rem;
+    width: 22rem;
+    height: 22rem;
+    background: rgba(var(--app-primary), 0.28);
+  }
+
+  .app-orb-right {
+    top: 12rem;
+    right: -9rem;
+    width: 24rem;
+    height: 24rem;
+    background: rgba(var(--app-secondary), 0.2);
+  }
+
+  .page-shell {
+    @apply relative mx-auto w-full max-w-6xl space-y-6;
+  }
+
+  .page-hero {
+    @apply flex flex-col gap-5 rounded-[2rem] border border-base-300 bg-base-100 p-6 shadow-xl shadow-slate-900/5 backdrop-blur sm:p-8 lg:flex-row lg:items-end lg:justify-between;
+  }
+
+  .hero-badge {
+    @apply inline-flex w-fit rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-primary;
+  }
+
+  .page-title {
+    @apply text-3xl font-semibold tracking-tight text-base-content sm:text-4xl;
+  }
+
+  .page-subtitle {
+    @apply max-w-3xl text-sm leading-6 text-base-content/65 sm:text-base;
+  }
+
+  .panel {
+    @apply rounded-[1.75rem] border border-base-300 bg-base-100 p-5 shadow-lg shadow-slate-900/5 backdrop-blur sm:p-6;
+  }
+
+  .panel-muted {
+    @apply rounded-[1.5rem] border border-dashed border-base-300 bg-base-200 p-5;
+  }
+
+  .section-header {
+    @apply mb-5 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .section-title {
+    @apply text-xl font-semibold tracking-tight text-base-content;
+  }
+
+  .section-subtitle {
+    @apply text-sm leading-6 text-base-content/60;
+  }
+
+  .metric-grid {
+    @apply grid gap-4 sm:grid-cols-2 xl:grid-cols-4;
+  }
+
+  .metric-card {
+    @apply rounded-[1.5rem] border border-base-300 bg-gradient-to-br from-base-100 to-base-200 p-5 shadow-sm;
+  }
+
+  .metric-label {
+    @apply text-sm font-medium text-base-content/60;
+  }
+
+  .metric-value {
+    @apply mt-4 text-3xl font-semibold tracking-tight text-base-content;
+  }
+
+  .metric-meta {
+    @apply mt-2 text-sm text-base-content/55;
+  }
+
+  .field-stack {
+    @apply flex flex-col gap-2;
+  }
+
+  .field-label {
+    @apply text-sm font-semibold text-base-content;
+  }
+
+  .field-hint {
+    @apply text-xs leading-5 text-base-content/55;
+  }
+
+  .chip-list {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .code-surface {
+    @apply rounded-2xl border border-base-300 bg-base-200 p-3 font-mono text-sm;
+  }
+}

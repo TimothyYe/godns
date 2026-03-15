@@ -1,13 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
 import { DomainControl } from '@/components/domain-control';
-import { ToastContainer } from 'react-toastify';
 import { get_info } from '@/api/info';
-import 'react-toastify/dist/ReactToastify.css';
 import { MultiProviderControl } from '@/components/multi-provider-control';
+import { PageShell } from '@/components/page-shell';
 
 export default function Domains() {
 	const router = useRouter();
@@ -19,21 +19,29 @@ export default function Domains() {
 			router.push('/login');
 			return;
 		}
+
 		setCurrentPage('Domains');
 		get_info(credentials).then((info) => {
 			saveVersion(info.version);
 		});
-
-	}, [setCurrentPage, credentials, saveVersion, router]);
+	}, [credentials, router, saveVersion, setCurrentPage]);
 
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-start pt-10 max-w-screen-xl">
-			<ToastContainer />
-			<div className="flex flex-col items-center w-full bg-base-100 p-10">
+		<PageShell
+			eyebrow="Configuration"
+			title="Providers and domains"
+			description="Configure provider credentials first, then attach domains and subdomains to the right provider profile. This keeps multi-provider setups explicit and easier to audit."
+			actions={(
+				<>
+					<Link className="btn btn-primary rounded-full px-5" href="/network">Review network settings</Link>
+					<Link className="btn btn-ghost rounded-full px-5" href="/logs">Open logs</Link>
+				</>
+			)}
+		>
+			<div className="space-y-6">
 				<MultiProviderControl />
-				<div className="divider"></div>
 				<DomainControl />
 			</div>
-		</main>
+		</PageShell>
 	);
 };

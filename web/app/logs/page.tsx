@@ -1,16 +1,26 @@
 'use client';
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
+
+import Link from 'next/link';
+import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
-import { get_logs, clear_logs, get_log_levels, LogEntry, LogsResponse } from '@/api/logs';
+import { get_logs, clear_logs, get_log_levels, LogEntry } from '@/api/logs';
 import { LogEntryComponent } from '@/components/log-entry';
 import { toast } from 'react-toastify';
+import { PageShell, SectionCard } from '@/components/page-shell';
+
+const refreshOptions = [
+  { label: '2s', value: 2000 },
+  { label: '5s', value: 5000 },
+  { label: '15s', value: 15000 },
+  { label: '30s', value: 30000 },
+];
 
 export default function LogsPage() {
   const router = useRouter();
   const userStore = useContext(CommonContext);
   const { credentials, setCurrentPage } = userStore;
-  
+
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [filteredLogs, setFilteredLogs] = useState<LogEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,11 +34,11 @@ export default function LogsPage() {
 
   const loadLogs = useCallback(async (showLoading = true) => {
     if (!credentials) return;
-    
+
     if (showLoading) setLoading(true);
-    
+
     try {
-      const response = await get_logs(credentials, 500); // Get last 500 logs
+      const response = await get_logs(credentials, 500);
       if (response) {
         setLogs(response.logs);
       }
@@ -41,7 +51,7 @@ export default function LogsPage() {
 
   const loadLogLevels = useCallback(async () => {
     if (!credentials) return;
-    
+
     try {
       const levels = await get_log_levels(credentials);
       setLogLevels(levels);
@@ -56,37 +66,33 @@ export default function LogsPage() {
       return;
     }
     setCurrentPage('Logs');
-    
-    // Load initial data
     loadLogs();
     loadLogLevels();
   }, [credentials, router, setCurrentPage, loadLogs, loadLogLevels]);
 
   useEffect(() => {
-    // Filter logs based on level and search term
     let filtered = logs;
-    
+
     if (selectedLevel) {
-      filtered = filtered.filter(log => log.level === selectedLevel);
+      filtered = filtered.filter((log) => log.level === selectedLevel);
     }
-    
+
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter(log => 
-        log.message.toLowerCase().includes(searchLower) ||
-        log.level.toLowerCase().includes(searchLower) ||
-        (log.fields && JSON.stringify(log.fields).toLowerCase().includes(searchLower))
+      filtered = filtered.filter((log) =>
+        log.message.toLowerCase().includes(searchLower)
+        || log.level.toLowerCase().includes(searchLower)
+        || (log.fields && JSON.stringify(log.fields).toLowerCase().includes(searchLower))
       );
     }
-    
+
     setFilteredLogs(filtered);
   }, [logs, selectedLevel, searchTerm]);
 
   useEffect(() => {
-    // Auto-refresh functionality
     if (autoRefresh && credentials) {
       intervalRef.current = setInterval(() => {
-        loadLogs(false); // Don't show loading for auto-refresh
+        loadLogs(false);
       }, refreshInterval);
     } else if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -102,7 +108,7 @@ export default function LogsPage() {
 
   const handleClearLogs = async () => {
     if (!credentials) return;
-    
+
     try {
       const success = await clear_logs(credentials);
       if (success) {
@@ -116,160 +122,147 @@ export default function LogsPage() {
     }
   };
 
-  const scrollToBottom = () => {
-    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
-    );
-  }
+  const levelCounts = useMemo(() => {
+    return logs.reduce<Record<string, number>>((acc, log) => {
+      const key = log.level.toLowerCase();
+      acc[key] = (acc[key] || 0) + 1;
+      return acc;
+    }, {});
+  }, [logs]);
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
-      <div className="flex flex-col gap-4">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-base-content">Application Logs</h1>
-            <p className="text-base-content/60">View and monitor application logs in real-time</p>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <button 
-              className="btn btn-primary btn-sm"
-              onClick={() => loadLogs()}
-              disabled={loading}
-            >
-              {loading ? <span className="loading loading-spinner loading-xs"></span> : 'Refresh'}
-            </button>
-            <button 
-              className="btn btn-error btn-sm"
-              onClick={handleClearLogs}
-            >
-              Clear Logs
-            </button>
-          </div>
-        </div>
+    <PageShell
+      eyebrow="Observability"
+      title="Runtime logs"
+      description="Inspect recent GoDNS activity, filter by severity, and keep a live tail open while you validate configuration changes."
+      actions={(
+        <>
+          <Link className="btn btn-ghost rounded-full px-5" href="/network">Back to network</Link>
+          <button className="btn btn-primary rounded-full px-5" onClick={() => loadLogs()} disabled={loading}>
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+        </>
+      )}
+    >
+      <SectionCard
+        title="Filters and controls"
+        description="Narrow the current view or switch the log stream into live-refresh mode."
+        actions={(
+          <button className="btn btn-error btn-sm rounded-full px-4" onClick={handleClearLogs}>
+            Clear logs
+          </button>
+        )}
+      >
+        <div className="grid gap-5 lg:grid-cols-[1.3fr_0.7fr]">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="field-stack">
+              <span className="field-label">Search logs</span>
+              <input
+                type="text"
+                className="input input-bordered h-12 w-full rounded-2xl"
+                placeholder="Message text, severity, or structured field"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </label>
 
-        {/* Controls */}
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1">
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text text-sm">Search logs</span>
-                  </div>
-                  <input
-                    type="text"
-                    className="input input-bordered input-sm w-full"
-                    placeholder="Search in messages, levels, or fields..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </label>
-              </div>
-              
-              {/* Level Filter */}
-              <div className="sm:w-48">
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text text-sm">Filter by level</span>
-                  </div>
-                  <select 
-                    className="select select-bordered select-sm w-full"
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(e.target.value)}
-                  >
-                    <option value="">All levels</option>
-                    {logLevels.map((level) => (
-                      <option key={level} value={level}>{level.toUpperCase()}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-            </div>
-
-            {/* Auto-refresh controls */}
-            <div className="divider my-2"></div>
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
-              <div className="form-control">
-                <label className="label cursor-pointer gap-2">
-                  <input 
-                    type="checkbox" 
-                    className="checkbox checkbox-sm"
-                    checked={autoRefresh}
-                    onChange={(e) => setAutoRefresh(e.target.checked)}
-                  />
-                  <span className="label-text text-sm">Auto-refresh</span>
-                </label>
-              </div>
-              
-              {autoRefresh && (
-                <div className="sm:w-32">
-                  <label className="form-control w-full">
-                    <div className="label">
-                      <span className="label-text text-xs">Interval (ms)</span>
-                    </div>
-                    <input
-                      type="number"
-                      className="input input-bordered input-sm w-full"
-                      value={refreshInterval}
-                      onChange={(e) => setRefreshInterval(parseInt(e.target.value) || 5000)}
-                      min="1000"
-                      step="1000"
-                    />
-                  </label>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Log Count and Actions */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-base-content/60">
-            Showing {filteredLogs.length} of {logs.length} log entries
-          </span>
-          <div className="flex gap-2">
-            <button className="btn btn-ghost btn-xs" onClick={scrollToTop}>
-              ↑ Top
-            </button>
-            <button className="btn btn-ghost btn-xs" onClick={scrollToBottom}>
-              ↓ Bottom
-            </button>
-          </div>
-        </div>
-
-        {/* Logs Display */}
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-0">
-            {filteredLogs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-base-content/60">
-                  {logs.length === 0 ? 'No logs available' : 'No logs match your filters'}
-                </p>
-              </div>
-            ) : (
-              <div className="max-h-[600px] overflow-y-auto">
-                {filteredLogs.map((log, index) => (
-                  <LogEntryComponent key={index} log={log} />
+            <label className="field-stack">
+              <span className="field-label">Severity</span>
+              <select
+                className="select select-bordered h-12 w-full rounded-2xl"
+                value={selectedLevel}
+                onChange={(e) => setSelectedLevel(e.target.value)}
+              >
+                <option value="">All levels</option>
+                {logLevels.map((level) => (
+                  <option key={level} value={level}>{level.toUpperCase()}</option>
                 ))}
-                <div ref={logsEndRef} />
+              </select>
+            </label>
+          </div>
+
+          <div className="grid gap-4 rounded-[1.5rem] border border-base-300/70 p-4">
+            <label className="flex items-center justify-between rounded-[1.25rem] bg-base-200/50 px-4 py-3">
+              <div className="space-y-1">
+                <p className="text-sm font-semibold">Live refresh</p>
+                <p className="text-xs text-base-content/60">{autoRefresh ? 'Streaming the latest logs.' : 'Manual refresh only.'}</p>
               </div>
-            )}
+              <input
+                type="checkbox"
+                className="toggle toggle-primary"
+                checked={autoRefresh}
+                onChange={(e) => setAutoRefresh(e.target.checked)}
+              />
+            </label>
+
+            <label className="field-stack">
+              <span className="field-label">Refresh cadence</span>
+              <select
+                className="select select-bordered h-12 w-full rounded-2xl"
+                value={refreshInterval}
+                disabled={!autoRefresh}
+                onChange={(e) => setRefreshInterval(Number(e.target.value))}
+              >
+                {refreshOptions.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </label>
+
+            <div className="flex gap-2">
+              <button className="btn btn-ghost btn-sm rounded-full" onClick={() => {
+                setSelectedLevel('');
+                setSearchTerm('');
+              }}>
+                Clear filters
+              </button>
+              <button className="btn btn-ghost btn-sm rounded-full" onClick={() => logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })}>
+                Jump to latest
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </SectionCard>
+
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="metric-card xl:col-span-2">
+          <p className="metric-label">Visible entries</p>
+          <p className="metric-value">{filteredLogs.length}</p>
+          <p className="metric-meta">Showing {filteredLogs.length} of {logs.length} buffered log entries.</p>
+        </div>
+        {['error', 'warn', 'info'].map((level) => (
+          <div key={level} className="metric-card">
+            <p className="metric-label">{level.toUpperCase()}</p>
+            <p className="metric-value">{levelCounts[level] || 0}</p>
+            <p className="metric-meta">Entries at {level} level.</p>
+          </div>
+        ))}
+      </section>
+
+      <SectionCard
+        title="Log stream"
+        description="Recent GoDNS events are buffered here. Expand structured fields to inspect provider responses or update payloads."
+      >
+        {loading ? (
+          <div className="flex min-h-80 items-center justify-center">
+            <span className="loading loading-spinner loading-lg" />
+          </div>
+        ) : filteredLogs.length === 0 ? (
+          <div className="panel-muted">
+            <p className="font-semibold">{logs.length === 0 ? 'No logs available' : 'No logs match your filters'}</p>
+            <p className="mt-2 text-sm text-base-content/60">
+              {logs.length === 0 ? 'Generate activity or confirm logging is enabled in GoDNS.' : 'Reset the search term or severity filter to broaden the results.'}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-hidden rounded-[1.5rem] border border-base-300/70 bg-base-100">
+            {filteredLogs.map((log, index) => (
+              <LogEntryComponent key={`${log.timestamp}-${index}`} log={log} />
+            ))}
+            <div ref={logsEndRef} />
+          </div>
+        )}
+      </SectionCard>
+    </PageShell>
   );
 }

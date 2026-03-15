@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import { Navbar } from "@/components/navbar";
 import "./globals.css";
 import { UserProvider } from "@/components/user";
+import { ToastProvider } from "@/components/toast-provider";
 
 export const metadata: Metadata = {
   title: siteConfig.name,
@@ -17,17 +18,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true} className="app-shell">
         <UserProvider>
-          <div className="relative flex flex-col h-screen">
+          <ToastProvider />
+          <div className="app-background" aria-hidden="true">
+            <div className="app-orb app-orb-left" />
+            <div className="app-orb app-orb-right" />
+          </div>
+          <div className="relative flex min-h-screen flex-col">
             <Navbar />
-            <main className="container mx-auto max-w-7xl px-6 flex-grow">
+            <main className="mx-auto w-full max-w-7xl flex-grow px-4 pb-10 pt-6 sm:px-6 lg:px-8">
               {children}
             </main>
-            <footer className="w-full flex items-center justify-center py-3 gap-2">
-              <span className="text-default-600">Powered by</span>
+            <footer className="mx-auto flex w-full max-w-7xl items-center justify-center gap-2 px-4 py-6 text-sm text-base-content/60 sm:px-6 lg:px-8">
+              <span>Powered by</span>
               <a
-                className="link link-hover flex items-center gap-1 text-current"
+                className="link link-hover flex items-center gap-1 font-semibold text-current"
                 href="https://github.com/TimothyYe/godns"
                 title="GoDNS project homepage"
                 target="_blank"

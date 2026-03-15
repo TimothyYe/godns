@@ -1,29 +1,11 @@
 'use client';
+
 import React from 'react';
 import { LogEntry } from '@/api/logs';
 
 interface LogEntryProps {
   log: LogEntry;
 }
-
-const getLevelColor = (level: string): string => {
-  switch (level.toLowerCase()) {
-    case 'error':
-    case 'fatal':
-    case 'panic':
-      return 'text-error';
-    case 'warn':
-      return 'text-warning';
-    case 'info':
-      return 'text-info';
-    case 'debug':
-      return 'text-primary';
-    case 'trace':
-      return 'text-neutral-500';
-    default:
-      return 'text-base-content';
-  }
-};
 
 const getLevelBadgeClass = (level: string): string => {
   switch (level.toLowerCase()) {
@@ -50,35 +32,39 @@ export const LogEntryComponent: React.FC<LogEntryProps> = ({ log }) => {
   };
 
   return (
-    <div className="border-b border-base-200 py-2 px-4 hover:bg-base-50 font-mono text-sm">
-      <div className="flex items-start gap-3">
-        <span className="text-neutral-500 text-xs whitespace-nowrap">
+    <article className="border-b border-base-300/70 px-4 py-4 last:border-b-0">
+      <div className="flex flex-col gap-3 md:flex-row md:items-start">
+        <div className="min-w-52 text-xs uppercase tracking-[0.2em] text-base-content/45">
           {formatTimestamp(log.timestamp)}
-        </span>
-        <span className={`badge badge-sm ${getLevelBadgeClass(log.level)} text-xs uppercase`}>
-          {log.level}
-        </span>
-        <span className={`flex-1 ${getLevelColor(log.level)}`}>
-          {log.message}
-        </span>
-      </div>
-      {log.fields && Object.keys(log.fields).length > 0 && (
-        <div className="mt-2 ml-16 text-xs text-neutral-600">
-          <details className="cursor-pointer">
-            <summary className="text-neutral-500">Fields ({Object.keys(log.fields).length})</summary>
-            <div className="mt-1 ml-4">
-              {Object.entries(log.fields).map(([key, value]) => (
-                <div key={key} className="flex gap-2">
-                  <span className="text-neutral-400">{key}:</span>
-                  <span className="text-neutral-600">
-                    {typeof value === 'object' ? JSON.stringify(value) : String(value)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </details>
         </div>
-      )}
-    </div>
+        <div className="flex-1 space-y-3">
+          <div className="flex flex-wrap items-start gap-3">
+            <span className={`badge badge-sm ${getLevelBadgeClass(log.level)} uppercase`}>
+              {log.level}
+            </span>
+            <p className="font-mono text-sm leading-6 text-base-content">
+              {log.message}
+            </p>
+          </div>
+          {log.fields && Object.keys(log.fields).length > 0 ? (
+            <details className="rounded-2xl border border-base-300 bg-base-200/40 p-3">
+              <summary className="cursor-pointer text-sm font-medium text-base-content/70">
+                Structured fields ({Object.keys(log.fields).length})
+              </summary>
+              <div className="mt-3 space-y-2">
+                {Object.entries(log.fields).map(([key, value]) => (
+                  <div key={key} className="code-surface grid gap-1">
+                    <span className="text-xs uppercase tracking-[0.2em] text-base-content/45">{key}</span>
+                    <span className="break-all text-base-content/80">
+                      {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </details>
+          ) : null}
+        </div>
+      </div>
+    </article>
   );
 };
