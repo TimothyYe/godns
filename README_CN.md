@@ -20,6 +20,20 @@
 
 [GoDNS](https://github.com/TimothyYe/godns) 是一个动态 DNS (DDNS) 客户端工具。它是用 [Go](https://golang.org) 重写的我早期的 [DynDNS](https://github.com/TimothyYe/DynDNS) 开源项目。
 
+## 托管版服务
+
+如果你想使用托管式 DDNS 服务，而不是自己部署客户端和维护整套 DNS 流程，可以试试 [godns.app](https://godns.app)。
+
+它提供：
+
+- `godns.app` 和 `godns.pro` 下的托管 hostname
+- OAuth 登录
+- API Key 管理
+- 适合路由器使用的 DDNS 更新接口
+- 用于 hostname 和账单管理的托管控制台
+
+下面展示的是开源版 GoDNS 内置的 Web UI：
+
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
 
 - [支持的 DNS 提供商](#支持的-dns-提供商)

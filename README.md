@@ -22,6 +22,20 @@
 
 [查看中文帮助文档](README_CN.md)
 
+## Hosted version
+
+If you want a managed DDNS service instead of self-hosting the client and DNS workflow yourself, try [godns.app](https://godns.app).
+
+It provides:
+
+- managed hostnames under `godns.app` and `godns.pro`
+- OAuth sign-in
+- API key management
+- router-friendly DDNS update endpoint
+- a hosted dashboard for hostname and billing management
+
+Below is the built-in web panel of the open-source GoDNS project:
+
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
 
 - [Supported DNS Providers](#supported-dns-providers)
