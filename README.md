@@ -24,15 +24,9 @@
 
 ## Hosted version
 
-If you want a managed DDNS service instead of self-hosting the client and DNS workflow yourself, try [godns.app](https://godns.app).
+If you want a managed DDNS service instead of self-hosting GoDNS yourself, try [godns.app](https://godns.app).
 
-It provides:
-
-- managed hostnames under `godns.app` and `godns.pro`
-- OAuth sign-in
-- API key management
-- router-friendly DDNS update endpoint
-- a hosted dashboard for hostname and billing management
+It is a hosted option for users who want DDNS without running their own server, managing DNS manually, or even owning a domain in advance.
 
 Below is the built-in web panel of the open-source GoDNS project:
 

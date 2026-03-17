@@ -22,15 +22,9 @@
 
 ## 托管版服务
 
-如果你想使用托管式 DDNS 服务，而不是自己部署客户端和维护整套 DNS 流程，可以试试 [godns.app](https://godns.app)。
+如果你希望直接使用托管式 DDNS 服务，而不是自己部署 GoDNS，可以试试 [godns.app](https://godns.app)。
 
-它提供：
-
-- `godns.app` 和 `godns.pro` 下的托管 hostname
-- OAuth 登录
-- API Key 管理
-- 适合路由器使用的 DDNS 更新接口
-- 用于 hostname 和账单管理的托管控制台
+它更适合那些不想自己搭服务器、不想手动维护 DNS 流程，甚至还没有自己域名的用户。
 
 下面展示的是开源版 GoDNS 内置的 Web UI：
 
