@@ -18,7 +18,7 @@
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
 
-[GoDNS](https://github.com/TimothyYe/godns) 是一个动态 DNS (DDNS) 客户端工具。它是用 [Go](https://golang.org) 重写的我早期的 [DynDNS](https://github.com/TimothyYe/DynDNS) 开源项目。
+[GoDNS](https://github.com/TimothyYe/godns) 是一个支持多提供商并内置 Web 面板的开源自建动态 DNS (DDNS) 客户端。它是用 [Go](https://golang.org) 重写的我早期的 [DynDNS](https://github.com/TimothyYe/DynDNS) 开源项目。
 
 ## 托管版服务
 
@@ -31,71 +31,14 @@
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
 
 - [支持的 DNS 提供商](#支持的-dns-提供商)
+- [快速开始](#快速开始)
 - [支持的平台](#支持的平台)
-- [前提条件](#前提条件)
+- [开源自建版前提条件](#开源自建版前提条件)
 - [安装](#安装)
-- [使用方法](#使用方法)
 - [配置](#配置)
-  - [概述](#概述)
-  - [多提供商支持](#多提供商支持)
-  - [配置文件格式](#配置文件格式)
-  - [动态加载配置](#动态加载配置)
-  - [配置属性](#配置属性)
-  - [更新根域名](#更新根域名)
-  - [配置示例](#配置示例)
-    - [Cloudflare](#cloudflare)
-    - [DigitalOcean](#digitalocean)
-    - [DNSPod](#dnspod)
-    - [Dreamhost](#dreamhost)
-    - [Dynv6](#dynv6)
-    - [Google Domains](#google-domains)
-    - [AliDNS](#alidns)
-    - [DuckDNS](#duckdns)
-    - [No-IP](#no-ip)
-    - [HE.net](#henet)
-    - [Scaleway](#scaleway)
-    - [Linode](#linode)
-    - [Strato](#strato)
-    - [LoopiaSE](#loopiase)
-    - [Infomaniak](#infomaniak)
-    - [Hetzner](#hetzner)
-    - [OVH](#ovh)
-    - [Porkbun](#porkbun)
-    - [Dynu](#dynu)
-    - [IONOS](#ionos)
-    - [TransIP](#transip)
-  - [通知](#通知)
-    - [电子邮件](#电子邮件)
-    - [Telegram](#telegram)
-    - [Slack](#slack)
-    - [Discord](#discord)
-    - [Pushover](#pushover)
-    - [Bark](#bark)
-    - [Ntfy](#ntfy)
-  - [Webhook](#webhook)
-    - [使用 HTTP GET 请求的 Webhook](#使用-http-get-请求的-webhook)
-    - [使用 HTTP POST 请求的 Webhook](#使用-http-post-请求的-webhook)
-  - [杂项主题](#杂项主题)
-    - [IPv6 支持](#ipv6-支持)
-    - [网络接口 IP 地址](#网络接口-ip-地址)
-    - [SOCKS5 代理支持](#socks5-代理支持)
-    - [显示调试信息](#显示调试信息)
-    - [从 RouterOS 获取 IP](#从-routeros-获取-ip)
-    - [多个 API URL](#多个-api-url)
-    - [推荐的 API](#推荐的-api)
 - [Web 面板](#web-面板)
 - [运行 GoDNS](#运行-godns)
-  - [手动运行](#手动运行)
-  - [作为手动守护进程](#作为手动守护进程)
-  - [作为托管守护进程（使用 upstart）](#作为托管守护进程使用-upstart)
-  - [作为托管守护进程（使用 systemd）](#作为托管守护进程使用-systemd)
-  - [作为托管守护进程（使用 procd）](#作为托管守护进程使用-procd)
-  - [作为 Docker 容器](#作为-docker-容器)
-  - [作为 Windows 服务](#作为-windows-服务)
 - [贡献](#贡献)
-  - [设置前端开发环境](#设置前端开发环境)
-  - [构建前端](#构建前端)
-  - [运行前端](#运行前端)
 
 ---
 
@@ -149,6 +92,15 @@
 
 提示：您可以关注此 [问题](https://github.com/TimothyYe/godns/issues/76) 查看根域名 DDNS 的当前状态。
 
+## 快速开始
+
+请选择最适合你的方式：
+
+- 如果你想直接使用托管服务而不自建：使用 [godns.app](https://godns.app)。
+- 如果你想最快速地开始自建：从 [releases](https://github.com/TimothyYe/godns/releases) 下载二进制文件。
+- 如果你想用容器运行：直接看 [作为 Docker 容器](#作为-docker-容器)。
+- 如果你想从源码构建：看 [安装](#安装)。
+
 ## 支持的平台
 
 - Linux
@@ -165,9 +117,9 @@
 
   该二进制文件也可以在路由器上运行。
 
-## 前提条件
+## 开源自建版前提条件
 
-要使用 GoDNS，假设：
+要自建部署 GoDNS，假设：
 
 - 您已注册（现在拥有）一个域名
 - 域名已委托给受支持的 [DNS 提供商](#支持的-dns-提供商)（即它有指向受支持提供商的 nameserver `NS` 记录）
@@ -176,15 +128,17 @@
 
 ## 安装
 
-通过运行以下命令构建 GoDNS（从仓库根目录）：
+你可以选择以下安装方式之一：
+
+- 从 [releases](https://github.com/TimothyYe/godns/releases) 下载已编译的二进制文件。
+- 使用 [作为 Docker 容器](#作为-docker-容器) 中描述的 Docker 镜像。
+- 从源码构建：
 
 ```bash
 cd cmd/godns        # 进入 GoDNS 目录
 go mod download     # 获取依赖项
 go build            # 构建
 ```
-
-您还可以从 [releases](https://github.com/TimothyYe/godns/releases) 下载已编译的二进制文件。
 
 ## 使用方法
 

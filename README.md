@@ -18,7 +18,7 @@
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
 
-[GoDNS](https://github.com/TimothyYe/godns) is a dynamic DNS (DDNS) client tool. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
+[GoDNS](https://github.com/TimothyYe/godns) is a self-hosted dynamic DNS (DDNS) client with multi-provider support and a built-in web panel. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
 
 [查看中文帮助文档](README_CN.md)
 
@@ -33,71 +33,14 @@ Below is the built-in web panel of the open-source GoDNS project:
 <img src="https://github.com/TimothyYe/godns/blob/master/assets/snapshots/web-panel.jpg?raw=true" />
 
 - [Supported DNS Providers](#supported-dns-providers)
+- [Quick Start](#quick-start)
 - [Supported Platforms](#supported-platforms)
-- [Pre-conditions](#pre-conditions)
+- [Self-hosting Pre-conditions](#self-hosting-pre-conditions)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Configuration](#configuration)
-  - [Overview](#overview)
-  - [Multi-Provider Support](#multi-provider-support)
-  - [Configuration file format](#configuration-file-format)
-  - [Dynamic loading of configuration](#dynamic-loading-of-configuration)
-  - [Configuration properties](#configuration-properties)
-  - [Update root domain](#update-root-domain)
-  - [Configuration examples](#configuration-examples)
-    - [Cloudflare](#cloudflare)
-    - [DigitalOcean](#digitalocean)
-    - [DNSPod](#dnspod)
-    - [Dreamhost](#dreamhost)
-    - [Dynv6](#dynv6)
-    - [Google Domains](#google-domains)
-    - [AliDNS](#alidns)
-    - [DuckDNS](#duckdns)
-    - [No-IP](#no-ip)
-    - [HE.net](#henet)
-    - [Scaleway](#scaleway)
-    - [Linode](#linode)
-    - [Strato](#strato)
-    - [LoopiaSE](#loopiase)
-    - [Infomaniak](#infomaniak)
-    - [Hetzner](#hetzner)
-    - [OVH](#ovh)
-    - [Porkbun](#porkbun)
-    - [Dynu](#dynu)
-    - [IONOS](#ionos)
-    - [TransIP](#transip)
-  - [Notifications](#notifications)
-    - [Email](#email)
-    - [Telegram](#telegram)
-    - [Slack](#slack)
-    - [Discord](#discord)
-    - [Pushover](#pushover)
-    - [Bark](#bark)
-    - [Ntfy](#ntfy)
-  - [Webhook](#webhook)
-    - [Webhook with HTTP GET request](#webhook-with-http-get-request)
-    - [Webhook with HTTP POST request](#webhook-with-http-post-request)
-  - [Miscellaneous topics](#miscellaneous-topics)
-    - [IPv6 support](#ipv6-support)
-    - [Network interface IP address](#network-interface-ip-address)
-    - [SOCKS5 proxy support](#socks5-proxy-support)
-    - [Display debug info](#display-debug-info)
-    - [Obtain IP from RouterOS](#obtain-ip-from-router-os)
-    - [Multiple API URLs](#multiple-api-urls)
-    - [Recommended APIs](#recommended-apis)
 - [Web Panel](#web-panel)
 - [Running GoDNS](#running-godns)
-  - [Manually](#manually)
-  - [As a manual daemon](#as-a-manual-daemon)
-  - [As a managed daemon (with upstart)](#as-a-managed-daemon-with-upstart)
-  - [As a managed daemon (with systemd)](#as-a-managed-daemon-with-systemd)
-  - [As a managed daemon (with procd)](#as-a-managed-daemon-with-procd)
-  - [As a Docker container](#as-a-docker-container)
-  - [As a Windows service](#as-a-windows-service)
 - [Contributing](#contributing)
-  - [Setup the frontend development environment](#setup-the-frontend-development-environment)
-  - [Build the frontend](#build-the-frontend)
-  - [Run the frontend](#run-the-frontend)
 
 ---
 
@@ -151,6 +94,15 @@ Below is the built-in web panel of the open-source GoDNS project:
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
+## Quick Start
+
+Choose the path that fits you best:
+
+- Want a managed service with no self-hosting: use [godns.app](https://godns.app).
+- Want the fastest self-hosted setup: download a binary from [releases](https://github.com/TimothyYe/godns/releases).
+- Want to run it in a container: jump to [As a Docker container](#as-a-docker-container).
+- Want to build from source: see [Installation](#installation).
+
 ## Supported Platforms
 
 - Linux
@@ -167,9 +119,9 @@ Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) t
 
   The binary can run on routers as well.
 
-## Pre-conditions
+## Self-hosting Pre-conditions
 
-To use GoDNS, it is assumed:
+To self-host GoDNS, it is assumed:
 
 - You registered (now own) a domain
 - Domain was delegated to a supported [DNS provider](#supported-dns-providers) (i.e. it has nameserver `NS` records pointing at a supported provider)
@@ -178,15 +130,17 @@ Alternatively, you can sign in to [DuckDNS](https://www.duckdns.org) (with a soc
 
 ## Installation
 
-Build GoDNS by running (from the root of the repository):
+Choose one of the following installation methods:
+
+- Download a compiled binary from [releases](https://github.com/TimothyYe/godns/releases).
+- Use the Docker image described in [As a Docker container](#as-a-docker-container).
+- Build from source:
 
 ```bash
 cd cmd/godns        # go to the GoDNS directory
 go mod download     # get dependencies
 go build            # build
 ```
-
-You can also download a compiled binary from the [releases](https://github.com/TimothyYe/godns/releases).
 
 ## Usage
 
