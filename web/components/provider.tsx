@@ -303,7 +303,7 @@ export const ProviderControl = () => {
 					) : null
 				}
 				<div className="card-actions justify-end">
-					<button className="btn btn-primary" onClick={onSaveProviderSettings}>Save</button>
+					<button className="theme-primary-sky btn rounded-xl border-none px-4" onClick={onSaveProviderSettings}>Save</button>
 				</div>
 			</div>
 		</div >

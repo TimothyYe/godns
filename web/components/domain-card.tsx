@@ -50,7 +50,7 @@ export const DomainCard = (props: DomainControlProps) => {
 							) : null}
 						</div>
 						{props.showActionBtn ? (
-							<button className="theme-danger-soft btn btn-sm rounded-xl px-4" onClick={openModal}>
+							<button className="theme-danger btn btn-sm rounded-xl border-none px-4" onClick={openModal}>
 								Remove
 							</button>
 						) : null}

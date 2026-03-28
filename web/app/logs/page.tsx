@@ -242,7 +242,7 @@ export default function LogsPage() {
             </div>
           </div>
 
-          <div className="mt-5 overflow-hidden rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70">
+          <div className="log-stream mt-5 rounded-[1.5rem]">
             {filteredLogs.length === 0 ? (
               <div className="px-6 py-12 text-center">
                 <p className="theme-muted">
@@ -250,7 +250,7 @@ export default function LogsPage() {
                 </p>
               </div>
             ) : (
-              <div className="max-h-[600px] overflow-y-auto">
+              <div className="log-stream-scroll">
                 {filteredLogs.map((log, index) => (
                   <LogEntryComponent key={index} log={log} />
                 ))}

@@ -310,7 +310,7 @@ export const MultiProviderControl = () => {
 							{Object.keys(providers).length} providers
 						</div>
 					) : null}
-					<button className="theme-primary-violet btn btn-sm rounded-xl border-none px-4 shadow-lg shadow-violet-950/20" onClick={openAddModal}>
+					<button className="theme-primary-sky btn btn-sm rounded-xl border-none px-4 shadow-lg shadow-sky-900/20" onClick={openAddModal}>
 						<PlusIcon />
 						Add Provider
 					</button>
@@ -367,6 +367,7 @@ export const MultiProviderControl = () => {
 									<button
 										className="theme-danger btn btn-sm rounded-xl border-none px-3"
 										onClick={() => openDeleteModal(providerName)}
+										aria-label={`Remove ${providerName} provider`}
 									>
 										<TrashIcon />
 									</button>
@@ -381,7 +382,7 @@ export const MultiProviderControl = () => {
 					<p className="mx-auto mb-5 max-w-lg text-sm leading-7 theme-muted">
 						Add your first provider before creating domains. Credentials added here are reused by the domains below.
 					</p>
-					<button className="theme-primary-violet btn rounded-xl border-none" onClick={openAddModal}>
+					<button className="theme-primary-sky btn rounded-xl border-none" onClick={openAddModal}>
 						<PlusIcon />
 						Add Your First Provider
 					</button>
@@ -403,7 +404,7 @@ export const MultiProviderControl = () => {
 							Cancel
 						</button>
 						<button
-							className="theme-primary-violet btn rounded-xl border-none"
+							className="theme-primary-sky btn rounded-xl border-none"
 							onClick={handleSaveProvider}
 							disabled={!selectedProvider || !currentProviderSettings}
 						>
@@ -430,7 +431,7 @@ export const MultiProviderControl = () => {
 						<button className="theme-subtle-btn btn rounded-xl" onClick={closeEditModal}>
 							Cancel
 						</button>
-						<button className="theme-primary-violet btn rounded-xl border-none" onClick={handleSaveProvider}>
+						<button className="theme-primary-sky btn rounded-xl border-none" onClick={handleSaveProvider}>
 							Update Provider
 						</button>
 					</div>
