@@ -36,9 +36,9 @@ export default function Login() {
   };
 
   return (
-    <main className="page-wrap flex min-h-screen items-center justify-center">
+    <main className="flex min-h-[calc(100dvh-10rem)] items-center justify-center py-3 sm:min-h-[calc(100dvh-10.5rem)] sm:py-4">
       <ToastContainer />
-		<div className="page-shell max-w-md gap-6">
+		<div className="page-shell max-w-md gap-5">
 		  <section className="page-hero page-hero-compact">
 			<div className="eyebrow">
 			  <span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
