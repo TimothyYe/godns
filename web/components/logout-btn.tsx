@@ -2,17 +2,12 @@
 import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { CommonContext } from '@/components/user';
-import { useState, useEffect } from "react";
+import { useIsHydrated } from "./use-is-hydrated";
 
 export const LogoutBtn = () => {
 	const router = useRouter();
 	const { logoutUser } = useContext(CommonContext);
-	const [isClient, setIsClient] = useState(false);
-
-	useEffect(() => {
-		// Set isClient to true once the component has mounted
-		setIsClient(typeof window !== 'undefined');
-	}, []);
+	const isHydrated = useIsHydrated();
 	const onClick = () => {
 		// logout user
 		logoutUser();
@@ -21,6 +16,6 @@ export const LogoutBtn = () => {
 	}
 
 	return (
-		isClient ? <button className="theme-nav-logout-btn btn btn-sm rounded-xl px-4" onClick={onClick}>Logout</button> : null
+		isHydrated ? <button className="theme-nav-logout-btn btn btn-sm rounded-xl px-4" onClick={onClick}>Logout</button> : null
 	);
 }

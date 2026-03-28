@@ -4,18 +4,15 @@ import classNames from "classnames";
 import { siteConfig } from "@/config/site";
 import { MenuIcon, GithubIcon, HeartFilledIcon } from "./icons";
 import { LogoutBtn } from "./logout-btn";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { CommonContext } from '@/components/user';
 import { ThemeSwitch } from "./theme-switch";
+import { useIsHydrated } from "./use-is-hydrated";
 
 export const Navbar = () => {
 	const userStore = useContext(CommonContext);
 	const { credentials, currentPage, version } = userStore;
-	const [isClient, setIsClient] = useState(false);
-
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
+	const isHydrated = useIsHydrated();
 
 	return (
 		<header className="theme-nav sticky top-0 z-40 backdrop-blur-xl">
@@ -25,7 +22,7 @@ export const Navbar = () => {
 						<div tabIndex={0} role="button" className="theme-icon-btn btn btn-ghost btn-sm rounded-xl px-3 lg:hidden">
 							<MenuIcon />
 						</div>
-						{isClient && credentials ? (
+						{isHydrated && credentials ? (
 							<ul tabIndex={0} className="menu menu-sm dropdown-content surface-panel z-[1] mt-3 w-56 p-2">
 								{siteConfig.navItems.map((item) => (
 									<li key={item.label}>
@@ -52,7 +49,7 @@ export const Navbar = () => {
 						</div>
 						<div className="flex items-baseline gap-3">
 							<span className="text-2xl font-semibold tracking-tight theme-heading">GoDNS</span>
-							{isClient && version && version !== 'v0.1' ? (
+							{isHydrated && version && version !== 'v0.1' ? (
 								<span className="theme-chip hidden rounded-full px-2.5 py-1 text-xs font-medium sm:inline-flex">
 									{version}
 								</span>
@@ -62,7 +59,7 @@ export const Navbar = () => {
 				</div>
 
 				<div className="navbar-center hidden lg:flex">
-					{isClient && credentials ? (
+					{isHydrated && credentials ? (
 						<ul className="menu menu-horizontal rounded-2xl p-1.5 form-shell">
 							{siteConfig.navItems.map((item) => (
 								<li key={item.label}>

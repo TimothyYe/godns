@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useContext, useRef } from "react";
-import { ProviderSetting, MultiProviderConfig } from "@/api/provider";
+import { ProviderSetting, MultiProviderConfig, ProviderConfig } from "@/api/provider";
 import { get_provider_settings, get_multi_providers, update_multi_providers, add_provider_config, delete_provider_config } from "@/api/provider";
 import { CommonContext } from "@/components/user";
 import { useRouter } from "next/navigation";
@@ -171,7 +171,7 @@ export const MultiProviderControl = () => {
 		const providerName = editingProvider || selectedProvider;
 		if (!providerName) return;
 
-		const config: any = {};
+		const config: ProviderConfig = {};
 		if (currentProviderSettings?.email) config.email = formData.email;
 		if (currentProviderSettings?.password) config.password = formData.password;
 		if (currentProviderSettings?.login_token) config.login_token = formData.loginToken;

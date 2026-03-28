@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
+import { useIsHydrated } from "./use-is-hydrated";
 
 const getPreferredTheme = () => {
 	if (typeof window === 'undefined') {
@@ -16,13 +17,8 @@ const getPreferredTheme = () => {
 };
 
 export const ThemeSwitch = () => {
-	const [theme, setTheme] = useState<string | null>(null);
-	const [mounted, setMounted] = useState(false);
-
-	useEffect(() => {
-		setMounted(true);
-		setTheme(getPreferredTheme());
-	}, []);
+	const [theme, setTheme] = useState(getPreferredTheme);
+	const isHydrated = useIsHydrated();
 
 	useEffect(() => {
 		if (theme) {
@@ -32,7 +28,7 @@ export const ThemeSwitch = () => {
 	}, [theme]);
 
 	// Prevent hydration mismatch by not rendering until mounted
-	if (!mounted || !theme) {
+	if (!isHydrated || !theme) {
 		return (
 			<div className="theme-icon-btn theme-nav-utility-btn flex h-10 w-10 items-center justify-center rounded-xl">
 				<div className="w-[22px] h-[22px]" /> {/* Placeholder to prevent layout shift */}

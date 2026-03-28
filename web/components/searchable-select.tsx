@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useIsHydrated } from './use-is-hydrated';
 
 interface SearchableSelectProps {
 	options: { label: string; value: string }[];
@@ -12,22 +13,19 @@ interface SearchableSelectProps {
 const SearchableSelect = ({ options, placeholder, defaultValue, onSelected }: SearchableSelectProps) => {
 	const [searchTerm, setSearchTerm] = useState(defaultValue || '');
 	const [showDropdown, setShowDropdown] = useState(false);
-	const [mounted, setMounted] = useState(false);
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0, maxHeight: 288 });
+	const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 	const wrapperRef = useRef<HTMLDivElement | null>(null);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
 	const inputId = useId();
 	const listboxId = `${inputId}-listbox`;
+	const isHydrated = useIsHydrated();
 
 	const filteredOptions = useMemo(() => {
 		return options.filter(option => option.label.toLowerCase().includes(searchTerm.toLowerCase()));
 	}, [options, searchTerm]);
-
-	useEffect(() => {
-		setMounted(true);
-	}, []);
 
 	useEffect(() => {
 		setSearchTerm(defaultValue || '');
@@ -70,10 +68,11 @@ const SearchableSelect = ({ options, placeholder, defaultValue, onSelected }: Se
 	};
 
 	useEffect(() => {
-		if (!showDropdown) {
+		if (!showDropdown || !isHydrated) {
 			return;
 		}
 
+		setPortalTarget((wrapperRef.current?.closest('dialog') as HTMLElement | null) ?? document.body);
 		updateDropdownPosition();
 		window.addEventListener('resize', updateDropdownPosition);
 		window.addEventListener('scroll', updateDropdownPosition, true);
@@ -82,7 +81,7 @@ const SearchableSelect = ({ options, placeholder, defaultValue, onSelected }: Se
 			window.removeEventListener('resize', updateDropdownPosition);
 			window.removeEventListener('scroll', updateDropdownPosition, true);
 		};
-	}, [showDropdown]);
+	}, [showDropdown, isHydrated]);
 
 	useEffect(() => {
 		if (!showDropdown) {
@@ -101,10 +100,6 @@ const SearchableSelect = ({ options, placeholder, defaultValue, onSelected }: Se
 		document.addEventListener('mousedown', handlePointerDown);
 		return () => document.removeEventListener('mousedown', handlePointerDown);
 	}, [showDropdown]);
-
-	const portalTarget = mounted
-		? ((wrapperRef.current?.closest('dialog') as HTMLElement | null) ?? document.body)
-		: null;
 
 	const activeOption = filteredOptions[activeIndex];
 
