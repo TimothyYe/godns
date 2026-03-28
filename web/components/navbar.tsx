@@ -29,7 +29,17 @@ export const Navbar = () => {
 							<ul tabIndex={0} className="menu menu-sm dropdown-content surface-panel z-[1] mt-3 w-56 p-2">
 								{siteConfig.navItems.map((item) => (
 									<li key={item.label}>
-										<Link href={item.href}>{item.label}</Link>
+										<Link
+											href={item.href}
+											className={classNames(
+												"rounded-xl px-4 py-2.5 text-sm font-medium transition-colors",
+												currentPage === item.label
+													? "theme-nav-link-active"
+													: "theme-nav-link"
+											)}
+										>
+											{item.label}
+										</Link>
 									</li>
 								))}
 							</ul>
@@ -75,10 +85,10 @@ export const Navbar = () => {
 
 				<div className="flex items-center gap-2">
 					<ThemeSwitch />
-					<a className="theme-icon-btn hidden h-10 w-10 items-center justify-center rounded-xl transition-colors sm:inline-flex" href={siteConfig.links.github} target="_blank" aria-label="Github">
+					<a className="theme-icon-btn theme-nav-utility-btn hidden h-10 w-10 items-center justify-center rounded-xl transition-colors sm:inline-flex" href={siteConfig.links.github} target="_blank" aria-label="Github">
 						<GithubIcon className="h-5 w-5" />
 					</a>
-					<a className="theme-icon-btn hidden h-10 w-10 items-center justify-center rounded-xl transition-colors sm:inline-flex" href={siteConfig.links.sponsor} target="_blank" aria-label="Sponsor">
+					<a className="theme-icon-btn theme-nav-utility-btn hidden h-10 w-10 items-center justify-center rounded-xl transition-colors sm:inline-flex" href={siteConfig.links.sponsor} target="_blank" aria-label="Sponsor">
 						<HeartFilledIcon className="h-5 w-5" />
 					</a>
 					{credentials ? <LogoutBtn /> : null}

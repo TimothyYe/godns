@@ -21,6 +21,7 @@ export default function LogsPage() {
   const [refreshInterval, setRefreshInterval] = useState(5000);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
+  const logsScrollRef = useRef<HTMLDivElement>(null);
 
   const loadLogs = useCallback(async (showLoading = true) => {
     if (!credentials) return;
@@ -117,11 +118,11 @@ export default function LogsPage() {
   };
 
   const scrollToBottom = () => {
-    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    logsScrollRef.current?.scrollTo({ top: logsScrollRef.current.scrollHeight, behavior: 'smooth' });
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    logsScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (loading) {
@@ -250,7 +251,7 @@ export default function LogsPage() {
                 </p>
               </div>
             ) : (
-              <div className="log-stream-scroll">
+              <div className="log-stream-scroll" ref={logsScrollRef}>
                 {filteredLogs.map((log, index) => (
                   <LogEntryComponent key={index} log={log} />
                 ))}

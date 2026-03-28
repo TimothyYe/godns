@@ -11,14 +11,7 @@ interface DomainControlProps {
 
 export const DomainCard = (props: DomainControlProps) => {
 	const modalRef = useRef<HTMLDialogElement | null>(null);
-	const accentClass = props.index % 4 === 0
-		? 'surface-card-accent-sky'
-		: props.index % 4 === 1
-			? 'surface-card-accent-violet'
-			: props.index % 4 === 2
-				? 'surface-card-accent-emerald'
-				: 'surface-card-accent-amber';
-	const chipClass = props.index % 2 === 0 ? 'theme-chip-sky' : 'theme-chip-violet';
+	const accentClass = 'surface-card-accent-sky';
 
 	const openModal = () => {
 		modalRef.current?.showModal();
@@ -41,9 +34,7 @@ export const DomainCard = (props: DomainControlProps) => {
 							{props.domain.provider ? (
 								<div className={classNames(
 									"badge px-3 py-3",
-									props.index % 4 === 0 ? "theme-badge-sky" :
-									props.index % 4 === 1 ? "theme-badge-violet" :
-									props.index % 4 === 2 ? "theme-badge-emerald" : "theme-badge-amber"
+									"theme-badge-sky"
 								)}>
 									{props.domain.provider}
 								</div>
@@ -60,7 +51,7 @@ export const DomainCard = (props: DomainControlProps) => {
 						<div className="metric-kicker">Subdomains</div>
 						<div className="flex flex-wrap gap-2">
 						{props.domain.sub_domains ? props.domain.sub_domains.map((sub_domain) => (
-							<div key={sub_domain} className={classNames("badge rounded-full px-3 py-3", chipClass)}>
+							<div key={sub_domain} className="theme-chip badge rounded-full px-3 py-3">
 								{sub_domain}
 							</div>
 						)) : null}

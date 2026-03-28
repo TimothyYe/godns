@@ -34,7 +34,7 @@ export const ThemeSwitch = () => {
 	// Prevent hydration mismatch by not rendering until mounted
 	if (!mounted || !theme) {
 		return (
-			<div className="theme-icon-btn flex h-10 w-10 items-center justify-center rounded-xl">
+			<div className="theme-icon-btn theme-nav-utility-btn flex h-10 w-10 items-center justify-center rounded-xl">
 				<div className="w-[22px] h-[22px]" /> {/* Placeholder to prevent layout shift */}
 			</div>
 		);
@@ -43,7 +43,7 @@ export const ThemeSwitch = () => {
 	return (
 		<button
 			type="button"
-			className="theme-icon-btn flex h-10 w-10 items-center justify-center rounded-xl transition-colors"
+			className="theme-icon-btn theme-nav-utility-btn flex h-10 w-10 items-center justify-center rounded-xl transition-colors"
 			aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
 			title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
 			onClick={() => {

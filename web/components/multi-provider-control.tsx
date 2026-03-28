@@ -232,7 +232,22 @@ export const MultiProviderControl = () => {
 		</label>
 	);
 
-	const getAccentChipClass = (index: number) => index % 2 === 0 ? 'theme-chip-sky' : 'theme-chip-violet';
+	const getFieldChipClass = (field: 'email' | 'password' | 'login_token' | 'app_key' | 'app_secret' | 'consumer_key') => {
+		switch (field) {
+			case 'email':
+				return 'theme-badge-sky';
+			case 'password':
+				return 'theme-badge-amber';
+			case 'login_token':
+				return 'theme-badge-violet';
+			case 'app_key':
+				return 'theme-badge-sky';
+			case 'app_secret':
+				return 'theme-badge-emerald';
+			case 'consumer_key':
+				return 'theme-badge-amber';
+		}
+	};
 
 	const renderProviderForm = () => (
 		<>
@@ -334,26 +349,26 @@ export const MultiProviderControl = () => {
 										{Object.keys(providers[providerName] || {}).length} fields
 									</div>
 								</div>
-								<div className="flex flex-wrap justify-start gap-2">
-									{providers[providerName]?.email && (
-										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(0))}>Email</div>
-									)}
-									{providers[providerName]?.password && (
-										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(1))}>Password</div>
-									)}
-									{providers[providerName]?.login_token && (
-										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(2))}>Token</div>
-									)}
-									{providers[providerName]?.app_key && (
-										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(3))}>App Key</div>
-									)}
-									{providers[providerName]?.app_secret && (
-										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(4))}>App Secret</div>
-									)}
-									{providers[providerName]?.consumer_key && (
-										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(5))}>Consumer Key</div>
-									)}
-								</div>
+									<div className="flex flex-wrap justify-start gap-2">
+										{providers[providerName]?.email && (
+											<div className={classNames("badge rounded-full px-3 py-3", getFieldChipClass('email'))}>Email</div>
+										)}
+										{providers[providerName]?.password && (
+											<div className={classNames("badge rounded-full px-3 py-3", getFieldChipClass('password'))}>Password</div>
+										)}
+										{providers[providerName]?.login_token && (
+											<div className={classNames("badge rounded-full px-3 py-3", getFieldChipClass('login_token'))}>Token</div>
+										)}
+										{providers[providerName]?.app_key && (
+											<div className={classNames("badge rounded-full px-3 py-3", getFieldChipClass('app_key'))}>App Key</div>
+										)}
+										{providers[providerName]?.app_secret && (
+											<div className={classNames("badge rounded-full px-3 py-3", getFieldChipClass('app_secret'))}>App Secret</div>
+										)}
+										{providers[providerName]?.consumer_key && (
+											<div className={classNames("badge rounded-full px-3 py-3", getFieldChipClass('consumer_key'))}>Consumer Key</div>
+										)}
+									</div>
 								<p className="text-sm leading-6 theme-muted">
 									These credentials are available to any domain mapped to this provider.
 								</p>
