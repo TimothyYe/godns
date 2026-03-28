@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
-import { get_logs, clear_logs, get_log_levels, LogEntry, LogsResponse } from '@/api/logs';
+import { get_logs, clear_logs, get_log_levels, LogEntry } from '@/api/logs';
 import { LogEntryComponent } from '@/components/log-entry';
 import { toast } from 'react-toastify';
 
@@ -33,7 +33,7 @@ export default function LogsPage() {
       if (response) {
         setLogs(response.logs);
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to load logs');
     } finally {
       if (showLoading) setLoading(false);
@@ -112,7 +112,7 @@ export default function LogsPage() {
       } else {
         toast.error('Failed to clear logs');
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to clear logs');
     }
   };
