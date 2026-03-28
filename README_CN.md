@@ -1340,7 +1340,7 @@ nssm remove YOURSERVICENAME
 
 要求：
 
-- Node.js `22.0.0` 或更高版本
+- Node.js `22.13.0` 或更高版本
 - Go `1.17` 或更高版本
 
 前端项目使用 [Next.js](https://nextjs.org/) 和 [daisyUI](https://daisyui.com/) 构建。要启动开发环境，运行：

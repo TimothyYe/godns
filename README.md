@@ -1342,7 +1342,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 Requirements:
 
-- Node.js `22.0.0` or higher
+- Node.js `22.13.0` or higher
 - Go `1.17` or higher
 
 The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](https://daisyui.com/). To start the development environment, run:
