@@ -4,7 +4,7 @@ export interface LogEntry {
 	timestamp: string;
 	level: string;
 	message: string;
-	fields?: { [key: string]: any };
+	fields?: Record<string, unknown>;
 }
 
 export interface LogsResponse {

@@ -44,6 +44,8 @@ test_configs/
 .DS_Store
 /vendor
 
+.next-dev
+
 dist/
 out/
 

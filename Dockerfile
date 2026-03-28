@@ -1,5 +1,5 @@
 # Stage 1: Build the Next.js frontend
-FROM node:20-alpine AS web-builder
+FROM node:22.13.0-alpine AS web-builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY web/package.json web/package-lock.json ./web/

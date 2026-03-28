@@ -5,7 +5,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 	size?: number;
 };
 
-export const InfoIcon = (props: IconSvgProps) => {
+export const InfoIcon = () => {
 	return (
 		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current">
 			<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -13,7 +13,7 @@ export const InfoIcon = (props: IconSvgProps) => {
 	)
 }
 
-export const TagIcon = (props: IconSvgProps) => {
+export const TagIcon = () => {
 	return (
 		<svg height={32} width={32} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 			<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.6 8.4h0m-4.7 11.3-6.6-6.6a1 1 0 0 1 0-1.4l7.3-7.4a1 1 0 0 1 .7-.3H18a2 2 0 0 1 2 2v5.5a1 1 0 0 1-.3.7l-7.5 7.5a1 1 0 0 1-1.3 0Z" />
@@ -21,7 +21,7 @@ export const TagIcon = (props: IconSvgProps) => {
 	)
 }
 
-export const DBIcon = (props: IconSvgProps) => {
+export const DBIcon = () => {
 	return (
 		<svg height={32} width={32} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 			<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 6c0 1.7-3.1 3-7 3S5 7.7 5 6m14 0c0-1.7-3.1-3-7-3S5 4.3 5 6m14 0v6M5 6v6m0 0c0 1.7 3.1 3 7 3s7-1.3 7-3M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
@@ -29,7 +29,7 @@ export const DBIcon = (props: IconSvgProps) => {
 	)
 }
 
-export const SettingsIcon = (props: IconSvgProps) => {
+export const SettingsIcon = () => {
 	return (
 		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-8 h-8 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
 	)
@@ -44,7 +44,7 @@ export const ComputerIcon = (props: IconSvgProps) => {
 	)
 }
 
-export const GearIcon = (props: IconSvgProps) => {
+export const GearIcon = () => {
 	return (
 		<svg height={24} width={24} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block w-8 h-8 stroke-current">
 			<circle cx="12" cy="12" r="3"></circle>
@@ -152,7 +152,7 @@ export const HeartFilledIcon = ({
 	</svg>
 );
 
-export const WarningIcon = (props: IconSvgProps) => (
+export const WarningIcon = () => (
 	<svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
 );
 
