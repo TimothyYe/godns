@@ -1,5 +1,4 @@
 'use client';
-// components/Login.tsx
 import React, { useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
@@ -37,40 +36,51 @@ export default function Login() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="page-wrap flex min-h-screen items-center justify-center">
       <ToastContainer />
-      <div className="card w-96 shadow-2xl shadow-neutral-950 bg-base-100">
-        <div className="card-body">
-          <form onSubmit={handleLogin} className="flex flex-col mb-4">
-            <h2 className="card-title text-primary">Login</h2>
-            <div className="divider" />
-            <div className="mb-4">
-              <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text font-bold">Username</span>
-                </div>
-                <input type="text" id="username" placeholder="Input the username" className="input input-primary input-bordered w-full max-w-xs"
-                  onChange={
-                    (e) => setUsername(e.target.value)
-                  } />
-              </label>
+		<div className="page-shell max-w-md gap-6">
+		  <section className="page-hero page-hero-compact">
+			<div className="eyebrow">
+			  <span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
+			  Secure Access
+			</div>
+			<h1 className="page-title text-3xl sm:text-4xl">Sign in to GoDNS.</h1>
+		  </section>
+
+        <section className="section-shell">
+          <form onSubmit={handleLogin} className="flex flex-col gap-5">
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight theme-heading">Login</h2>
+              <p className="mt-2 text-sm leading-7 theme-muted">Use your web panel credentials to continue.</p>
             </div>
-            <div className="mb-4">
-              <label className="form-control w-full max-w-xs">
-                <div className="label">
-                  <span className="label-text font-bold">Password</span>
-                </div>
-                <input type="password" id="password" placeholder="Input the password" className="input input-primary input-bordered w-full max-w-xs"
-                  onChange={
-                    (e) => setPassword(e.target.value)
-                  } />
-              </label>
-            </div>
-            <div className="card-actions justify-end">
-              <button className="btn btn-primary">Sign In</button>
+
+            <fieldset className="theme-field">
+              <label className="theme-field-label" htmlFor="username">Username</label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Input the username"
+                className="input theme-input w-full rounded-2xl"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </fieldset>
+
+            <fieldset className="theme-field">
+              <label className="theme-field-label" htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Input the password"
+                className="input theme-input w-full rounded-2xl"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </fieldset>
+
+            <div className="flex justify-end">
+              <button className="theme-primary-sky btn rounded-xl border-none px-6">Sign In</button>
             </div>
           </form>
-        </div>
+        </section>
       </div>
     </main>
   );

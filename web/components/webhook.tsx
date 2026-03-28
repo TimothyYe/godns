@@ -1,5 +1,4 @@
-import { GearIcon } from "./icons"
-import { useState } from "react";
+import { GearIcon } from "./icons";
 
 interface WebHookProps {
 	Enabled: boolean;
@@ -9,71 +8,80 @@ interface WebHookProps {
 }
 
 export const WebHook = (props: WebHookProps) => {
-	const [webhookEnabled, setWebhookEnabled] = useState(props.Enabled);
-	const [webhookUrl, setWebhookUrl] = useState(props.Url);
-	const [webhookRequestBody, setWebhookRequestBody] = useState(props.RequestBody);
-
 	return (
-		<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
-			<div className="stat gap-2">
-				<div className="stat-title">Webhook</div>
-				<div className="flex flex-col gap-3">
-					<div className="flex flex-row items-center justify-start gap-2">
-						<span className="label-text text-slate-500 ">Enable Webhook</span>
-						<input
-							type="checkbox"
-							className="toggle toggle-primary"
-							checked={webhookEnabled}
-							onClick={() => {
-								setWebhookEnabled(!webhookEnabled);
-								if (props.onWebHookChange) {
-									props.onWebHookChange({
-										Enabled: !webhookEnabled,
-										Url: webhookUrl,
-										RequestBody: webhookRequestBody
-									});
-								}
-							}}
-							onChange={() => { }}
-						/>
-						<div className="flex flex-grow justify-end text-secondary">
-							<GearIcon />
-						</div>
+		<div className="surface-panel-soft p-5 sm:p-6">
+			<div className="flex flex-col gap-5">
+				<div className="flex items-start justify-between gap-4">
+					<div>
+						<div className="metric-kicker">Webhook</div>
+						<h3 className="mt-2 text-xl font-semibold tracking-tight theme-heading">Push change notifications downstream</h3>
+						<p className="mt-2 text-sm leading-7 theme-muted">Trigger a GET or POST request whenever GoDNS publishes a fresh address update.</p>
 					</div>
-					<input type="text"
-						className="input input-primary w-full"
-						placeholder="Input the webhhook URL"
-						value={webhookUrl}
-						disabled={!webhookEnabled}
-						onChange={(e) => {
-							setWebhookUrl(e.target.value);
+					<div className="metric-icon text-violet-300">
+						<GearIcon />
+					</div>
+				</div>
+
+				<label className="inline-flex items-center gap-3 text-sm theme-muted">
+					<input
+						type="checkbox"
+						className="toggle toggle-primary"
+						checked={props.Enabled}
+						onChange={() => {
 							if (props.onWebHookChange) {
 								props.onWebHookChange({
-									Enabled: webhookEnabled,
-									Url: e.target.value,
-									RequestBody: webhookRequestBody
+									Enabled: !props.Enabled,
+									Url: props.Url,
+									RequestBody: props.RequestBody
 								});
 							}
 						}}
 					/>
-					<textarea
-						className="textarea textarea-primary w-full h-28"
-						placeholder="Input request body"
-						value={props.RequestBody}
-						disabled={!webhookEnabled}
+					<span>Enable webhook delivery</span>
+				</label>
+
+				<fieldset className="theme-field">
+					<label className="theme-field-label" htmlFor="webhook-url">Target URL</label>
+					<input
+						id="webhook-url"
+						type="text"
+						className="input theme-input w-full rounded-2xl"
+						placeholder="Input the webhook URL"
+						value={props.Url}
+						disabled={!props.Enabled}
 						onChange={(e) => {
-							setWebhookRequestBody(e.target.value);
 							if (props.onWebHookChange) {
 								props.onWebHookChange({
-									Enabled: webhookEnabled,
-									Url: webhookUrl,
+									Enabled: props.Enabled,
+									Url: e.target.value,
+									RequestBody: props.RequestBody
+								});
+							}
+						}}
+					/>
+				</fieldset>
+
+				<fieldset className="theme-field">
+					<label className="theme-field-label" htmlFor="webhook-request-body">Request body</label>
+					<textarea
+						id="webhook-request-body"
+						className="textarea theme-input h-28 w-full rounded-2xl"
+						placeholder="Input request body"
+						value={props.RequestBody}
+						disabled={!props.Enabled}
+						onChange={(e) => {
+							if (props.onWebHookChange) {
+								props.onWebHookChange({
+									Enabled: props.Enabled,
+									Url: props.Url,
 									RequestBody: e.target.value
 								});
 							}
 						}}
 					/>
-				</div>
+					<span className="theme-field-hint">Leave the body empty to send a GET request instead of POST.</span>
+				</fieldset>
 			</div>
 		</div>
-	)
-}
+	);
+};

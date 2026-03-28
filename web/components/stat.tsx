@@ -18,98 +18,171 @@ export const Stat = () => {
 			return;
 		}
 		setCurrentPage('Home');
-		get_info(credentials).then((info) => {
-			setInfo(info);
-			saveVersion(info.version);
+		get_info(credentials).then((nextInfo) => {
+			setInfo(nextInfo);
+			saveVersion(nextInfo.version);
 		});
 	}, [saveVersion, credentials, setCurrentPage, router]);
 
-	return (
-		info ? (
-			<div className="flex flex-col max-w-screen-lg">
-				<span className="text-xl font-semibold text-neutral-500 ml-1 mb-1">Basic Info</span>
-				<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<InfoIcon />
-						</div>
-						<div className="stat-title">Uptime</div>
-						<div className="stat-value text-primary">{info ? get_hours(info.start_time) : null}</div>
-						<div className="stat-desc">Since {info ? get_date(info.start_time) : null}</div>
-					</div>
+	return info ? (
+		<div className="flex flex-col gap-8">
+			<section className="page-hero page-hero-compact">
+				<div className="eyebrow">
+					<span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
+					System Overview
+				</div>
+				<h1 className="page-title">Manage your DNS updates with less friction.</h1>
+				<p className="page-description">
+					Check runtime health, network mode, and the domains currently under management.
+				</p>
+			</section>
 
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<GearIcon />
-						</div>
-						<div className="stat-title">Providers</div>
-						<div className="stat-value text-warning">{info && info.providers ? info.providers.length : 0}</div>
-						<div className="stat-desc">Providers configured</div>
-					</div>
-
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<DBIcon />
-						</div>
-						<div className="stat-title">Domains</div>
-						<div className="stat-value text-info">{info ? info.domain_num : 0}</div>
-						<div className="stat-desc">Domains configured</div>
-					</div>
-
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<ComputerIcon />
-						</div>
-						<div className="stat-title">Subdomains</div>
-						<div className="stat-value text-error">{info ? info.sub_domain_num : 0}</div>
-						<div className="stat-desc">Subdomains configured</div>
+			<section className="section-shell">
+				<div className="section-header">
+					<div className="section-copy">
+						<div className="section-label ml-0">Basic Info</div>
+						<h2 className="text-2xl font-semibold tracking-tight theme-heading">Runtime snapshot</h2>
+						<p className="mt-2 text-sm leading-7 theme-muted">
+							A compact view of how long this node has been up and how much DNS configuration it is carrying.
+						</p>
 					</div>
 				</div>
-				<span className="text-xl font-semibold text-neutral-500 ml-1 mb-1 mt-5">Network Info</span>
-				<div className="stats shadow bg-primary-content stats-vertical lg:stats-horizontal">
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<TagIcon />
+				<div className="metric-grid">
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">Uptime</div>
+								<div className="metric-value">{get_hours(info.start_time)}</div>
+							</div>
+							<div className="metric-icon text-sky-300">
+								<InfoIcon />
+							</div>
 						</div>
-						<div className="stat-title">Public IP</div>
-						<div className="stat-value text-primary">{info ? info.public_ip : 'N/A'}</div>
-						<div className="stat-desc">The public IP address</div>
+						<div className="metric-note">Since {get_date(info.start_time)}</div>
 					</div>
-
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<SettingsIcon />
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">Providers</div>
+								<div className="metric-value">{info.providers ? info.providers.length : 0}</div>
+							</div>
+							<div className="metric-icon text-violet-300">
+								<GearIcon />
+							</div>
 						</div>
-						<div className="stat-title">IP Mode</div>
-						<div className="stat-value text-info">{info ? info.ip_mode : 'N/A'}</div>
-						<div className="stat-desc">The IP mode</div>
+						<div className="metric-note">Providers configured</div>
 					</div>
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">Domains</div>
+								<div className="metric-value">{info.domain_num}</div>
+							</div>
+							<div className="metric-icon text-cyan-300">
+								<DBIcon />
+							</div>
+						</div>
+						<div className="metric-note">Root domains configured</div>
+					</div>
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">Subdomains</div>
+								<div className="metric-value">{info.sub_domain_num}</div>
+							</div>
+							<div className="metric-icon text-amber-300">
+								<ComputerIcon />
+							</div>
+						</div>
+						<div className="metric-note">Subdomains configured</div>
+					</div>
+				</div>
+			</section>
 
-					<div className="stat">
-						<div className="stat-figure text-secondary">
-							<GearIcon />
+			<section className="section-shell">
+				<div className="section-header">
+					<div className="section-copy">
+						<div className="section-label ml-0">Network Info</div>
+						<h2 className="text-2xl font-semibold tracking-tight theme-heading">Current network state</h2>
+						<p className="mt-2 text-sm leading-7 theme-muted">
+							The current public address, update mode, and provider strategy the daemon is operating with.
+						</p>
+					</div>
+				</div>
+				<div className="metric-grid-compact">
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">Public IP</div>
+								<div className="metric-value text-2xl">{info.public_ip || 'N/A'}</div>
+							</div>
+							<div className="metric-icon text-sky-300">
+								<TagIcon />
+							</div>
 						</div>
-						<div className="stat-title">Provider</div>
-						<div className="stat-value text-error">
-							{info ? (
-								info.provider && (!info.providers || info.providers.length === 0) ? info.provider : 'Multiple'
-							) : 'N/A'}
+						<div className="metric-note">Detected public address</div>
+					</div>
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">IP Mode</div>
+								<div className="metric-value">{info.ip_mode || 'N/A'}</div>
+							</div>
+							<div className="metric-icon text-emerald-300">
+								<SettingsIcon />
+							</div>
 						</div>
-						<div className="stat-desc">
-							{info && info.provider && (!info.providers || info.providers.length === 0) ? 'Provider configured' : 'Multiple providers configured'}
+						<div className="metric-note">Current update mode</div>
+					</div>
+					<div className="metric-card">
+						<div className="metric-head">
+							<div>
+								<div className="metric-kicker">Provider Strategy</div>
+								<div className="metric-value text-2xl">
+									{info.provider && (!info.providers || info.providers.length === 0) ? info.provider : 'Multiple'}
+								</div>
+							</div>
+							<div className="metric-icon text-rose-300">
+								<GearIcon />
+							</div>
+						</div>
+						<div className="metric-note">
+							{info.provider && (!info.providers || info.providers.length === 0) ? 'Single provider configured' : 'Multiple providers configured'}
 						</div>
 					</div>
 				</div>
-				<span className="text-xl font-semibold text-neutral-500 ml-1 mb-1 mt-5">Domain Info</span>
-				<div className="flex flex-wrap gap-2">
-					{
-						info && info.domains ? info.domains.map((domain, index) => {
-							return (
-								<DomainCard key={index} domain={domain} index={index} />
-							);
-						}) : null
-					}
+			</section>
+
+			<section className="section-shell">
+				<div className="section-header">
+					<div className="section-copy">
+						<div className="section-label ml-0">Domain Info</div>
+						<h2 className="text-2xl font-semibold tracking-tight theme-heading">Tracked domains</h2>
+						<p className="mt-2 text-sm leading-7 theme-muted">
+							These are the root domains and subdomains currently being managed by the running GoDNS instance.
+						</p>
+					</div>
+					{info.domains?.length ? (
+						<div className="theme-chip rounded-full px-3 py-1 text-xs font-medium">
+							{info.domains.length} tracked
+						</div>
+					) : null}
 				</div>
-			</div>
-		) : null);
+				<div className="mt-5 grid gap-4 lg:grid-cols-3">
+					{info.domains && info.domains.length > 0 ? info.domains.map((domain, index) => (
+						<DomainCard key={index} domain={domain} index={index} />
+					)) : (
+						<div className="surface-panel-soft col-span-full px-6 py-10 text-center">
+							<p className="text-lg font-medium theme-heading">No domains configured yet</p>
+							<p className="mt-2 text-sm theme-muted">Add a provider and domain from the Domains page to start managing DNS updates.</p>
+						</div>
+					)}
+				</div>
+			</section>
+		</div>
+	) : (
+		<div className="surface-panel flex min-h-[18rem] items-center justify-center">
+			<span className="loading loading-spinner loading-lg text-sky-400" />
+		</div>
+	);
 }

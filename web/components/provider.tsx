@@ -193,7 +193,7 @@ export const ProviderControl = () => {
 				/>
 				{
 					currentProviderSettings && currentProviderSettings.username ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !username
 						})}>
 							Username
@@ -209,7 +209,7 @@ export const ProviderControl = () => {
 				}
 				{
 					currentProviderSettings && currentProviderSettings.email ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !email
 						})}>
 							Email
@@ -225,7 +225,7 @@ export const ProviderControl = () => {
 				}
 				{
 					currentProviderSettings && currentProviderSettings.password ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !password
 						})}>
 							Password
@@ -241,7 +241,7 @@ export const ProviderControl = () => {
 				}
 				{
 					currentProviderSettings && currentProviderSettings.login_token ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !loginToken
 						})}>
 							Login Token
@@ -257,7 +257,7 @@ export const ProviderControl = () => {
 				}
 				{
 					currentProviderSettings && currentProviderSettings.app_key ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !appKey
 						})}>
 							App Key
@@ -273,7 +273,7 @@ export const ProviderControl = () => {
 				}
 				{
 					currentProviderSettings && currentProviderSettings.app_secret ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !appSecret
 						})}>
 							App Secret
@@ -289,7 +289,7 @@ export const ProviderControl = () => {
 				}
 				{
 					currentProviderSettings && currentProviderSettings.consumer_key ? (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
+						<label className={classNames("input flex items-center gap-2", {
 							'input-error': !consumerKey
 						})}>
 							Consumer Key

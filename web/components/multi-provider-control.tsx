@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import SearchableSelect from "./searchable-select";
 import classNames from "classnames";
 import { toast } from "react-toastify";
-import { PlusIcon, TrashIcon, GearIcon } from "@/components/icons";
+import { PlusIcon, TrashIcon } from "@/components/icons";
 
 interface ProviderConfigForm {
 	email: string;
@@ -211,6 +211,29 @@ export const MultiProviderControl = () => {
 		}
 	};
 
+	const renderTextField = (
+		label: string,
+		value: string,
+		onChange: (next: string) => void,
+		placeholder: string,
+		type: string = 'text',
+		hint?: string
+	) => (
+		<label className="theme-field">
+			<span className="theme-field-label">{label}</span>
+			<input
+				type={type}
+				className="input theme-input w-full rounded-2xl"
+				placeholder={placeholder}
+				value={value}
+				onChange={(e) => onChange(e.target.value)}
+			/>
+			{hint ? <span className="theme-field-hint">{hint}</span> : null}
+		</label>
+	);
+
+	const getAccentChipClass = (index: number) => index % 2 === 0 ? 'theme-chip-sky' : 'theme-chip-violet';
+
 	const renderProviderForm = () => (
 		<>
 			{!editingProvider && (
@@ -225,93 +248,27 @@ export const MultiProviderControl = () => {
 			{currentProviderSettings && (
 				<>
 					{currentProviderSettings.email && (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
-							'input-error': !formData.email
-						})}>
-							Email
-							<input
-								type="text"
-								className="grow"
-								placeholder="Input the email"
-								value={formData.email}
-								onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-							/>
-						</label>
+						renderTextField('Email', formData.email, (email) => setFormData(prev => ({ ...prev, email })), 'name@example.com')
 					)}
 
 					{currentProviderSettings.password && (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
-							'input-error': !formData.password
-						})}>
-							Password
-							<input
-								type="password"
-								className="grow"
-								placeholder="Input the password"
-								value={formData.password}
-								onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-							/>
-						</label>
+						renderTextField('Password', formData.password, (password) => setFormData(prev => ({ ...prev, password })), 'Provider password', 'password')
 					)}
 
 					{currentProviderSettings.login_token && (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
-							'input-error': !formData.loginToken
-						})}>
-							Login Token
-							<input
-								type="text"
-								className="grow"
-								placeholder="Input the token"
-								value={formData.loginToken}
-								onChange={(e) => setFormData(prev => ({ ...prev, loginToken: e.target.value }))}
-							/>
-						</label>
+						renderTextField('Login Token', formData.loginToken, (loginToken) => setFormData(prev => ({ ...prev, loginToken })), 'Paste the login token')
 					)}
 
 					{currentProviderSettings.app_key && (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
-							'input-error': !formData.appKey
-						})}>
-							App Key
-							<input
-								type="text"
-								className="grow"
-								placeholder="Input the app key"
-								value={formData.appKey}
-								onChange={(e) => setFormData(prev => ({ ...prev, appKey: e.target.value }))}
-							/>
-						</label>
+						renderTextField('App Key', formData.appKey, (appKey) => setFormData(prev => ({ ...prev, appKey })), 'Paste the app key')
 					)}
 
 					{currentProviderSettings.app_secret && (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
-							'input-error': !formData.appSecret
-						})}>
-							App Secret
-							<input
-								type="text"
-								className="grow"
-								placeholder="Input the app secret"
-								value={formData.appSecret}
-								onChange={(e) => setFormData(prev => ({ ...prev, appSecret: e.target.value }))}
-							/>
-						</label>
+						renderTextField('App Secret', formData.appSecret, (appSecret) => setFormData(prev => ({ ...prev, appSecret })), 'Paste the app secret')
 					)}
 
 					{currentProviderSettings.consumer_key && (
-						<label className={classNames("input input-bordered flex items-center gap-2", {
-							'input-error': !formData.consumerKey
-						})}>
-							Consumer Key
-							<input
-								type="text"
-								className="grow"
-								placeholder="Input the consumer key"
-								value={formData.consumerKey}
-								onChange={(e) => setFormData(prev => ({ ...prev, consumerKey: e.target.value }))}
-							/>
-						</label>
+						renderTextField('Consumer Key', formData.consumerKey, (consumerKey) => setFormData(prev => ({ ...prev, consumerKey })), 'Paste the consumer key')
 					)}
 				</>
 			)}
@@ -339,58 +296,76 @@ export const MultiProviderControl = () => {
 
 	return (
 		<div className="w-full">
-			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-xl font-semibold text-neutral-500">Provider Settings</h2>
-				<button className="btn btn-primary btn-sm" onClick={openAddModal}>
-					<PlusIcon />
-					Add Provider
-				</button>
+			<div className="section-header">
+				<div className="section-copy">
+					<div className="section-label ml-0">Providers</div>
+					<h2 className="text-2xl font-semibold tracking-tight theme-heading">Provider credentials</h2>
+					<p className="mt-2 text-sm leading-7 theme-muted">
+						Keep provider credentials organized and easy to scan before attaching domains to them.
+					</p>
+				</div>
+				<div className="flex items-center gap-3">
+					{Object.keys(providers).length > 0 ? (
+						<div className="theme-chip-violet rounded-full px-3 py-1 text-xs font-medium">
+							{Object.keys(providers).length} providers
+						</div>
+					) : null}
+					<button className="theme-primary-violet btn btn-sm rounded-xl border-none px-4 shadow-lg shadow-violet-950/20" onClick={openAddModal}>
+						<PlusIcon />
+						Add Provider
+					</button>
+				</div>
 			</div>
 
 			{Object.keys(providers).length > 0 ? (
-				<div className="flex flex-wrap gap-2">
-					{Object.keys(providers).map((providerName, index) => (
+				<div className="mt-5 grid gap-4 lg:grid-cols-3">
+					{Object.keys(providers).map((providerName) => (
 						<div
 							key={providerName}
-							className={classNames("card w-full bg-primary-content shadow-xl mb-1", {
-								"md:w-1/3": (index + 1) % 3 !== 0,
-								"md:flex-1": (index + 1) % 3 === 0
-							})}
+							className="surface-card"
 						>
-							<div className="card-body">
-								<h2 className="card-title">
-									{providerName}
-								</h2>
+							<div className="card-body gap-4 p-5 sm:p-6">
+								<div className="metric-kicker">Provider</div>
+								<div className="flex items-start justify-between gap-4">
+									<h2 className="text-xl font-semibold tracking-tight theme-heading">
+										{providerName}
+									</h2>
+									<div className="theme-chip-violet rounded-full px-3 py-1 text-xs font-medium">
+										{Object.keys(providers[providerName] || {}).length} fields
+									</div>
+								</div>
 								<div className="flex flex-wrap justify-start gap-2">
-									{/* Show configured credential types as badges */}
 									{providers[providerName]?.email && (
-										<div className="badge badge-primary">Email</div>
+										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(0))}>Email</div>
 									)}
 									{providers[providerName]?.password && (
-										<div className="badge badge-primary">Password</div>
+										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(1))}>Password</div>
 									)}
 									{providers[providerName]?.login_token && (
-										<div className="badge badge-primary">Token</div>
+										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(2))}>Token</div>
 									)}
 									{providers[providerName]?.app_key && (
-										<div className="badge badge-primary">App Key</div>
+										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(3))}>App Key</div>
 									)}
 									{providers[providerName]?.app_secret && (
-										<div className="badge badge-primary">App Secret</div>
+										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(4))}>App Secret</div>
 									)}
 									{providers[providerName]?.consumer_key && (
-										<div className="badge badge-primary">Consumer Key</div>
+										<div className={classNames("badge rounded-full px-3 py-3", getAccentChipClass(5))}>Consumer Key</div>
 									)}
 								</div>
+								<p className="text-sm leading-6 theme-muted">
+									These credentials are available to any domain mapped to this provider.
+								</p>
 								<div className="card-actions justify-end">
 									<button
-										className="btn btn-secondary btn-sm"
+										className="theme-subtle-btn btn btn-sm rounded-xl px-4"
 										onClick={() => openEditModal(providerName)}
 									>
 										Edit
 									</button>
 									<button
-										className="btn btn-error btn-sm"
+										className="theme-danger btn btn-sm rounded-xl border-none px-3"
 										onClick={() => openDeleteModal(providerName)}
 									>
 										<TrashIcon />
@@ -401,9 +376,12 @@ export const MultiProviderControl = () => {
 					))}
 				</div>
 			) : (
-				<div className="text-center py-8">
-					<p className="text-neutral-500 mb-4">No providers configured yet.</p>
-					<button className="btn btn-primary" onClick={openAddModal}>
+				<div className="surface-panel-soft px-6 py-10 text-center">
+					<p className="mb-3 text-lg font-medium theme-heading">No providers configured yet.</p>
+					<p className="mx-auto mb-5 max-w-lg text-sm leading-7 theme-muted">
+						Add your first provider before creating domains. Credentials added here are reused by the domains below.
+					</p>
+					<button className="theme-primary-violet btn rounded-xl border-none" onClick={openAddModal}>
 						<PlusIcon />
 						Add Your First Provider
 					</button>
@@ -411,18 +389,21 @@ export const MultiProviderControl = () => {
 			)}
 
 			{/* Add Provider Modal */}
-			<dialog id="add_provider_modal" className="modal" ref={addModalRef}>
-				<div className="modal-box max-w-lg">
-					<h3 className="font-bold text-lg mb-4">Add New Provider</h3>
+			<dialog id="add_provider_modal" className="modal modal-bottom sm:modal-middle" ref={addModalRef}>
+				<div className="theme-modal modal-box max-w-lg rounded-[1.5rem]">
+					<h3 className="mb-4 text-xl font-semibold tracking-tight theme-heading">Add New Provider</h3>
+					<p className="mb-4 text-sm leading-7 theme-muted">
+						Choose a provider first, then fill in only the credentials required by that integration.
+					</p>
 					<div className="flex flex-col gap-4">
 						{renderProviderForm()}
 					</div>
 					<div className="modal-action">
-						<button className="btn" onClick={closeAddModal}>
+						<button className="theme-subtle-btn btn rounded-xl" onClick={closeAddModal}>
 							Cancel
 						</button>
 						<button
-							className="btn btn-primary"
+							className="theme-primary-violet btn rounded-xl border-none"
 							onClick={handleSaveProvider}
 							disabled={!selectedProvider || !currentProviderSettings}
 						>
@@ -430,43 +411,55 @@ export const MultiProviderControl = () => {
 						</button>
 					</div>
 				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button aria-label="Close add provider dialog">close</button>
+				</form>
 			</dialog>
 
 			{/* Edit Provider Modal */}
-			<dialog id="edit_provider_modal" className="modal" ref={editModalRef}>
-				<div className="modal-box max-w-lg">
-					<h3 className="font-bold text-lg mb-4">Edit {editingProvider}</h3>
+			<dialog id="edit_provider_modal" className="modal modal-bottom sm:modal-middle" ref={editModalRef}>
+				<div className="theme-modal modal-box max-w-lg rounded-[1.5rem]">
+					<h3 className="mb-4 text-xl font-semibold tracking-tight theme-heading">Edit {editingProvider}</h3>
+					<p className="mb-4 text-sm leading-7 theme-muted">
+						Update the saved credentials for this provider profile.
+					</p>
 					<div className="flex flex-col gap-4">
 						{renderProviderForm()}
 					</div>
 					<div className="modal-action">
-						<button className="btn" onClick={closeEditModal}>
+						<button className="theme-subtle-btn btn rounded-xl" onClick={closeEditModal}>
 							Cancel
 						</button>
-						<button className="btn btn-primary" onClick={handleSaveProvider}>
+						<button className="theme-primary-violet btn rounded-xl border-none" onClick={handleSaveProvider}>
 							Update Provider
 						</button>
 					</div>
 				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button aria-label="Close edit provider dialog">close</button>
+				</form>
 			</dialog>
 
 			{/* Delete Confirmation Modal */}
-			<dialog id="delete_provider_modal" className="modal" ref={deleteModalRef}>
-				<div className="modal-box">
-					<h3 className="font-bold text-lg">Remove Provider</h3>
-					<p className="py-4">
+			<dialog id="delete_provider_modal" className="modal modal-bottom sm:modal-middle" ref={deleteModalRef}>
+				<div className="theme-modal modal-box rounded-[1.5rem]">
+					<h3 className="text-lg font-semibold theme-heading">Remove Provider</h3>
+					<p className="py-4 text-sm leading-7 theme-muted">
 						Are you sure you want to remove <strong>{providerToDelete}</strong> provider? 
 						This action cannot be undone and will affect any domains using this provider.
 					</p>
 					<div className="modal-action">
-						<button className="btn" onClick={closeDeleteModal}>
+						<button className="theme-subtle-btn btn rounded-xl" onClick={closeDeleteModal}>
 							Cancel
 						</button>
-						<button className="btn btn-error" onClick={handleDeleteProvider}>
+						<button className="theme-danger btn rounded-xl border-none" onClick={handleDeleteProvider}>
 							Remove Provider
 						</button>
 					</div>
 				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button aria-label="Close delete provider dialog">close</button>
+				</form>
 			</dialog>
 		</div>
 	);

@@ -111,39 +111,50 @@ export const DomainControl = () => {
 
 	return (
 		<div className="w-full">
-			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-xl font-semibold text-neutral-500">Domain Settings</h2>
-				<button className="btn btn-primary btn-sm" onClick={openModal}>
-					<PlusIcon />
-					Add Domain
-				</button>
+			<div className="section-header">
+				<div className="section-copy">
+					<div className="section-label ml-0">Domains</div>
+					<h2 className="text-2xl font-semibold tracking-tight theme-heading">Managed domains</h2>
+					<p className="mt-2 text-sm leading-7 theme-muted">
+						Review the currently tracked root domains and add new ones without leaving the panel.
+					</p>
+				</div>
+				<div className="flex items-center gap-3">
+					{domains.length > 0 ? (
+						<div className="theme-chip-sky rounded-full px-3 py-1 text-xs font-medium">
+							{domains.length} domains
+						</div>
+					) : null}
+					<button className="theme-primary-sky btn btn-sm rounded-xl border-none px-4 shadow-lg shadow-sky-900/20" onClick={openModal}>
+						<PlusIcon />
+						Add Domain
+					</button>
+				</div>
 			</div>
 			{
 				showAlert ? (
-					<div role="alert" className="alert alert-warning">
+					<div role="alert" className="mt-5 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-4 text-amber-100">
 						<WarningIcon />
 						<span>Warning: No domains configured, please add a domain first!</span>
 					</div>
 				) : (
 
-					<div className="flex flex-wrap gap-2">
+					<div className="mt-5 grid gap-4 lg:grid-cols-3">
 						{domains.map((domain, index) => (
 							<DomainCard key={index} domain={domain} index={index} showActionBtn={true} onRemove={onRemove} />
 						))}
 					</div>
 				)
 			}
-			<dialog id="modal_add" className="modal" ref={modalRef}>
-				<div className="modal-box max-w-lg">
-					<h3 className="font-bold text-lg">Add Domain</h3>
-					<p className="py-4">Add a new domain to the configuration.</p>
+			<dialog id="modal_add" className="modal modal-bottom sm:modal-middle" ref={modalRef}>
+				<div className="theme-modal modal-box max-w-xl rounded-[1.5rem]">
+					<h3 className="text-xl font-semibold tracking-tight theme-heading">Add Domain</h3>
+					<p className="py-4 text-sm leading-7 theme-muted">Add a new domain to the configuration and map it to an existing provider profile.</p>
 					<form method="dialog">
-						<label className="form-control w-full mb-4">
-							<div className="label">
-								<span className="label-text font-bold">Provider</span>
-							</div>
+						<label className="theme-field mb-4">
+							<span className="theme-field-label">Provider</span>
 							<select
-								className="select select-primary select-bordered w-full"
+								className="select theme-input w-full rounded-2xl"
 								value={selectedProvider}
 								onChange={(e) => setSelectedProvider(e.target.value)}
 							>
@@ -155,43 +166,37 @@ export const DomainControl = () => {
 								))}
 							</select>
 						</label>
-						<label className="form-control w-full mb-4">
-							<div className="label">
-								<span className="label-text font-bold">Domain</span>
-							</div>
+						<label className="theme-field mb-4">
+							<span className="theme-field-label">Domain</span>
 							<input
 								type="text"
 								id="domain"
-								placeholder="Input the domain name"
-								className="input input-primary input-bordered w-full"
+								placeholder="example.com"
+								className="input theme-input w-full rounded-2xl"
 								value={domainName}
 								onChange={(e) => setDomainName(e.target.value)}
 							/>
 						</label>
-						<label className="form-control w-full mb-4">
-							<div className="label">
-								<span className="label-text font-bold">Subdomains</span>
-							</div>
+						<label className="theme-field mb-4">
+							<span className="theme-field-label">Subdomains</span>
 							<textarea
-								className="textarea textarea-primary h-36"
+								className="textarea theme-input h-36 rounded-2xl"
 								placeholder={`subdomain1\nsubdomain2\nsubdomain3`}
 								value={subDomains.join('\n')}
 								onChange={(e) => setSubDomains(e.target.value.split('\n').filter(s => s.trim()))}
 							/>
-							<div className="label">
-								<span className="label-text-alt">Enter each subdomain on a new line</span>
-							</div>
+							<span className="theme-field-hint">Enter each subdomain on a new line.</span>
 						</label>
 						<div className="modal-action">
 							<button 
-								className="btn mr-2" 
+								className="theme-subtle-btn btn mr-2 rounded-xl" 
 								type="button"
 								onClick={() => modalRef.current?.close()}
 							>
-								Close
+								Cancel
 							</button>
 							<button 
-								className="btn btn-primary" 
+								className="theme-primary-sky btn rounded-xl border-none" 
 								type="button"
 								onClick={addNewDomain}
 								disabled={!domainName || !subDomains.length || !selectedProvider}
@@ -201,8 +206,10 @@ export const DomainControl = () => {
 						</div>
 					</form>
 				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button aria-label="Close add domain dialog">close</button>
+				</form>
 			</dialog>
 		</div>
 	);
 };
-

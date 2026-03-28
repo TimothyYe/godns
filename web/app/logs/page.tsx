@@ -126,136 +126,126 @@ export default function LogsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="surface-panel flex min-h-[18rem] items-center justify-center">
         <span className="loading loading-spinner loading-lg"></span>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
-      <div className="flex flex-col gap-4">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-base-content">Application Logs</h1>
-            <p className="text-base-content/60">View and monitor application logs in real-time</p>
-          </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <button 
-              className="btn btn-primary btn-sm"
-              onClick={() => loadLogs()}
-              disabled={loading}
-            >
-              {loading ? <span className="loading loading-spinner loading-xs"></span> : 'Refresh'}
-            </button>
-            <button 
-              className="btn btn-error btn-sm"
-              onClick={handleClearLogs}
-            >
-              Clear Logs
-            </button>
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-4">
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Search */}
-              <div className="flex-1">
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text text-sm">Search logs</span>
-                  </div>
-                  <input
-                    type="text"
-                    className="input input-bordered input-sm w-full"
-                    placeholder="Search in messages, levels, or fields..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </label>
-              </div>
-              
-              {/* Level Filter */}
-              <div className="sm:w-48">
-                <label className="form-control w-full">
-                  <div className="label">
-                    <span className="label-text text-sm">Filter by level</span>
-                  </div>
-                  <select 
-                    className="select select-bordered select-sm w-full"
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(e.target.value)}
-                  >
-                    <option value="">All levels</option>
-                    {logLevels.map((level) => (
-                      <option key={level} value={level}>{level.toUpperCase()}</option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-            </div>
-
-            {/* Auto-refresh controls */}
-            <div className="divider my-2"></div>
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
-              <div className="form-control">
-                <label className="label cursor-pointer gap-2">
-                  <input 
-                    type="checkbox" 
-                    className="checkbox checkbox-sm"
-                    checked={autoRefresh}
-                    onChange={(e) => setAutoRefresh(e.target.checked)}
-                  />
-                  <span className="label-text text-sm">Auto-refresh</span>
-                </label>
-              </div>
-              
-              {autoRefresh && (
-                <div className="sm:w-32">
-                  <label className="form-control w-full">
-                    <div className="label">
-                      <span className="label-text text-xs">Interval (ms)</span>
-                    </div>
-                    <input
-                      type="number"
-                      className="input input-bordered input-sm w-full"
-                      value={refreshInterval}
-                      onChange={(e) => setRefreshInterval(parseInt(e.target.value) || 5000)}
-                      min="1000"
-                      step="1000"
-                    />
-                  </label>
-                </div>
-              )}
+    <main className="page-wrap">
+      <div className="page-shell">
+		<section className="page-hero page-hero-compact">
+		  <div className="section-header">
+		    <div className="section-copy">
+		      <div className="eyebrow">
+		        <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+		        Observability
+		      </div>
+		      <h1 className="page-title">Application logs at a glance.</h1>
+		    </div>
+		    <div className="flex flex-wrap gap-2">
+              <button
+                className="theme-primary-sky btn btn-sm rounded-xl border-none px-4"
+                onClick={() => loadLogs()}
+                disabled={loading}
+              >
+                {loading ? <span className="loading loading-spinner loading-xs"></span> : 'Refresh'}
+              </button>
+              <button
+                className="theme-danger btn btn-sm rounded-xl border-none px-4"
+                onClick={handleClearLogs}
+              >
+                Clear Logs
+              </button>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Log Count and Actions */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-base-content/60">
-            Showing {filteredLogs.length} of {logs.length} log entries
-          </span>
-          <div className="flex gap-2">
-            <button className="btn btn-ghost btn-xs" onClick={scrollToTop}>
-              ↑ Top
-            </button>
-            <button className="btn btn-ghost btn-xs" onClick={scrollToBottom}>
-              ↓ Bottom
-            </button>
+        <section className="section-shell">
+          <div className="section-header">
+            <div className="section-copy">
+              <div className="section-label ml-0">Filters</div>
+              <h2 className="text-2xl font-semibold tracking-tight theme-heading">Refine the stream</h2>
+              <p className="mt-2 text-sm leading-7 theme-muted">
+                Search by message content, narrow by severity, and optionally keep the stream polling in the background.
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Logs Display */}
-        <div className="card bg-base-100 shadow-sm">
-          <div className="card-body p-0">
+          <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(14rem,0.7fr)_minmax(12rem,0.7fr)]">
+            <fieldset className="theme-field">
+              <label className="theme-field-label" htmlFor="log-search">Search logs</label>
+              <input
+                id="log-search"
+                type="text"
+                className="input theme-input w-full rounded-2xl"
+                placeholder="Search messages, levels, or structured fields"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </fieldset>
+
+            <fieldset className="theme-field">
+              <label className="theme-field-label" htmlFor="log-level">Filter by level</label>
+              <select
+                id="log-level"
+                className="select theme-input w-full rounded-2xl"
+                value={selectedLevel}
+                onChange={(e) => setSelectedLevel(e.target.value)}
+              >
+                <option value="">All levels</option>
+                {logLevels.map((level) => (
+                  <option key={level} value={level}>{level.toUpperCase()}</option>
+                ))}
+              </select>
+            </fieldset>
+
+            <fieldset className="theme-field">
+              <label className="theme-field-label" htmlFor="refresh-interval">Refresh cadence</label>
+              <input
+                id="refresh-interval"
+                type="number"
+                className="input theme-input w-full rounded-2xl"
+                value={refreshInterval}
+                onChange={(e) => setRefreshInterval(parseInt(e.target.value, 10) || 5000)}
+                min="1000"
+                step="1000"
+                disabled={!autoRefresh}
+              />
+              <label className="mt-2 inline-flex items-center gap-3 text-sm theme-muted" htmlFor="auto-refresh">
+                <input
+                  id="auto-refresh"
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  checked={autoRefresh}
+                  onChange={(e) => setAutoRefresh(e.target.checked)}
+                />
+                Auto-refresh logs
+              </label>
+            </fieldset>
+          </div>
+        </section>
+
+        <section className="section-shell">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm theme-muted">
+              Showing <span className="theme-heading">{filteredLogs.length}</span> of <span className="theme-heading">{logs.length}</span> log entries
+            </p>
+            <div className="flex gap-2">
+              <button className="theme-subtle-btn btn btn-xs rounded-xl" onClick={scrollToTop}>
+                ↑ Top
+              </button>
+              <button className="theme-subtle-btn btn btn-xs rounded-xl" onClick={scrollToBottom}>
+                ↓ Bottom
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-5 overflow-hidden rounded-[1.5rem] border border-slate-700/70 bg-slate-950/70">
             {filteredLogs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-base-content/60">
+              <div className="px-6 py-12 text-center">
+                <p className="theme-muted">
                   {logs.length === 0 ? 'No logs available' : 'No logs match your filters'}
                 </p>
               </div>
@@ -268,8 +258,8 @@ export default function LogsPage() {
               </div>
             )}
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
