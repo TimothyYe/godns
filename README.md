@@ -1342,15 +1342,15 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 Requirements:
 
-- Node.js `22.13.0` or higher
+- Bun `1.3.11` or higher
 - Go `1.17` or higher
 
 The frontend project is built with [Next.js](https://nextjs.org/) and [daisyUI](https://daisyui.com/). To start the development environment, run:
 
 ```bash
 cd web
-npm ci
-npm run dev
+bun install
+bun run dev
 ```
 
 ### Build the frontend
@@ -1359,7 +1359,7 @@ To build the frontend, run:
 
 ```bash
 cd web
-npm run build
+bun run build
 ```
 
 ### Run the frontend
@@ -1368,7 +1368,7 @@ To run the frontend, run:
 
 ```bash
 cd web
-npm run start
+bun run start
 ```
 
 ## Star History

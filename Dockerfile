@@ -1,12 +1,12 @@
 # Stage 1: Build the Next.js frontend
-FROM node:22.13.0-alpine AS web-builder
+FROM oven/bun:1.3.11-alpine AS web-builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY web/package.json web/package-lock.json ./web/
+COPY web/package.json web/bun.lock ./web/
 WORKDIR /app/web
-RUN npm ci && npm cache clean --force
+RUN bun install --frozen-lockfile
 COPY web/ .
-RUN npm run build
+RUN bun run build
 
 # Stage 2: Build the Go backend
 FROM golang:1.24.1-alpine AS go-builder

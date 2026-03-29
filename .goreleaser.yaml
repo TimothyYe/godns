@@ -3,8 +3,8 @@ version: 2
 before:
   hooks:
     # build the frontend project
-    - npm ci --prefix ./web
-    - npm run build --prefix ./web
+    - bun install --cwd ./web --frozen-lockfile
+    - bun run --cwd ./web build
     # You may remove this if you don't use go modules.
     - go mod tidy
     # you may remove this if you don't need go generate
