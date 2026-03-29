@@ -28,6 +28,9 @@ builds:
       - mipsle
       - mips64
       - mips64le
+    ignore:
+      - goos: windows
+        goarch: arm
     ldflags:
       - -s -w -X main.Version={{.Tag}}
 archives:
