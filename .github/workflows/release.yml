@@ -32,3 +32,14 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+      - name: Package web frontend
+        run: |
+          cd web
+          zip -rq "../godns-web-${{ github.ref_name }}.zip" out
+      - name: Upload web frontend asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: godns-web-${{ github.ref_name }}.zip
+          overwrite_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
