@@ -76,8 +76,17 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 	if zoneID != "" {
 		records := provider.getDNSRecords(zoneID)
 		matched := false
+		var matchingRecords []DNSRecord
+		var fullDomainName string
 
-		// update records
+		// Determine the full domain name we're looking for
+		if subdomainName == utils.RootDomain {
+			fullDomainName = domainName
+		} else {
+			fullDomainName = fmt.Sprintf("%s.%s", subdomainName, domainName)
+		}
+
+		// Collect all matching records for this subdomain
 		for _, rec := range records {
 			rec := rec
 			if !recordTracked(provider.getCurrentDomain(domainName), &rec) {
@@ -85,18 +94,47 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 				continue
 			}
 
-			if strings.Contains(rec.Name, subdomainName) || rec.Name == domainName {
-				if rec.IP != ip {
-					log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
-					if rec.ZoneID == "" {
-						rec.ZoneID = zoneID
-					}
-					provider.updateRecord(rec, ip)
-				} else {
-					log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
+			if rec.Name == fullDomainName {
+				matchingRecords = append(matchingRecords, rec)
+			}
+		}
+
+		// Process matching records
+		if len(matchingRecords) > 0 {
+			matched = true
+			updatedRecordID := ""
+
+			// Update or keep the first record with correct IP
+			for i, rec := range matchingRecords {
+				if rec.ZoneID == "" {
+					rec.ZoneID = zoneID
 				}
 
-				matched = true
+				if rec.IP != ip {
+					log.Infof("IP mismatch: Current(%+v) vs Cloudflare(%+v)", ip, rec.IP)
+					if i == 0 {
+						// Update the first record
+						provider.updateRecord(rec, ip)
+						updatedRecordID = rec.ID
+					}
+				} else {
+					log.Infof("Record OK: %+v - %+v", rec.Name, rec.IP)
+					if updatedRecordID == "" {
+						updatedRecordID = rec.ID
+					}
+				}
+			}
+
+			// Delete all duplicate records except the one we updated/kept
+			for _, rec := range matchingRecords {
+				if rec.ID != updatedRecordID {
+					log.Infof("Deleting duplicate record: %+v (ID: %s)", rec.Name, rec.ID)
+					if err := provider.deleteRecord(zoneID, rec.ID); err != nil {
+						log.Errorf("Failed to delete duplicate record %s: %v", rec.ID, err)
+					} else {
+						log.Infof("Duplicate record deleted: %+v", rec.Name)
+					}
+				}
 			}
 		}
 
@@ -322,4 +360,39 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 		lastIP = record.IP
 	}
 	return lastIP
+}
+
+// Delete a DNS record.
+func (provider *DNSProvider) deleteRecord(zoneID, recordID string) error {
+	req, client := provider.newRequest("DELETE",
+		"/zones/"+zoneID+"/dns_records/"+recordID,
+		nil,
+	)
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Error("Request error:", err)
+		return err
+	}
+
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("Failed to read response body: %+v", err)
+		return err
+	}
+
+	var r DNSRecordUpdateResponse
+	err = json.Unmarshal(body, &r)
+	if err != nil {
+		log.Errorf("Decoder error: %+v", err)
+		log.Debugf("Response body: %+v", string(body))
+		return err
+	}
+
+	if !r.Success {
+		log.Infof("Response failed: %+v", string(body))
+		return fmt.Errorf("failed to delete record: %+v", string(body))
+	}
+
+	return nil
 }
