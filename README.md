@@ -132,14 +132,28 @@ Alternatively, you can sign in to [DuckDNS](https://www.duckdns.org) (with a soc
 
 Choose one of the following installation methods:
 
-- Download a compiled binary from [releases](https://github.com/TimothyYe/godns/releases).
-- Use the Docker image described in [As a Docker container](#as-a-docker-container).
-- Build from source:
+### Binary Download
+
+Download a compiled binary from [releases](https://github.com/TimothyYe/godns/releases).
+
+### Docker Container
+
+Use the Docker image described in [As a Docker container](#as-a-docker-container).
+
+### Build from Source
 
 ```bash
 cd cmd/godns        # go to the GoDNS directory
 go mod download     # get dependencies
 go build            # build
+```
+
+### Homebrew
+
+For macOS or Linux, you can use homebrew to install GoDNS:
+
+```bash
+brew install mrasong/tap/godns
 ```
 
 ## Usage
@@ -168,6 +182,7 @@ Usage of ./godns:
 🆕 **GoDNS now supports multiple DNS providers simultaneously!**
 
 You can now configure domains from different DNS providers in a single configuration file, allowing you to:
+
 - Manage domains across multiple DNS services (Cloudflare, DNSPod, DigitalOcean, etc.)
 - Use provider-specific credentials for each service
 - Maintain full backward compatibility with existing single-provider configurations
@@ -791,6 +806,7 @@ More info: [help.ovhcloud.com](https://help.ovhcloud.com/csm/en-gb-api-getting-s
 </details>
 
 #### Porkbun
+
 For Porkbun, you need to provide your API key as `login_token` and secret key as `password`.
 Get your API credentials from [Porkbun API Management](https://porkbun.com/account/api).
 
@@ -814,6 +830,7 @@ Get your API credentials from [Porkbun API Management](https://porkbun.com/accou
   "interval": 300
 }
 ```
+
 </details>
 
 #### Dynu
@@ -1110,7 +1127,6 @@ To enable the `IPv6` support of GoDNS, there are two solutions to choose from:
 1. Use an online service to lookup the external IPv6
 
    For that:
-
    - Set the `ip_type` as `IPv6`, and make sure the `ipv6_urls` is configured
    - Create an `AAAA` record instead of an `A` record in your DNS provider
 

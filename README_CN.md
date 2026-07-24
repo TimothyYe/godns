@@ -130,14 +130,28 @@
 
 你可以选择以下安装方式之一：
 
-- 从 [releases](https://github.com/TimothyYe/godns/releases) 下载已编译的二进制文件。
-- 使用 [作为 Docker 容器](#作为-docker-容器) 中描述的 Docker 镜像。
-- 从源码构建：
+### 下载已编译的二进制文件
+
+从 [releases](https://github.com/TimothyYe/godns/releases) 下载已编译的二进制文件。
+
+### Docker 容器
+
+使用 [作为 Docker 容器](#作为-docker-容器) 中描述的 Docker 镜像。
+
+### 从源码构建
 
 ```bash
 cd cmd/godns        # 进入 GoDNS 目录
 go mod download     # 获取依赖项
 go build            # 构建
+```
+
+### Homebrew
+
+macOS 或 Linux 用户，可以使用 homebrew 安装 GoDNS：
+
+```bash
+brew install mrasong/tap/godns
 ```
 
 ## 使用方法
@@ -166,6 +180,7 @@ Usage of ./godns:
 🆕 **GoDNS 现已支持同时使用多个 DNS 提供商！**
 
 您现在可以在单个配置文件中配置来自不同 DNS 提供商的域名，从而实现：
+
 - 跨多个 DNS 服务（Cloudflare、DNSPod、DigitalOcean 等）管理域名
 - 为每个服务使用提供商特定的凭据
 - 与现有单提供商配置保持完全向后兼容
@@ -789,6 +804,7 @@ GoDNS Linode 处理程序目前对 Linode DNS 记录使用固定的 30 秒 TTL�
 </details>
 
 #### Porkbun
+
 对于 Porkbun，您需要提供 API 密钥作为 `login_token` 和秘密密钥作为 `password`。
 从 [Porkbun API 管理](https://porkbun.com/account/api) 获取您的 API 凭据。
 
@@ -812,6 +828,7 @@ GoDNS Linode 处理程序目前对 Linode DNS 记录使用固定的 30 秒 TTL�
   "interval": 300
 }
 ```
+
 </details>
 
 #### Dynu
@@ -1108,7 +1125,6 @@ http://localhost:5000/api/v1/send?domain=ddns.example.com&ip=192.168.1.1&ip_type
 1. 使用在线服务查找外部 IPv6
 
    为此：
-
    - 将 `ip_type` 设置为 `IPv6`，并确保配置了 `ipv6_urls`
    - 在您的 DNS 提供商中创建 `AAAA` 记录而不是 `A` 记录
 
