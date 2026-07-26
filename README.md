@@ -1381,4 +1381,4 @@ bun run start
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=timothyye/godns&type=date&legend=top-left)](https://www.star-history.com/#timothyye/godns&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/chart?repos=timothyye/godns&type=date&legend=top-left&sealed_token=_J0qwcFvEXQOQ_qAZLm797oWRL6RSJyyZmiybWfH6Rv5P50a7Bl0WQmufET40oCB7OqnkYblx-pmX17fO8j9rb0KK8jbldaz_C0efBkREtkNrIMl3yNxFQ)](https://www.star-history.com/?repos=timothyye%2Fgodns&type=date&legend=top-left)
