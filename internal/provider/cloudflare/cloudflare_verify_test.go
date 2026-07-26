@@ -21,7 +21,7 @@ func newMockCloudflare(t *testing.T, records []DNSRecord, calls *apiLog) *httpte
 	t.Helper()
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/zones", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/zones", func(w http.ResponseWriter, _ *http.Request) {
 		_ = json.NewEncoder(w).Encode(ZoneResponse{
 			Zones:   []Zone{{ID: "zone1", Name: "example.com"}},
 			Success: true,
