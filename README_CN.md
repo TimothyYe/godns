@@ -7,7 +7,7 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
 ```
 
-[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14]
+[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14] [![Homebrew][15]][16]
 
 [3]: https://img.shields.io/docker/image-size/timothyye/godns/latest
 [4]: https://hub.docker.com/r/timothyye/godns
@@ -17,6 +17,8 @@
 [12]: https://goreportcard.com/report/github.com/timothyye/godns
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
+[15]: https://img.shields.io/homebrew/v/godns
+[16]: https://formulae.brew.sh/formula/godns
 
 [GoDNS](https://github.com/TimothyYe/godns) 是一个支持多提供商并内置 Web 面板的开源自建动态 DNS (DDNS) 客户端。它是用 [Go](https://golang.org) 重写的我早期的 [DynDNS](https://github.com/TimothyYe/DynDNS) 开源项目。
 
@@ -129,6 +131,12 @@
 ## 安装
 
 你可以选择以下安装方式之一：
+
+- 使用 [Homebrew](https://brew.sh) 安装（macOS / Linux）：
+
+```bash
+brew install godns
+```
 
 - 从 [releases](https://github.com/TimothyYe/godns/releases) 下载已编译的二进制文件。
 - 使用 [作为 Docker 容器](#作为-docker-容器) 中描述的 Docker 镜像。

@@ -7,7 +7,7 @@
  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
 ```
 
-[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14]
+[![Apache licensed][9]][10] [![Docker][3]][4] [![Go Report Card][11]][12] [![GoDoc][13]][14] [![Homebrew][15]][16]
 
 [3]: https://img.shields.io/docker/image-size/timothyye/godns/latest
 [4]: https://hub.docker.com/r/timothyye/godns
@@ -17,6 +17,8 @@
 [12]: https://goreportcard.com/report/github.com/timothyye/godns
 [13]: https://godoc.org/github.com/TimothyYe/godns?status.svg
 [14]: https://godoc.org/github.com/TimothyYe/godns
+[15]: https://img.shields.io/homebrew/v/godns
+[16]: https://formulae.brew.sh/formula/godns
 
 [GoDNS](https://github.com/TimothyYe/godns) is a self-hosted dynamic DNS (DDNS) client with multi-provider support and a built-in web panel. It is a rewrite in [Go](https://golang.org) of my early [DynDNS](https://github.com/TimothyYe/DynDNS) open-source project.
 
@@ -131,6 +133,12 @@ Alternatively, you can sign in to [DuckDNS](https://www.duckdns.org) (with a soc
 ## Installation
 
 Choose one of the following installation methods:
+
+- Install with [Homebrew](https://brew.sh) (macOS / Linux):
+
+```bash
+brew install godns
+```
 
 - Download a compiled binary from [releases](https://github.com/TimothyYe/godns/releases).
 - Use the Docker image described in [As a Docker container](#as-a-docker-container).
