@@ -88,6 +88,10 @@ func main() {
 	<-c
 	log.Info("GoDNS is terminated, stopping the DNS manager...")
 	dnsManager.Stop()
+	// Stop the IPHelper's background refresh goroutine. Done here in main
+	// rather than in DNSManager.Stop() because Restart() also calls Stop()
+	// and we want the helper alive across restarts — it's a singleton.
+	lib.GetIPHelperInstance(&config).Stop()
 	// wait for the goroutines to exit
 	time.Sleep(200 * time.Millisecond)
 	log.Info("GoDNS is stopped, bye!")

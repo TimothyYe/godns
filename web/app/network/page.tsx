@@ -36,38 +36,56 @@ export default function Network() {
 
 
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-between pt-10 max-w-screen-xl">
+		<main className="page-wrap">
 			<ToastContainer />
-			<div className="p-5">
-				<div className="flex flex-col max-w-screen-lg gap-5">
-					<IpMode
-						IPMode={settings.ip_mode}
-						IPUrls={settings.ip_urls}
-						IPV6Urls={settings.ipv6_urls}
-						onIpModeChange={(data) => {
-							setSettings({
-								...settings,
-								ip_mode: data.IPMode,
-								ip_urls: data.IPUrls,
-								ipv6_urls: data.IPV6Urls
-							});
-						}}
-					/>
-					<Proxy
-						EnableProxy={settings.use_proxy}
-						SkipSSLVerify={settings.skip_ssl_verify}
-						Socks5Proxy={settings.socks5_proxy}
-						onProxyChange={(data) => {
-							setSettings({
-								...settings,
-								use_proxy: data.EnableProxy,
-								skip_ssl_verify: data.SkipSSLVerify,
-								socks5_proxy: data.Socks5Proxy
-							});
-						}}
-					/>
-					{
-						settings.webhook ?
+			<div className="page-shell">
+				<section className="page-hero page-hero-compact">
+					<div className="eyebrow">
+						<span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+						Network Controls
+					</div>
+					<h1 className="page-title">Tune how GoDNS discovers and publishes addresses.</h1>
+				</section>
+
+				<section className="section-shell">
+					<div className="section-header">
+						<div className="section-copy">
+							<div className="section-label ml-0">Configuration</div>
+							<h2 className="text-2xl font-semibold tracking-tight theme-heading">Network and webhook settings</h2>
+							<p className="mt-2 text-sm leading-7 theme-muted">
+								These controls affect how public addresses are detected and how update events are pushed to downstream systems.
+							</p>
+						</div>
+					</div>
+
+					<div className="mt-5 flex flex-col gap-5">
+						<IpMode
+							IPMode={settings.ip_mode}
+							IPUrls={settings.ip_urls}
+							IPV6Urls={settings.ipv6_urls}
+							onIpModeChange={(data) => {
+								setSettings({
+									...settings,
+									ip_mode: data.IPMode,
+									ip_urls: data.IPUrls,
+									ipv6_urls: data.IPV6Urls
+								});
+							}}
+						/>
+						<Proxy
+							EnableProxy={settings.use_proxy}
+							SkipSSLVerify={settings.skip_ssl_verify}
+							Socks5Proxy={settings.socks5_proxy}
+							onProxyChange={(data) => {
+								setSettings({
+									...settings,
+									use_proxy: data.EnableProxy,
+									skip_ssl_verify: data.SkipSSLVerify,
+									socks5_proxy: data.Socks5Proxy
+								});
+							}}
+						/>
+						{settings.webhook ? (
 							<WebHook
 								Enabled={settings.webhook.enabled}
 								Url={settings.webhook.url}
@@ -82,47 +100,49 @@ export default function Network() {
 										}
 									});
 								}}
-							/> : null
-					}
-					<Resolver
-						Resolver={settings.resolver}
-						onResolverChange={(data) => {
-							setSettings({
-								...settings,
-								resolver: data.Resolver
-							});
-						}}
-					/>
-					<IPInterface
-						IPInterface={settings.ip_interface}
-						onIPInterfaceChange={(data) => {
-							setSettings({
-								...settings,
-								ip_interface: data.IPInterface
-							});
-						}}
-					/>
-					<div className="flex justify-center">
-						<button className="flex btn btn-primary"
-							onClick={() => {
-								if (!credentials) {
-									toast.error('Invalid credentials');
-									return;
-								}
-
-								update_network_settings(credentials, settings).then((success) => {
-									if (success) {
-										toast.success('Network settings updated successfully');
-									} else {
-										toast.error('Failed to update network settings');
-									}
+							/>
+						) : null}
+						<Resolver
+							Resolver={settings.resolver}
+							onResolverChange={(data) => {
+								setSettings({
+									...settings,
+									resolver: data.Resolver
 								});
 							}}
-						>
-							Save
-						</button>
+						/>
+						<IPInterface
+							IPInterface={settings.ip_interface}
+							onIPInterfaceChange={(data) => {
+								setSettings({
+									...settings,
+									ip_interface: data.IPInterface
+								});
+							}}
+						/>
+						<div className="flex justify-end">
+							<button
+								className="theme-primary-sky btn rounded-xl border-none px-6"
+								onClick={() => {
+									if (!credentials) {
+										toast.error('Invalid credentials');
+										return;
+									}
+
+									update_network_settings(credentials, settings).then((success) => {
+										if (success) {
+											toast.success('Network settings updated successfully');
+										} else {
+											toast.error('Failed to update network settings');
+										}
+									});
+								}}
+							>
+								Save
+							</button>
+						</div>
 					</div>
-				</div>
+				</section>
 			</div>
 		</main>
 	);

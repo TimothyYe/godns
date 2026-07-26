@@ -67,7 +67,11 @@ func (r *DNSResolver) lookupHost(host string, dnsType uint16, triesLeft int) ([]
 		m1.Question[0] = dns.Question{Name: dns.Fqdn(host), Qtype: dns.TypeAAAA, Qclass: dns.ClassINET}
 	}
 
-	in, err := dns.Exchange(m1, r.Servers[r.r.Intn(len(r.Servers))])
+	// dns.Exchange uses a package-default client with no timeout, so a
+	// black-holed resolver would hang the entire update loop. Use an
+	// explicit client with a bounded read/write timeout instead.
+	c := &dns.Client{Timeout: 5 * time.Second}
+	in, _, err := c.Exchange(m1, r.Servers[r.r.Intn(len(r.Servers))])
 
 	var result []net.IP
 

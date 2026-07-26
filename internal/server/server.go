@@ -16,7 +16,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//go:embed out/*
+//go:embed all:out
 var embeddedFiles embed.FS
 
 type Server struct {

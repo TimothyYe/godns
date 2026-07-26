@@ -53,7 +53,10 @@ func (n *SlackNotification) Send(domain, currentIP string) error {
 
 	defer response.Body.Close()
 
-	body, _ := io.ReadAll(response.Body)
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return fmt.Errorf("failed to read response body: %w", err)
+	}
 	type ResponseParameters struct {
 		MigrateToChatID int64 `json:"migrate_to_chat_id"` // optional
 		RetryAfter      int   `json:"retry_after"`        // optional

@@ -11,17 +11,17 @@ const getLevelColor = (level: string): string => {
     case 'error':
     case 'fatal':
     case 'panic':
-      return 'text-error';
+      return 'theme-log-level-danger';
     case 'warn':
-      return 'text-warning';
+      return 'theme-log-level-warn';
     case 'info':
-      return 'text-info';
+      return 'theme-log-level-info';
     case 'debug':
-      return 'text-primary';
+      return 'theme-log-level-debug';
     case 'trace':
-      return 'text-neutral-500';
+      return 'theme-log-level-trace';
     default:
-      return 'text-base-content';
+      return 'theme-log-level-default';
   }
 };
 
@@ -30,17 +30,17 @@ const getLevelBadgeClass = (level: string): string => {
     case 'error':
     case 'fatal':
     case 'panic':
-      return 'badge-error';
+      return 'theme-badge-danger';
     case 'warn':
-      return 'badge-warning';
+      return 'theme-badge-amber';
     case 'info':
-      return 'badge-info';
+      return 'theme-badge-sky';
     case 'debug':
-      return 'badge-primary';
+      return 'theme-badge-violet';
     case 'trace':
-      return 'badge-neutral';
+      return 'theme-badge-neutral';
     default:
-      return 'badge-ghost';
+      return 'theme-badge-neutral';
   }
 };
 
@@ -50,27 +50,27 @@ export const LogEntryComponent: React.FC<LogEntryProps> = ({ log }) => {
   };
 
   return (
-    <div className="border-b border-base-200 py-2 px-4 hover:bg-base-50 font-mono text-sm">
+    <div className="log-row px-4 py-2 text-sm">
       <div className="flex items-start gap-3">
-        <span className="text-neutral-500 text-xs whitespace-nowrap">
+        <span className="log-time whitespace-nowrap text-xs">
           {formatTimestamp(log.timestamp)}
         </span>
-        <span className={`badge badge-sm ${getLevelBadgeClass(log.level)} text-xs uppercase`}>
+        <span className={`badge badge-sm border ${getLevelBadgeClass(log.level)} text-xs uppercase`}>
           {log.level}
         </span>
-        <span className={`flex-1 ${getLevelColor(log.level)}`}>
+        <span className={`log-message flex-1 ${getLevelColor(log.level)}`}>
           {log.message}
         </span>
       </div>
       {log.fields && Object.keys(log.fields).length > 0 && (
-        <div className="mt-2 ml-16 text-xs text-neutral-600">
+        <div className="log-fields mt-2 ml-16 text-xs">
           <details className="cursor-pointer">
-            <summary className="text-neutral-500">Fields ({Object.keys(log.fields).length})</summary>
+            <summary className="log-fields-summary">Fields ({Object.keys(log.fields).length})</summary>
             <div className="mt-1 ml-4">
               {Object.entries(log.fields).map(([key, value]) => (
                 <div key={key} className="flex gap-2">
-                  <span className="text-neutral-400">{key}:</span>
-                  <span className="text-neutral-600">
+                  <span className="log-field-key">{key}:</span>
+                  <span className="log-field-value">
                     {typeof value === 'object' ? JSON.stringify(value) : String(value)}
                   </span>
                 </div>

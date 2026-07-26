@@ -3,6 +3,7 @@ package duck
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 
 	"github.com/TimothyYe/godns/internal/settings"
@@ -18,11 +19,13 @@ const (
 // DNSProvider struct.
 type DNSProvider struct {
 	configuration *settings.Settings
+	client        *http.Client
 }
 
 // Init passes DNS settings and store it to the provider instance.
 func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.configuration = conf
+	provider.client = utils.GetHTTPClient(provider.configuration)
 }
 
 func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
@@ -38,10 +41,8 @@ func (provider *DNSProvider) updateIP(domainName, subdomainName, currentIP strin
 		ip = fmt.Sprintf("ipv6=%s", currentIP)
 	}
 
-	client := utils.GetHTTPClient(provider.configuration)
-
 	// update IP with HTTP GET request
-	resp, err := client.Get(fmt.Sprintf(URL, subdomainName, provider.configuration.LoginToken, ip))
+	resp, err := provider.client.Get(fmt.Sprintf(URL, subdomainName, provider.configuration.LoginToken, ip))
 	if err != nil {
 		// handle error
 		log.Errorf("Failed to update sub domain: %s.%s, error: %s", domainName, subdomainName, err)

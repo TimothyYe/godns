@@ -33,6 +33,8 @@ export interface MultiProviderConfig {
 	};
 }
 
+export type ProviderConfig = MultiProviderConfig[string];
+
 export async function get_provider_settings(credentials: string): Promise<ProviderSetting[]> {
 	if (credentials) {
 		const resp = await fetch(get_api_server() + '/api/v1/provider/settings', {
@@ -122,7 +124,7 @@ export async function update_multi_providers(credentials: string, providers: Mul
 	return false;
 }
 
-export async function add_provider_config(credentials: string, providerName: string, config: any): Promise<boolean> {
+export async function add_provider_config(credentials: string, providerName: string, config: ProviderConfig): Promise<boolean> {
 	if (credentials) {
 		const resp = await fetch(get_api_server() + `/api/v1/providers/${providerName}`, {
 			method: 'PUT',

@@ -1,47 +1,53 @@
 'use client';
 import { useEffect, useState } from "react";
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
+import { useIsHydrated } from "./use-is-hydrated";
+
+const getPreferredTheme = () => {
+	if (typeof window === 'undefined') {
+		return 'light';
+	}
+
+	const localTheme = localStorage.getItem("theme");
+	if (localTheme === 'light' || localTheme === 'dark') {
+		return localTheme;
+	}
+
+	return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
 
 export const ThemeSwitch = () => {
-	const [theme, setTheme] = useState<string | null>(null);
-	const [mounted, setMounted] = useState(false);
-
-	useEffect(() => {
-		setMounted(true);
-		const localTheme = localStorage.getItem("theme");
-		setTheme(localTheme ? localTheme : "dark");
-	}, []);
+	const [theme, setTheme] = useState(getPreferredTheme);
+	const isHydrated = useIsHydrated();
 
 	useEffect(() => {
 		if (theme) {
-			// set theme attribute to the <html> tag
-			document.documentElement.setAttribute(
-				"data-theme",
-				theme
-			);
+			document.documentElement.setAttribute("data-theme", theme);
+			localStorage.setItem("theme", theme);
 		}
 	}, [theme]);
 
 	// Prevent hydration mismatch by not rendering until mounted
-	if (!mounted || !theme) {
+	if (!isHydrated || !theme) {
 		return (
-			<div className="w-auto h-auto bg-transparent rounded-lg flex items-center justify-center group-data-[selected=true]:bg-transparent !text-default-500 pt-px px-0 mx-0">
+			<div className="theme-icon-btn theme-nav-utility-btn flex h-10 w-10 items-center justify-center rounded-xl">
 				<div className="w-[22px] h-[22px]" /> {/* Placeholder to prevent layout shift */}
 			</div>
 		);
 	}
 
 	return (
-		<div className="w-auto h-auto bg-transparent rounded-lg flex items-center justify-center group-data-[selected=true]:bg-transparent !text-default-500 pt-px px-0 mx-0">
-			<div onClick={
-				() => {
-					const newTheme = theme === "light" ? "dark" : "light";
-					localStorage.setItem("theme", newTheme);
-					setTheme(newTheme);
-				}
-			}>
-				{theme === "dark" ? <SunFilledIcon className="hover:text-gray-700" size={22} /> : <MoonFilledIcon size={22} className="hover:text-gray-700" />}
-			</div>
-		</div>
+		<button
+			type="button"
+			className="theme-icon-btn theme-nav-utility-btn flex h-10 w-10 items-center justify-center rounded-xl transition-colors"
+			aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+			title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+			onClick={() => {
+				const newTheme = theme === "light" ? "dark" : "light";
+				setTheme(newTheme);
+			}}
+		>
+			{theme === "dark" ? <SunFilledIcon size={20} /> : <MoonFilledIcon size={20} />}
+		</button>
 	);
 };

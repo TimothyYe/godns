@@ -36,6 +36,11 @@ var (
 	}
 	instance *AliDNS
 	once     sync.Once
+
+	// httpClient is shared across alidns GET helpers. Bounded timeout
+	// prevents a slow upstream from blocking the update loop indefinitely
+	// (the previous `http.Get` used the default client with no timeout).
+	httpClient = &http.Client{Timeout: time.Second * utils.DefaultTimeout}
 )
 
 // AliDNS token.
@@ -72,10 +77,12 @@ type DomainRecord struct {
 }
 
 func getHTTPBody(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+	resp, err := httpClient.Get(url)
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 	if resp.StatusCode == http.StatusOK {
 		return body, err

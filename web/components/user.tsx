@@ -17,11 +17,11 @@ interface ICommonContext {
 
 export const CommonContext = createContext<ICommonContext>({
 	credentials: null,
-	loginUser: (_: string) => { },
+	loginUser: () => { },
 	logoutUser: () => { },
-	saveVersion: (_: string) => { },
+	saveVersion: () => { },
 	currentPage: '',
-	setCurrentPage: (_: string) => { },
+	setCurrentPage: () => { },
 	version: null,
 });
 

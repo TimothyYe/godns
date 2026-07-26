@@ -179,13 +179,16 @@ func recordTracked(domain *settings.Domain, record *DNSRecord) bool {
 }
 
 // Create a new request with auth in place and optional proxy.
-func (provider *DNSProvider) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client) {
+func (provider *DNSProvider) newRequest(method, url string, body io.Reader) (*http.Request, *http.Client, error) {
 	client := utils.GetHTTPClient(provider.configuration)
 	if client == nil {
 		log.Info("cannot create HTTP client")
 	}
 
-	req, _ := http.NewRequest(method, provider.API+url, body)
+	req, err := http.NewRequest(method, provider.API+url, body)
+	if err != nil {
+		return nil, nil, err
+	}
 	req.Header.Set("Content-Type", "application/json")
 
 	if provider.configuration.Email != "" && provider.configuration.Password != "" {
@@ -195,21 +198,30 @@ func (provider *DNSProvider) newRequest(method, url string, body io.Reader) (*ht
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", provider.configuration.LoginToken))
 	}
 
-	return req, client
+	return req, client, nil
 }
 
 // Find the correct zone via domain name.
 func (provider *DNSProvider) getZone(domain string) string {
 	var z ZoneResponse
 
-	req, client := provider.newRequest("GET", fmt.Sprintf("/zones?name=%s", domain), nil)
+	req, client, err := provider.newRequest("GET", fmt.Sprintf("/zones?name=%s", domain), nil)
+	if err != nil {
+		log.Errorf("Failed to build request: %+v", err)
+		return ""
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Error("Request error:", err)
 		return ""
 	}
+	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("Failed to read response body: %+v", err)
+		return ""
+	}
 	err = json.Unmarshal(body, &z)
 	if err != nil {
 		log.Errorf("Decoder error: %+v", err)
@@ -243,14 +255,23 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 	}
 
 	log.Infof("Querying records with type: %s", recordType)
-	req, client := provider.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s&page=1&per_page=500", recordType), nil)
+	req, client, err := provider.newRequest("GET", fmt.Sprintf("/zones/"+zoneID+"/dns_records?type=%s&page=1&per_page=500", recordType), nil)
+	if err != nil {
+		log.Errorf("Failed to build request: %+v", err)
+		return empty
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Error("Request error:", err)
 		return empty
 	}
+	defer resp.Body.Close()
 
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("Failed to read response body: %+v", err)
+		return empty
+	}
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		log.Infof("Decoder error: %+v", err)
@@ -258,7 +279,6 @@ func (provider *DNSProvider) getDNSRecords(zoneID string) []DNSRecord {
 		return empty
 	}
 	if !r.Success {
-		body, _ := io.ReadAll(resp.Body)
 		log.Infof("Response failed: %+v", string(body))
 		return empty
 
@@ -297,7 +317,11 @@ func (provider *DNSProvider) createRecord(zoneID, domain, subDomain, ip string) 
 		return err
 	}
 
-	req, client := provider.newRequest("POST", fmt.Sprintf("/zones/%s/dns_records", zoneID), bytes.NewBuffer(content))
+	req, client, err := provider.newRequest("POST", fmt.Sprintf("/zones/%s/dns_records", zoneID), bytes.NewBuffer(content))
+	if err != nil {
+		log.Errorf("Failed to build request: %+v", err)
+		return err
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Error("Request error:", err)
@@ -334,10 +358,14 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 	var lastIP string
 
 	j, _ := json.Marshal(record)
-	req, client := provider.newRequest("PUT",
+	req, client, err := provider.newRequest("PUT",
 		"/zones/"+record.ZoneID+"/dns_records/"+record.ID,
 		bytes.NewBuffer(j),
 	)
+	if err != nil {
+		log.Errorf("Failed to build request: %+v", err)
+		return ""
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Error("Request error:", err)
@@ -345,7 +373,11 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 	}
 
 	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Errorf("Failed to read response body: %+v", err)
+		return ""
+	}
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		log.Errorf("Decoder error: %+v", err)
@@ -353,7 +385,6 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 		return ""
 	}
 	if !r.Success {
-		body, _ := io.ReadAll(resp.Body)
 		log.Infof("Response failed: %+v", string(body))
 	} else {
 		log.Infof("Record updated: %+v - %+v", record.Name, record.IP)
@@ -364,10 +395,14 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 
 // Delete a DNS record.
 func (provider *DNSProvider) deleteRecord(zoneID, recordID string) error {
-	req, client := provider.newRequest("DELETE",
+	req, client, err := provider.newRequest("DELETE",
 		"/zones/"+zoneID+"/dns_records/"+recordID,
 		nil,
 	)
+	if err != nil {
+		log.Errorf("Failed to build request: %+v", err)
+		return err
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Error("Request error:", err)

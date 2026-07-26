@@ -63,7 +63,10 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 }
 func (provider *DNSProvider) getData(endpoint string, param string, value string) ([]byte, error) {
 
-	req, _ := http.NewRequest("GET", BaseURL+endpoint, nil)
+	req, err := http.NewRequest("GET", BaseURL+endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
 
 	q := req.URL.Query()
 	q.Add(param, value)
@@ -77,13 +80,17 @@ func (provider *DNSProvider) getData(endpoint string, param string, value string
 		log.Error("Error in fetching: ", err)
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	respBody, _ := io.ReadAll(resp.Body)
 	return respBody, nil
 }
 func (provider *DNSProvider) putData(endpoint string, location string, body []byte) error {
 
-	req, _ := http.NewRequest("PUT", BaseURL+endpoint+"/"+location, bytes.NewBuffer(body))
+	req, err := http.NewRequest("PUT", BaseURL+endpoint+"/"+location, bytes.NewBuffer(body))
+	if err != nil {
+		return err
+	}
 
 	req.Header.Add("Auth-API-Token", provider.configuration.LoginToken)
 	req.Header.Add("Content-Type", "application/json")
@@ -94,6 +101,8 @@ func (provider *DNSProvider) putData(endpoint string, location string, body []by
 		log.Error("Fetch failed")
 		return err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != http.StatusOK {
 		log.Error("Got non 200 status code: ", resp.Status)
 		return fmt.Errorf("got non 200 status code %s", resp.Status)

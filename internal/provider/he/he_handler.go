@@ -45,13 +45,18 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 
 	client := utils.GetHTTPClient(provider.configuration)
 
-	req, _ := http.NewRequest("POST", URL, strings.NewReader(values.Encode()))
+	req, err := http.NewRequest("POST", URL, strings.NewReader(values.Encode()))
+	if err != nil {
+		log.Error("Failed to build request:", err)
+		return err
+	}
 	resp, err := client.Do(req)
 
 	if err != nil {
 		log.Error("Request error:", err)
 		return err
 	}
+	defer resp.Body.Close()
 
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode == http.StatusOK {

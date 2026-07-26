@@ -15,24 +15,24 @@ const defaultTTL int = 60 // 60 seconds.
 // DNSProvider struct.
 type DNSProvider struct {
 	configuration *settings.Settings
-	clientConfig  gotransip.ClientConfiguration
 }
 
 // Init passes DNS settings and store it to the provider instance.
 func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.configuration = conf
-	provider.clientConfig = gotransip.ClientConfiguration{
-		AccountName: conf.Email}
-	if strings.HasPrefix(conf.LoginToken, "-----BEGIN PRIVATE KEY-----") { // Private Key.
-		provider.clientConfig.PrivateKeyReader = strings.NewReader(conf.LoginToken)
-	} else { // JWT.
-		provider.clientConfig.Token = conf.LoginToken
-	}
 }
 
 // UpdateIP updates the IP address of the given subdomain.
 func (provider *DNSProvider) UpdateIP(domainName, subDomainName, ip string) error {
-	client, err := gotransip.NewClient(provider.clientConfig)
+	config := gotransip.ClientConfiguration{
+		AccountName: provider.configuration.Email}
+	if strings.HasPrefix(provider.configuration.LoginToken, "-----BEGIN PRIVATE KEY-----") { // Private Key.
+		config.PrivateKeyReader = strings.NewReader(provider.configuration.LoginToken)
+	} else { // JWT.
+		config.Token = provider.configuration.LoginToken
+	}
+	// Unsure if we can reuse the client, will it auto refresh the session?
+	client, err := gotransip.NewClient(config)
 	if err != nil {
 		return err
 	}

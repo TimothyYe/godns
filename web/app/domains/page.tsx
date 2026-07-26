@@ -4,9 +4,7 @@ import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CommonContext } from '@/components/user';
 import { DomainControl } from '@/components/domain-control';
-import { ToastContainer } from 'react-toastify';
 import { get_info } from '@/api/info';
-import 'react-toastify/dist/ReactToastify.css';
 import { MultiProviderControl } from '@/components/multi-provider-control';
 
 export default function Domains() {
@@ -27,12 +25,23 @@ export default function Domains() {
 	}, [setCurrentPage, credentials, saveVersion, router]);
 
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-start pt-10 max-w-screen-xl">
-			<ToastContainer />
-			<div className="flex flex-col items-center w-full bg-base-100 p-10">
-				<MultiProviderControl />
-				<div className="divider"></div>
-				<DomainControl />
+		<main className="page-wrap">
+			<div className="page-shell">
+				<section className="page-hero page-hero-compact">
+					<div className="eyebrow">
+						<span className="inline-block h-2 w-2 rounded-full bg-violet-400" />
+						Configuration
+					</div>
+					<h1 className="page-title">Organize provider credentials and managed domains.</h1>
+				</section>
+
+				<section className="section-shell">
+					<MultiProviderControl />
+				</section>
+
+				<section className="section-shell">
+					<DomainControl />
+				</section>
 			</div>
 		</main>
 	);
