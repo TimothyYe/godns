@@ -220,6 +220,10 @@ func (helper *IPHelper) getIPFromInterface() (string, error) {
 			continue
 		}
 
+		if !ip.IsGlobalUnicast() {
+			continue
+		}
+
 		if !helper.configuration.AllowPrivate && ip.IsPrivate() {
 			continue
 		}
