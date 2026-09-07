@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/TimothyYe/godns/internal/settings"
 	"github.com/TimothyYe/godns/internal/utils"
@@ -22,12 +23,15 @@ const (
 type DNSProvider struct {
 	configuration *settings.Settings
 	client        *http.Client
+	// API is the base address of the IONOS DNS API. It is overridden in tests.
+	API string
 }
 
 // Init passes DNS settings and store it to the provider instance.
 func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.configuration = conf
 	provider.client = utils.GetHTTPClient(provider.configuration)
+	provider.API = BaseURL
 }
 
 func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
@@ -49,7 +53,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 }
 
 func (provider *DNSProvider) getData(endpoint string, params map[string]string) ([]byte, error) {
-	req, err := http.NewRequest(http.MethodGet, BaseURL+endpoint, nil)
+	req, err := http.NewRequest(http.MethodGet, provider.API+endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +73,7 @@ func (provider *DNSProvider) getData(endpoint string, params map[string]string) 
 		return nil, err
 	}
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("failed to get data from %s, status code: %s", BaseURL+endpoint, resp.Status)
+		return nil, fmt.Errorf("failed to get data from %s, status code: %s", provider.API+endpoint, resp.Status)
 	}
 	defer resp.Body.Close()
 
@@ -88,7 +92,7 @@ func (provider *DNSProvider) putData(endpoint string, params map[string]any) err
 		}
 	}
 
-	req, err := http.NewRequest(http.MethodPut, BaseURL+endpoint, bytes.NewReader(body))
+	req, err := http.NewRequest(http.MethodPut, provider.API+endpoint, bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
@@ -154,15 +158,10 @@ type recordListResponse struct {
 
 func (provider *DNSProvider) getRecord(zoneID, recordName string) (id string, ip string, err error) {
 
-	ipType := utils.IPTypeA
-	if provider.configuration.IPType == utils.IPV6 || provider.configuration.IPType == utils.IPTypeAAAA {
-		ipType = utils.IPTypeAAAA
-	}
-
 	body, err := provider.getData(fmt.Sprintf("zones/%s", zoneID),
 		map[string]string{
 			"recordName": recordName,
-			"recordType": ipType,
+			"recordType": provider.getRecordType(),
 		})
 	if err != nil {
 		return "", "", err
@@ -179,6 +178,18 @@ func (provider *DNSProvider) getRecord(zoneID, recordName string) (id string, ip
 	}
 
 	return "", "", fmt.Errorf("record %s not found", recordName)
+}
+
+// getRecordType maps the configured ip_type to the DNS record type to update.
+// ip_type is compared case-insensitively because it is documented as "IPv4" or
+// "IPv6", while the web UI stores it as "IPV4" or "IPV6".
+func (provider *DNSProvider) getRecordType() string {
+	ipType := strings.ToUpper(provider.configuration.IPType)
+	if ipType == utils.IPV6 || ipType == utils.IPTypeAAAA {
+		return utils.IPTypeAAAA
+	}
+
+	return utils.IPTypeA
 }
 
 func (provider *DNSProvider) updateRecord(zoneID, recordID, recordName, ip string) error {

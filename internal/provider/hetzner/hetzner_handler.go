@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"net/http"
 
@@ -31,12 +32,15 @@ type Record struct {
 type DNSProvider struct {
 	configuration *settings.Settings
 	client        *http.Client
+	// API is the base address of the Hetzner DNS API. It is overridden in tests.
+	API string
 }
 
 // Init passes DNS settings and store it to the provider instance.
 func (provider *DNSProvider) Init(conf *settings.Settings) {
 	provider.configuration = conf
 	provider.client = utils.GetHTTPClient(provider.configuration)
+	provider.API = BaseURL
 }
 
 func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) error {
@@ -63,7 +67,7 @@ func (provider *DNSProvider) UpdateIP(domainName, subdomainName, ip string) erro
 }
 func (provider *DNSProvider) getData(endpoint string, param string, value string) ([]byte, error) {
 
-	req, err := http.NewRequest("GET", BaseURL+endpoint, nil)
+	req, err := http.NewRequest("GET", provider.API+endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +91,7 @@ func (provider *DNSProvider) getData(endpoint string, param string, value string
 }
 func (provider *DNSProvider) putData(endpoint string, location string, body []byte) error {
 
-	req, err := http.NewRequest("PUT", BaseURL+endpoint+"/"+location, bytes.NewBuffer(body))
+	req, err := http.NewRequest("PUT", provider.API+endpoint+"/"+location, bytes.NewBuffer(body))
 	if err != nil {
 		return err
 	}
@@ -156,7 +160,9 @@ func (provider *DNSProvider) getRecord(recordName string, zoneID string, Type st
 		return Record{}, fmt.Errorf("zone doesn't have an records")
 	}
 	outRecord := Record{}
-	if Type == "IPv6" {
+	// ip_type is compared case-insensitively because it is documented as "IPv4"
+	// or "IPv6", while the web UI stores it as "IPV4" or "IPV6".
+	if strings.ToUpper(Type) == utils.IPV6 {
 		Type = utils.IPTypeAAAA
 	} else {
 		Type = utils.IPTypeA
