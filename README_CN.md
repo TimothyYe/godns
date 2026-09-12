@@ -69,6 +69,7 @@
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [IONOS][ionos]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [TransIP][transip]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [name.com][namecom]                   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [digitalocean]: https://digitalocean.com
@@ -91,6 +92,7 @@
 [dynu]: https://www.dynu.com/
 [ionos]: https://www.ionos.com/
 [transip]: https://www.transip.net/
+[namecom]: https://www.name.com/
 
 提示：您可以关注此 [问题](https://github.com/TimothyYe/godns/issues/76) 查看根域名 DDNS 的当前状态。
 
@@ -808,6 +810,33 @@ GoDNS Linode 处理程序目前对 Linode DNS 记录使用固定的 30 秒 TTL�
   "provider": "Porkbun",
   "login_token": "pk1_your_api_key",
   "password": "sk1_your_secret_key",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["@", "www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ipify.org"],
+  "ip_type": "IPv4",
+  "interval": 300
+}
+```
+</details>
+
+#### name.com
+
+对于 name.com，您需要提供账户用户名作为 `email`，API 令牌作为 `login_token`。
+从 [name.com API 设置](https://www.name.com/account/settings/api) 生成 API 令牌。该提供商使用 CORE v1 API，记录不存在时会自动创建。
+
+<details>
+<summary>示例</summary>
+
+```json
+{
+  "provider": "NameDotCom",
+  "email": "your_username",
+  "login_token": "your_api_token",
   "domains": [
     {
       "domain_name": "example.com",

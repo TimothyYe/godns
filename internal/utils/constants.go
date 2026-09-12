@@ -47,6 +47,8 @@ const (
 	TRANSIP = "TransIP"
 	// PORKBUN for Porkbun.
 	PORKBUN = "Porkbun"
+	// NAMEDOTCOM for name.com.
+	NAMEDOTCOM = "NameDotCom"
 	// IPV4 for IPV4 mode.
 	IPV4 = "IPV4"
 	// IPV6 for IPV6 mode.
@@ -184,6 +186,11 @@ var (
 			Name:       PORKBUN,
 			LoginToken: true,
 			Password:   true,
+		},
+		{
+			Name:       NAMEDOTCOM,
+			Email:      true,
+			LoginToken: true,
 		},
 	}
 )

@@ -185,6 +185,13 @@ func validateProviderCredentials(providerName string, accessor credentialAccesso
 		if accessor.GetPassword() == "" {
 			return errors.New("secret key cannot be empty")
 		}
+	case NAMEDOTCOM:
+		if accessor.GetEmail() == "" {
+			return errors.New("username cannot be empty")
+		}
+		if accessor.GetLoginToken() == "" {
+			return errors.New("API token cannot be empty")
+		}
 	default:
 		return fmt.Errorf("'%s' is not a supported DNS provider", providerName)
 	}

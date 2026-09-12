@@ -71,6 +71,7 @@ Below is the built-in web panel of the open-source GoDNS project:
 | [Dynu][dynu]                          | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [IONOS][ionos]                        | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
 | [TransIP][transip]                    | :white_check_mark: | :white_check_mark: |        :x:         | :white_check_mark: |
+| [name.com][namecom]                   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
 
 [cloudflare]: https://cloudflare.com
 [digitalocean]: https://digitalocean.com
@@ -93,6 +94,7 @@ Below is the built-in web panel of the open-source GoDNS project:
 [dynu]: https://www.dynu.com/
 [ionos]: https://www.ionos.com/
 [transip]: https://www.transip.net/
+[namecom]: https://www.name.com/
 
 Tip: You can follow this [issue](https://github.com/TimothyYe/godns/issues/76) to view the current status of DDNS for root domains.
 
@@ -810,6 +812,33 @@ Get your API credentials from [Porkbun API Management](https://porkbun.com/accou
   "provider": "Porkbun",
   "login_token": "pk1_your_api_key",
   "password": "sk1_your_secret_key",
+  "domains": [
+    {
+      "domain_name": "example.com",
+      "sub_domains": ["@", "www", "test"]
+    }
+  ],
+  "resolver": "8.8.8.8",
+  "ip_urls": ["https://api.ipify.org"],
+  "ip_type": "IPv4",
+  "interval": 300
+}
+```
+</details>
+
+#### name.com
+
+For name.com, you need to provide your account username as `email` and your API token as `login_token`.
+Generate an API token from [name.com API settings](https://www.name.com/account/settings/api). The provider uses the CORE v1 API and creates the record if it does not exist yet.
+
+<details>
+<summary>Example</summary>
+
+```json
+{
+  "provider": "NameDotCom",
+  "email": "your_username",
+  "login_token": "your_api_token",
   "domains": [
     {
       "domain_name": "example.com",
