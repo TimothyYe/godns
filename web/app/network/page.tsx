@@ -5,6 +5,7 @@ import { Proxy } from "@/components/proxy";
 import { WebHook } from "@/components/webhook";
 import { Resolver } from "@/components/resolver";
 import { IPInterface } from "@/components/ip-interface";
+import { QueryInterface } from "@/components/query-interface";
 import { useRouter } from "next/navigation";
 import { CommonContext } from "@/components/user";
 import { useEffect, useState, useContext } from "react";
@@ -117,6 +118,15 @@ export default function Network() {
 								setSettings({
 									...settings,
 									ip_interface: data.IPInterface
+								});
+							}}
+						/>
+						<QueryInterface
+							QueryInterface={settings.query_interface}
+							onQueryInterfaceChange={(data) => {
+								setSettings({
+									...settings,
+									query_interface: data.QueryInterface
 								});
 							}}
 						/>

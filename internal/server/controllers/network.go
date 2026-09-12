@@ -8,28 +8,30 @@ import (
 )
 
 type NetworkSettings struct {
-	IPMode        string           `json:"ip_mode"`
-	IPUrls        []string         `json:"ip_urls"`
-	IPV6Urls      []string         `json:"ipv6_urls"`
-	UseProxy      bool             `json:"use_proxy"`
-	SkipSSLVerify bool             `json:"skip_ssl_verify"`
-	Socks5Proxy   string           `json:"socks5_proxy"`
-	Webhook       settings.Webhook `json:"webhook,omitempty"`
-	Resolver      string           `json:"resolver"`
-	IPInterface   string           `json:"ip_interface"`
+	IPMode         string           `json:"ip_mode"`
+	IPUrls         []string         `json:"ip_urls"`
+	IPV6Urls       []string         `json:"ipv6_urls"`
+	UseProxy       bool             `json:"use_proxy"`
+	SkipSSLVerify  bool             `json:"skip_ssl_verify"`
+	Socks5Proxy    string           `json:"socks5_proxy"`
+	Webhook        settings.Webhook `json:"webhook,omitempty"`
+	Resolver       string           `json:"resolver"`
+	IPInterface    string           `json:"ip_interface"`
+	QueryInterface string           `json:"query_interface"`
 }
 
 func (c *Controller) GetNetworkSettings(ctx *fiber.Ctx) error {
 	settings := NetworkSettings{
-		IPMode:        c.config.IPType,
-		IPUrls:        c.config.IPUrls,
-		IPV6Urls:      c.config.IPV6Urls,
-		UseProxy:      c.config.UseProxy,
-		SkipSSLVerify: c.config.SkipSSLVerify,
-		Socks5Proxy:   c.config.Socks5Proxy,
-		Webhook:       c.config.Webhook,
-		Resolver:      c.config.Resolver,
-		IPInterface:   c.config.IPInterface,
+		IPMode:         c.config.IPType,
+		IPUrls:         c.config.IPUrls,
+		IPV6Urls:       c.config.IPV6Urls,
+		UseProxy:       c.config.UseProxy,
+		SkipSSLVerify:  c.config.SkipSSLVerify,
+		Socks5Proxy:    c.config.Socks5Proxy,
+		Webhook:        c.config.Webhook,
+		Resolver:       c.config.Resolver,
+		IPInterface:    c.config.IPInterface,
+		QueryInterface: c.config.QueryInterface,
 	}
 
 	return ctx.JSON(settings)
@@ -63,6 +65,7 @@ func (c *Controller) UpdateNetworkSettings(ctx *fiber.Ctx) error {
 	c.config.Webhook = settings.Webhook
 	c.config.Resolver = settings.Resolver
 	c.config.IPInterface = settings.IPInterface
+	c.config.QueryInterface = settings.QueryInterface
 
 	if err := c.config.SaveSettings(c.configPath); err != nil {
 		log.Errorf("Failed to save settings: %s", err.Error())

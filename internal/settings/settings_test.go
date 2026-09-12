@@ -2,6 +2,7 @@ package settings
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -83,25 +84,29 @@ func TestLoadWithEnvPath(t *testing.T) {
 }
 
 func TestQueryInterfaceField(t *testing.T) {
-	// Test JSON config
+	dir := t.TempDir()
+
+	jsonPath := filepath.Join(dir, "config.json")
+	if err := os.WriteFile(jsonPath, []byte(`{"query_interface": "wan0"}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
 	var jsonSettings Settings
-	err := LoadSettings("../../configs/config_sample.json", &jsonSettings)
-	if err != nil {
-		t.Fatal(err.Error())
+	if err := LoadSettings(jsonPath, &jsonSettings); err != nil {
+		t.Fatal(err)
+	}
+	if jsonSettings.QueryInterface != "wan0" {
+		t.Errorf("json query_interface = %q, want wan0", jsonSettings.QueryInterface)
 	}
 
-	// Query interface field should exist (even if empty)
-	_ = jsonSettings.QueryInterface
-
-	// Test YAML config
+	yamlPath := filepath.Join(dir, "config.yaml")
+	if err := os.WriteFile(yamlPath, []byte("query_interface: wan1\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
 	var yamlSettings Settings
-	err = LoadSettings("../../configs/config_sample.yaml", &yamlSettings)
-	if err != nil {
-		t.Fatal(err.Error())
+	if err := LoadSettings(yamlPath, &yamlSettings); err != nil {
+		t.Fatal(err)
 	}
-
-	// Query interface field should exist (even if empty)
-	_ = yamlSettings.QueryInterface
-
-	t.Log("query_interface field loaded successfully")
+	if yamlSettings.QueryInterface != "wan1" {
+		t.Errorf("yaml query_interface = %q, want wan1", yamlSettings.QueryInterface)
+	}
 }

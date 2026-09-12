@@ -1191,20 +1191,8 @@ Note: If `ip_urls` is also specified, it will be used to perform an online looku
 
 #### Query IP through specific network interface
 
-If you have multiple network interfaces and want to query your public IP address through a specific interface (useful when you have multiple uplinks, some behind CGNAT and others with public IPs), you can use the `query_interface` configuration option:
+On a host with several uplinks, the online IP lookup normally leaves through the default route. If that route sits behind CGNAT while another link has a public address, the lookup returns the wrong IP. `query_interface` sends the lookup out through a named interface instead:
 
-```json
-  "query_interface": "wan0",
-```
-
-With `wan0` replaced by the name of the network interface you want to use for querying the IP address. When this option is set, GoDNS will bind the HTTP request to the specified network interface, ensuring the IP query goes through that interface rather than the default route.
-
-This is particularly useful in scenarios where:
-- You have multiple WAN connections with different routing priorities
-- One interface is behind CGNAT while another has a public IP
-- You want to ensure the IP query reflects the actual public IP of a specific interface
-
-Example configuration for dual-WAN setup:
 ```json
 {
   "ip_urls": ["https://api.ipify.org/"],
@@ -1213,7 +1201,14 @@ Example configuration for dual-WAN setup:
 }
 ```
 
-Note: The `query_interface` option is different from `ip_interface`. The `query_interface` specifies which interface to use when making the HTTP request to query your public IP, while `ip_interface` reads the IP address directly from the local interface without making any external requests.
+GoDNS binds the lookup socket to the device itself (`SO_BINDTODEVICE` on Linux, `IP_BOUND_IF` on macOS) and uses one of the interface's addresses as the source. The device bind is what forces the route, so no policy-routing rules are needed. On other platforms only the source address is bound, which works when the system's routing already sends that source out the intended link.
+
+Notes:
+
+- `query_interface` is different from `ip_interface`. `query_interface` chooses which link the HTTP request leaves through. `ip_interface` reads the address straight off a local interface without any request.
+- The interface must carry a global-unicast address of the configured `ip_type`. Private addresses are fine, e.g. an interface behind a 1:1 NAT.
+- On Linux kernels older than 5.7, binding to a device requires the `CAP_NET_RAW` capability. If the bind fails, the lookup fails rather than silently falling back to the default route.
+- The lookup URL's hostname is still resolved through the system resolver.
 
 #### SOCKS5 proxy support
 

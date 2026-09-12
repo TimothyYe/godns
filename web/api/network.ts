@@ -16,6 +16,7 @@ export interface NetworkSettings {
 	webhook: WebHook;
 	resolver: string;
 	ip_interface: string;
+	query_interface: string;
 }
 
 export async function get_network_settings(credentials: string): Promise<NetworkSettings> {
