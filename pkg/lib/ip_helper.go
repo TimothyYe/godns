@@ -373,28 +373,30 @@ func (helper *IPHelper) getIPOnline() string {
 			continue
 		}
 		ipReg := regexp.MustCompile(utils.IPPattern)
-		onlineIP = ipReg.FindString(string(body))
-		if onlineIP == "" {
+		// Hold the answer in a local so a rejected or unparsed attempt cannot
+		// survive the loop and end up as the return value.
+		candidateIP := ipReg.FindString(string(body))
+		if candidateIP == "" {
 			log.Error(fmt.Sprintf("request:%v failed to get online IP", reqURL))
 			response.Body.Close()
 			continue
 		}
 
-		if isIPv4(onlineIP) {
+		if isIPv4(candidateIP) {
 			if !utils.IsIPv4(helper.configuration.IPType) {
-				log.Warnf("The online IP (%s) from %s is not IPV6, will skip it.", onlineIP, reqURL)
+				log.Warnf("The online IP (%s) from %s is not IPV6, will skip it.", candidateIP, reqURL)
 				response.Body.Close()
 				continue
 			}
 		} else {
 			if !utils.IsIPv6(helper.configuration.IPType) {
-				log.Warnf("The online IP (%s) from %s is not IPV4, will skip it.", onlineIP, reqURL)
+				log.Warnf("The online IP (%s) from %s is not IPV4, will skip it.", candidateIP, reqURL)
 				response.Body.Close()
 				continue
 			}
 		}
 
-		log.Debugf("Get ip success by: %s, online IP: %s", reqURL, onlineIP)
+		log.Debugf("Get ip success by: %s, online IP: %s", reqURL, candidateIP)
 
 		err = response.Body.Close()
 		if err != nil {
@@ -402,9 +404,7 @@ func (helper *IPHelper) getIPOnline() string {
 			continue
 		}
 
-		if onlineIP == "" {
-			log.Error("fail to get online IP")
-		}
+		onlineIP = candidateIP
 
 		break
 	}
