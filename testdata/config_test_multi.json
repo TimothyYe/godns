@@ -37,8 +37,7 @@
     }
   ],
   "ip_urls": [
-    "https://api4.ipify.org",
-    "https://myip.biturl.top"
+    "https://api4.ipify.org"
   ],
   "interval": 300,
   "debug_info": true
