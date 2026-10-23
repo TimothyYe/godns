@@ -12,7 +12,7 @@ import (
 
 type apiLog struct {
 	mu      sync.Mutex
-	updated []string // record IDs that received PUT
+	updated []string // record IDs that received PATCH
 	deleted []string // record IDs that received DELETE
 	created int
 }
@@ -44,7 +44,7 @@ func newMockCloudflare(t *testing.T, records []DNSRecord, calls *apiLog) *httpte
 		id := r.URL.Path[len("/zones/zone1/dns_records/"):]
 		calls.mu.Lock()
 		switch r.Method {
-		case http.MethodPut:
+		case http.MethodPatch:
 			calls.updated = append(calls.updated, id)
 		case http.MethodDelete:
 			calls.deleted = append(calls.deleted, id)
@@ -188,5 +188,25 @@ func TestNoSubstringFalseMatch(t *testing.T) {
 	}
 	if calls.created != 1 {
 		t.Errorf("expected sub.example.com to be created, got %d creations", calls.created)
+	}
+}
+
+// Issue #323: PUT overwrites the whole record and drops fields GoDNS does not
+// send, such as the comment, so the IP must be updated with PATCH.
+func TestUpdateUsesPatch(t *testing.T) {
+	calls := &apiLog{}
+	records := []DNSRecord{
+		{ID: "rec1", Name: "sub.example.com", IP: "fd00::old", Type: "AAAA"},
+	}
+	srv := newMockCloudflare(t, records, calls)
+	defer srv.Close()
+
+	provider := newTestProvider(srv.URL)
+	if err := provider.UpdateIP("example.com", "sub", "fd00::current"); err != nil {
+		t.Fatalf("UpdateIP failed: %v", err)
+	}
+
+	if len(calls.updated) != 1 || calls.updated[0] != "rec1" {
+		t.Errorf("expected rec1 updated with PATCH, got %v", calls.updated)
 	}
 }
