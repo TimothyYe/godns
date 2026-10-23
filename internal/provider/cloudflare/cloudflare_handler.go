@@ -343,7 +343,9 @@ func (provider *DNSProvider) updateRecord(record DNSRecord, newIP string) string
 	var lastIP string
 
 	j, _ := json.Marshal(record)
-	req, client, err := provider.newRequest("PUT",
+	// PATCH only changes the fields sent here. PUT would overwrite the whole
+	// record and drop the fields GoDNS does not send, such as comment and tags.
+	req, client, err := provider.newRequest("PATCH",
 		"/zones/"+record.ZoneID+"/dns_records/"+record.ID,
 		bytes.NewBuffer(j),
 	)
