@@ -1246,7 +1246,6 @@ GoDNS 支持通过简单的轮询算法从多个 URL 获取公共 IP。如果第
 ```json
   "ip_urls": [
   "https://api.ipify.org",
-  "https://myip.biturl.top",
   "https://api-ipv4.ip.sb/ip"
   ],
 ```
@@ -1254,7 +1253,6 @@ GoDNS 支持通过简单的轮询算法从多个 URL 获取公共 IP。如果第
 #### 推荐的 API
 
 - <https://api.ipify.org>
-- <https://myip.biturl.top>
 - <https://ipecho.net/plain>
 - <https://api-ipv4.ip.sb/ip>
 

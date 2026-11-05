@@ -1248,7 +1248,6 @@ GoDNS supports fetching the public IP from multiple URLs via a simple round-robi
 ```json
   "ip_urls": [
   "https://api.ipify.org",
-  "https://myip.biturl.top",
   "https://api-ipv4.ip.sb/ip"
   ],
 ```
@@ -1256,7 +1255,6 @@ GoDNS supports fetching the public IP from multiple URLs via a simple round-robi
 #### Recommended APIs
 
 - <https://api.ipify.org>
-- <https://myip.biturl.top>
 - <https://ipecho.net/plain>
 - <https://api-ipv4.ip.sb/ip>
 
