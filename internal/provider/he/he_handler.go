@@ -50,6 +50,7 @@ func (provider *DNSProvider) updateIP(domain, subDomain, currentIP string) error
 		log.Error("Failed to build request:", err)
 		return err
 	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := client.Do(req)
 
 	if err != nil {
